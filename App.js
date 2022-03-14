@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import Newsfeed from './Screens/Newsfeed/Newsfeed';
 import Notifications from './Screens/Notifications/Notifications';
 import Marketplace from './Screens/Marketplace/Marketplace';
 import Profile from './Screens/ProfilePage/ProfileGeneral/ProfileGeneral';

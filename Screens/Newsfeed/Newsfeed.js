@@ -9,10 +9,12 @@ import {useNavigation} from '@react-navigation/native';
 const Newsfeed = ({navigation}) => {
 
   let user; // put in user object here
+  //filter posts for those in the building 
+  //display max of 300 posts
+  //update every 15 mins or on drag down from top
 
   return (
-    <View>
-
+    <>
       <Pressable onPress={()=>{navigation.navigate("BuildingInfo")}}>
         <Text>Building Info</Text>
       </Pressable>
@@ -20,8 +22,7 @@ const Newsfeed = ({navigation}) => {
       <Pressable onPress={()=>{navigation.navigate("CreatePost")}}>
         <Text>New Post</Text>
       </Pressable>
-
-    </View>
+    </>
   );
 };
 
