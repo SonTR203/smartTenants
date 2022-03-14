@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const BuildingInfo = () => {
+const ProfileGeneral = () => {
   return (
     <View>
-      <Text>BuildingInfo is here!</Text>
+      <Text>ProfileGeneral</Text>
     </View>
   );
 };
 
-export default BuildingInfo;
+export default ProfileGeneral;
