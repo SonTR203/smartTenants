@@ -6,6 +6,9 @@ import Notifications from './Screens/Notifications/Notifications';
 import Marketplace from './Screens/Marketplace/Marketplace';
 import Profile from './Screens/ProfilePage/Profile/Profile';
 
+// Import building for testing
+// import BuildingInfo from './Screens/BuildingInfo/BuildingInfo'
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
