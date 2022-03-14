@@ -1,4 +1,6 @@
 import { initializeApp } from "firebase/app";
+import { getFirestore } from '@firebase/firestore';
+
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
@@ -12,3 +14,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+//Export Access to DB
+export const db = getFirestore(app)
