@@ -7,6 +7,9 @@ import Profile from './Screens/ProfilePage/ProfileGeneral/ProfileGeneral';
 
 import {NewsfeedNavigator} from './Screens/customNavigator.js'
 
+// Import building for testing
+// import BuildingInfo from './Screens/BuildingInfo/BuildingInfo'
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
