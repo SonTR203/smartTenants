@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   StyleSheet,
   View,
@@ -8,6 +9,22 @@ import {
 } from 'react-native';
 
 import { db } from '../../firebase-config';
+
+let user = {
+  DOB: "01/12/1997",
+  buildingID: "123CharmingAve",
+  unitNumber: 7,
+  firstName: "Eric",
+  lastName: "Shantz",
+  email: "",
+  isAdmin: true,
+  isAuthorized: false,
+  myMarketplaccePosts: 0,
+  myPosts: 0,
+  userID: "fpgqEjeqXkZyZEMk5z2q",
+  visibileNotices: 0,
+  visibleAnnouncements: 0
+}
 
 const Signup = () => {
 
@@ -24,11 +41,46 @@ const Signup = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        return (
         <KeyboardAvoidingView
           style={styles.container}
           behavior="padding"
         >
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Name"
+              value={user.name}
+              onChangeText={text => user.name[text]}
+              style={styles.input}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Last Name"
+              value={user.lastName}
+              onChangeText={text => user.lastName[text]}
+              style={styles.input}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Unit Number"
+              value={user.unitNumber}
+              onChangeText={text => user.unitNumber[text]}
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Building Address"
+              value={user.buildingID}
+              onChangeText={text => user.buildingID[text]}
+              style={styles.input}
+            />
+
+          </View>
           <View style={styles.inputContainer}>
             <TextInput
               placeholder="Email"
@@ -36,6 +88,8 @@ const Signup = () => {
               onChangeText={text => setEmail(text)}
               style={styles.input}
             />
+          </View>
+          <View>
             <TextInput
               placeholder="Password"
               value={password}
@@ -54,12 +108,13 @@ const Signup = () => {
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
-        )
+
         <View>
           <Text style={styles.title}>upon signup you accept our terms & conditions outlined in out terms of use and privacy policy</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
+
   );
 };
 
