@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
+import Signup from '../Signup/Signup';
+
 
 import { db } from '../../firebase-config';
 
@@ -58,6 +60,9 @@ const Login = () => {
           secureTextEntry
         />
       </View>
+      <View>
+        <Text>Forgot password?</Text>
+      </View>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -67,6 +72,20 @@ const Login = () => {
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>
+      <View>
+        <Text>Don't have an account?</Text>
+      </View>
+      <View style={styles.buttonContainer}>
+
+        <TouchableOpacity
+          onPress={console.log("Navigate to signup screen")}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Signup here</Text>
+        </TouchableOpacity>
+      </View>
+
+
     </KeyboardAvoidingView>
   )
 
