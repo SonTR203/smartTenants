@@ -6,6 +6,8 @@ import Marketplace from './Screens/Marketplace/Marketplace';
 import Profile from './Screens/ProfilePage/ProfileGeneral/ProfileGeneral';
 import Login from './Screens/Login/Login';
 
+import { LoginNavigator } from './Screens/customNavigator.js';
+
 import { NewsfeedNavigator } from './Screens/customNavigator.js'
 
 // Import building for testing
@@ -21,7 +23,7 @@ export default function App() {
         {/* ======= Login ======= */}
         <Tab.Screen
           name='Login'
-          component={Login}
+          component={LoginNavigator}
           options={{ headerShown: false }} />
 
         {/* ======= Marketplace ======= */}

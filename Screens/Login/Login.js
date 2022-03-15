@@ -1,10 +1,9 @@
-import { useNavigation } from '@react-navigation/core'
+import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
-import Signup from '../Signup/Signup';
-
+// import Signup from '../Signup/Signup';
 
 import { db } from '../../firebase-config';
 
@@ -12,16 +11,19 @@ import { db } from '../../firebase-config';
 const auth = getAuth();
 console.log(auth)
 
-const Login = () => {
+
+
+const Login = ({navigation}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const navigation = useNavigation()
+
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        navigation.replace("newsfeed")
+        //navigation.replace("newsfeed")
+        navigation.navigate("Newsfeed")
       }
     })
 
@@ -78,7 +80,7 @@ const Login = () => {
       <View style={styles.buttonContainer}>
 
         <TouchableOpacity
-          onPress={console.log("Navigate to signup screen")}
+          onPress={() => {navigation.navigate("Signup")}}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Signup here</Text>

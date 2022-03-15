@@ -1,11 +1,14 @@
 import React from 'react';
 
+
+
 import {
   StyleSheet,
   View,
   Text,
   SafeAreaView,
   ScrollView,
+  KeyboardAvoidingView, TextInput, TouchableOpacity
 } from 'react-native';
 
 import { db } from '../../firebase-config';
@@ -16,24 +19,25 @@ let user = {
   unitNumber: 7,
   firstName: "Eric",
   lastName: "Shantz",
-  email: "",
+  email: "shantz.eric@gmail.com",
+  userID: "number",
   isAdmin: true,
-  isAuthorized: false,
-  myMarketplaccePosts: 0,
-  myPosts: 0,
-  userID: "fpgqEjeqXkZyZEMk5z2q",
-  visibileNotices: 0,
-  visibleAnnouncements: 0
+  tenantAuthorized: true,
+  myMarketplaccePosts: [],
+  myPosts: [],
+  visibileNotices: [],
+  visibleAnnouncements: []
 }
 
 const Signup = () => {
 
-  const handleSignUp = () => {
+  const handleSignup = () => {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('Registered with:', user.email);
+        console.log('User Id: ', user.userID);
       })
       .catch(error => alert(error.message))
   }
@@ -48,9 +52,9 @@ const Signup = () => {
 
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Name"
-              value={user.name}
-              onChangeText={text => user.name[text]}
+              placeholder="Nameeeee"
+              value={user.firstName}
+              onChangeText={text => user.firstName[text]}
               style={styles.input}
             />
           </View>
@@ -84,15 +88,18 @@ const Signup = () => {
           <View style={styles.inputContainer}>
             <TextInput
               placeholder="Email"
-              value={email}
-              onChangeText={text => setEmail(text)}
+              value={user.email}
+              onChangeText={text => {
+                setEmail(text);
+                user.email;
+              }}
               style={styles.input}
             />
           </View>
           <View>
             <TextInput
               placeholder="Password"
-              value={password}
+              value={""}
               onChangeText={text => setPassword(text)}
               style={styles.input}
               secureTextEntry
