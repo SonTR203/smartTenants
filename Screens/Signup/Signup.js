@@ -35,21 +35,10 @@ let user = {
   visibleAnnouncements: []
 }
 
-const Signup = () => {
+const Signup = ({navigation}) => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        navigation.replace("AccountApprovalPending")
-      }
-    })
-
-    return unsubscribe
-  }, [])
 
 
 
@@ -60,6 +49,7 @@ const Signup = () => {
         const user = userCredentials.user;
         console.log('Registered with:', user.email);
         console.log('User Id: ', user.userID);
+        navigation.navigate('AccountApprovalPending')
       })
       .catch(error => alert(error.message))
   }
