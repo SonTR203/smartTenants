@@ -10,6 +10,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo-google-fonts/roboto": "^0.2.2",
     "@firebase/firestore": "^3.4.5",
     "@react-native-masked-view/masked-view": "^0.2.6",
     "@react-navigation/bottom-tabs": "^6.2.0",
@@ -18,6 +19,7 @@
     "eslint": "^8.11.0",
     "expo": "~44.0.0",
     "expo-cli": "^5.2.0",
+    "expo-font": "~10.0.4",
     "expo-image-picker": "^12.0.2",
     "expo-status-bar": "~1.2.0",
     "firebase": "^9.6.8",
@@ -29,7 +31,8 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-web": "0.17.1",
-    "react-router-dom": "^6.2.2"
+    "react-router-dom": "^6.2.2",
+    "expo-app-loading": "~1.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
