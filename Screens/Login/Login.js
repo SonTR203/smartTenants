@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 // import Signup from '../Signup/Signup';
 
@@ -13,82 +13,68 @@ console.log(auth)
 
 
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
 
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        //navigation.replace("newsfeed")
-        navigation.navigate("Newsfeed")
-      }
-    })
-
-    return unsubscribe
-  }, [])
-
-
-
   const handleLogin = () => {
-    auth
-      .signInWithEmailAndPassword(email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('Logged in with:', user.email);
+        navigation.navigate("Newsfeed")
       })
       .catch(error => alert(error.message))
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior="padding"
-    >
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Email"
-          value={email}
-          onChangeText={text => setEmail(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={text => setPassword(text)}
-          style={styles.input}
-          secureTextEntry
-        />
-      </View>
-      <View>
-        <Text>Forgot password?</Text>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+      >
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={text => setEmail(text)}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={text => setPassword(text)}
+            style={styles.input}
+            secureTextEntry
+          />
+        </View>
+        <View>
+          <Text>Forgot password?</Text>
+        </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleLogin}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-      </View>
-      <View>
-        <Text>Don't have an account?</Text>
-      </View>
-      <View style={styles.buttonContainer}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={handleLogin}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Text>Don't have an account?</Text>
+        </View>
+        <View style={styles.buttonContainer}>
 
-        <TouchableOpacity
-          onPress={() => {navigation.navigate("Signup")}}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Signup here</Text>
-        </TouchableOpacity>
-      </View>
-
-
-    </KeyboardAvoidingView>
+          <TouchableOpacity
+            onPress={() => { navigation.navigate("Signup") }}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Signup here</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 
 }
