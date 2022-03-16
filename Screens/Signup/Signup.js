@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from 'react'
 
-
 import {
   StyleSheet,
   View,
   Text,
   SafeAreaView,
-  ScrollView,
   KeyboardAvoidingView, TextInput, TouchableOpacity
 } from 'react-native';
 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 import { addDoc, collection } from "@firebase/firestore"
+import { db } from '../../firebase-config';
 
 const auth = getAuth();
-console.log("Here is the auth, ", auth)
-
-import { db } from '../../firebase-config';
 
 const Signup = ({ navigation }) => {
 
@@ -26,7 +22,7 @@ const Signup = ({ navigation }) => {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [buildingID, setBuildingID] = useState("")
-  const [unitNumber, setUnitNumber] = useState(0)
+  const [unitNumber, setUnitNumber] = useState("")
   const [userID, setUserID] = useState("")
   const [isAdmin, setIsAdmin] = useState(false)
   const [tenantAuthorized, setTenantAuthorized] = useState(true)
@@ -34,7 +30,35 @@ const Signup = ({ navigation }) => {
   const [myPosts, setMyPosts] = useState([])
   const [visibileNotices, setVisibileNotices] = useState([])
   const [visibleAnnouncements, setVisibleAnnouncements] = useState([])
- 
+
+
+  const checkTextInputs = () => {
+
+    if (!firstName.trim()) {
+      alert('Please Enter Your First Name');
+      return false;
+    } else if (!lastName.trim()) {
+      alert('Please Enter Your last Name');
+      return false;
+    } else if (!unitNumber.trim() || isNaN(unitNumber.trim())) {
+      console.log(+unitNumber)
+      alert('Please Enter a Unit Number');
+      return false;
+    } else if (!buildingID.trim()) {
+      alert('Please Enter Your Building Id');
+      return false;
+    } else if (!email) {
+      alert('Please Enter Your Email Address');
+      return false;
+    } else if (!password) {
+      alert('Please Enter Your Password, at leat 6 charcters');
+      return false;
+    }
+    return true;
+  }
+
+
+
 
   async function createNewUser(user) {
     try {
@@ -44,7 +68,7 @@ const Signup = ({ navigation }) => {
           firstName,
           lastName,
           buildingID,
-          unitNumber,
+          unitNumber: parseInt(unitNumber),
           isAdmin: false,
           tenantAuthorized: true,
           myMarketplaccePosts: [],
@@ -53,30 +77,22 @@ const Signup = ({ navigation }) => {
           visibleAnnouncements: []
         })
     } catch (error) {
-      console.log(error)
+      alert(error)
     }
   }
 
   function signUpSuccess(user) {
-    //setModalText("Post Successful!")
-    //setModalVisible(true)
-
-    console.log('Registered with:', user.email);
-    console.log('User Id: ', user.uid);
     createNewUser(user)
-
     navigation.navigate('AccountApprovalPending')
   }
 
   function signUpFailure() {
-    //setModalText("SignUp Failed")
-    //setModalVisible(true)
-    console.log(`User ${newUser.lastName} Signup failed`)
+    alert("You have not been signedup, please try again")
   }
 
-
-
   const handleSignup = () => {
+
+    if (!checkTextInputs()) return;
 
     createUserWithEmailAndPassword(auth, email, password)
       .then(userCredentials => {
@@ -84,7 +100,7 @@ const Signup = ({ navigation }) => {
         signUpSuccess(user)
       })
       .catch(error => {
-        console.log(error.message)
+        alert(error.message)
         signUpFailure()
       })
   }
