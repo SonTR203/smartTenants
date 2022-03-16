@@ -19,26 +19,60 @@ console.log("Here is the auth, ", auth)
 
 import { db } from '../../firebase-config';
 
-let user = {
-  DOB: "01/12/1997",
-  buildingID: "123CharmingAve",
-  unitNumber: 7,
-  firstName: "Eric",
-  lastName: "Shantz",
-  email: "shantz.eric@gmail.com",
-  userID: "number",
-  isAdmin: true,
-  tenantAuthorized: true,
-  myMarketplaccePosts: [],
-  myPosts: [],
-  visibileNotices: [],
-  visibleAnnouncements: []
-}
-
-const Signup = ({navigation}) => {
+const Signup = ({ navigation }) => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [buildingID, setBuildingID] = useState("")
+  const [unitNumber, setUnitNumber] = useState(0)
+  const [userID, setUserID] = useState("")
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [tenantAuthorized, setTenantAuthorized] = useState(true)
+  const [myMarketplacePosts, setMyMarketplacePosts] = useState([])
+  const [myPosts, setMyPosts] = useState([])
+  const [visibileNotices, setVisibileNotices] = useState([])
+  const [visibleAnnouncements, setVisibleAnnouncements] = useState([])
+ 
+
+  async function createNewUser(user) {
+    try {
+      await addDoc(collection(db, 'Users'),
+        {
+          userID: user.uid,
+          firstName,
+          lastName,
+          buildingID,
+          unitNumber,
+          isAdmin: false,
+          tenantAuthorized: true,
+          myMarketplaccePosts: [],
+          myPosts: [],
+          visibileNotices: [],
+          visibleAnnouncements: []
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  function signUpSuccess(user) {
+    //setModalText("Post Successful!")
+    //setModalVisible(true)
+
+    console.log('Registered with:', user.email);
+    console.log('User Id: ', user.uid);
+    createNewUser(user)
+
+    navigation.navigate('AccountApprovalPending')
+  }
+
+  function signUpFailure() {
+    //setModalText("SignUp Failed")
+    //setModalVisible(true)
+    console.log(`User ${newUser.lastName} Signup failed`)
+  }
 
 
 
@@ -47,11 +81,12 @@ const Signup = ({navigation}) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
-        console.log('Registered with:', user.email);
-        console.log('User Id: ', user.userID);
-        navigation.navigate('AccountApprovalPending')
+        signUpSuccess(user)
       })
-      .catch(error => alert(error.message))
+      .catch(error => {
+        console.log(error.message)
+        signUpFailure()
+      })
   }
 
   return (
@@ -63,30 +98,30 @@ const Signup = ({navigation}) => {
 
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder="Nameeeee"
-            value={user.firstName}
-            onChangeText={text => user.firstName[text]}
+            placeholder="First Name"
+            value={firstName}
+            onChangeText={text => setFirstName(text)}
             style={styles.input}
           />
 
           <TextInput
             placeholder="Last Name"
-            value={user.lastName}
-            onChangeText={text => user.lastName[text]}
+            value={lastName}
+            onChangeText={text => setLastName(text)}
             style={styles.input}
           />
 
           <TextInput
             placeholder="Unit Number"
-            value={user.unitNumber}
-            onChangeText={text => user.unitNumber[text]}
+            value={unitNumber}
+            onChangeText={text => setUnitNumber(text)}
             style={styles.input}
           />
 
           <TextInput
-            placeholder="Building Address"
-            value={user.buildingID}
-            onChangeText={text => user.buildingID[text]}
+            placeholder="Building ID"
+            value={buildingID}
+            onChangeText={text => setBuildingID(text)}
             style={styles.input}
           />
 
@@ -95,7 +130,6 @@ const Signup = ({navigation}) => {
             value={email}
             onChangeText={text => {
               setEmail(text);
-              user.email;
             }}
             style={styles.input}
           />
