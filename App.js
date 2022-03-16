@@ -6,6 +6,8 @@ import {
   Roboto_700Bold
 } from '@expo-google-fonts/roboto'
 import { ThemeProvider } from './ThemeContext'
+import AppLoading from 'expo-app-loading'
+import { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Notifications from './Screens/Notifications/Notifications'
@@ -20,6 +22,39 @@ import { NewsfeedNavigator } from './Screens/customNavigator.js'
 const Tab = createBottomTabNavigator()
 
 export default function App () {
+  const [resourcesLoaded, setResourcesLoaded] = useState(false)
+
+  let [fontLoaded] = useFonts({
+    Roboto_400Regular,
+    Roboto_500Medium,
+    Roboto_700Bold
+  })
+
+  const getResources = () => {
+    if (fontLoaded) {
+      Promise.resolve()
+    }
+  }
+
+  if (resourcesLoaded) {
+    return <AppContainer />
+  } else {
+    return (
+      <AppLoading
+        startAsync={getResources}
+        onFinish={() => {
+          //minimum timeout for 2s so that we can see splashscreen
+          setTimeout(() => {
+            setResourcesLoaded(true)
+          }, 2000)
+        }}
+        onError={console.warn}
+      />
+    )
+  }
+}
+
+function AppContainer () {
   return (
     <ThemeProvider>
       <NavigationContainer>
