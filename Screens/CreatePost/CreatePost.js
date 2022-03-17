@@ -11,6 +11,7 @@ import {
 	Modal,
 	Platform,
 	ActivityIndicator,
+	ScrollView,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
@@ -20,10 +21,10 @@ import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useTheme } from '../../ThemeContext';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const CreatePost = ({ navigation }) => {
 	const [theme] = useTheme();
-	console.log(theme);
 	const [postContent, setPostContent] = useState('');
 	const [modalVisible, setModalVisible] = useState(false);
 	const [modalText, setModalText] = useState('');
@@ -150,56 +151,75 @@ const CreatePost = ({ navigation }) => {
 	}
 
 	return (
-		<>
+		<ScrollView style={theme.pageContainer}>
+			<StatusBar style="auto" />
+			{isLoading && <ActivityIndicator size="large" />}
+
 			<Modal
 				animationType="slide"
 				transparent={false}
+				statusBarTranslucent={true}
 				visible={modalVisible}
 				onRequestClose={() => {
 					setModalVisible(!modalVisible);
 				}}
+				onShow={() => {
+					setTimeout(() => {
+						setModalVisible(!modalVisible);
+						navigation.navigate('Newsfeed');
+					}, 2000);
+				}}
 			>
-				<View style={styles.centeredView}>
-					<View style={styles.modalView}>
-						<Text style={styles.modalText}>{modalText}</Text>
-						<TouchableOpacity
-							style={[styles.button, styles.buttonClose]}
-							onPress={() => {
-								setModalVisible(!modalVisible);
-								navigation.navigate('Newsfeed');
-							}}
-						>
-							<Text style={styles.textStyle}>Close</Text>
-						</TouchableOpacity>
+				<View style={theme.container}>
+					<View style={theme.modalView}>
+						<Text style={theme.modalText}>{modalText}</Text>
 					</View>
 				</View>
 			</Modal>
 
-			<View>
+			<View id="statusInput">
+				<Text style={theme.textInputLabel}>What's on your mind?</Text>
 				<TextInput
 					onChangeText={(text) => {
 						setPostContent(text);
 					}}
-					placeholder="Write your post here"
+					placeholder="280 characters maximum"
+					numberOfLines={5}
+					multiline="true"
+					style={theme.textInput}
 				></TextInput>
-				<StatusBar style="auto" />
 			</View>
 
-			{isLoading && <ActivityIndicator size="large" />}
-
-			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+			<View id="imageUploadPreview" style={theme.container}>
 				{image && (
-					<Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+					<Image source={{ uri: image }} style={theme.imageUploadPreview} />
 				)}
-				<TouchableOpacity onPress={pickImage}>
-					<Text>Upload Image</Text>
-				</TouchableOpacity>
 			</View>
 
-			<TouchableOpacity>
-				<Text onPress={handleSelectedImage}>Post</Text>
+			<TouchableOpacity
+				id="selectImageButton"
+				onPress={pickImage}
+				style={theme.secondaryButton}
+			>
+				<Text style={theme.secondaryButtonText}>
+					Upload image
+					<MaterialCommunityIcons
+						name="image-plus"
+						size={24}
+						color={theme.colors.primary}
+						style={{ marginLeft: 8 }}
+					/>
+				</Text>
 			</TouchableOpacity>
-		</>
+
+			<TouchableOpacity
+				id="submitPostButton"
+				onPress={handleSelectedImage}
+				style={theme.primaryButton}
+			>
+				<Text style={theme.primaryButtonText}>Submit post</Text>
+			</TouchableOpacity>
+		</ScrollView>
 	);
 };
 
@@ -227,6 +247,10 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		elevation: 5,
 	},
+	modalText: {
+		marginBottom: 15,
+		textAlign: 'center',
+	},
 	button: {
 		borderRadius: 20,
 		padding: 10,
@@ -241,10 +265,6 @@ const styles = StyleSheet.create({
 	textStyle: {
 		color: 'white',
 		fontWeight: 'bold',
-		textAlign: 'center',
-	},
-	modalText: {
-		marginBottom: 15,
 		textAlign: 'center',
 	},
 });
