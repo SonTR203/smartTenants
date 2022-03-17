@@ -13,8 +13,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Notifications from './Screens/Notifications/Notifications'
 import Marketplace from './Screens/Marketplace/Marketplace'
 import Profile from './Screens/ProfilePage/ProfileGeneral/ProfileGeneral'
-
-import { NewsfeedNavigator } from './Screens/customNavigator.js'
+import { NewsfeedNavigator, LoginNavigator } from './Screens/customNavigator.js'
 
 // Import building for testing
 // import BuildingInfo from './Screens/BuildingInfo/BuildingInfo'
@@ -59,6 +58,12 @@ function AppContainer () {
     <ThemeProvider>
       <NavigationContainer>
         <Tab.Navigator initialRouteName='Newsfeed '>
+          {/* ======= Login ======= */}
+          <Tab.Screen
+            name='Login'
+            component={LoginNavigator}
+            options={{ headerShown: false }} />
+
           {/* ======= Marketplace ======= */}
           <Tab.Screen
             name='Marketplace '
