@@ -7,7 +7,7 @@ const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
 
 function ThemeProvider (props) {
-  return <ThemeContext.Provider value={[theme]} {...props} />
+  return <ThemeContext.Provider value={[theme, styleVariables]} {...props} />
 }
 
 function useTheme () {
@@ -16,12 +16,15 @@ function useTheme () {
   return context //all state data and functions
 }
 
-const theme = StyleSheet.create({
+let styleVariables = {
   colors: {
     primary: '#395E66',
     primary14: '#395E6624',
     white: '#FFF'
-  },
+  }
+}
+
+const theme = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
