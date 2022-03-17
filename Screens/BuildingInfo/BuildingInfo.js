@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	StyleSheet,
 	View,
@@ -7,6 +7,15 @@ import {
 	ScrollView,
 	Image,
 } from 'react-native';
+
+// Import DB from Firestore config file
+import { db } from '../../firebase-config';
+
+// Import required functions
+import { collection, getDocs } from '@firebase/firestore';
+
+// Create collection Reference
+const colRef = collection(db, 'Buildings');
 
 const styles = StyleSheet.create({
 	container: {
@@ -23,6 +32,30 @@ const styles = StyleSheet.create({
 });
 
 const BuildingInfo = () => {
+	const [building, setBuilding] = useState({});
+	let userBuilding = 'hGNLpcFncmAy3RokTThv';
+	useEffect(() => {
+		// Get collections data
+		getDocs(colRef).then((snapshot) => {
+			snapshot.docs.forEach((doc) => {
+				if (doc.id == userBuilding) {
+					setBuilding({ ...doc.data(), id: doc.id });
+				} else {
+					alert('No building found');
+				}
+			});
+		});
+	}, []);
+
+	console.log(building);
+
+	let image = building.buildingImage;
+	let address = building.buildingAddress;
+	let location = building.buildingLocation;
+	let name = building.fullName;
+	let email = building.email;
+	let phone = building.phone;
+
 	return (
 		<SafeAreaView style={styles.container}>
 			<ScrollView>
@@ -30,24 +63,18 @@ const BuildingInfo = () => {
 					<Image
 						style={{ width: 300, height: 300, alignSelf: 'center' }}
 						source={{
-							uri: 'https://dummyimage.com/800',
+							uri: image,
 						}}
 					/>
-					<Text style={styles.title}>123 Robinson Road</Text>
-					<Text style={styles.title}>Ottawa, Ontario, CA KIK 5T9</Text>
+					<Text style={styles.title}>{address}</Text>
+					<Text style={styles.title}>{location}</Text>
 				</View>
 				<View>
 					<Text style={styles.title}>CONTACTS</Text>
-					{/* Flatlist will go here */}
 					<View>
-						<Text style={styles.title}>Santino Santino</Text>
-						<Text style={styles.title}>santino@gmail.com</Text>
-						<Text style={styles.title}>6136136136</Text>
-					</View>
-					<View>
-						<Text style={styles.title}>Santino Santino</Text>
-						<Text style={styles.title}>santino@gmail.com</Text>
-						<Text style={styles.title}>6136136136</Text>
+						<Text style={styles.title}>{name}</Text>
+						<Text style={styles.title}>{email}</Text>
+						<Text style={styles.title}>{phone}</Text>
 					</View>
 				</View>
 			</ScrollView>
