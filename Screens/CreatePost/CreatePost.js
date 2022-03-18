@@ -1,230 +1,218 @@
 // Modal: https://reactnative.dev/docs/modal
 
 import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Button,
-  Image,
-  TouchableOpacity,
-  Modal,
-  Platform,
-  ActivityIndicator,
-  ScrollView
-} from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import React, { useState, useEffect } from 'react'
-import { db } from '../../firebase-config'
-import { addDoc, collection } from '@firebase/firestore'
-import { useNavigation } from '@react-navigation/native'
-import * as ImagePicker from 'expo-image-picker'
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { useTheme } from '../../ThemeContext'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+	StyleSheet,
+	Text,
+	View,
+	TextInput,
+	Button,
+	Image,
+	TouchableOpacity,
+	Modal,
+	Platform,
+	ActivityIndicator,
+	ScrollView,
+} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import React, { useState, useEffect } from 'react';
+import { db } from '../../firebase-config';
+import { addDoc, collection } from '@firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useTheme } from '../../ThemeContext';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const CreatePost = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme()
-  const [postContent, setPostContent] = useState('')
-  const [modalVisible, setModalVisible] = useState(false)
-  const [modalText, setModalText] = useState('')
-  const [image, setImage] = useState(null)
-  const [imageURL, setImageURL] = useState('')
-  const [isLoading, setIsloading] = useState(false)
+	const [theme, styleVariables] = useTheme();
+	const [postContent, setPostContent] = useState('');
+	const [modalVisible, setModalVisible] = useState(false);
+	const [modalText, setModalText] = useState('');
+	const [image, setImage] = useState(null);
+	const [imageURL, setImageURL] = useState('');
+	const [isLoading, setIsloading] = useState(false);
 
-  let user // this will hold the user object
-  // replace these with the user object
-  let userID = 1234
-  let imageName = `newsfeedImages/${userID}/${Date.now() +
-    Math.floor(Math.random() * 20)}.jpg`
-  let buildingID = 5678
-  let postUserID = 12345678
+	let userID = 1234; //replace with context userID
 
-  useEffect(() => {
-    ;(async () => {
-      if (Platform.OS !== 'web') {
-        const {
-          status
-        } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!')
-        }
-      }
-    })()
-  }, [])
+	let imageName = `newsfeedImages/${userID}/${
+		Date.now() + Math.floor(Math.random() * 20)
+	}.jpg`;
 
-  async function PostContent (imgUrl) {
-    if (!imgUrl) {
-      imgUrl = 'no image posted'
-    }
-    try {
-      await addDoc(collection(db, 'Newsfeed'), {
-        buildingID: buildingID,
-        postContent: postContent,
-        postID:
-          String.fromCharCode(Math.floor(Math.random() * 20) + 97) +
-          Math.random()
-            .toString(16)
-            .slice(2) +
-          Date.now()
-            .toString(16)
-            .slice(4),
-        postUserID: userID,
-        images: [imgUrl],
-        peopleWhoLiked: [],
-        comments: []
-      })
+	useEffect(() => {
+		(async () => {
+			if (Platform.OS !== 'web') {
+				const { status } =
+					await ImagePicker.requestMediaLibraryPermissionsAsync();
+				if (status !== 'granted') {
+					alert('Sorry, we need camera roll permissions to make this work!');
+				}
+			}
+		})();
+	}, []);
 
-      postSuccess()
-    } catch (error) {
-      console.log(error)
-      postFailure()
-    }
-  }
+	async function PostContent(imgUrl) {
+		if (!imgUrl) {
+			imgUrl = 'no image posted';
+		}
+		try {
+			await addDoc(collection(db, 'Newsfeed'), {
+				postContent: postContent,
+				userID: userID,
+				images: [imgUrl],
+				peopleWhoLiked: [],
+				comments: [],
+			});
 
-  function postSuccess () {
-    setIsloading(false)
-    setModalText('Post Successful!')
-    setModalVisible(true)
-  }
+			postSuccess();
+		} catch (error) {
+			console.log(error);
+			postFailure();
+		}
+	}
 
-  function postFailure () {
-    setModalText('Post Failed')
-    setModalVisible(true)
-  }
+	function postSuccess() {
+		setIsloading(false);
+		setModalText('Post Successful!');
+		setModalVisible(true);
+	}
 
-  // ============================= IMAGE UPLOAD =============================
+	function postFailure() {
+		setModalText('Post Failed');
+		setModalVisible(true);
+	}
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1
-    })
+	// ============================= IMAGE UPLOAD =============================
 
-    if (!result.cancelled) {
-      setImage(result.uri)
-    }
-  }
+	const pickImage = async () => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			allowsEditing: true,
+			aspect: [4, 3],
+			quality: 1,
+		});
 
-  async function handleSelectedImage () {
-    setIsloading(true)
+		if (!result.cancelled) {
+			setImage(result.uri);
+		}
+	};
 
-    if (image == null) {
-      console.log('no image found')
-      PostContent()
-    } else {
-      try {
-        if (!image.cancelled) {
-          await uploadImage(image)
-        }
-      } catch (e) {
-        console.log(e)
-        alert('Upload failed, sorry :(')
-      }
-    }
-  }
+	async function handleSelectedImage() {
+		setIsloading(true);
 
-  async function uploadImage () {
-    console.log('UPLOADING')
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest()
-      xhr.onload = function () {
-        resolve(xhr.response)
-      }
-      xhr.onerror = function (e) {
-        console.log(e)
-        reject(new TypeError('Network request failed'))
-      }
-      xhr.responseType = 'blob'
-      xhr.open('GET', image, true)
-      xhr.send(null)
-    })
+		if (image == null) {
+			console.log('no image found');
+			PostContent();
+		} else {
+			try {
+				if (!image.cancelled) {
+					await uploadImage(image);
+				}
+			} catch (e) {
+				console.log(e);
+				alert('Upload failed, sorry :(');
+			}
+		}
+	}
 
-    const fileRef = ref(getStorage(), imageName)
-    await uploadBytes(fileRef, blob)
+	async function uploadImage() {
+		console.log('UPLOADING');
+		const blob = await new Promise((resolve, reject) => {
+			const xhr = new XMLHttpRequest();
+			xhr.onload = function () {
+				resolve(xhr.response);
+			};
+			xhr.onerror = function (e) {
+				console.log(e);
+				reject(new TypeError('Network request failed'));
+			};
+			xhr.responseType = 'blob';
+			xhr.open('GET', image, true);
+			xhr.send(null);
+		});
 
-    // blob.close();
-    let imgUrl = await getDownloadURL(fileRef)
-    setImageURL(imgUrl)
+		const fileRef = ref(getStorage(), imageName);
+		await uploadBytes(fileRef, blob);
 
-    //set postContent to ImageURl hook in future, for some reason ImageUrl keeps coming back empty
-    PostContent(imgUrl)
-    return imgUrl
-  }
+		// blob.close();
+		let imgUrl = await getDownloadURL(fileRef);
+		setImageURL(imgUrl);
 
-  return (
-    <ScrollView style={theme.pageContainer}>
-      <StatusBar style='auto' />
-      {isLoading && <ActivityIndicator size='large' />}
+		//set postContent to ImageURl hook in future, for some reason ImageUrl keeps coming back empty
+		PostContent(imgUrl);
+		return imgUrl;
+	}
 
-      <Modal
-        animationType='slide'
-        transparent={false}
-        statusBarTranslucent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible)
-        }}
-        onShow={() => {
-          setTimeout(() => {
-            setModalVisible(!modalVisible)
-            navigation.navigate('Newsfeed')
-          }, 2000)
-        }}
-      >
-        <View style={theme.container}>
-          <View style={theme.modalView}>
-            <Text style={theme.modalText}>{modalText}</Text>
-          </View>
-        </View>
-      </Modal>
+	return (
+		<ScrollView style={theme.pageContainer}>
+			<StatusBar style="auto" />
+			{isLoading && <ActivityIndicator size="large" />}
 
-      <View id='statusInput'>
-        <Text style={theme.textInputLabel}>What's on your mind?</Text>
-        <TextInput
-          onChangeText={text => {
-            setPostContent(text)
-          }}
-          placeholder='280 characters maximum'
-          numberOfLines={5}
-          multiline='true'
-          style={theme.textInput}
-        ></TextInput>
-      </View>
+			<Modal
+				animationType="slide"
+				transparent={false}
+				statusBarTranslucent={true}
+				visible={modalVisible}
+				onRequestClose={() => {
+					setModalVisible(!modalVisible);
+				}}
+				onShow={() => {
+					setTimeout(() => {
+						setModalVisible(!modalVisible);
+						navigation.navigate('Newsfeed');
+					}, 2000);
+				}}
+			>
+				<View style={theme.container}>
+					<View style={theme.modalView}>
+						<Text style={theme.modalText}>{modalText}</Text>
+					</View>
+				</View>
+			</Modal>
 
-      <View id='imageUploadPreview' style={theme.container}>
-        {image && (
-          <Image source={{ uri: image }} style={theme.imageUploadPreview} />
-        )}
-      </View>
+			<View id="statusInput">
+				<Text style={theme.textInputLabel}>What's on your mind?</Text>
+				<TextInput
+					onChangeText={(text) => {
+						setPostContent(text);
+					}}
+					placeholder="280 characters maximum"
+					numberOfLines={5}
+					multiline="true"
+					style={theme.textInput}
+				></TextInput>
+			</View>
 
-      <TouchableOpacity
-        id='selectImageButton'
-        onPress={pickImage}
-        style={theme.secondaryButton}
-      >
-        <Text style={theme.secondaryButtonText}>
-          Upload image
-          <MaterialCommunityIcons
-            name='image-plus'
-            size={24}
-            color={styleVariables.colors.primary}
-            style={{ marginLeft: 8 }}
-          />
-        </Text>
-      </TouchableOpacity>
+			<View id="imageUploadPreview" style={theme.container}>
+				{image && (
+					<Image source={{ uri: image }} style={theme.imageUploadPreview} />
+				)}
+			</View>
 
-      <TouchableOpacity
-        id='submitPostButton'
-        onPress={handleSelectedImage}
-        style={theme.primaryButton}
-      >
-        <Text style={theme.primaryButtonText}>Submit post</Text>
-      </TouchableOpacity>
-    </ScrollView>
-  )
-}
+			<TouchableOpacity
+				id="selectImageButton"
+				onPress={pickImage}
+				style={theme.secondaryButton}
+			>
+				<Text style={theme.secondaryButtonText}>
+					Upload image
+					<MaterialCommunityIcons
+						name="image-plus"
+						size={24}
+						color={styleVariables.colors.primary}
+						style={{ marginLeft: 8 }}
+					/>
+				</Text>
+			</TouchableOpacity>
 
-export default CreatePost
+			<TouchableOpacity
+				id="submitPostButton"
+				onPress={handleSelectedImage}
+				style={theme.primaryButton}
+			>
+				<Text style={theme.primaryButtonText}>Submit post</Text>
+			</TouchableOpacity>
+		</ScrollView>
+	);
+};
+
+export default CreatePost;
