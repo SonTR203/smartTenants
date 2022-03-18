@@ -6,7 +6,7 @@ function AppProvider({ children }) {
 	const [post, setPost] = useState({});
 	const [user, setUser] = useState({});
 	return (
-		<AppContext.Provider value={{ post, setPost }}>
+		<AppContext.Provider value={{ post, setPost, user, setUser }}>
 			{children}
 		</AppContext.Provider>
 	);
