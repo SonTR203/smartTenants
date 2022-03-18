@@ -32,14 +32,11 @@ const CreatePost = ({ navigation }) => {
 	const [imageURL, setImageURL] = useState('');
 	const [isLoading, setIsloading] = useState(false);
 
-	let user; // this will hold the user object
-	// replace these with the user object
-	let userID = 1234;
+	let userID = 1234; //replace with context userID
+
 	let imageName = `newsfeedImages/${userID}/${
 		Date.now() + Math.floor(Math.random() * 20)
 	}.jpg`;
-	let buildingID = 5678;
-	let postUserID = 12345678;
 
 	useEffect(() => {
 		(async () => {
@@ -59,9 +56,8 @@ const CreatePost = ({ navigation }) => {
 		}
 		try {
 			await addDoc(collection(db, 'Newsfeed'), {
-				buildingID: buildingID,
 				postContent: postContent,
-				postUserID: userID,
+				userID: userID,
 				images: [imgUrl],
 				peopleWhoLiked: [],
 				comments: [],

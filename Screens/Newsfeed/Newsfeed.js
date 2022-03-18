@@ -91,13 +91,12 @@ const Newsfeed = ({ navigation }) => {
 //============================== Individual Post Cards ==========================
 function Post({ posts, navigation }) {
 	posts = {
-		buildingID: posts.buildingID.integerValue.toString(),
 		comments: posts.comments.arrayValue,
 		id: posts.id,
 		image: posts.images.arrayValue.values[0].stringValue,
 		peopleWhoLiked: posts.peopleWhoLiked.arrayValue,
 		postContent: posts.postContent.stringValue,
-		postUserID: posts.UserId,
+		userID: posts.UserId,
 	};
 	console.log(posts);
 
