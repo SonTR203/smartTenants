@@ -7,19 +7,27 @@ import {
 	RefreshControl,
 	Image,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { collection, getDocs, deleteDoc } from '@firebase/firestore';
 import { db } from '../../firebase-config';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FAB } from 'react-native-paper';
+import { useAppContext } from '../../Context/AppContext';
 
 //Get info about who is currently logged in, get user info
 //loop through all and show posts with only that building ID in flatlist
 
+let globalPost;
+let setGlobalPost;
+
 const Newsfeed = ({ navigation }) => {
 	const [posts, setPosts] = useState([]);
+	const { post, setPost } = useAppContext();
 	const colRef = collection(db, 'Newsfeed');
 	const [refreshing, setRefreshing] = useState(true);
+
+	globalPost = post;
+	setGlobalPost = setPost;
 
 	useEffect(() => {
 		getPosts();
@@ -36,7 +44,6 @@ const Newsfeed = ({ navigation }) => {
 		);
 		setRefreshing(false);
 	};
-	console.log(posts);
 
 	return (
 		<>
@@ -83,6 +90,17 @@ const Newsfeed = ({ navigation }) => {
 
 //============================== Individual Post Cards ==========================
 function Post({ posts, navigation }) {
+	posts = {
+		buildingID: posts.buildingID.integerValue.toString(),
+		comments: posts.comments.arrayValue,
+		id: posts.id,
+		image: posts.images.arrayValue.values[0].stringValue,
+		peopleWhoLiked: posts.peopleWhoLiked.arrayValue,
+		postContent: posts.postContent.stringValue,
+		postUserID: posts.UserId,
+	};
+	console.log(posts);
+
 	return (
 		<View style={{ borderColor: 'black', borderWidth: 1, margin: 20 }}>
 			<View className="postOwnerInfo"></View>
@@ -90,15 +108,18 @@ function Post({ posts, navigation }) {
 			<TouchableOpacity
 				onPress={() => {
 					navigation.navigate('IndividualPosts');
+					setGlobalPost(posts);
 				}}
 			>
 				<View className="postTextContent" style={{ margin: 10 }}>
-					<Text>{posts.postContent.stringValue}</Text>
+					<Text>{posts.postContent}</Text>
 				</View>
 
-				{posts.images.arrayValue.values[0].stringValue != 'no image posted' && (
+				{posts.image != 'no image posted' && (
 					<Image
-						source={{ uri: `${posts.images.arrayValue.values[0].stringValue}` }}
+						source={{
+							uri: `${posts.image}`,
+						}}
 						style={{ width: 330, height: 300 }}
 					/>
 				)}
@@ -118,6 +139,7 @@ function Post({ posts, navigation }) {
 				<TouchableOpacity
 					onPress={() => {
 						navigation.navigate('IndividualPosts');
+						setGlobalPost(posts);
 					}}
 				>
 					<Text>Comment</Text>

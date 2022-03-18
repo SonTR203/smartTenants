@@ -17,6 +17,7 @@ import {
 	NewsfeedNavigator,
 	LoginNavigator,
 } from './Screens/customNavigator.js';
+import { AppProvider } from './Context/AppContext';
 
 // Import building for testing
 // import BuildingInfo from './Screens/BuildingInfo/BuildingInfo'
@@ -59,44 +60,46 @@ export default function App() {
 function AppContainer() {
 	return (
 		<ThemeProvider>
-			<NavigationContainer>
-				<Tab.Navigator initialRouteName="Newsfeed ">
-					{/* ======= Login ======= */}
-					<Tab.Screen
-						name="Login "
-						component={LoginNavigator}
-						options={{ headerShown: false }}
-					/>
+			<AppProvider>
+				<NavigationContainer>
+					<Tab.Navigator initialRouteName="Newsfeed ">
+						{/* ======= Login ======= */}
+						<Tab.Screen
+							name="Login "
+							component={LoginNavigator}
+							options={{ headerShown: false }}
+						/>
 
-					{/* ======= Marketplace ======= */}
-					<Tab.Screen
-						name="Marketplace "
-						component={Marketplace}
-						options={{ headerShown: false }}
-					/>
+						{/* ======= Marketplace ======= */}
+						<Tab.Screen
+							name="Marketplace "
+							component={Marketplace}
+							options={{ headerShown: false }}
+						/>
 
-					{/* ======= Newsfeed ======= */}
-					<Tab.Screen
-						name="Newsfeed "
-						component={NewsfeedNavigator}
-						options={{ headerShown: false }}
-					/>
+						{/* ======= Newsfeed ======= */}
+						<Tab.Screen
+							name="Newsfeed "
+							component={NewsfeedNavigator}
+							options={{ headerShown: false }}
+						/>
 
-					{/* ======= Notifications ======= */}
-					<Tab.Screen
-						name="Notifications "
-						component={Notifications}
-						options={{ headerShown: false }}
-					/>
+						{/* ======= Notifications ======= */}
+						<Tab.Screen
+							name="Notifications "
+							component={Notifications}
+							options={{ headerShown: false }}
+						/>
 
-					{/* ======= Profile ======= */}
-					<Tab.Screen
-						name="Profile "
-						component={Profile}
-						options={{ headerShown: false }}
-					/>
-				</Tab.Navigator>
-			</NavigationContainer>
+						{/* ======= Profile ======= */}
+						<Tab.Screen
+							name="Profile "
+							component={Profile}
+							options={{ headerShown: false }}
+						/>
+					</Tab.Navigator>
+				</NavigationContainer>
+			</AppProvider>
 		</ThemeProvider>
 	);
 }
