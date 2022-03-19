@@ -1,3 +1,4 @@
+//https://www.youtube.com/watch?v=aSOsfpsMriI
 import React, { useEffect, useState } from 'react';
 
 import {
@@ -8,12 +9,12 @@ import {
 	KeyboardAvoidingView,
 	TextInput,
 	TouchableOpacity,
+	Modal,
 } from 'react-native';
-
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-
-import { addDoc, collection } from '@firebase/firestore';
+import { addDoc, collection, getDocs, deleteDoc } from '@firebase/firestore';
 import { db } from '../../firebase-config';
+import ModalPicker from '../../components/ModalBuildingPicker';
 
 const auth = getAuth();
 
@@ -22,15 +23,26 @@ const Signup = ({ navigation }) => {
 	const [password, setPassword] = useState('');
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
+	const [buildingAddress, setBuildingAddress] = useState('Select Building...');
 	const [buildingID, setBuildingID] = useState('');
+	const [modalVisible, setModalVisible] = useState(false);
 	const [unitNumber, setUnitNumber] = useState('');
-	const [userID, setUserID] = useState('');
 	const [isAdmin, setIsAdmin] = useState(false);
-	const [tenantAuthorized, setTenantAuthorized] = useState(true);
+	const [tenantAuthorized, setTenantAuthorized] = useState(false);
 	const [myMarketplacePosts, setMyMarketplacePosts] = useState([]);
 	const [myPosts, setMyPosts] = useState([]);
-	const [visibileNotices, setVisibileNotices] = useState([]);
+	const [visibleNotices, setVisibileNotices] = useState([]);
 	const [visibleAnnouncements, setVisibleAnnouncements] = useState([]);
+
+	const changeModalVisibility = (bool) => {
+		setModalVisible(bool);
+	};
+
+	const setData = (building) => {
+		building = building.buildingAddress.stringValue;
+		setBuildingAddress(building);
+		setBuildingID(building.replace(/\s/g, ''));
+	};
 
 	const checkTextInputs = () => {
 		if (!firstName.trim()) {
@@ -63,14 +75,15 @@ const Signup = ({ navigation }) => {
 				firstName,
 				lastName,
 				buildingID,
+				buildingAddress,
 				email,
 				unitNumber: parseInt(unitNumber),
-				isAdmin: false,
-				tenantAuthorized: true,
-				myMarketplacePosts: [],
-				myPosts: [],
-				visibleNotices: [],
-				visibleAnnouncements: [],
+				isAdmin,
+				tenantAuthorized,
+				myMarketplacePosts,
+				myPosts,
+				visibleNotices,
+				visibleAnnouncements,
 			});
 		} catch (error) {
 			alert(error);
@@ -83,7 +96,7 @@ const Signup = ({ navigation }) => {
 	}
 
 	function signUpFailure() {
-		alert('You have not been signedup, please try again');
+		alert('You have not been signed up, please try again');
 	}
 
 	const handleSignup = () => {
@@ -125,12 +138,26 @@ const Signup = ({ navigation }) => {
 						style={styles.input}
 					/>
 
-					<TextInput
-						placeholder="Building ID"
-						value={buildingID}
-						onChangeText={(text) => setBuildingID(text)}
-						style={styles.input}
-					/>
+					<TouchableOpacity
+						onPress={() => {
+							changeModalVisibility(true);
+						}}
+					>
+						<Text>{buildingAddress}</Text>
+					</TouchableOpacity>
+					<Modal
+						transparent={true}
+						animationType="fade"
+						visible={modalVisible}
+						nRequestClose={() => {
+							changeModalVisibility(false);
+						}}
+					>
+						<ModalPicker
+							changeModalVisibility={changeModalVisibility}
+							setData={setData}
+						/>
+					</Modal>
 
 					<TextInput
 						placeholder="Email"
