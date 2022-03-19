@@ -20,21 +20,45 @@ let styleVariables = {
   colors: {
     primary: '#395E66',
     primary14: '#395E6624',
-    white: '#FFF'
+    white: '#FFF',
+    black: '#191919'
+  },
+  fontSizes: {
+    hero: { fontSize: 40, fontFamily: 'Roboto_400Regular' },
+    header: { fontSize: 34, fontFamily: 'Roboto_500Medium' },
+    secondaryHeader: { fontSize: 28, fontFamily: 'Roboto_500Medium' },
+    title: { fontSize: 22, fontFamily: 'Roboto_400Regular' },
+    body: { fontSize: 17, fontFamily: 'Roboto_400Regular' }
   }
 }
 
 const theme = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: styleVariables.colors.white,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    color: styleVariables.colors.black
   },
   pageContainer: {
     paddingHorizontal: 17,
-    backgroundColor: '#FFF'
+    backgroundColor: styleVariables.colors.white
+  },
+  card: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    padding: 17,
+    borderRadius: 24,
+    shadowColor: styleVariables.colors.primary,
+    shadowOffset: {
+      width: 0,
+      height: 8
+    },
+    shadowOpacity: 0.14,
+    shadowRadius: 34,
+    elevation: 20
   },
   modalView: {
     width: windowWidth - 34,
@@ -55,7 +79,7 @@ const theme = StyleSheet.create({
     elevation: 20
   },
   modalText: {
-    fontSize: 17,
+    fontSize: styleVariables.fontSizes.body,
     fontFamily: 'Roboto_400Regular',
     color: '#395E66'
   },
@@ -68,28 +92,41 @@ const theme = StyleSheet.create({
     borderRadius: 18,
     marginBottom: 17
   },
+  buildingImagePreview: {
+    width: windowWidth - 68,
+    height: (windowWidth - 68) * 0.66,
+    borderRadius: 16,
+    shadowColor: styleVariables.colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 8
+    },
+    shadowOpacity: 0.14,
+    shadowRadius: 34,
+    elevation: 20
+  },
   textInputLabel: {
-    fontSize: 17,
+    fontSize: styleVariables.fontSizes.body,
     fontFamily: 'Roboto_400Regular',
-    backgroundColor: '#FFF',
+    backgroundColor: styleVariables.colors.white,
     paddingHorizontal: 8,
     marginLeft: 14,
     transform: [{ translateY: 9 }],
     alignSelf: 'flex-start'
   },
   textInput: {
-    fontSize: 17,
+    fontSize: styleVariables.fontSizes.body,
     fontFamily: 'Roboto_400Regular',
     width: '100%',
     borderColor: '#395E6624',
     borderWidth: 2,
-    backgroundColor: '#FFF',
+    backgroundColor: styleVariables.colors.white,
     borderRadius: 18,
     padding: 22,
     marginBottom: 17
   },
   primaryButton: {
-    fontSize: 17,
+    fontSize: styleVariables.fontSizes.body,
     fontFamily: 'Roboto_400Regular',
 
     display: 'flex',
@@ -102,12 +139,12 @@ const theme = StyleSheet.create({
     marginBottom: 17
   },
   primaryButtonText: {
-    fontSize: 17,
+    fontSize: styleVariables.fontSizes.body,
     fontFamily: 'Roboto_500Medium',
-    color: '#FFF'
+    color: styleVariables.colors.white
   },
   secondaryButton: {
-    fontSize: 17,
+    fontSize: styleVariables.fontSizes.body,
     fontFamily: 'Roboto_400Regular',
     color: '#395E66',
     display: 'flex',
@@ -124,7 +161,7 @@ const theme = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 17,
+    fontSize: styleVariables.fontSizes.body,
     fontFamily: 'Roboto_400Regular',
     color: '#395E66'
   }
