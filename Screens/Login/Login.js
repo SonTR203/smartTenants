@@ -33,10 +33,7 @@ const Login = ({ navigation }) => {
 			.then(async (userCredentials) => {
 				console.log('Logged in with:', userCredentials.user.email);
 				if (userCredentials.user.email) {
-					navigation.navigate('Newsfeed');
 					findUser(userCredentials.user);
-				} else {
-					//the first time never logs in? email is undefined?
 				}
 			})
 			.catch((error) => alert(error.message));
@@ -45,6 +42,7 @@ const Login = ({ navigation }) => {
 	const findUser = async (user) => {
 		const colRef = collection(db, 'Users');
 		const data = await getDocs(colRef);
+		let loggedInUser;
 
 		data.docs.map((item) => {
 			let userUID =
@@ -52,7 +50,7 @@ const Login = ({ navigation }) => {
 			if (userUID) {
 				if (userUID == user.uid) {
 					let object = item._document.data.value.mapValue.fields;
-					let loggedInUser = {
+					loggedInUser = {
 						buildingID: object.buildingID.stringValue,
 						email: object.email.stringValue,
 						firstName: object.firstName.stringValue,
@@ -71,6 +69,12 @@ const Login = ({ navigation }) => {
 				}
 			}
 		});
+
+		if (loggedInUser.tenantAuthorized) {
+			navigation.navigate('Newsfeed');
+		} else {
+			navigation.navigate('AccountApprovalPending');
+		}
 	};
 
 	return (
