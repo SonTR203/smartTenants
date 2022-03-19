@@ -1,85 +1,190 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
-	StyleSheet,
-	View,
-	Text,
-	SafeAreaView,
-	ScrollView,
-	Image,
-} from 'react-native';
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  Image
+} from 'react-native'
+import { useTheme } from '../../ThemeContext'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 // Import DB from Firestore config file
-import { db } from '../../firebase-config';
+import { db } from '../../firebase-config'
 
 // Import required functions
-import { collection, getDocs } from '@firebase/firestore';
+import { collection, getDocs } from '@firebase/firestore'
 
 // Create collection Reference
-const colRef = collection(db, 'Buildings');
+const colRef = collection(db, 'Buildings')
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	scrollView: {
-		backgroundColor: 'pink',
-		marginHorizontal: 20,
-	},
-	title: {
-		fontSize: 20,
-		alignSelf: 'center',
-	},
-});
+  container: {
+    flex: 1
+  },
+  scrollView: {
+    backgroundColor: 'pink',
+    marginHorizontal: 20
+  },
+  title: {
+    fontSize: 20,
+    alignSelf: 'center'
+  }
+})
 
 const BuildingInfo = () => {
-	const [building, setBuilding] = useState({});
-	let userBuilding = 'hGNLpcFncmAy3RokTThv';
-	useEffect(() => {
-		// Get collections data
-		getDocs(colRef).then((snapshot) => {
-			snapshot.docs.forEach((doc) => {
-				if (doc.id == userBuilding) {
-					setBuilding({ ...doc.data(), id: doc.id });
-				} else {
-					alert('No building found');
-				}
-			});
-		});
-	}, []);
+  const [theme, styleVariables] = useTheme()
 
-	console.log(building);
+  const [building, setBuilding] = useState({})
+  let userBuilding = 'hGNLpcFncmAy3RokTThv'
+  useEffect(() => {
+    // Get collections data
+    getDocs(colRef).then(snapshot => {
+      snapshot.docs.forEach(doc => {
+        if (doc.id == userBuilding) {
+          setBuilding({ ...doc.data(), id: doc.id })
+        } else {
+          alert('No building found')
+        }
+      })
+    })
+  }, [])
 
-	let image = building.buildingImage;
-	let address = building.buildingAddress;
-	let location = building.buildingLocation;
-	let name = building.fullName;
-	let email = building.email;
-	let phone = building.phone;
+  console.log(building)
 
-	return (
-		<SafeAreaView style={styles.container}>
-			<ScrollView>
-				<View>
-					<Image
-						style={{ width: 300, height: 300, alignSelf: 'center' }}
-						source={{
-							uri: image,
-						}}
-					/>
-					<Text style={styles.title}>{address}</Text>
-					<Text style={styles.title}>{location}</Text>
-				</View>
-				<View>
-					<Text style={styles.title}>CONTACTS</Text>
-					<View>
-						<Text style={styles.title}>{name}</Text>
-						<Text style={styles.title}>{email}</Text>
-						<Text style={styles.title}>{phone}</Text>
-					</View>
-				</View>
-			</ScrollView>
-		</SafeAreaView>
-	);
-};
+  let image = building.buildingImage
+  let address = building.buildingAddress
+  let location = building.buildingLocation
+  let name = building.fullName
+  let email = building.email
+  let phone = building.phone
 
-export default BuildingInfo;
+  return (
+    <ScrollView style={theme.pageContainer}>
+      <View id='buildingInfoCard' style={theme.card}>
+        <Image
+          style={theme.buildingImagePreview}
+          source={require('../../assets/icon.png')}
+        />
+
+        <View
+          id='buildingInfoAddress'
+          style={{
+            display: 'flex',
+            alignContent: 'center',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            width: '100%',
+            marginTop: 17
+          }}
+        >
+          <Text style={styleVariables.fontSizes.header}>{address}</Text>
+          <MaterialCommunityIcons
+            name='arrow-top-right'
+            size={24}
+            color={styleVariables.colors.primary}
+          />
+        </View>
+
+        <View
+          id='buildingInfoLocation'
+          style={{
+            display: 'flex',
+            alignContent: 'center',
+            flexDirection: 'row',
+            width: '100%',
+            marginTop: 6,
+            marginBottom: 4
+          }}
+        >
+          <MaterialCommunityIcons
+            name='map-marker-outline'
+            size={18}
+            color={styleVariables.colors.primary}
+            style={{ marginRight: 8 }}
+          />
+          <Text
+            style={[
+              styleVariables.fontSizes.body,
+              { color: styleVariables.colors.primary }
+            ]}
+          >
+            {location}
+          </Text>
+        </View>
+      </View>
+
+      <View id='contacts' style={{ marginTop: 17, padding: 17 }}>
+        <Text
+          style={[
+            styleVariables.fontSizes.secondaryHeader,
+            { marginBottom: 14 }
+          ]}
+        >
+          Contacts
+        </Text>
+
+        <View>
+          <Text style={[styleVariables.fontSizes.title, { marginBottom: 10 }]}>
+            {name}
+          </Text>
+          <View
+            style={{
+              display: 'flex',
+              alignContent: 'center',
+              flexDirection: 'row',
+              width: '100%',
+              marginTop: 6,
+              marginBottom: 4,
+              opacity: 0.66
+            }}
+          >
+            <MaterialCommunityIcons
+              name='email-outline'
+              size={18}
+              color={styleVariables.colors.primary}
+              style={{ marginRight: 8 }}
+            />
+            <Text
+              style={[
+                styleVariables.fontSizes.body,
+                { color: styleVariables.colors.primary }
+              ]}
+            >
+              {email}
+            </Text>
+          </View>
+          <View
+            style={{
+              display: 'flex',
+              alignContent: 'center',
+              flexDirection: 'row',
+              width: '100%',
+              marginTop: 6,
+              marginBottom: 4,
+              opacity: 0.66
+            }}
+          >
+            <MaterialCommunityIcons
+              name='phone-outline'
+              size={18}
+              color={styleVariables.colors.primary}
+              style={{ marginRight: 8 }}
+            />
+            <Text
+              style={[
+                styleVariables.fontSizes.body,
+                { color: styleVariables.colors.primary }
+              ]}
+            >
+              {phone}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
+  )
+}
+
+export default BuildingInfo
