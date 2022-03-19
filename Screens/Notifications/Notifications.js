@@ -10,6 +10,20 @@ const Notifications = () => {
 	const [notifications, setNotifications] = useState([]);
 	const colReference  = collection(db, "Users", `${currentUser.userDocId}`, "notifications");
 
+	useEffect(() => {
+		getDocs(colReference)
+		.then(snapshot => {
+		  let notificationList = []
+		  snapshot.docs.forEach(doc => {
+			notificationList.push({ ...doc.data(), id: doc.id })
+		  })
+		  setNotifications(notificationList);
+		})
+		.catch(err => {
+		  console.log(err.message)
+		});
+	},[]);
+
 	return (
 		<SafeAreaView>
 			<Text>Notifications</Text>
