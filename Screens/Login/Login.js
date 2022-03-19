@@ -10,27 +10,67 @@ import {
 	View,
 } from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { collection, getDocs } from '@firebase/firestore';
 
 // import Signup from '../Signup/Signup';
 
 import { db } from '../../firebase-config';
+import { useAppContext } from '../../Context/AppContext';
 
 const auth = getAuth();
-console.log(auth);
+let globalSetCurrentUser;
+let globalCurrentUser;
 
 const Login = ({ navigation }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const { currentUser, setCurrentUser } = useAppContext();
+	globalSetCurrentUser = setCurrentUser;
+	globalCurrentUser = currentUser;
 
 	const handleLogin = () => {
 		signInWithEmailAndPassword(auth, email, password)
-			.then((userCredentials) => {
-				const user = userCredentials.user;
-				console.log('Logged in with:', user.email);
-				navigation.navigate('Newsfeed');
-				//call function here to search through users and get the correct userID to put in context
+			.then(async (userCredentials) => {
+				console.log('Logged in with:', userCredentials.user.email);
+				if (userCredentials.user.email) {
+					navigation.navigate('Newsfeed');
+					findUser(userCredentials.user);
+				} else {
+					//the first time never logs in? email is undefined?
+				}
 			})
 			.catch((error) => alert(error.message));
+	};
+
+	const findUser = async (user) => {
+		const colRef = collection(db, 'Users');
+		const data = await getDocs(colRef);
+
+		data.docs.map((item) => {
+			let userUID =
+				item._document.data.value.mapValue.fields.userID.stringValue;
+			if (userUID) {
+				if (userUID == user.uid) {
+					let object = item._document.data.value.mapValue.fields;
+					let loggedInUser = {
+						buildingID: object.buildingID.stringValue,
+						email: object.email.stringValue,
+						firstName: object.firstName.stringValue,
+						lastName: object.lastName.stringValue,
+						isAdmin: object.isAdmin.booleanValue,
+						myMarketplacePosts: object.myMarketplacePosts.arrayValue,
+						myPosts: object.myPosts.arrayValue,
+						tenantAuthorized: object.tenantAuthorized.booleanValue,
+						unitNumber: object.unitNumber.integerValue,
+						userUID: object.userID.stringValue,
+						userDocId: item._key.path.segments[6],
+						visibleNotices: object.visibleNotices.arrayValue,
+						visibleAnnouncements: object.visibleAnnouncements.arrayValue,
+					};
+					globalSetCurrentUser(loggedInUser);
+				}
+			}
+		});
 	};
 
 	return (
