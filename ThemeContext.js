@@ -28,7 +28,8 @@ let styleVariables = {
     header: { fontSize: 34, fontFamily: 'Roboto_500Medium' },
     secondaryHeader: { fontSize: 28, fontFamily: 'Roboto_500Medium' },
     title: { fontSize: 22, fontFamily: 'Roboto_400Regular' },
-    body: { fontSize: 17, fontFamily: 'Roboto_400Regular' }
+    body: { fontSize: 17, fontFamily: 'Roboto_400Regular' },
+    bodyBold: { fontSize: 17, fontFamily: 'Roboto_500Medium' }
   }
 }
 
@@ -106,8 +107,6 @@ const theme = StyleSheet.create({
     elevation: 20
   },
   textInputLabel: {
-    fontSize: styleVariables.fontSizes.body,
-    fontFamily: 'Roboto_400Regular',
     backgroundColor: styleVariables.colors.white,
     paddingHorizontal: 8,
     marginLeft: 14,
@@ -115,8 +114,6 @@ const theme = StyleSheet.create({
     alignSelf: 'flex-start'
   },
   textInput: {
-    fontSize: styleVariables.fontSizes.body,
-    fontFamily: 'Roboto_400Regular',
     width: '100%',
     borderColor: '#395E6624',
     borderWidth: 2,
@@ -126,9 +123,6 @@ const theme = StyleSheet.create({
     marginBottom: 17
   },
   primaryButton: {
-    fontSize: styleVariables.fontSizes.body,
-    fontFamily: 'Roboto_400Regular',
-
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -139,13 +133,9 @@ const theme = StyleSheet.create({
     marginBottom: 17
   },
   primaryButtonText: {
-    fontSize: styleVariables.fontSizes.body,
-    fontFamily: 'Roboto_500Medium',
     color: styleVariables.colors.white
   },
   secondaryButton: {
-    fontSize: styleVariables.fontSizes.body,
-    fontFamily: 'Roboto_400Regular',
     color: '#395E66',
     display: 'flex',
     justifyContent: 'center',
