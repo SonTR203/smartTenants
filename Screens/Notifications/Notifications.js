@@ -7,9 +7,7 @@ import { collection, getDocs } from 'firebase/firestore';
 
 const Notifications = () => {
 	const { currentUser, setCurrentUser } = useAppContext();
-	console.log(currentUser);
-
-	//the user document id is: currentUser.userDocId
+	const colReference  = collection(db, "Users", `${currentUser.userDocId}`, "notifications");
 
 	return (
 		<SafeAreaView>
