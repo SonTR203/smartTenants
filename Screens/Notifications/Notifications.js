@@ -7,6 +7,7 @@ import { collection, getDocs } from 'firebase/firestore';
 
 const Notifications = () => {
 	const { currentUser, setCurrentUser } = useAppContext();
+	const [notifications, setNotifications] = useState([]);
 	const colReference  = collection(db, "Users", `${currentUser.userDocId}`, "notifications");
 
 	return (
