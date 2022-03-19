@@ -1,12 +1,19 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View, Text } from 'react-native';
+import React from 'react';
+import { useAppContext } from '../../Context/AppContext';
 
 const Notifications = () => {
-  return (
-    <View>
-      <Text>Notifications</Text>
-    </View>
-  );
+	const { currentUser, setCurrentUser } = useAppContext();
+	console.log(currentUser);
+
+	//the user document id is: currentUser.userDocId
+
+	return (
+		<View>
+			<Text>Notifications</Text>
+			<Text>{currentUser.userDocId}</Text>
+		</View>
+	);
 };
 
 export default Notifications;

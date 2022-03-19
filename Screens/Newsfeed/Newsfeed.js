@@ -35,7 +35,6 @@ const Newsfeed = ({ navigation }) => {
 
 	const getPosts = async () => {
 		const data = await getDocs(colRef);
-		console.log('DATA.DOCS', data.docs);
 		setPosts(
 			data.docs.map((item) => ({
 				...item._document.data.value.mapValue.fields,
@@ -98,7 +97,6 @@ function Post({ posts, navigation }) {
 		postContent: posts.postContent.stringValue,
 		userID: posts.UserId,
 	};
-	console.log(posts);
 
 	return (
 		<View style={{ borderColor: 'black', borderWidth: 1, margin: 20 }}>

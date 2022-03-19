@@ -4,9 +4,9 @@ const AppContext = createContext();
 
 function AppProvider({ children }) {
 	const [post, setPost] = useState({});
-	const [user, setUser] = useState({});
+	const [currentUser, setCurrentUser] = useState({});
 	return (
-		<AppContext.Provider value={{ post, setPost, user, setUser }}>
+		<AppContext.Provider value={{ post, setPost, currentUser, setCurrentUser }}>
 			{children}
 		</AppContext.Provider>
 	);
