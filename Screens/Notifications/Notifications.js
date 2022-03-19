@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React from 'react';
+import { React, useState, useEffect } from 'react';
 import { useAppContext } from '../../Context/AppContext';
 
 const Notifications = () => {
