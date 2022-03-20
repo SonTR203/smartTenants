@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Newsfeed from './Newsfeed/Newsfeed';
 import BuildingInfo from './BuildingInfo/BuildingInfo';
 import CreatePost from './CreatePost/CreatePost';
-
+import { useAppContext } from '../Context/AppContext';
 import Login from './Login/Login';
 import Signup from './Signup/Signup';
 import AccountApprovalPending from './AccountApprovalPending/AccountApprovalPending';
@@ -17,6 +17,8 @@ const Stack = createStackNavigator();
 //hypothetically
 
 const NewsfeedNavigator = () => {
+	const { post, setPost } = useAppContext();
+
 	return (
 		<Stack.Navigator>
 			<Stack.Screen
@@ -37,7 +39,7 @@ const NewsfeedNavigator = () => {
 			<Stack.Screen
 				name="IndividualPosts"
 				component={IndividualPosts}
-				options={{ title: 'Post' }}
+				options={{ title: `${post.userFirstName}'s Post` }}
 			/>
 		</Stack.Navigator>
 	);

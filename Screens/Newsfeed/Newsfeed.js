@@ -89,6 +89,10 @@ const Newsfeed = ({ navigation }) => {
 
 //============================== Individual Post Cards ==========================
 function Post({ posts, navigation }) {
+	console.log(posts);
+	console.log(posts.userProfileImage.stringValue);
+	console.log(posts.userFirstName.stringValue);
+	console.log(posts.userLastName.stringValue);
 	posts = {
 		comments: posts.comments.arrayValue,
 		id: posts.id,
@@ -96,11 +100,22 @@ function Post({ posts, navigation }) {
 		peopleWhoLiked: posts.peopleWhoLiked.arrayValue,
 		postContent: posts.postContent.stringValue,
 		userID: posts.UserId,
+		userProfileImage: posts.userProfileImage.stringValue,
+		userFirstName: posts.userFirstName.stringValue,
+		userLastName: posts.userLastName.stringValue,
 	};
 
 	return (
 		<View style={{ borderColor: 'black', borderWidth: 1, margin: 20 }}>
-			<View className="postOwnerInfo"></View>
+			<View className="postOwnerInfo" style={{ flexDirection: 'row' }}>
+				<Image
+					source={{ uri: `${posts.userProfileImage}` }}
+					style={{ width: 25, height: 25, borderRadius: 50 }}
+				/>
+				<Text style={{ marginTop: 3, marginLeft: 5 }}>
+					{posts.userFirstName} {posts.userLastName}
+				</Text>
+			</View>
 
 			<TouchableOpacity
 				onPress={() => {
