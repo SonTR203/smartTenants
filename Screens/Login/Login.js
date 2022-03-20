@@ -8,6 +8,7 @@ import {
 	TextInput,
 	TouchableOpacity,
 	View,
+	Linking,
 } from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { collection, getDocs } from '@firebase/firestore';
@@ -77,6 +78,10 @@ const Login = ({ navigation }) => {
 		}
 	};
 
+	function forgotPassword() {
+		console.log('forgot password');
+	}
+
 	return (
 		<SafeAreaView style={styles.container}>
 			<KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -96,7 +101,12 @@ const Login = ({ navigation }) => {
 					/>
 				</View>
 				<View>
-					<Text>Forgot password?</Text>
+					<Text
+						onPress={forgotPassword}
+						style={{ textDecorationLine: 'underline' }}
+					>
+						Forgot password?
+					</Text>
 				</View>
 
 				<View style={styles.buttonContainer}>
@@ -104,18 +114,33 @@ const Login = ({ navigation }) => {
 						<Text style={styles.buttonText}>Login</Text>
 					</TouchableOpacity>
 				</View>
+
 				<View>
-					<Text>Don't have an account?</Text>
+					<Text>
+						Don't have an account?{' '}
+						<Text
+							onPress={() => {
+								navigation.navigate('Signup');
+							}}
+							style={{ textDecorationLine: 'underline' }}
+						>
+							Sign up here
+						</Text>
+					</Text>
 				</View>
-				<View style={styles.buttonContainer}>
-					<TouchableOpacity
-						onPress={() => {
-							navigation.navigate('Signup');
-						}}
-						style={styles.button}
-					>
-						<Text style={styles.buttonText}>Signup here</Text>
-					</TouchableOpacity>
+
+				<View>
+					<Text>
+						Looking to be one of our future tenants?{' '}
+						<Text
+							onPress={() => {
+								Linking.openURL('https://www.smartlivingproperties.ca/');
+							}}
+							style={{ fontWeight: 700, textDecorationLine: 'underline' }}
+						>
+							Browse our current listings
+						</Text>
+					</Text>
 				</View>
 			</KeyboardAvoidingView>
 		</SafeAreaView>
