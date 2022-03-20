@@ -18,14 +18,17 @@ import {
 	LoginNavigator,
 } from './Screens/customNavigator.js';
 import { AppProvider } from './Context/AppContext';
-
-// Import building for testing
-// import BuildingInfo from './Screens/BuildingInfo/BuildingInfo'
+import Splashscreen from './Screens/Splashscreen/Splashscreen';
 
 const Tab = createBottomTabNavigator();
+let globalShowSplashscreen;
+let globalSetShowSplashscreen;
 
 export default function App() {
 	const [resourcesLoaded, setResourcesLoaded] = useState(false);
+	const [showSplashscreen, setShowSplashscreen] = useState(true);
+	globalShowSplashscreen = showSplashscreen;
+	globalSetShowSplashscreen = setShowSplashscreen;
 
 	let [fontLoaded] = useFonts({
 		Roboto_400Regular,
@@ -46,10 +49,7 @@ export default function App() {
 			<AppLoading
 				startAsync={getResources}
 				onFinish={() => {
-					//minimum timeout for 2s so that we can see splashscreen
-					setTimeout(() => {
-						setResourcesLoaded(true);
-					}, 2000);
+					setResourcesLoaded(true);
 				}}
 				onError={console.warn}
 			/>
@@ -58,47 +58,54 @@ export default function App() {
 }
 
 function AppContainer() {
+	setTimeout(() => {
+		globalSetShowSplashscreen(false);
+	}, 2000);
 	return (
 		<ThemeProvider>
 			<AppProvider>
-				<NavigationContainer>
-					<Tab.Navigator initialRouteName="Newsfeed ">
-						{/* ======= Login ======= */}
-						<Tab.Screen
-							name="Login "
-							component={LoginNavigator}
-							options={{ headerShown: false }}
-						/>
+				{globalShowSplashscreen ? (
+					<Splashscreen />
+				) : (
+					<NavigationContainer>
+						<Tab.Navigator initialRouteName="Newsfeed ">
+							{/* ======= Login ======= */}
+							<Tab.Screen
+								name="Login "
+								component={LoginNavigator}
+								options={{ headerShown: false }}
+							/>
 
-						{/* ======= Marketplace ======= */}
-						<Tab.Screen
-							name="Marketplace "
-							component={Marketplace}
-							options={{ headerShown: false }}
-						/>
+							{/* ======= Marketplace ======= */}
+							<Tab.Screen
+								name="Marketplace "
+								component={Marketplace}
+								options={{ headerShown: false }}
+							/>
 
-						{/* ======= Newsfeed ======= */}
-						<Tab.Screen
-							name="Newsfeed "
-							component={NewsfeedNavigator}
-							options={{ headerShown: false }}
-						/>
+							{/* ======= Newsfeed ======= */}
+							<Tab.Screen
+								name="Newsfeed "
+								component={NewsfeedNavigator}
+								options={{ headerShown: false }}
+							/>
 
-						{/* ======= Notifications ======= */}
-						<Tab.Screen
-							name="Notifications "
-							component={Notifications}
-							options={{ headerShown: false }}
-						/>
+							{/* ======= Notifications ======= */}
+							<Tab.Screen
+								name="Notifications "
+								component={Notifications}
+								options={{ headerShown: false }}
+							/>
 
-						{/* ======= Profile ======= */}
-						<Tab.Screen
-							name="Profile "
-							component={Profile}
-							options={{ headerShown: false }}
-						/>
-					</Tab.Navigator>
-				</NavigationContainer>
+							{/* ======= Profile ======= */}
+							<Tab.Screen
+								name="Profile "
+								component={Profile}
+								options={{ headerShown: false }}
+							/>
+						</Tab.Navigator>
+					</NavigationContainer>
+				)}
 			</AppProvider>
 		</ThemeProvider>
 	);
