@@ -8,26 +8,26 @@ import {
 	Image,
 } from 'react-native';
 import React, { useState, useEffect, useContext } from 'react';
-import { collection, getDocs, deleteDoc } from '@firebase/firestore';
+import { collection, getDocs, deleteDoc, addDoc } from '@firebase/firestore';
 import { db } from '../../firebase-config';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FAB } from 'react-native-paper';
 import { useAppContext } from '../../Context/AppContext';
 
-//Get info about who is currently logged in, get user info
-//loop through all and show posts with only that building ID in flatlist
-
 let globalPost;
 let setGlobalPost;
+let globalCurrentUser;
 
 const Newsfeed = ({ navigation }) => {
 	const [posts, setPosts] = useState([]);
 	const { post, setPost } = useAppContext();
+	const { currentUser, setCurrentUser } = useAppContext();
 	const colRef = collection(db, 'Newsfeed');
 	const [refreshing, setRefreshing] = useState(true);
 
 	globalPost = post;
 	setGlobalPost = setPost;
+	globalCurrentUser = currentUser;
 
 	useEffect(() => {
 		getPosts();
@@ -95,10 +95,29 @@ function Post({ posts, navigation }) {
 		image: posts.images.arrayValue.values[0].stringValue,
 		peopleWhoLiked: posts.peopleWhoLiked.arrayValue,
 		postContent: posts.postContent.stringValue,
-		userID: posts.UserId,
+		userID: posts.userID.stringValue,
 		userProfileImage: posts.userProfileImage.stringValue,
 		userFirstName: posts.userFirstName.stringValue,
 		userLastName: posts.userLastName.stringValue,
+	};
+
+	const likePost = async () => {
+		const notificationColRef = collection(
+			db,
+			`Users/${posts.userID}/Notifications`
+		);
+
+		try {
+			await addDoc(notificationColRef, {
+				content: `${globalCurrentUser.firstName} ${globalCurrentUser.lastName} liked your post.`,
+				notificationID: 2,
+				postID: posts.id,
+				userID: posts.userID,
+				wasSeen: false,
+			});
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
@@ -137,11 +156,7 @@ function Post({ posts, navigation }) {
 				className="likeAndComment"
 				style={{ display: 'flex', flexDirection: 'row' }}
 			>
-				<TouchableOpacity
-					onPress={() => {
-						console.log('like');
-					}}
-				>
+				<TouchableOpacity onPress={likePost}>
 					<Text>Like</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
