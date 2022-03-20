@@ -33,6 +33,8 @@ const Signup = ({ navigation }) => {
 	const [myPosts, setMyPosts] = useState([]);
 	const [visibleNotices, setVisibileNotices] = useState([]);
 	const [visibleAnnouncements, setVisibleAnnouncements] = useState([]);
+	const defaultProfileImage =
+		'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=80cd4281-4842-42b6-90ca-0828f00ceb82';
 
 	const changeModalVisibility = (bool) => {
 		setModalVisible(bool);
@@ -84,6 +86,7 @@ const Signup = ({ navigation }) => {
 				myPosts,
 				visibleNotices,
 				visibleAnnouncements,
+				userProfileImage: defaultProfileImage,
 			});
 		} catch (error) {
 			alert(error);
