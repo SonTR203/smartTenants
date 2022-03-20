@@ -89,10 +89,6 @@ const Newsfeed = ({ navigation }) => {
 
 //============================== Individual Post Cards ==========================
 function Post({ posts, navigation }) {
-	console.log(posts);
-	console.log(posts.userProfileImage.stringValue);
-	console.log(posts.userFirstName.stringValue);
-	console.log(posts.userLastName.stringValue);
 	posts = {
 		comments: posts.comments.arrayValue,
 		id: posts.id,

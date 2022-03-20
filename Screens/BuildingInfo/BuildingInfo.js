@@ -53,8 +53,6 @@ const BuildingInfo = () => {
 		});
 	}, []);
 
-	console.log(building);
-
 	let image = building.buildingImage;
 	let address = building.buildingAddress;
 	let location = building.buildingLocation;
