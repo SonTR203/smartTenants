@@ -65,6 +65,7 @@ const Login = ({ navigation }) => {
 						userDocId: item._key.path.segments[6],
 						visibleNotices: object.visibleNotices.arrayValue,
 						visibleAnnouncements: object.visibleAnnouncements.arrayValue,
+						userProfileImage: object.userProfileImage.stringValue,
 					};
 					globalSetCurrentUser(loggedInUser);
 				}
