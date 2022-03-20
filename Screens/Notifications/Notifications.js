@@ -6,10 +6,20 @@ import { useAppContext } from '../../Context/AppContext';
 import { db } from '../../firebase-config';
 import { collection, getDocs } from 'firebase/firestore';
 
+const Item = ({content}) => (
+	<View>
+		<Text>{content}</Text>
+	</View>
+);
+
 const Notifications = () => {
 	const { currentUser, setCurrentUser } = useAppContext();
 	const [notifications, setNotifications] = useState([]);
 	const colReference  = collection(db, "Users", `${currentUser.userDocId}`, "Notifications");
+
+	const renderItem = ({item}) => (
+		<Item content={item.content} />
+	);
 
 	useEffect(() => {
 		getDocs(colReference)
@@ -30,9 +40,7 @@ const Notifications = () => {
 			<Text>Notifications</Text>
 			<FlatList
        		data={notifications}
-       		renderItem={(notif) => (
-         	<Text>{notif.item.content}</Text>
-       		)}
+       		renderItem={renderItem}
        		keyExtractor={item => item.id}
      		/>
 		</SafeAreaView>
