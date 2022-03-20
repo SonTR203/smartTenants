@@ -11,10 +11,7 @@ import {
 	Linking,
 } from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { collection, getDocs } from '@firebase/firestore';
-
-// import Signup from '../Signup/Signup';
-
+import { addDoc, collection, getDocs, doc, setDoc } from '@firebase/firestore';
 import { db } from '../../firebase-config';
 import { useAppContext } from '../../Context/AppContext';
 
@@ -68,6 +65,7 @@ const Login = ({ navigation }) => {
 						userProfileImage: object.userProfileImage.stringValue,
 					};
 					globalSetCurrentUser(loggedInUser);
+					createNotificationCollection(loggedInUser);
 				}
 			}
 		});
@@ -76,6 +74,29 @@ const Login = ({ navigation }) => {
 			navigation.navigate('Newsfeed');
 		} else {
 			navigation.navigate('AccountApprovalPending');
+		}
+	};
+
+	const createNotificationCollection = async (loggedInUser) => {
+		const colRef = collection(
+			db,
+			`Users/${loggedInUser.userDocId}/Notifications`
+		);
+		let data = await getDocs(colRef);
+		console.log('DATA.DOCS', data.docs);
+
+		if (data.docs.length > 0) {
+			console.log('Notifications Subcollection already exists');
+		} else {
+			console.log('creating notification doc');
+			await addDoc(colRef, {
+				content:
+					'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
+				notificationID: 1,
+				postID: '',
+				userID: loggedInUser.userDocId,
+				wasSeen: false,
+			});
 		}
 	};
 
