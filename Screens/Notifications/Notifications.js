@@ -7,12 +7,6 @@ import { db } from '../../firebase-config';
 import { collection, getDocs } from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const Item = ({ content }) => (
-	<View>
-		<Text>{content}</Text>
-	</View>
-);
-
 const Notifications = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
 	const [notifications, setNotifications] = useState([]);
