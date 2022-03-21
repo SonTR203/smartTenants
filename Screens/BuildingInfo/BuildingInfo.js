@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../ThemeContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useAppContext } from '../../Context/AppContext';
 
 // Import DB from Firestore config file
 import { db } from '../../firebase-config';
@@ -36,18 +37,25 @@ const styles = StyleSheet.create({
 });
 
 const BuildingInfo = () => {
+	const { currentUser, setCurrentUser } = useAppContext();
+	console.log('CURRENT USER', currentUser);
+
 	const [theme, styleVariables] = useTheme();
 
 	const [building, setBuilding] = useState({});
-	let userBuilding = 'hGNLpcFncmAy3RokTThv';
+	let userBuilding = currentUser.buildingID;
 	useEffect(() => {
 		// Get collections data
 		getDocs(colRef).then((snapshot) => {
 			snapshot.docs.forEach((doc) => {
-				if (doc.id == userBuilding) {
+				console.log(userBuilding);
+				if (
+					doc._document.data.value.mapValue.fields.buildingID.stringValue ==
+					userBuilding
+				) {
 					setBuilding({ ...doc.data(), id: doc.id });
 				} else {
-					alert('No building found');
+					console.log('No building found');
 				}
 			});
 		});
