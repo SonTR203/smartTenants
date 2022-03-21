@@ -22,9 +22,24 @@ const NewsfeedNavigator = () => {
 	return (
 		<Stack.Navigator>
 			<Stack.Screen
+				name="Login"
+				component={Login}
+				options={{ title: 'Login' }}
+			/>
+			<Stack.Screen
+				name="Signup"
+				component={Signup}
+				options={{ title: 'Signup' }}
+			/>
+			<Stack.Screen
+				name="AccountApprovalPending"
+				component={AccountApprovalPending}
+				options={{ title: 'Account Approval Pending' }}
+			/>
+			<Stack.Screen
 				name="Newsfeed"
 				component={Newsfeed}
-				options={{ title: 'Newsfeed' }}
+				options={{ title: 'Newsfeed', headerLeft: null }}
 			/>
 			<Stack.Screen
 				name="BuildingInfo"
@@ -45,26 +60,4 @@ const NewsfeedNavigator = () => {
 	);
 };
 
-const LoginNavigator = () => {
-	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="Login"
-				component={Login}
-				options={{ title: 'Login' }}
-			/>
-			<Stack.Screen
-				name="Signup"
-				component={Signup}
-				options={{ title: 'Signup' }}
-			/>
-			<Stack.Screen
-				name="AccountApprovalPending"
-				component={AccountApprovalPending}
-				options={{ title: 'Account Approval Pending' }}
-			/>
-		</Stack.Navigator>
-	);
-};
-
-export { NewsfeedNavigator, LoginNavigator };
+export { NewsfeedNavigator };

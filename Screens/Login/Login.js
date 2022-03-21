@@ -83,8 +83,6 @@ const Login = ({ navigation }) => {
 			`Users/${loggedInUser.userDocId}/Notifications`
 		);
 		let data = await getDocs(colRef);
-		console.log('DATA.DOCS', data.docs);
-
 		if (data.docs.length > 0) {
 			console.log('Notifications Subcollection already exists');
 		} else {
