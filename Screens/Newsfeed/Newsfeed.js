@@ -10,7 +10,7 @@ import {
 import React, { useState, useEffect, useContext } from 'react';
 import { collection, getDocs, deleteDoc, addDoc } from '@firebase/firestore';
 import { db } from '../../firebase-config';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { FAB } from 'react-native-paper';
 import { useAppContext } from '../../Context/AppContext';
 
@@ -46,34 +46,40 @@ const Newsfeed = ({ navigation }) => {
 
 	return (
 		<>
-			{refreshing ? <ActivityIndicator /> : null}
+			<ScrollView>
+				{refreshing ? <ActivityIndicator /> : null}
 
-			<Pressable
-				onPress={() => {
-					navigation.navigate('BuildingInfo');
-				}}
-			>
-				<Text>Building Info</Text>
-			</Pressable>
+				<Pressable
+					onPress={() => {
+						navigation.navigate('BuildingInfo');
+					}}
+				>
+					<Text>Building Info</Text>
+				</Pressable>
 
-			{posts.length > 0 && (
-				<FlatList
-					data={posts}
-					keyExtractor={(item) => item.id}
-					renderItem={({ item }) => (
-						<Post posts={item} navigation={navigation} />
-					)}
-					refreshControl={
-						<RefreshControl onRefresh={getPosts} refreshing={refreshing} />
-					}
-				/>
-			)}
-
-			{posts.length < 1 && (
 				<View>
-					<Text>no items to show</Text>
+					<Text>Announcements</Text>
 				</View>
-			)}
+
+				{posts.length > 0 && (
+					<FlatList
+						data={posts}
+						keyExtractor={(item) => item.id}
+						renderItem={({ item }) => (
+							<Post posts={item} navigation={navigation} />
+						)}
+						refreshControl={
+							<RefreshControl onRefresh={getPosts} refreshing={refreshing} />
+						}
+					/>
+				)}
+
+				{posts.length < 1 && (
+					<View>
+						<Text>no items to show</Text>
+					</View>
+				)}
+			</ScrollView>
 
 			<FAB
 				medium
