@@ -13,12 +13,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Notifications from './Screens/Notifications/Notifications';
 import Marketplace from './Screens/Marketplace/Marketplace';
 import Profile from './Screens/ProfilePage/ProfileGeneral/ProfileGeneral';
-import {
-	NewsfeedNavigator,
-	LoginNavigator,
-} from './Screens/customNavigator.js';
+import { NewsfeedNavigator } from './Screens/customNavigator.js';
 import { AppProvider } from './Context/AppContext';
 import Splashscreen from './Screens/Splashscreen/Splashscreen';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 let globalShowSplashscreen;
@@ -68,17 +66,7 @@ function AppContainer() {
 					<Splashscreen />
 				) : (
 					<NavigationContainer>
-						<Tab.Navigator initialRouteName="Login ">
-							{/* ======= Login ======= */}
-							<Tab.Screen
-								name="Login "
-								component={LoginNavigator}
-								options={{
-									headerShown: false,
-									tabBarStyle: { display: 'none' },
-								}}
-							/>
-
+						<Tab.Navigator initialRouteName="Newsfeed ">
 							{/* ======= Marketplace ======= */}
 							<Tab.Screen
 								name="Marketplace "
@@ -90,7 +78,14 @@ function AppContainer() {
 							<Tab.Screen
 								name="Newsfeed "
 								component={NewsfeedNavigator}
-								options={{ headerShown: false }}
+								options={({ route }) => ({
+									left: { display: 'none' },
+									headerShown: false,
+									tabBarStyle: {
+										display: getRouteName(route) ? getRouteName(route) : 'none',
+									},
+								})}
+								// options={{ headerShown: false }}
 							/>
 
 							{/* ======= Notifications ======= */}
@@ -118,6 +113,21 @@ function AppContainer() {
 		</ThemeProvider>
 	);
 }
+
+const getRouteName = (route) => {
+	const routeName = getFocusedRouteNameFromRoute(route);
+	console.log(routeName);
+	if (
+		routeName?.includes('Login') ||
+		routeName?.includes('Signup') ||
+		routeName?.includes('AccountApprovalPending')
+	) {
+		return 'none';
+	} else if (routeName == undefined) {
+		return 'none';
+	}
+	return 'flex';
+};
 
 const styles = StyleSheet.create({
 	container: {
