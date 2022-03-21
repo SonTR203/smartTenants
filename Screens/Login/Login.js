@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
 	KeyboardAvoidingView,
@@ -8,10 +7,17 @@ import {
 	TextInput,
 	TouchableOpacity,
 	View,
+	Image,
 	Linking,
 } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection, getDocs, doc, setDoc } from '@firebase/firestore';
+import { collection, getDocs } from '@firebase/firestore';
+import { useTheme } from '../../ThemeContext';
+import { Dimensions } from 'react-native';
+
+// import Signup from '../Signup/Signup';
+
 import { db } from '../../firebase-config';
 import { useAppContext } from '../../Context/AppContext';
 
@@ -20,6 +26,9 @@ let globalSetCurrentUser;
 let globalCurrentUser;
 
 const Login = ({ navigation }) => {
+	const [theme, styleVariables] = useTheme();
+	const windowWidth = Dimensions.get('window').width;
+	const windowHeight = Dimensions.get('window').height;
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const { currentUser, setCurrentUser } = useAppContext();
@@ -62,10 +71,8 @@ const Login = ({ navigation }) => {
 						userDocId: item._key.path.segments[6],
 						visibleNotices: object.visibleNotices.arrayValue,
 						visibleAnnouncements: object.visibleAnnouncements.arrayValue,
-						userProfileImage: object.userProfileImage.stringValue,
 					};
 					globalSetCurrentUser(loggedInUser);
-					createNotificationCollection(loggedInUser);
 				}
 			}
 		});
@@ -77,92 +84,144 @@ const Login = ({ navigation }) => {
 		}
 	};
 
-	const createNotificationCollection = async (loggedInUser) => {
-		const colRef = collection(
-			db,
-			`Users/${loggedInUser.userDocId}/Notifications`
-		);
-		let data = await getDocs(colRef);
-		if (data.docs.length > 0) {
-			console.log('Notifications Subcollection already exists');
-		} else {
-			console.log('creating notification doc');
-			await addDoc(colRef, {
-				content:
-					'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
-				notificationID: 1,
-				postID: '',
-				userID: loggedInUser.userDocId,
-				wasSeen: false,
-			});
-		}
-	};
-
-	function forgotPassword() {
-		console.log('forgot password');
-	}
-
 	return (
-		<SafeAreaView style={styles.container}>
-			<KeyboardAvoidingView style={styles.container} behavior="padding">
-				<View style={styles.inputContainer}>
-					<TextInput
-						placeholder="Email"
-						value={email}
-						onChangeText={(text) => setEmail(text)}
-						style={styles.input}
+		<SafeAreaView>
+			<View style={theme.pageContainer}>
+				<StatusBar style="auto" />
+				<KeyboardAvoidingView behavior="padding">
+					{/* Logo image */}
+					<Image
+						source={require('../../assets/SmartLiving_Logo.png')}
+						style={{
+							width: 187,
+							height: 111,
+							margin: 'auto',
+						}}
+						resizeMode="fill"
 					/>
-					<TextInput
-						placeholder="Password"
-						value={password}
-						onChangeText={(text) => setPassword(text)}
-						style={styles.input}
-						secureTextEntry
-					/>
-				</View>
-				<View>
-					<Text
-						onPress={forgotPassword}
-						style={{ textDecorationLine: 'underline' }}
-					>
-						Forgot password?
-					</Text>
-				</View>
 
-				<View style={styles.buttonContainer}>
-					<TouchableOpacity onPress={handleLogin} style={styles.button}>
-						<Text style={styles.buttonText}>Login</Text>
-					</TouchableOpacity>
-				</View>
+					<View id="LoginContainer">
+						{/* textInput */}
+						<View id="emailInput">
+							<Text
+								style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+							>
+								Email
+							</Text>
+							<TextInput
+								placeholder="name@company.com"
+								value={email}
+								onChangeText={(text) => setEmail(text)}
+								style={[theme.textInput, styleVariables.fontSizes.body]}
+							/>
+						</View>
+						<View id="passwordInput">
+							<Text
+								style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+							>
+								Password
+							</Text>
+							<TextInput
+								placeholder="••••••••••"
+								value={password}
+								onChangeText={(text) => setPassword(text)}
+								secureTextEntry
+								style={[theme.textInput, styleVariables.fontSizes.body]}
+							/>
+						</View>
 
-				<View>
-					<Text>
-						Don't have an account?{' '}
-						<Text
-							onPress={() => {
-								navigation.navigate('Signup');
-							}}
-							style={{ textDecorationLine: 'underline' }}
+						{/* forgotPassword */}
+						<View
+							id="forgotPassword"
+							style={[theme.container, { alignItems: 'flex-end' }]}
 						>
-							Sign up here
-						</Text>
-					</Text>
-				</View>
+							<Text
+								style={[
+									styleVariables.fontSizes.callout,
+									{
+										color: styleVariables.colors.primary,
+										opacity: '66%',
+										marginBottom: 8,
+									},
+								]}
+							>
+								Forgot password?
+							</Text>
+						</View>
 
-				<View>
-					<Text>
-						Looking to be one of our future tenants?{' '}
+						{/* loginButton */}
+						<TouchableOpacity
+							id="loginButton"
+							onPress={handleLogin}
+							style={theme.primaryButton}
+						>
+							<Text
+								style={[
+									theme.primaryButtonText,
+									styleVariables.fontSizes.bodyBold,
+								]}
+							>
+								Login
+							</Text>
+						</TouchableOpacity>
+
+						{/* no account CTA */}
+						<View
+							id="noAccountCTA"
+							style={[
+								theme.container,
+								{ flexDirection: 'row', marginBottom: 8 },
+							]}
+						>
+							<Text
+								style={[
+									styleVariables.fontSizes.callout,
+									{ color: styleVariables.colors.black, marginRight: 7 },
+								]}
+							>
+								Don't have an account?
+							</Text>
+							<TouchableOpacity
+								onPress={() => {
+									navigation.navigate('Signup');
+								}}
+							>
+								<Text
+									style={[
+										styleVariables.fontSizes.calloutBold,
+										{ color: styleVariables.colors.primary },
+									]}
+								>
+									Signup here
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+
+					{/* BrowseListingsRedirect */}
+					<View
+						id="browseListingsRedirect"
+						style={[theme.container, { marginTop: 34, marginBottom: 8 }]}
+					>
 						<Text
+							style={[styleVariables.fontSizes.callout, { opacity: '66%' }]}
+						>
+							Looking to be one of our future tenants?
+						</Text>
+						<TouchableOpacity
 							onPress={() => {
 								Linking.openURL('https://www.smartlivingproperties.ca/');
 							}}
-							style={{ fontWeight: 700, textDecorationLine: 'underline' }}
+							style={[
+								styleVariables.fontSizes.calloutBold,
+								{ color: styleVariables.colors.primary },
+							]}
 						>
-							Browse our current listings
-						</Text>
-					</Text>
-				</View>
-			</KeyboardAvoidingView>
+							<Text>Browse our current listings</Text>
+						</TouchableOpacity>
+					</View>
+				</KeyboardAvoidingView>
+			</View>
 		</SafeAreaView>
 	);
 };
@@ -174,44 +233,5 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-	},
-	inputContainer: {
-		width: '80%',
-	},
-	input: {
-		backgroundColor: 'white',
-		paddingHorizontal: 15,
-		paddingVertical: 10,
-		borderRadius: 10,
-		marginTop: 5,
-	},
-	buttonContainer: {
-		width: '60%',
-		justifyContent: 'center',
-		alignItems: 'center',
-		marginTop: 40,
-	},
-	button: {
-		backgroundColor: '#0782F9',
-		width: '100%',
-		padding: 15,
-		borderRadius: 10,
-		alignItems: 'center',
-	},
-	buttonOutline: {
-		backgroundColor: 'white',
-		marginTop: 5,
-		borderColor: '#0782F9',
-		borderWidth: 2,
-	},
-	buttonText: {
-		color: 'white',
-		fontWeight: '700',
-		fontSize: 16,
-	},
-	buttonOutlineText: {
-		color: '#0782F9',
-		fontWeight: '700',
-		fontSize: 16,
 	},
 });
