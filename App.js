@@ -68,12 +68,15 @@ function AppContainer() {
 					<Splashscreen />
 				) : (
 					<NavigationContainer>
-						<Tab.Navigator initialRouteName="Newsfeed ">
+						<Tab.Navigator initialRouteName="Login ">
 							{/* ======= Login ======= */}
 							<Tab.Screen
 								name="Login "
 								component={LoginNavigator}
-								options={{ headerShown: false }}
+								options={{
+									headerShown: false,
+									tabBarStyle: { display: 'none' },
+								}}
 							/>
 
 							{/* ======= Marketplace ======= */}
@@ -101,7 +104,12 @@ function AppContainer() {
 							<Tab.Screen
 								name="Profile "
 								component={Profile}
-								options={{ headerShown: false }}
+								options={{
+									headerShown: false,
+								}}
+								tabBarOptions={{
+									display: 'none',
+								}}
 							/>
 						</Tab.Navigator>
 					</NavigationContainer>

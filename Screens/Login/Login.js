@@ -71,7 +71,7 @@ const Login = ({ navigation }) => {
 		});
 
 		if (loggedInUser.tenantAuthorized) {
-			navigation.navigate('Newsfeed');
+			navigation.navigate('Newsfeed ');
 		} else {
 			navigation.navigate('AccountApprovalPending');
 		}
