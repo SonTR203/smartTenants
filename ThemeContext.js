@@ -29,7 +29,9 @@ let styleVariables = {
     secondaryHeader: { fontSize: 28, fontFamily: 'Roboto_500Medium' },
     title: { fontSize: 22, fontFamily: 'Roboto_400Regular' },
     body: { fontSize: 17, fontFamily: 'Roboto_400Regular' },
-    bodyBold: { fontSize: 17, fontFamily: 'Roboto_500Medium' }
+    bodyBold: { fontSize: 17, fontFamily: 'Roboto_500Medium' },
+    callout: { fontSize: 15, fontFamily: 'Roboto_400Regular' },
+    calloutBold: { fontSize: 15, fontFamily: 'Roboto_500Medium' }
   }
 }
 

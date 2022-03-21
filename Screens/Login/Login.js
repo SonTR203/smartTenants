@@ -7,7 +7,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Image
+  Image,
+  Linking
 } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
@@ -87,18 +88,19 @@ const Login = ({ navigation }) => {
       <View style={theme.pageContainer}>
         <StatusBar style='auto' />
         <KeyboardAvoidingView behavior='padding'>
+          {/* Logo image */}
           <Image
             source={require('../../assets/SmartLiving_Logo.png')}
             style={{
               width: 187,
               height: 111,
-              margin: 'auto',
-              flex: 1
+              margin: 'auto'
             }}
             resizeMode='fill'
           />
 
-          <View id='inputContainer'>
+          <View id='LoginContainer'>
+            {/* textInput */}
             <View id='emailInput'>
               <Text
                 style={[theme.textInputLabel, styleVariables.fontSizes.body]}
@@ -112,7 +114,6 @@ const Login = ({ navigation }) => {
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
             </View>
-
             <View id='passwordInput'>
               <Text
                 style={[theme.textInputLabel, styleVariables.fontSizes.body]}
@@ -127,27 +128,95 @@ const Login = ({ navigation }) => {
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
             </View>
-          </View>
 
-          <View>
-            <Text>Forgot password?</Text>
-          </View>
+            {/* forgotPassword */}
+            <View
+              id='forgotPassword'
+              style={[theme.container, { alignItems: 'flex-end' }]}
+            >
+              <Text
+                style={[
+                  styleVariables.fontSizes.callout,
+                  {
+                    color: styleVariables.colors.primary,
+                    opacity: '66%',
+                    marginBottom: 8
+                  }
+                ]}
+              >
+                Forgot password?
+              </Text>
+            </View>
 
-          <View>
-            <TouchableOpacity onPress={handleLogin}>
-              <Text>Login</Text>
+            {/* loginButton */}
+            <TouchableOpacity
+              id='loginButton'
+              onPress={handleLogin}
+              style={theme.primaryButton}
+            >
+              <Text
+                style={[
+                  theme.primaryButtonText,
+                  styleVariables.fontSizes.bodyBold
+                ]}
+              >
+                Login
+              </Text>
             </TouchableOpacity>
+
+            {/* no account CTA */}
+            <View
+              id='noAccountCTA'
+              style={[
+                theme.container,
+                { flexDirection: 'row', marginBottom: 8 }
+              ]}
+            >
+              <Text
+                style={[
+                  styleVariables.fontSizes.callout,
+                  { color: styleVariables.colors.black, marginRight: 7 }
+                ]}
+              >
+                Don't have an account?
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('Signup')
+                }}
+              >
+                <Text
+                  style={[
+                    styleVariables.fontSizes.calloutBold,
+                    { color: styleVariables.colors.primary }
+                  ]}
+                >
+                  Signup here
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View>
-            <Text>Don't have an account?</Text>
-          </View>
-          <View>
+
+          {/* BrowseListingsRedirect */}
+          <View
+            id='browseListingsRedirect'
+            style={[theme.container, { marginTop: 34, marginBottom: 8 }]}
+          >
+            <Text
+              style={[styleVariables.fontSizes.callout, { opacity: '66%' }]}
+            >
+              Looking to be one of our future tenants?
+            </Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Signup')
+                Linking.openURL('https://www.smartlivingproperties.ca/')
               }}
+              style={[
+                styleVariables.fontSizes.calloutBold,
+                { color: styleVariables.colors.primary }
+              ]}
             >
-              <Text>Signup here</Text>
+              Browse our current listings
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
