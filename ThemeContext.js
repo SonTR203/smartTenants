@@ -27,7 +27,7 @@ let styleVariables = {
     hero: { fontSize: 40, fontFamily: 'Roboto_400Regular' },
     header: { fontSize: 34, fontFamily: 'Roboto_500Medium' },
     secondaryHeader: { fontSize: 28, fontFamily: 'Roboto_500Medium' },
-    title: { fontSize: 22, fontFamily: 'Roboto_400Regular' },
+    title: { fontSize: 22, fontFamily: 'Roboto_500Medium' },
     body: { fontSize: 17, fontFamily: 'Roboto_400Regular' },
     bodyBold: { fontSize: 17, fontFamily: 'Roboto_500Medium' },
     callout: { fontSize: 15, fontFamily: 'Roboto_400Regular' },
@@ -45,13 +45,41 @@ const theme = StyleSheet.create({
     color: styleVariables.colors.black
   },
   pageContainer: {
-    paddingHorizontal: 17,
+    // paddingHorizontal: 17,
     backgroundColor: styleVariables.colors.white
   },
   fullHeight: {
     display: 'flex',
     // justifyContent: 'space-between',
-    height: windowHeight
+    minHeight: windowHeight
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: styleVariables.colors.primary,
+    paddingHorizontal: 17,
+    minHeight: 98
+  },
+  firstListItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: styleVariables.colors.primary
+  },
+  topCard: {
+    backgroundColor: styleVariables.colors.white,
+    width: '100%',
+    borderTopLeftRadius: 27,
+    borderTopRightRadius: 27,
+    shadowColor: styleVariables.colors.black,
+    shadowOffset: {
+      width: 0,
+      height: -34
+    },
+    shadowOpacity: 0.14,
+    shadowRadius: 17,
+    elevation: 20
   },
   card: {
     display: 'flex',
@@ -90,6 +118,19 @@ const theme = StyleSheet.create({
     fontSize: styleVariables.fontSizes.body.fontSize,
     fontFamily: 'Roboto_400Regular',
     color: '#395E66'
+  },
+  fab: {
+    position: 'absolute',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 17,
+    right: 0,
+    bottom: 0,
+    backgroundColor: styleVariables.colors.primary,
+    height: 60,
+    width: 60,
+    borderRadius: 16
   },
   imageUploadPreview: {
     display: 'flex',
@@ -164,6 +205,39 @@ const theme = StyleSheet.create({
     fontSize: styleVariables.fontSizes.body.fontSize,
     fontFamily: 'Roboto_400Regular',
     color: '#395E66'
+  },
+  cardButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    minHeight: 66,
+    margin: 17,
+    padding: 22,
+    borderRadius: 24,
+    shadowColor: styleVariables.colors.primary,
+    shadowOffset: {
+      width: 0,
+      height: 8
+    },
+    shadowOpacity: 0.14,
+    shadowRadius: 34,
+    elevation: 20
+  },
+  counter: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
+  },
+  notificationCounter: {
+    padding: 5,
+    paddingHorizontal: 10,
+    backgroundColor: styleVariables.colors.primary,
+    borderRadius: 14,
+    marginRight: 8,
+    overflow: 'hidden'
   }
 })
 
