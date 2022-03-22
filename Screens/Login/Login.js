@@ -66,7 +66,8 @@ const Login = ({ navigation }) => {
             userUID: object.userID.stringValue,
             userDocId: item._key.path.segments[6],
             visibleNotices: object.visibleNotices.arrayValue,
-            visibleAnnouncements: object.visibleAnnouncements.arrayValue
+            visibleAnnouncements: object.visibleAnnouncements.arrayValue,
+            userProfileImage: object.userProfileImage.stringValue
           }
           globalSetCurrentUser(loggedInUser)
           createNotificationCollection(loggedInUser);
