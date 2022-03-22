@@ -168,11 +168,7 @@ const Signup = ({ navigation }) => {
 
             <View id='buildingSelect'>
               <Text
-                style={[
-                  theme.textInputLabel,
-                  styleVariables.fontSizes.body,
-                  { zIndex: 2 }
-                ]}
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
               >
                 Building Address
               </Text>

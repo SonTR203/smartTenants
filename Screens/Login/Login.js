@@ -12,9 +12,8 @@ import {
 } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { collection, getDocs } from '@firebase/firestore'
+import { collection, getDocs, addDoc } from '@firebase/firestore'
 import { useTheme } from '../../ThemeContext'
-import { Dimensions } from 'react-native'
 
 // import Signup from '../Signup/Signup';
 
@@ -67,9 +66,12 @@ const Login = ({ navigation }) => {
             userUID: object.userID.stringValue,
             userDocId: item._key.path.segments[6],
             visibleNotices: object.visibleNotices.arrayValue,
-            visibleAnnouncements: object.visibleAnnouncements.arrayValue
+            visibleAnnouncements: object.visibleAnnouncements.arrayValue,
+            userProfileImage: object.userProfileImage.stringValue
           }
           globalSetCurrentUser(loggedInUser)
+          createNotificationCollection(loggedInUser);
+
         }
       }
     })
@@ -81,21 +83,48 @@ const Login = ({ navigation }) => {
     }
   }
 
+  const createNotificationCollection = async (loggedInUser) => {
+		const colRef = collection(
+			db,
+			`Users/${loggedInUser.userDocId}/Notifications`
+		);
+		let data = await getDocs(colRef);
+		if (data.docs.length > 0) {
+			console.log('Notifications Subcollection already exists');
+		} else {
+			console.log('creating notification doc');
+			await addDoc(colRef, {
+				content:
+					'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
+				notificationID: 1,
+				postID: '',
+				userID: loggedInUser.userDocId,
+				wasSeen: false,
+			});
+		}
+	};
+
+  function forgotPassword() {
+		console.log('forgot password');
+	}
+
   return (
     <SafeAreaView>
       <View style={theme.pageContainer}>
         <StatusBar style='auto' />
-        <KeyboardAvoidingView behavior='padding'>
+        <KeyboardAvoidingView behavior='padding' style={theme.fullHeight}>
           {/* Logo image */}
-          <Image
-            source={require('../../assets/SmartLiving_Logo.png')}
-            style={{
-              width: 187,
-              height: 111,
-              margin: 'auto'
-            }}
-            resizeMode='fill'
-          />
+          <View style={[theme.container, {}]}>
+            <Image
+              source={require('../../assets/SmartLiving_Logo.png')}
+              style={{
+                width: 187,
+                height: 111,
+                margin: 'auto'
+              }}
+              resizeMode='contain'
+            />
+          </View>
 
           <View id='LoginContainer'>
             {/* textInput */}
@@ -133,11 +162,12 @@ const Login = ({ navigation }) => {
               style={[theme.container, { alignItems: 'flex-end' }]}
             >
               <Text
+              onPress={forgotPassword}
                 style={[
                   styleVariables.fontSizes.callout,
                   {
                     color: styleVariables.colors.primary,
-                    opacity: '66%',
+                    opacity: 0.66,
                     marginBottom: 8
                   }
                 ]}
@@ -200,9 +230,7 @@ const Login = ({ navigation }) => {
             id='browseListingsRedirect'
             style={[theme.container, { marginTop: 34, marginBottom: 8 }]}
           >
-            <Text
-              style={[styleVariables.fontSizes.callout, { opacity: '66%' }]}
-            >
+            <Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
               Looking to be one of our future tenants?
             </Text>
             <TouchableOpacity

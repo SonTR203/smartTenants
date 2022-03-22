@@ -13,29 +13,13 @@ import IndividualPosts from './IndividualPosts/IndividualPosts';
 
 const Stack = createStackNavigator();
 
-//for admin pages where we need to go 3 or four levels deep, we should be able to add the screens to the main stack and call them from anywhere within the stack
-//hypothetically
-
 const NewsfeedNavigator = () => {
 	const { post, setPost } = useAppContext();
+	const { currentUser, setCurrentUser } = useAppContext();
 
-	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="Login"
-				component={Login}
-				options={{ title: 'Login' }}
-			/>
-			<Stack.Screen
-				name="Signup"
-				component={Signup}
-				options={{ title: 'Signup' }}
-			/>
-			<Stack.Screen
-				name="AccountApprovalPending"
-				component={AccountApprovalPending}
-				options={{ title: 'Account Approval Pending' }}
-			/>
+	if(currentUser && currentUser.tenantAuthorized){
+		return(
+<Stack.Navigator>
 			<Stack.Screen
 				name="Newsfeed"
 				component={Newsfeed}
@@ -57,7 +41,28 @@ const NewsfeedNavigator = () => {
 				options={{ title: `${post.userFirstName}'s Post` }}
 			/>
 		</Stack.Navigator>
+		)
+	} else {
+	return (
+		<Stack.Navigator>
+			<Stack.Screen
+				name="Login"
+				component={Login}
+				options={{ title: 'Login' }}
+			/>
+			<Stack.Screen
+				name="Signup"
+				component={Signup}
+				options={{ title: 'Signup' }}
+			/>
+			<Stack.Screen
+				name="AccountApprovalPending"
+				component={AccountApprovalPending}
+				options={{ title: 'Account Approval Pending' }}
+			/>
+		</Stack.Navigator>
 	);
+	}
 };
 
 export { NewsfeedNavigator };
