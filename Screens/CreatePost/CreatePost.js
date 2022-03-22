@@ -54,6 +54,8 @@ const CreatePost = ({ navigation }) => {
 			imgUrl = 'no image posted';
 		}
 		try {
+			console.log(currentUser)
+			console.log(currentUser.userProfileImage)
 			await addDoc(collection(db, 'Newsfeed'), {
 				postContent: postContent,
 				userID: currentUser.userDocId,
