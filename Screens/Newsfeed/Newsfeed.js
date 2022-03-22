@@ -113,6 +113,8 @@ function Post({ posts, navigation }) {
 			db,
 			`Users/${posts.userID}/Notifications`
 		);
+		let likeColRef = collection(db, `Newsfeed/${posts.id}/peopleWhoLiked`)
+
 
 		try {
 			await addDoc(notificationColRef, {
@@ -128,7 +130,6 @@ function Post({ posts, navigation }) {
 
 		try{
 			console.log(globalCurrentUser)
-			let likeColRef = collection(db, `Newsfeed/${posts.id}/peopleWhoLiked`)
 			await addDoc(likeColRef, {
 				likedBy: globalCurrentUser.userDocId,
 				name: `${globalCurrentUser.firstName} ${globalCurrentUser.lastName}`
