@@ -189,7 +189,7 @@ const Login = ({ navigation }) => {
                     { color: styleVariables.colors.primary }
                   ]}
                 >
-                  Signup here
+                  Sign up here
                 </Text>
               </TouchableOpacity>
             </View>
