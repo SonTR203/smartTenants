@@ -108,6 +108,7 @@ function Post({ posts, navigation }) {
 	};
 
 	const likePost = async () => {
+		console.log("POSTS", posts)
 		const notificationColRef = collection(
 			db,
 			`Users/${posts.userID}/Notifications`
@@ -123,6 +124,18 @@ function Post({ posts, navigation }) {
 			});
 		} catch (error) {
 			console.log(error);
+		}
+
+		try{
+			console.log(globalCurrentUser)
+			let likeColRef = collection(db, `Newsfeed/${posts.id}/peopleWhoLiked`)
+			await addDoc(likeColRef, {
+				likedBy: globalCurrentUser.userDocId,
+				name: `${globalCurrentUser.firstName} ${globalCurrentUser.lastName}`
+			})
+
+		}catch (error){
+			console.log(error)
 		}
 	};
 
