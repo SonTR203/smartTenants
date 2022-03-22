@@ -14,7 +14,6 @@ import { StatusBar } from 'expo-status-bar'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { collection, getDocs } from '@firebase/firestore'
 import { useTheme } from '../../ThemeContext'
-import { Dimensions } from 'react-native'
 
 // import Signup from '../Signup/Signup';
 
@@ -85,17 +84,19 @@ const Login = ({ navigation }) => {
     <SafeAreaView>
       <View style={theme.pageContainer}>
         <StatusBar style='auto' />
-        <KeyboardAvoidingView behavior='padding'>
+        <KeyboardAvoidingView behavior='padding' style={theme.fullHeight}>
           {/* Logo image */}
-          <Image
-            source={require('../../assets/SmartLiving_Logo.png')}
-            style={{
-              width: 187,
-              height: 111,
-              margin: 'auto'
-            }}
-            resizeMode='contain'
-          />
+          <View style={[theme.container, {}]}>
+            <Image
+              source={require('../../assets/SmartLiving_Logo.png')}
+              style={{
+                width: 187,
+                height: 111,
+                margin: 'auto'
+              }}
+              resizeMode='contain'
+            />
+          </View>
 
           <View id='LoginContainer'>
             {/* textInput */}

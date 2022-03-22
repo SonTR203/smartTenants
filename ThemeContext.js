@@ -37,7 +37,7 @@ let styleVariables = {
 
 const theme = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: styleVariables.colors.white,
     display: 'flex',
     alignItems: 'center',
@@ -47,6 +47,11 @@ const theme = StyleSheet.create({
   pageContainer: {
     paddingHorizontal: 17,
     backgroundColor: styleVariables.colors.white
+  },
+  fullHeight: {
+    display: 'flex',
+    // justifyContent: 'space-between',
+    height: windowHeight
   },
   card: {
     display: 'flex',
@@ -114,7 +119,8 @@ const theme = StyleSheet.create({
     marginTop: -9,
     marginLeft: 14,
     transform: [{ translateY: 9 }],
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
+    zIndex: 2
   },
   textInput: {
     width: '100%',
@@ -123,7 +129,8 @@ const theme = StyleSheet.create({
     backgroundColor: styleVariables.colors.white,
     borderRadius: 18,
     padding: 22,
-    marginBottom: 17
+    marginBottom: 17,
+    zIndex: 1
   },
   primaryButton: {
     display: 'flex',
