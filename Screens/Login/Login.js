@@ -27,8 +27,6 @@ let globalCurrentUser
 
 const Login = ({ navigation }) => {
   const [theme, styleVariables] = useTheme()
-  const windowWidth = Dimensions.get('window').width
-  const windowHeight = Dimensions.get('window').height
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { currentUser, setCurrentUser } = useAppContext()
