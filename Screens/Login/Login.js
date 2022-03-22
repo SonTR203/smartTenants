@@ -173,10 +173,10 @@ const Login = ({ navigation }) => {
               <Text
                 style={[
                   styleVariables.fontSizes.callout,
-                  { color: styleVariables.colors.black, marginRight: 7 }
+                  { color: styleVariables.colors.black }
                 ]}
               >
-                Don't have an account?
+                Don't have an account?{' '}
               </Text>
               <TouchableOpacity
                 onPress={() => {
