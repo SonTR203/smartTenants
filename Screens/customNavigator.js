@@ -1,6 +1,7 @@
 //mix tab and stack navigators: https://www.youtube.com/watch?v=dkriklWelm0&t=139s
 
 import React from 'react';
+import { Button } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Newsfeed from './Newsfeed/Newsfeed';
 import BuildingInfo from './BuildingInfo/BuildingInfo';
@@ -17,51 +18,60 @@ const NewsfeedNavigator = () => {
 	const { post, setPost } = useAppContext();
 	const { currentUser, setCurrentUser } = useAppContext();
 
-	if(currentUser && currentUser.tenantAuthorized){
-		return(
-<Stack.Navigator>
-			<Stack.Screen
-				name="Newsfeed"
-				component={Newsfeed}
-				options={{ title: 'Newsfeed', headerLeft: null }}
-			/>
-			<Stack.Screen
-				name="BuildingInfo"
-				component={BuildingInfo}
-				options={{ title: 'Building Info' }}
-			/>
-			<Stack.Screen
-				name="CreatePost"
-				component={CreatePost}
-				options={{ title: 'Create Post' }}
-			/>
-			<Stack.Screen
-				name="IndividualPosts"
-				component={IndividualPosts}
-				options={{ title: `${post.userFirstName}'s Post` }}
-			/>
-		</Stack.Navigator>
-		)
+	console.log(currentUser);
+	console.log(post);
+	if (currentUser && currentUser.tenantAuthorized) {
+		return (
+			<Stack.Navigator>
+				<Stack.Screen
+					name="Newsfeed"
+					component={Newsfeed}
+					options={{ title: 'Newsfeed', headerLeft: null }}
+				/>
+				<Stack.Screen
+					name="BuildingInfo"
+					component={BuildingInfo}
+					options={{ title: 'Building Info' }}
+				/>
+				<Stack.Screen
+					name="CreatePost"
+					component={CreatePost}
+					options={{ title: 'Create Post' }}
+				/>
+				<Stack.Screen
+					name="IndividualPosts"
+					component={IndividualPosts}
+					options={{
+						title: `${post.userFirstName}'s Post`,
+						headerRight: () => {
+							if (currentUser.userDocId === post.userID) {
+								return <Button title="options" />;
+							}
+						},
+					}}
+				/>
+			</Stack.Navigator>
+		);
 	} else {
-	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="Login"
-				component={Login}
-				options={{ title: 'Login' }}
-			/>
-			<Stack.Screen
-				name="Signup"
-				component={Signup}
-				options={{ title: 'Signup' }}
-			/>
-			<Stack.Screen
-				name="AccountApprovalPending"
-				component={AccountApprovalPending}
-				options={{ title: 'Account Approval Pending' }}
-			/>
-		</Stack.Navigator>
-	);
+		return (
+			<Stack.Navigator>
+				<Stack.Screen
+					name="Login"
+					component={Login}
+					options={{ title: 'Login' }}
+				/>
+				<Stack.Screen
+					name="Signup"
+					component={Signup}
+					options={{ title: 'Signup' }}
+				/>
+				<Stack.Screen
+					name="AccountApprovalPending"
+					component={AccountApprovalPending}
+					options={{ title: 'Account Approval Pending' }}
+				/>
+			</Stack.Navigator>
+		);
 	}
 };
 

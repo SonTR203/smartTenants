@@ -6,8 +6,12 @@ import { useAppContext } from '../../Context/AppContext';
 
 const IndividualPosts = () => {
 	const { post, setPost } = useAppContext();
+	
 	console.log(post);
 	return (
+
+
+
 		<View style={{ borderColor: 'black', borderWidth: 1, margin: 20 }}>
 			<View className="postOwnerInfo" style={{ flexDirection: 'row' }}>
 				<Image
@@ -29,6 +33,10 @@ const IndividualPosts = () => {
 						style={{ width: 330, height: 300 }}
 					/>
 				)}
+			</View>
+
+			<View>
+				Liked by number of likes people
 			</View>
 		</View>
 	);
