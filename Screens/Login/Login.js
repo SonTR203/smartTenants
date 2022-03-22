@@ -94,7 +94,7 @@ const Login = ({ navigation }) => {
               height: 111,
               margin: 'auto'
             }}
-            resizeMode='fill'
+            resizeMode='contain'
           />
 
           <View id='LoginContainer'>
@@ -137,7 +137,7 @@ const Login = ({ navigation }) => {
                   styleVariables.fontSizes.callout,
                   {
                     color: styleVariables.colors.primary,
-                    opacity: '66%',
+                    opacity: 0.66,
                     marginBottom: 8
                   }
                 ]}
@@ -200,9 +200,7 @@ const Login = ({ navigation }) => {
             id='browseListingsRedirect'
             style={[theme.container, { marginTop: 34, marginBottom: 8 }]}
           >
-            <Text
-              style={[styleVariables.fontSizes.callout, { opacity: '66%' }]}
-            >
+            <Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
               Looking to be one of our future tenants?
             </Text>
             <TouchableOpacity
