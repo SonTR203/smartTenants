@@ -67,13 +67,13 @@ const Signup = ({ navigation }) => {
       alert('Please Enter Your Email Address')
       return false
     } else if (!password) {
-      alert('Please Enter Your Password, at leat 6 charcters')
+      alert('Please Enter Your Password, at least 6 characters')
       return false
     }
     return true
   }
 
-  async function createNewUser (user) {
+  async function createNewUser(user) {
     try {
       await addDoc(collection(db, 'Users'), {
         userID: user.uid,
@@ -96,12 +96,12 @@ const Signup = ({ navigation }) => {
     }
   }
 
-  function signUpSuccess (user) {
+  function signUpSuccess(user) {
     createNewUser(user)
     navigation.navigate('AccountApprovalPending')
   }
 
-  function signUpFailure () {
+  function signUpFailure() {
     alert('You have not been signed up, please try again')
   }
 

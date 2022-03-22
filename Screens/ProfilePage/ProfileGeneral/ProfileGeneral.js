@@ -13,6 +13,7 @@ const ProfileGeneral = () => {
 			<Text>ProfileGeneral</Text>
 			<Text>{currentUser.userDocId}</Text>
 		</View>
+		
 	);
 };
 
