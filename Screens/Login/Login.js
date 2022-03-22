@@ -14,7 +14,6 @@ import { StatusBar } from 'expo-status-bar'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { collection, getDocs } from '@firebase/firestore'
 import { useTheme } from '../../ThemeContext'
-import { Dimensions } from 'react-native'
 
 // import Signup from '../Signup/Signup';
 
@@ -85,17 +84,19 @@ const Login = ({ navigation }) => {
     <SafeAreaView>
       <View style={theme.pageContainer}>
         <StatusBar style='auto' />
-        <KeyboardAvoidingView behavior='padding'>
+        <KeyboardAvoidingView behavior='padding' style={theme.fullHeight}>
           {/* Logo image */}
-          <Image
-            source={require('../../assets/SmartLiving_Logo.png')}
-            style={{
-              width: 187,
-              height: 111,
-              margin: 'auto'
-            }}
-            resizeMode='fill'
-          />
+          <View style={[theme.container, {}]}>
+            <Image
+              source={require('../../assets/SmartLiving_Logo.png')}
+              style={{
+                width: 187,
+                height: 111,
+                margin: 'auto'
+              }}
+              resizeMode='contain'
+            />
+          </View>
 
           <View id='LoginContainer'>
             {/* textInput */}
@@ -137,7 +138,7 @@ const Login = ({ navigation }) => {
                   styleVariables.fontSizes.callout,
                   {
                     color: styleVariables.colors.primary,
-                    opacity: '66%',
+                    opacity: 0.66,
                     marginBottom: 8
                   }
                 ]}
@@ -200,9 +201,7 @@ const Login = ({ navigation }) => {
             id='browseListingsRedirect'
             style={[theme.container, { marginTop: 34, marginBottom: 8 }]}
           >
-            <Text
-              style={[styleVariables.fontSizes.callout, { opacity: '66%' }]}
-            >
+            <Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
               Looking to be one of our future tenants?
             </Text>
             <TouchableOpacity
