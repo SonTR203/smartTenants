@@ -13,11 +13,11 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection, getDocs, deleteDoc } from '@firebase/firestore';
-import { db } from '../../firebase-config';
-import ModalPicker from '../../components/ModalBuildingPicker'
-import { useTheme } from '../../ThemeContext';
+import { db } from '../../../firebase-config';
+import ModalPicker from '../../../components/ModalBuildingPicker'
+import { useTheme } from '../../../ThemeContext';
 import { StatusBar } from 'expo-status-bar';
-import { useAppContext } from '../../Context/AppContext';
+import { useAppContext } from '../../../Context/AppContext';
 import { async } from '@firebase/util';
 import ProfileGeneral from '../ProfileGeneral/ProfileGeneral';
 
@@ -111,54 +111,12 @@ const EditProfile = ({ navigation }) => {
     }
 
     function goToProfile(navigation) {
-      navigation.navigate('ProfileGeneral');
+      //navigation.navigate('ProfileGeneral');
     }
 
-    // async function createNewUser(user) {
-    //   try {
-    //     await addDoc(collection(db, 'Users'), {
-    //       userID: user.uid,
-    //       firstName,
-    //       lastName,
-    //       buildingID,
-    //       buildingAddress,
-    //       email,
-    //       unitNumber: parseInt(unitNumber),
-    //       isAdmin,
-    //       tenantAuthorized,
-    //       myMarketplacePosts,
-    //       myPosts,
-    //       visibleNotices,
-    //       visibleAnnouncements,
-    //       userProfileImage: defaultProfileImage
-    //     })
-    //   } catch (error) {
-    //     alert(error)
-    //   }
-    // }
+    function saveProfileInfo() {
 
-    // function signUpSuccess(user) {
-    //   createNewUser(user)
-    //   navigation.navigate('AccountApprovalPending')
-    // }
-
-    // function signUpFailure() {
-    //   alert('You have not been signed up, please try again')
-    // }
-
-    // const handleSignup = () => {
-    //   if (!checkTextInputs()) return
-
-    //   createUserWithEmailAndPassword(auth, email, password)
-    //     .then(userCredentials => {
-    //       const user = userCredentials.user
-    //       signUpSuccess(user)
-    //     })
-    //     .catch(error => {
-    //       alert(error.message)
-    //       signUpFailure()
-    //     })
-    // }
+    }
 
     return (
       <SafeAreaView>
@@ -307,15 +265,16 @@ const EditProfile = ({ navigation }) => {
           </KeyboardAvoidingView>
         </ScrollView>
       </SafeAreaView>
-    )
+    );
   }
+}
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
-    }
-  })
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+});
 
-  export default EditProfile;
+export default EditProfile;

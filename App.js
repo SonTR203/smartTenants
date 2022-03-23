@@ -12,11 +12,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Notifications from './Screens/Notifications/Notifications';
 import Marketplace from './Screens/Marketplace/Marketplace';
-import Profile from './Screens/ProfilePage/ProfileGeneral/ProfileGeneral';
-import { NewsfeedNavigator } from './Screens/customNavigator.js';
+import ProfileGeneral from './Screens/ProfilePage/ProfileGeneral/ProfileGeneral';
 import { AppProvider } from './Context/AppContext';
 import Splashscreen from './Screens/Splashscreen/Splashscreen';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { NewsfeedNavigator, ProfileNavigator } from './Screens/customNavigator.js'
 
 const Tab = createBottomTabNavigator();
 let globalShowSplashscreen;
@@ -85,7 +85,7 @@ function AppContainer() {
 										display: getRouteName(route) ? getRouteName(route) : 'none',
 									},
 								})}
-								// options={{ headerShown: false }}
+							// options={{ headerShown: false }}
 							/>
 
 							{/* ======= Notifications ======= */}
@@ -97,13 +97,11 @@ function AppContainer() {
 
 							{/* ======= Profile ======= */}
 							<Tab.Screen
-								name="Profile "
-								component={Profile}
-								options={{
-									headerShown: false,
-								}}
+								name='Profile '
+								component={ProfileNavigator}
+								options={{ headerShown: false }}
 								tabBarOptions={{
-									display: 'none',
+									display: 'none'
 								}}
 							/>
 						</Tab.Navigator>
