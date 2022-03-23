@@ -38,7 +38,7 @@ let styleVariables = {
 const theme = StyleSheet.create({
   container: {
     // flex: 1,
-    backgroundColor: styleVariables.colors.white,
+    // backgroundColor: styleVariables.colors.white,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -53,6 +53,7 @@ const theme = StyleSheet.create({
     // justifyContent: 'space-between',
     minHeight: windowHeight
   },
+  globalMargins: { marginHorizontal: 17 },
   header: {
     display: 'flex',
     justifyContent: 'center',
@@ -199,7 +200,15 @@ const theme = StyleSheet.create({
     paddingVertical: 20,
     backgroundColor: '#395E66',
     borderRadius: 18,
-    marginBottom: 17
+    marginBottom: 17,
+    shadowColor: styleVariables.colors.primary,
+    shadowOffset: {
+      width: 0,
+      height: 8
+    },
+    shadowOpacity: 0.14,
+    shadowRadius: 34,
+    elevation: 20
   },
   primaryButtonText: {
     color: styleVariables.colors.white

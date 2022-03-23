@@ -37,7 +37,7 @@ const Signup = ({ navigation }) => {
   const [visibleNotices, setVisibileNotices] = useState([])
   const [visibleAnnouncements, setVisibleAnnouncements] = useState([])
   const defaultProfileImage =
-  "https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=38f0365b-cb36-4964-ab8c-7a600073c244"
+    'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=38f0365b-cb36-4964-ab8c-7a600073c244'
 
   const changeModalVisibility = bool => {
     setModalVisible(bool)
@@ -120,8 +120,9 @@ const Signup = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView>
-      <ScrollView style={theme.pageContainer}>
+    // <SafeAreaView edges={['bottom']}>
+    <ScrollView style={theme.pageContainer}>
+      <View style={theme.globalMargins}>
         <StatusBar style='auto' />
         <KeyboardAvoidingView behavior='padding'>
           <View id='signupInputs'>
@@ -262,8 +263,9 @@ const Signup = ({ navigation }) => {
             </Text>
           </View>
         </KeyboardAvoidingView>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
+    // </SafeAreaView>
   )
 }
 
