@@ -1,19 +1,20 @@
 //mix tab and stack navigators: https://www.youtube.com/watch?v=dkriklWelm0&t=139s
 
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import Newsfeed from './Newsfeed/Newsfeed';
-import BuildingInfo from './BuildingInfo/BuildingInfo';
-import CreatePost from './CreatePost/CreatePost';
-import { useAppContext } from '../Context/AppContext';
-import Login from './Login/Login';
-import Signup from './Signup/Signup';
-import AccountApprovalPending from './AccountApprovalPending/AccountApprovalPending';
-import IndividualPosts from './IndividualPosts/IndividualPosts';
+import React from 'react'
+import { createStackNavigator } from '@react-navigation/stack'
+import Newsfeed from './Newsfeed/Newsfeed'
+import BuildingInfo from './BuildingInfo/BuildingInfo'
+import CreatePost from './CreatePost/CreatePost'
+import { useAppContext } from '../Context/AppContext'
+import Login from './Login/Login'
+import Signup from './Signup/Signup'
+import AccountApprovalPending from './AccountApprovalPending/AccountApprovalPending'
+import IndividualPosts from './IndividualPosts/IndividualPosts'
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator()
 
 const NewsfeedNavigator = () => {
+
 	const { post, setPost } = useAppContext();
 	const { currentUser, setCurrentUser } = useAppContext();
 
@@ -23,7 +24,7 @@ const NewsfeedNavigator = () => {
 			<Stack.Screen
 				name="Newsfeed"
 				component={Newsfeed}
-				options={{ title: 'Newsfeed', headerLeft: null }}
+				options={{ title: 'Newsfeed', headerLeft: null, headerShown: false }}
 			/>
 			<Stack.Screen
 				name="BuildingInfo"
@@ -65,4 +66,4 @@ const NewsfeedNavigator = () => {
 	}
 };
 
-export { NewsfeedNavigator };
+export { NewsfeedNavigator }
