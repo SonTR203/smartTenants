@@ -13,11 +13,11 @@ import IndividualPosts from './IndividualPosts/IndividualPosts';
 import EditProfile from './ProfilePage/EditProfile/EditProfile'
 import MyPosts from './ProfilePage/MyPosts/MyPosts'
 import ProfileGeneral from './ProfilePage/ProfileGeneral/ProfileGeneral';
-//import Notifications from './Notifications/Notifications';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator()
 
 const NewsfeedNavigator = () => {
+
 	const { post, setPost } = useAppContext();
 	const { currentUser, setCurrentUser } = useAppContext();
 
