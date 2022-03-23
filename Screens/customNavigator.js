@@ -1,7 +1,6 @@
 //mix tab and stack navigators: https://www.youtube.com/watch?v=dkriklWelm0&t=139s
 
 import React from 'react';
-import { Button , Alert} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Newsfeed from './Newsfeed/Newsfeed';
 import BuildingInfo from './BuildingInfo/BuildingInfo';
@@ -13,24 +12,20 @@ import AccountApprovalPending from './AccountApprovalPending/AccountApprovalPend
 import IndividualPosts from './IndividualPosts/IndividualPosts';
 import DeletePost from '../components/DeletePost';
 
-import { deleteDoc, doc} from 'firebase/firestore';
-import { db } from '../firebase-config';
-
-const Stack = createStackNavigator();
+const Stack = createStackNavigator()
 
 const NewsfeedNavigator = () => {
+
 	const { post, setPost } = useAppContext();
 	const { currentUser, setCurrentUser } = useAppContext();
 
-
-
-	if (currentUser && currentUser.tenantAuthorized) {
+	if(currentUser && currentUser.tenantAuthorized){
 		return (
 			<Stack.Navigator>
 				<Stack.Screen
 					name="Newsfeed"
 					component={Newsfeed}
-					options={{ title: 'Newsfeed', headerLeft: null }}
+					options={{ title: 'Newsfeed', headerLeft: null, headerShown: false }}
 				/>
 				<Stack.Screen
 					name="BuildingInfo"
@@ -52,17 +47,11 @@ const NewsfeedNavigator = () => {
 								currentUser.userDocId === post.userID ||
 								currentUser.isAdmin
 							) {
-								return <DeletePost/>;
+								return <DeletePost />;
 							}
 						},
 					}}
 				/>
-
-				{/* <Stack.Screen
-					name="DeletePost"
-					component={DeletePost}
-					options={{ title: 'delete posttttt' }}
-				/> */}
 			</Stack.Navigator>
 		);
 	} else {
@@ -88,4 +77,4 @@ const NewsfeedNavigator = () => {
 	}
 };
 
-export { NewsfeedNavigator };
+export { NewsfeedNavigator }

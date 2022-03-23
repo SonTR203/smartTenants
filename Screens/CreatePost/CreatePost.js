@@ -191,6 +191,7 @@ const CreatePost = ({ navigation }) => {
 					placeholder="280 characters maximum"
 					numberOfLines={5}
 					multiline={true}
+					maxLength={280}
 					style={[theme.textInput, styleVariables.fontSizes.body]}
 				></TextInput>
 			</View>
