@@ -1,15 +1,25 @@
-import { View, Text, ActivityIndicator, Image, Alert } from 'react-native';
+import {
+	View,
+	Text,
+	ActivityIndicator,
+	Image,
+	Alert,
+	Button
+} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
 
 import React from 'react';
 import { useAppContext } from '../../Context/AppContext';
 
-const IndividualPosts = () => {
+
+const IndividualPosts = ({ route , navigation}) => {
 	const { post, setPost } = useAppContext();
 
-	
+
 
 	return (
+	
 		<View style={{ borderColor: 'black', borderWidth: 1, margin: 20 }}>
 			<View className="postOwnerInfo" style={{ flexDirection: 'row' }}>
 				<Image
@@ -32,8 +42,6 @@ const IndividualPosts = () => {
 					/>
 				)}
 			</View>
-
-		
 		</View>
 	);
 };

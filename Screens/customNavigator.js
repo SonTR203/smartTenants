@@ -11,10 +11,9 @@ import Login from './Login/Login';
 import Signup from './Signup/Signup';
 import AccountApprovalPending from './AccountApprovalPending/AccountApprovalPending';
 import IndividualPosts from './IndividualPosts/IndividualPosts';
-
+import DeletePost from '../components/DeletePost';
 
 import { deleteDoc, doc} from 'firebase/firestore';
-
 import { db } from '../firebase-config';
 
 const Stack = createStackNavigator();
@@ -24,29 +23,6 @@ const NewsfeedNavigator = () => {
 	const { currentUser, setCurrentUser } = useAppContext();
 
 
-console.log(post.id);
-
-	const optionsAlert = () =>{
-
-	console.log("Displaying Alert for options");
-
-Alert.alert('title', 'My Alert Msg', [
-	{
-		text: 'Delete',
-		onPress: deletePost,
-		style: 'cancel',
-	},
-	{
-		text: 'Turn off Notifications',
-		onPress: () => console.log('Turn off Notifications Pressed'),
-	},
-]);  
-	}
-
-	const deletePost = async () => {
-		const singleDoc = doc(db, 'Newsfeed', post.id);
-		await deleteDoc(singleDoc);
-	};
 
 	if (currentUser && currentUser.tenantAuthorized) {
 		return (
@@ -72,12 +48,21 @@ Alert.alert('title', 'My Alert Msg', [
 					options={{
 						title: `${post.userFirstName}'s Post`,
 						headerRight: () => {
-							if (currentUser.userDocId === post.userID || currentUser.isAdmin) {
-								return <Button title="options" onPress={optionsAlert} />;
+							if (
+								currentUser.userDocId === post.userID ||
+								currentUser.isAdmin
+							) {
+								return <DeletePost/>;
 							}
 						},
 					}}
 				/>
+
+				{/* <Stack.Screen
+					name="DeletePost"
+					component={DeletePost}
+					options={{ title: 'delete posttttt' }}
+				/> */}
 			</Stack.Navigator>
 		);
 	} else {
