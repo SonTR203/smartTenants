@@ -3,8 +3,8 @@ import { createContext, useContext } from 'react'
 import { Dimensions } from 'react-native'
 
 const ThemeContext = createContext()
-const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
+const windowWidth = Dimensions.get('window').width
 
 function ThemeProvider (props) {
   return <ThemeContext.Provider value={[theme, styleVariables]} {...props} />
@@ -88,6 +88,24 @@ const theme = StyleSheet.create({
     padding: 17,
     borderRadius: 24,
     shadowColor: styleVariables.colors.primary,
+    shadowOffset: {
+      width: 0,
+      height: 8
+    },
+    shadowOpacity: 0.14,
+    shadowRadius: 34,
+    elevation: 20
+  },
+  cardContainer: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    backgroundColor: styleVariables.colors.white,
+    padding: 17,
+    marginHorizontal: 17,
+    marginBottom: 17,
+    borderRadius: 24,
+    shadowColor: styleVariables.colors.black,
     shadowOffset: {
       width: 0,
       height: 8
@@ -214,6 +232,7 @@ const theme = StyleSheet.create({
     backgroundColor: 'white',
     minHeight: 66,
     margin: 17,
+    marginBottom: 22,
     padding: 22,
     borderRadius: 24,
     shadowColor: styleVariables.colors.primary,
