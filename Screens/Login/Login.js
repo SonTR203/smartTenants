@@ -55,6 +55,7 @@ const Login = ({ navigation }) => {
           let object = item._document.data.value.mapValue.fields
           loggedInUser = {
             buildingID: object.buildingID.stringValue,
+            buildingAddress: object.buildingAddress.stringValue,
             email: object.email.stringValue,
             firstName: object.firstName.stringValue,
             lastName: object.lastName.stringValue,

@@ -78,197 +78,152 @@ const EditProfile = ({ navigation }) => {
     return true
   }
 
-  async function getCurrentUserDetails(currentUser) {
-    const findUser = async user => {
-      const colRef = collection(db, 'Users')
-      const data = await getDocs(colRef)
-      let loggedInUser
+  function goToProfile(navigation) {
+    navigation.navigate('ProfileGeneral');
+  }
 
-      data.docs.map(item => {
-        let userUID = item._document.data.value.mapValue.fields.userID.stringValue
-        if (userUID) {
-          if (userUID == user.uid) {
-            let object = item._document.data.value.mapValue.fields
-            loggedInUser = {
-              buildingID: object.buildingID.stringValue,
-              email: object.email.stringValue,
-              firstName: object.firstName.stringValue,
-              lastName: object.lastName.stringValue,
-              isAdmin: object.isAdmin.booleanValue,
-              myMarketplacePosts: object.myMarketplacePosts.arrayValue,
-              myPosts: object.myPosts.arrayValue,
-              tenantAuthorized: object.tenantAuthorized.booleanValue,
-              unitNumber: object.unitNumber.integerValue,
-              userUID: object.userID.stringValue,
-              userDocId: item._key.path.segments[6],
-              visibleNotices: object.visibleNotices.arrayValue,
-              visibleAnnouncements: object.visibleAnnouncements.arrayValue
-            }
-            globalSetCurrentUser(loggedInUser)
-          }
-        }
-      })
-    }
+  function saveProfileInfo() {
+    console.log('save profile info')
+  }
 
-    function goToProfile(navigation) {
-      //navigation.navigate('ProfileGeneral');
-    }
-
-    function saveProfileInfo() {
-
-    }
-
-    return (
-      <SafeAreaView>
-        <ScrollView style={theme.pageContainer}>
-          <StatusBar style='auto' />
-          <KeyboardAvoidingView behavior='padding'>
-            <View id='signupInputs'>
-              <View id='firstNameInput'>
-                <Text
-                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-                >
-                  Name
-                </Text>
-                <TextInput
-                  placeholder='John'
-                  value={loggedInUser.firstName}
-                  onChangeText={text => setFirstName(text)}
-                  style={[theme.textInput, styleVariables.fontSizes.body]}
-                />
-              </View>
-              <View id='lastNameInput'>
-                <Text
-                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-                >
-                  Last Name
-                </Text>
-                <TextInput
-                  placeholder='Doe'
-                  value={lastName}
-                  onChangeText={text => setLastName(text)}
-                  style={[theme.textInput, styleVariables.fontSizes.body]}
-                />
-              </View>
-
-              <View id='unitNumberInput'>
-                <Text
-                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-                >
-                  Unit number
-                </Text>
-                <TextInput
-                  placeholder='1234'
-                  value={unitNumber}
-                  onChangeText={text => setUnitNumber(text)}
-                  style={[theme.textInput, styleVariables.fontSizes.body]}
-                />
-              </View>
-
-              <View id='buildingSelect'>
-                <Text
-                  style={[
-                    theme.textInputLabel,
-                    styleVariables.fontSizes.body,
-                    { zIndex: 2 }
-                  ]}
-                >
-                  Building Address
-                </Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    changeModalVisibility(true)
-                  }}
-                >
-                  <Text
-                    style={[
-                      theme.textInput,
-                      styleVariables.fontSizes.body,
-                      { color: '#00000080' }
-                    ]}
-                  >
-                    {buildingAddress}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <Modal
-                transparent={true}
-                animationType='fade'
-                visible={modalVisible}
-                nRequestClose={() => {
-                  changeModalVisibility(false)
-                }}
+  return (
+    <SafeAreaView>
+      <ScrollView style={theme.pageContainer}>
+        <StatusBar style='auto' />
+        <KeyboardAvoidingView behavior='padding'>
+          <View id='signupInputs'>
+            <View id='firstNameInput'>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
               >
-                <ModalPicker
-                  changeModalVisibility={changeModalVisibility}
-                  setData={setData}
-                />
-              </Modal>
-              <View id='emailInput'>
-                <Text
-                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-                >
-                  Email
-                </Text>
-                <TextInput
-                  placeholder='name@company.com'
-                  value={email}
-                  onChangeText={text => {
-                    setEmail(text)
-                  }}
-                  style={[theme.textInput, styleVariables.fontSizes.body]}
-                />
-              </View>
-              <View id='passwordInput'>
-                <Text
-                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-                >
-                  Password
-                </Text>
-                <TextInput
-                  placeholder='Minimum 8 characters'
-                  value={password}
-                  onChangeText={text => setPassword(text)}
-                  secureTextEntry
-                  style={[theme.textInput, styleVariables.fontSizes.body]}
-                />
-              </View>
+                Name
+              </Text>
+              <TextInput
+                placeholder='John'
+                value={currentUser.firstName}
+                onChangeText={text => setFirstName(text)}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
+            </View>
+            <View id='lastNameInput'>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Last Name
+              </Text>
+              <TextInput
+                placeholder='Doe'
+                value={currentUser.lastName}
+                onChangeText={text => setLastName(text)}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
             </View>
 
-            <View style={[theme.secondaryButton, { marginTop: 17 }]}>
-              <TouchableOpacity onPress={() => { navigation.navigate('ProfileGeneral') }}>
+            <View id='unitNumberInput'>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Unit number
+              </Text>
+              <TextInput
+                placeholder='1234'
+                value={currentUser.unitNumber}
+                onChangeText={text => setUnitNumber(text)}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
+            </View>
+
+            <View id='buildingSelect'>
+              <Text
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.body,
+                  { zIndex: 2 }
+                ]}
+              >
+                Building Address
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  changeModalVisibility(true)
+                }}
+              >
                 <Text
                   style={[
-                    theme.secondaryButtonText,
-                    styleVariables.fontSizes.bodyBold
+                    theme.textInput,
+                    styleVariables.fontSizes.body,
+                    { color: '#00000080' }
                   ]}
                 >
-                  Cancel
+                  {currentUser.buildingAddress}
+                 
                 </Text>
               </TouchableOpacity>
             </View>
-
-            <View id='signupCTA'>
-              <View style={[theme.primaryButton, { marginTop: 17 }]}>
-                <TouchableOpacity
-                //onPress={goToProfile}
-                >
-                  <Text
-                    style={[
-                      theme.primaryButtonText,
-                      styleVariables.fontSizes.bodyBold
-                    ]}
-                  >
-                    Save
-                  </Text>
-                </TouchableOpacity>
-              </View>
+            <Modal
+              transparent={true}
+              animationType='fade'
+              visible={modalVisible}
+              nRequestClose={() => {
+                changeModalVisibility(false)
+              }}
+            >
+              <ModalPicker
+                changeModalVisibility={changeModalVisibility}
+                setData={setData}
+              />
+            </Modal>
+            <View id='emailInput'>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Email
+              </Text>
+              <TextInput
+                placeholder='name@company.com'
+                value={currentUser.email}
+                onChangeText={text => {
+                  setEmail(text)
+                }}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
             </View>
-          </KeyboardAvoidingView>
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
+
+          </View>
+
+            <TouchableOpacity onPress={() => { navigation.navigate('Profile') }}>
+          <View style={[theme.secondaryButton, { marginTop: 17 }]}>
+              <Text
+                style={[
+                  theme.secondaryButtonText,
+                  styleVariables.fontSizes.bodyBold
+                ]}
+              >
+                Cancel
+              </Text>
+          </View>
+            </TouchableOpacity>
+
+          <View id='signupCTA'>
+            <TouchableOpacity
+              onPress={saveProfileInfo}
+              >
+              <View style={[theme.primaryButton, { marginTop: 17 }]}>
+                <Text
+                  style={[
+                    theme.primaryButtonText,
+                    styleVariables.fontSizes.bodyBold
+                  ]}
+                >
+                  Save
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -31,9 +31,10 @@ const ProfileGeneral = ({ navigation }) => {
 	const [theme, styleVariables] = useTheme()
 
 	const { currentUser, setCurrentUser } = useAppContext();
-	console.log('current user', currentUser);
 
-	//the user document id is: currentUser.userDocId
+	const logUserOut = () => {
+		console.log("logging user out")
+	}
 
 
 	return (
@@ -49,7 +50,7 @@ const ProfileGeneral = ({ navigation }) => {
 				<View className="postOwnerInfo" style={{ flexDirection: 'row' }}>
 					<TouchableOpacity
 						id=''
-						//onPress={() => navigation.navigate('EditProfile')}
+						onPress={() => {navigation.navigate('EditProfile')}}
 						style={theme.primaryButton}
 					>
 
@@ -102,8 +103,7 @@ const ProfileGeneral = ({ navigation }) => {
 				</View>
 				<View>
 					<TouchableOpacity
-						id=''
-						onPress={() => navigation.navigate('Login')}
+						onPress={logUserOut}
 						style={theme.primaryButton}
 					>
 						<Text

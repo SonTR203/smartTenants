@@ -84,16 +84,6 @@ const ProfileNavigator = () => {
 				component={EditProfile}
 				options={{ title: "Edit Profile" }}
 			/>
-			<Stack.Screen
-				name="MyPosts"
-				component={IndividualPosts}
-				options={{ title: "My Posts" }}
-			/>
-			<Stack.Screen
-				name="Login"
-				component={Login}
-				options={{ title: "Login" }}
-			/>
 
 		</Stack.Navigator>
 	)
