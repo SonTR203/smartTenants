@@ -24,25 +24,25 @@ import ProfileGeneral from '../ProfileGeneral/ProfileGeneral';
 const auth = getAuth()
 
 const EditProfile = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [buildingAddress, setBuildingAddress] = useState('Select building')
-  const [buildingID, setBuildingID] = useState('')
-  const [modalVisible, setModalVisible] = useState(false)
-  const [unitNumber, setUnitNumber] = useState('')
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [tenantAuthorized, setTenantAuthorized] = useState(false)
-  const [myMarketplacePosts, setMyMarketplacePosts] = useState([])
-  const [myPosts, setMyPosts] = useState([])
-  const [visibleNotices, setVisibileNotices] = useState([])
-  const [visibleAnnouncements, setVisibleAnnouncements] = useState([])
-  const defaultProfileImage =
-    'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=80cd4281-4842-42b6-90ca-0828f00ceb82'
-
   const { currentUser, setCurrentUser } = useAppContext();
+  const [theme, styleVariables] = useTheme()
+  const [email, setEmail] = useState(currentUser.email)
+  const [userUID, setUserUID] = useState(currentUser.userUID)
+  // const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState(currentUser.firstName)
+  const [lastName, setLastName] = useState(currentUser.lastName)
+  const [buildingAddress, setBuildingAddress] = useState(currentUser.buildingAddress)
+  const [buildingID, setBuildingID] = useState(currentUser.buildingID)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [unitNumber, setUnitNumber] = useState(currentUser.unitNumber)
+  const [isAdmin, setIsAdmin] = useState(currentUser.isAdmin)
+  const [tenantAuthorized, setTenantAuthorized] = useState(currentUser.tenantAuthorized)
+  const [myMarketplacePosts, setMyMarketplacePosts] = useState(currentUser.myMarketplacePosts)
+  const [myPosts, setMyPosts] = useState(currentUser.myPosts)
+  const [visibleNotices, setVisibileNotices] = useState(currentUser.visibleNotices)
+  const [visibleAnnouncements, setVisibleAnnouncements] = useState(currentUser.visibleAnnouncements)
+  const [userProfileImage, setUserProfileImage] = useState(currentUser.userProfileImage)
+
 
   const changeModalVisibility = bool => {
     setModalVisible(bool)
@@ -84,6 +84,28 @@ const EditProfile = ({ navigation }) => {
 
   function saveProfileInfo() {
     console.log('save profile info')
+  
+    let newUserObj = {
+        userUID, 
+        firstName,
+        lastName,
+        buildingID,
+        buildingAddress,
+        email,
+        unitNumber,
+        isAdmin,
+        tenantAuthorized,
+        myMarketplacePosts,
+        myPosts,
+        visibleNotices,
+        visibleAnnouncements,
+        userProfileImage
+    }
+
+    console.log("new user object" , newUserObj)
+    //make a fetch call to update the appropriate user object on firestore
+    //-- try addDoc with the new values --
+
   }
 
   return (
@@ -100,7 +122,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder='John'
-                value={currentUser.firstName}
+                defaultValue={currentUser.firstName}
                 onChangeText={text => setFirstName(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
@@ -113,7 +135,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder='Doe'
-                value={currentUser.lastName}
+                defaultValue={currentUser.lastName}
                 onChangeText={text => setLastName(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
@@ -127,7 +149,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder='1234'
-                value={currentUser.unitNumber}
+                defaultValue={currentUser.unitNumber}
                 onChangeText={text => setUnitNumber(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
@@ -181,7 +203,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder='name@company.com'
-                value={currentUser.email}
+                defaultValue={currentUser.email}
                 onChangeText={text => {
                   setEmail(text)
                 }}
@@ -208,7 +230,7 @@ const EditProfile = ({ navigation }) => {
             <TouchableOpacity
               onPress={saveProfileInfo}
               >
-              <View style={[theme.primaryButton, { marginTop: 17 }]}>
+              <View style={[theme.primaryButton, { marginTop: 17}]}>
                 <Text
                   style={[
                     theme.primaryButtonText,
