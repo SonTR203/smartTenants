@@ -34,6 +34,7 @@ const ProfileGeneral = ({ navigation }) => {
 
 	const logUserOut = () => {
 		console.log("logging user out")
+		navigation.navigate("Login")
 	}
 
 
