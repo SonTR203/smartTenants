@@ -236,7 +236,7 @@ const EditProfile = ({ navigation }) => {
             </View>
 
             <View style={[theme.secondaryButton, { marginTop: 17 }]}>
-              <TouchableOpacity onPress={goToProfile}>
+              <TouchableOpacity onPress={() => { navigation.navigate('ProfileGeneral') }}>
                 <Text
                   style={[
                     theme.secondaryButtonText,
@@ -250,7 +250,9 @@ const EditProfile = ({ navigation }) => {
 
             <View id='signupCTA'>
               <View style={[theme.primaryButton, { marginTop: 17 }]}>
-                <TouchableOpacity onPress={goToProfile}>
+                <TouchableOpacity
+                //onPress={goToProfile}
+                >
                   <Text
                     style={[
                       theme.primaryButtonText,

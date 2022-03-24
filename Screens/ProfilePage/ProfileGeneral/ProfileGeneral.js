@@ -19,10 +19,6 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { collection, getDocs, addDoc } from '@firebase/firestore'
 import { useTheme } from '../../../ThemeContext'
 import { ProfilePages } from '../../customNavigator'
-
-console.log('line 23', ProfilePages)
-
-
 import { db } from '../../../firebase-config'
 import { useAppContext } from '../../../Context/AppContext'
 import EditProfile from '../EditProfile/EditProfile'
@@ -46,14 +42,14 @@ const ProfileGeneral = ({ navigation }) => {
 			<View>
 				<Text>{currentUser.firstName + " " + currentUser.lastName}</Text>
 			</View>
-			{ currentUser.isAdmin && <View>
+			{currentUser.isAdmin && <View>
 				<Text>Admin Panel</Text>
-			</View> }
+			</View>}
 			<View style={{ borderColor: 'black', borderWidth: 1, margin: 20 }}>
 				<View className="postOwnerInfo" style={{ flexDirection: 'row' }}>
 					<TouchableOpacity
 						id=''
-						//onPress={navigation.navigate('EditProfile')}
+						//onPress={() => navigation.navigate('EditProfile')}
 						style={theme.primaryButton}
 					>
 
