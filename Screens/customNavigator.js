@@ -27,7 +27,7 @@ const NewsfeedNavigator = () => {
 				<Stack.Screen
 					name="Newsfeed"
 					component={Newsfeed}
-					options={{ title: 'Newsfeed', headerLeft: null }}
+					options={{ title: 'Newsfeed', headerLeft: null, headerShown: false }}
 				/>
 				<Stack.Screen
 					name="BuildingInfo"
