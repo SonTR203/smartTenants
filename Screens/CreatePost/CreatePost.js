@@ -16,7 +16,7 @@ import {
 import { StatusBar } from 'expo-status-bar'
 import React, { useState, useEffect } from 'react'
 import { db } from '../../firebase-config'
-import { addDoc, collection } from '@firebase/firestore'
+import { addDoc, collection, getDocs } from '@firebase/firestore'
 import { useNavigation } from '@react-navigation/native'
 import * as ImagePicker from 'expo-image-picker'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
@@ -37,7 +37,7 @@ const CreatePost = ({ navigation }) => {
     Math.floor(Math.random() * 20)}.jpg`
 
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       if (Platform.OS !== 'web') {
         const {
           status
@@ -50,28 +50,50 @@ const CreatePost = ({ navigation }) => {
   }, [])
 
   async function PostContent (imgUrl) {
+
+    let specificPostID;
+
     if (!imgUrl) {
       imgUrl = 'no image posted'
     }
     try {
-      console.log(currentUser)
-      console.log(currentUser.userProfileImage)
-      await addDoc(collection(db, 'Newsfeed'), {
+
+      const {id} = await addDoc(collection(db, 'Newsfeed'), {
         postContent: postContent,
         userID: currentUser.userDocId,
         userFirstName: currentUser.firstName,
         userLastName: currentUser.lastName,
         userProfileImage: currentUser.userProfileImage,
         images: [imgUrl],
+        timestamp: Date.now(),
         peopleWhoLiked: [],
         comments: []
       })
       postSuccess()
+      specificPostID = id;
+      createMyPostsCollection(specificPostID)
     } catch (error) {
       console.log(error)
       postFailure()
     }
   }
+
+  async function createMyPostsCollection(specificPostID){
+      const colRef = collection(
+        db,
+        `Users/${currentUser.userDocId}/myPosts`
+      )
+      let data = await getDocs(colRef)
+      if (data.docs.length > 0) {
+        console.log('myPosts Subcollection already exists')
+      } else {
+        console.log('creating myPosts doc')
+        await addDoc(colRef, {
+          postID: specificPostID
+        })
+      }
+    }
+  
 
   function postSuccess () {
     setIsloading(false)
