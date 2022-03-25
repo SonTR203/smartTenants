@@ -71,14 +71,14 @@ const CreatePost = ({ navigation }) => {
       })
       postSuccess()
       specificPostID = id;
-      createMyPostsCollection(specificPostID)
+      createMyPostsCollection(specificPostID, imgUrl)
     } catch (error) {
       console.log(error)
       postFailure()
     }
   }
 
-  async function createMyPostsCollection(specificPostID){
+  async function createMyPostsCollection(specificPostID, imgUrl){
       const colRef = collection(
         db,
         `Users/${currentUser.userDocId}/myPosts`
@@ -89,8 +89,15 @@ const CreatePost = ({ navigation }) => {
       } else {
         console.log('creating myPosts doc')
         await addDoc(colRef, {
-          postID: specificPostID
-        })
+          postContent: postContent,
+          postID: specificPostID,
+          userID: currentUser.userDocId,
+          userFirstName: currentUser.firstName,
+          userLastName: currentUser.lastName,
+          userProfileImage: currentUser.userProfileImage,
+          images: [imgUrl],
+          timestamp: Date.now(),
+         })
       }
     }
   
