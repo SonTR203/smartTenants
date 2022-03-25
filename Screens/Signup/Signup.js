@@ -189,7 +189,9 @@ const Signup = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
             </View>
+
             <Modal
+              id='buildingSelectModal'
               transparent={true}
               animationType='fade'
               visible={modalVisible}
@@ -202,6 +204,7 @@ const Signup = ({ navigation }) => {
                 setData={setData}
               />
             </Modal>
+
             <View id='emailInput'>
               <Text
                 style={[theme.textInputLabel, styleVariables.fontSizes.body]}

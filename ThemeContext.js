@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { createContext, useContext } from 'react'
 import { Dimensions } from 'react-native'
+import { Platform } from 'expo-modules-core'
 
 const ThemeContext = createContext()
 const windowHeight = Dimensions.get('window').height
@@ -178,8 +179,8 @@ const theme = StyleSheet.create({
       height: 8
     },
     shadowOpacity: 0.14,
-    shadowRadius: 34,
-    elevation: 20
+    shadowRadius: 34
+    // elevation: 20
   },
   textInputLabel: {
     backgroundColor: styleVariables.colors.white,
