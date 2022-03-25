@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { createContext, useContext } from 'react'
 import { Dimensions } from 'react-native'
+import { Platform } from 'expo-modules-core'
 
 const ThemeContext = createContext()
 const windowHeight = Dimensions.get('window').height
@@ -38,7 +39,7 @@ let styleVariables = {
 const theme = StyleSheet.create({
   container: {
     // flex: 1,
-    backgroundColor: styleVariables.colors.white,
+    // backgroundColor: styleVariables.colors.white,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -53,6 +54,7 @@ const theme = StyleSheet.create({
     // justifyContent: 'space-between',
     minHeight: windowHeight
   },
+  globalMargins: { marginHorizontal: 17 },
   header: {
     display: 'flex',
     justifyContent: 'center',
@@ -135,7 +137,7 @@ const theme = StyleSheet.create({
   modalText: {
     fontSize: styleVariables.fontSizes.body.fontSize,
     fontFamily: 'Roboto_400Regular',
-    color: '#395E66'
+    color: styleVariables.colors.primary
   },
   fab: {
     position: 'absolute',
@@ -148,7 +150,15 @@ const theme = StyleSheet.create({
     backgroundColor: styleVariables.colors.primary,
     height: 60,
     width: 60,
-    borderRadius: 16
+    borderRadius: 16,
+    shadowColor: styleVariables.colors.primary,
+    shadowOffset: {
+      width: 0,
+      height: 4
+    },
+    shadowOpacity: 0.33,
+    shadowRadius: 21,
+    elevation: 20
   },
   imageUploadPreview: {
     display: 'flex',
@@ -169,8 +179,8 @@ const theme = StyleSheet.create({
       height: 8
     },
     shadowOpacity: 0.14,
-    shadowRadius: 34,
-    elevation: 20
+    shadowRadius: 34
+    // elevation: 20
   },
   textInputLabel: {
     backgroundColor: styleVariables.colors.white,
@@ -183,7 +193,7 @@ const theme = StyleSheet.create({
   },
   textInput: {
     width: '100%',
-    borderColor: '#395E6624',
+    borderColor: styleVariables.colors.primary14,
     borderWidth: 2,
     backgroundColor: styleVariables.colors.white,
     borderRadius: 18,
@@ -197,21 +207,29 @@ const theme = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     paddingVertical: 20,
-    backgroundColor: '#395E66',
+    backgroundColor: styleVariables.colors.primary,
     borderRadius: 18,
-    marginBottom: 17
+    marginBottom: 17,
+    shadowColor: styleVariables.colors.primary,
+    shadowOffset: {
+      width: 0,
+      height: 8
+    },
+    shadowOpacity: 0.14,
+    shadowRadius: 34,
+    elevation: 20
   },
   primaryButtonText: {
     color: styleVariables.colors.white
   },
   secondaryButton: {
-    color: '#395E66',
+    color: styleVariables.colors.primary,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     paddingVertical: 20,
-    borderColor: '#395E6624',
+    borderColor: styleVariables.colors.primary14,
     borderWidth: 2,
     borderRadius: 18,
     marginBottom: 17
@@ -222,7 +240,7 @@ const theme = StyleSheet.create({
     alignItems: 'center',
     fontSize: styleVariables.fontSizes.body.fontSize,
     fontFamily: 'Roboto_400Regular',
-    color: '#395E66'
+    color: styleVariables.colors.primary
   },
   cardButton: {
     display: 'flex',

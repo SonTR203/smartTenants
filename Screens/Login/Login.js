@@ -71,8 +71,7 @@ const Login = ({ navigation }) => {
             userProfileImage: object.userProfileImage.stringValue
           }
           globalSetCurrentUser(loggedInUser)
-          createNotificationCollection(loggedInUser);
-
+          createNotificationCollection(loggedInUser)
         }
       }
     })
@@ -84,30 +83,30 @@ const Login = ({ navigation }) => {
     }
   }
 
-  const createNotificationCollection = async (loggedInUser) => {
-		const colRef = collection(
-			db,
-			`Users/${loggedInUser.userDocId}/Notifications`
-		);
-		let data = await getDocs(colRef);
-		if (data.docs.length > 0) {
-			console.log('Notifications Subcollection already exists');
-		} else {
-			console.log('creating notification doc');
-			await addDoc(colRef, {
-				content:
-					'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
-				notificationID: 1,
-				postID: '',
-				userID: loggedInUser.userDocId,
-				wasSeen: false,
-			});
-		}
-	};
+  const createNotificationCollection = async loggedInUser => {
+    const colRef = collection(
+      db,
+      `Users/${loggedInUser.userDocId}/Notifications`
+    )
+    let data = await getDocs(colRef)
+    if (data.docs.length > 0) {
+      console.log('Notifications Subcollection already exists')
+    } else {
+      console.log('creating notification doc')
+      await addDoc(colRef, {
+        content:
+          'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
+        notificationID: 1,
+        postID: '',
+        userID: loggedInUser.userDocId,
+        wasSeen: false
+      })
+    }
+  }
 
-  function forgotPassword() {
-		console.log('forgot password');
-	}
+  function forgotPassword () {
+    console.log('forgot password')
+  }
 
   return (
     <SafeAreaView>
@@ -127,7 +126,7 @@ const Login = ({ navigation }) => {
             />
           </View>
 
-          <View id='LoginContainer'>
+          <View id='LoginContainer' style={theme.globalMargins}>
             {/* textInput */}
             <View id='emailInput'>
               <Text
@@ -163,7 +162,7 @@ const Login = ({ navigation }) => {
               style={[theme.container, { alignItems: 'flex-end' }]}
             >
               <Text
-              onPress={forgotPassword}
+                onPress={forgotPassword}
                 style={[
                   styleVariables.fontSizes.callout,
                   {
@@ -229,7 +228,11 @@ const Login = ({ navigation }) => {
           {/* BrowseListingsRedirect */}
           <View
             id='browseListingsRedirect'
-            style={[theme.container, { marginTop: 34, marginBottom: 8 }]}
+            style={[
+              theme.container,
+              theme.globalMargins,
+              { marginTop: 34, marginBottom: 8 }
+            ]}
           >
             <Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
               Looking to be one of our future tenants?
