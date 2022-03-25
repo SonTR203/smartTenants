@@ -49,9 +49,9 @@ const Login = ({ navigation }) => {
     let loggedInUser
 
     data.docs.map(item => {
-      let userUID = item._document.data.value.mapValue.fields.userID.stringValue
-      if (userUID) {
-        if (userUID == user.uid) {
+      let userID = item._document.data.value.mapValue.fields.userID.stringValue
+      if (userID) {
+        if (userID == user.uid) {
           let object = item._document.data.value.mapValue.fields
           loggedInUser = {
             buildingID: object.buildingID.stringValue,
@@ -64,7 +64,7 @@ const Login = ({ navigation }) => {
             myPosts: object.myPosts.arrayValue,
             tenantAuthorized: object.tenantAuthorized.booleanValue,
             unitNumber: object.unitNumber.integerValue,
-            userUID: object.userID.stringValue,
+            userID: object.userID.stringValue,
             userDocId: item._key.path.segments[6],
             visibleNotices: object.visibleNotices.arrayValue,
             visibleAnnouncements: object.visibleAnnouncements.arrayValue,
