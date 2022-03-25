@@ -17,6 +17,7 @@ import { useAppContext } from '../../Context/AppContext'
 import { useTheme } from '../../ThemeContext'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Dimensions } from 'react-native'
+import _ from 'lodash'
 const windowWidth = Dimensions.get('window').width
 
 let globalPost
@@ -41,14 +42,31 @@ const Newsfeed = ({ navigation }) => {
 
   const getPosts = async () => {
     const data = await getDocs(colRef)
-    setPosts(
-      data.docs.map(item => ({
-        ...item._document.data.value.mapValue.fields,
-        id: item._key.path.segments[6]
-      }))
-    )
+    let listOfPosts = data.docs.map(item => ({
+          ...item._document.data.value.mapValue.fields,
+          id: item._key.path.segments[6]
+        }))
+    let sortedListOfPosts = _.sortBy( listOfPosts, 'timestamp.integerValue' ).reverse();
+    setPosts(sortedListOfPosts)    
+
+   
     setRefreshing(false)
   }
+
+
+  //======================= SORTING HAT =======================
+  let comparePosts = (a , b) =>{
+    if ( a.timestamp < b.timestamp ){
+      return -1;
+    }
+    if ( a.timestamp > b.timestamp ){
+      return 1;
+    }
+    return 0;
+
+  }
+    //======================= SORTING HAT ENDS =======================
+
 
   return (
     <SafeAreaView
