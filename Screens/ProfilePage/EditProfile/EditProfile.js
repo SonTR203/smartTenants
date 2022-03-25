@@ -22,12 +22,12 @@ import { async } from '@firebase/util';
 import ProfileGeneral from '../ProfileGeneral/ProfileGeneral';
 
 const auth = getAuth()
-
 const EditProfile = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
+  console.log("CUURENT USER: ",currentUser)
   const [theme, styleVariables] = useTheme()
   const [email, setEmail] = useState(currentUser.email)
-  const [userUID, setUserUID] = useState(currentUser.userUID)
+  const [userID, setUserID] = useState(currentUser.userID)
   // const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState(currentUser.firstName)
   const [lastName, setLastName] = useState(currentUser.lastName)
@@ -86,7 +86,7 @@ const EditProfile = ({ navigation }) => {
     console.log('save profile info')
   
     let newUserObj = {
-        userUID, 
+        userID, 
         firstName,
         lastName,
         buildingID,
