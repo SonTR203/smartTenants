@@ -53,8 +53,6 @@ const Newsfeed = ({ navigation }) => {
     setRefreshing(false)
   }
 
-
-  //======================= SORTING HAT =======================
   let comparePosts = (a , b) =>{
     if ( a.timestamp < b.timestamp ){
       return -1;
@@ -65,8 +63,6 @@ const Newsfeed = ({ navigation }) => {
     return 0;
 
   }
-    //======================= SORTING HAT ENDS =======================
-
 
   return (
     <SafeAreaView
@@ -138,6 +134,7 @@ const Newsfeed = ({ navigation }) => {
 
 //============================== Individual Post Cards ==========================
 function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
+  const [numberOfLikes, setNumberOfLikes] = useState(0)
   posts = {
     comments: posts.comments.arrayValue,
     id: posts.id,
@@ -150,10 +147,27 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
     userLastName: posts.userLastName.stringValue
   }
 
+  const getLikes = async() => {
+    const likesColReference = collection(
+      db,
+      'Newsfeed',
+      `${posts.id}`,
+      'peopleWhoLiked'
+    );
+
+    const data = await getDocs(likesColReference)
+    setNumberOfLikes(data.docs.length)  
+  }
+  getLikes()
+
   const likePost = async () => {
     const notificationColRef = collection(
       db,
       `Users/${posts.userID}/Notifications`
+    )
+    const peopleWhoLikedColRef = collection(
+      db,
+      `Newsfeed/${posts.id}/peopleWhoLiked`
     )
 
     try {
@@ -165,6 +179,18 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
         wasSeen: false
       })
     } catch (error) {
+      console.log(error)
+    }
+
+    try{
+      await addDoc(peopleWhoLikedColRef, {
+        firstName: globalCurrentUser.firstName,
+        lastName: globalCurrentUser.lastName,
+        postID: posts.id,
+        userID: posts.userID
+      })
+      
+    }catch(error){
       console.log(error)
     }
   }
@@ -259,6 +285,7 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
           marginBottom: 5
         }}
       >
+        {/* =========================== LIKE ============================= */}
         <TouchableOpacity
           id='like'
           onPress={likePost}
@@ -274,16 +301,18 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
             color={styleVariables.colors.black}
             style={{ marginRight: 8 }}
           />
-          <Text
-            style={[
-              styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black }
-            ]}
-          >
-            12
+              <Text
+              style={[
+                styleVariables.fontSizes.body,
+                { color: styleVariables.colors.black }
+              ]}
+            >
+              {numberOfLikes}
           </Text>
         </TouchableOpacity>
 
+
+        {/* =========================== COMMENT ============================= */}
         <TouchableOpacity
           id='comment'
           onPress={() => {
