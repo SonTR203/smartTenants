@@ -88,6 +88,8 @@ const CreatePost = ({ navigation }) => {
         console.log('myPosts Subcollection already exists')
       } else {
         console.log('creating myPosts doc')
+      }
+        
         await addDoc(colRef, {
           postContent: postContent,
           postID: specificPostID,
@@ -98,7 +100,6 @@ const CreatePost = ({ navigation }) => {
           images: [imgUrl],
           timestamp: Date.now(),
          })
-      }
     }
   
 
