@@ -34,16 +34,21 @@ const ProfileGeneral = ({ navigation }) => {
 		auth.signOut().then(
 			console.log("Tenant signed out")
 		)
-		navigation.navigate("Login")
+		//============this navigates the user to the login screen within the ProfileNavigator, and when they log back in and try to go 
+		//to profile again, they can only see the login screen again. We'll need to think of a clever way to do this=============
+		// navigation.navigate("Login")
 	}
 
 
 	return (
 		<SafeAreaView>
 			<StatusBar style='auto' />
+			<TouchableOpacity onPress={()=>{navigation.navigate("BuildingInfo")}}>
+            <Text>{currentUser.buildingAddress}</Text>
+      </TouchableOpacity>
 			<View>
 				<Image
-					source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon2.png?alt=media&token=88588d1f-3bc6-4edb-86a2-b0f3f769d3ce' }}
+					source={{ uri: currentUser.userProfileImage }}
 					style={{ height: 43, width: 43, borderRadius: 12 }}
 				/>
 			</View>
@@ -122,6 +127,11 @@ const ProfileGeneral = ({ navigation }) => {
 							Log Out
 						</Text>
 					</TouchableOpacity>
+				</View>
+				<View>
+					<Text>
+						Created by IntelliDev Solutions
+					</Text>
 				</View>
 			</View>
 		</SafeAreaView >

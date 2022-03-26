@@ -94,6 +94,11 @@ const ProfileNavigator = () => {
 				component={Login}
 				options={{ title: "Login", headerLeft: null }}
 			/>
+			<Stack.Screen
+					name="BuildingInfo"
+					component={BuildingInfo}
+					options={{ title: 'Building Info' }}
+				/>
 		</Stack.Navigator>
 	)
 };
