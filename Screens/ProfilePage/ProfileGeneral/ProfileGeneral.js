@@ -39,6 +39,12 @@ const ProfileGeneral = ({ navigation }) => {
 		<SafeAreaView>
 			<StatusBar style='auto' />
 			<View>
+				<Image
+					source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon2.png?alt=media&token=88588d1f-3bc6-4edb-86a2-b0f3f769d3ce' }}
+					style={{ height: 43, width: 43, borderRadius: 12 }}
+				/>
+			</View>
+			<View>
 				<Text>{currentUser.firstName + " " + currentUser.lastName}</Text>
 			</View>
 			{currentUser.isAdmin && <View>

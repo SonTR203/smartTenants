@@ -6,6 +6,7 @@ import {
   Text,
   SafeAreaView,
   KeyboardAvoidingView,
+  Image,
   TextInput,
   TouchableOpacity,
   Modal
@@ -38,7 +39,7 @@ const EditProfile = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [unitNumber, setUnitNumber] = useState(currentUser.unitNumber)
 
-console.log(unitNumber);
+  console.log(unitNumber);
 
   const [isAdmin, setIsAdmin] = useState(currentUser.isAdmin)
   const [tenantAuthorized, setTenantAuthorized] = useState(currentUser.tenantAuthorized)
@@ -88,11 +89,6 @@ console.log(unitNumber);
     console.log('save profile info')
 
 
-    //console.log("new user object", newUserObj)
-    //make a fetch call to update the appropriate user object on firestore
-    //-- try addDoc with the new values --
-
-
     const userDocRef = doc(db, 'Users', currentUser.userDocId);
 
     try {
@@ -118,6 +114,12 @@ console.log(unitNumber);
       <ScrollView style={theme.pageContainer}>
         <StatusBar style='auto' />
         <KeyboardAvoidingView behavior='padding'>
+          <View>
+            <Image
+              source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon2.png?alt=media&token=88588d1f-3bc6-4edb-86a2-b0f3f769d3ce' }}
+              style={{ height: 43, width: 43, borderRadius: 12 }}
+            />
+          </View>
           <View id='signupInputs'>
             <View id='firstNameInput'>
               <Text
