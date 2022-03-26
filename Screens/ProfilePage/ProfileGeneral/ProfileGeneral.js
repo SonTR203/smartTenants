@@ -1,7 +1,3 @@
-//import { View, Text } from 'react-native';
-//import React from 'react';
-// import { useAppContext } from '../../../Context/AppContext';
-
 import React, { useEffect, useState } from 'react'
 import {
 	KeyboardAvoidingView,
@@ -22,6 +18,7 @@ import { ProfilePages } from '../../customNavigator'
 import { db } from '../../../firebase-config'
 import { useAppContext } from '../../../Context/AppContext'
 import EditProfile from '../EditProfile/EditProfile'
+import { ProfileNavigator } from '../../customNavigator';
 
 const auth = getAuth()
 let globalSetCurrentUser
@@ -33,7 +30,8 @@ const ProfileGeneral = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
 
 	const logUserOut = () => {
-		console.log("logging user out")
+		console.log("logging user out");
+		navigation.navigate('Login');
 	}
 
 
@@ -50,7 +48,7 @@ const ProfileGeneral = ({ navigation }) => {
 				<View className="postOwnerInfo" style={{ flexDirection: 'row' }}>
 					<TouchableOpacity
 						id=''
-						onPress={() => {navigation.navigate('EditProfile')}}
+						onPress={() => { navigation.navigate('EditProfile') }}
 						style={theme.primaryButton}
 					>
 

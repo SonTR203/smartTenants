@@ -85,29 +85,29 @@ const Login = ({ navigation }) => {
   }
 
   const createNotificationCollection = async (loggedInUser) => {
-		const colRef = collection(
-			db,
-			`Users/${loggedInUser.userDocId}/Notifications`
-		);
-		let data = await getDocs(colRef);
-		if (data.docs.length > 0) {
-			console.log('Notifications Subcollection already exists');
-		} else {
-			console.log('creating notification doc');
-			await addDoc(colRef, {
-				content:
-					'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
-				notificationID: 1,
-				postID: '',
-				userID: loggedInUser.userDocId,
-				wasSeen: false,
-			});
-		}
-	};
+    const colRef = collection(
+      db,
+      `Users/${loggedInUser.userDocId}/Notifications`
+    );
+    let data = await getDocs(colRef);
+    if (data.docs.length > 0) {
+      console.log('Notifications Subcollection already exists');
+    } else {
+      console.log('creating notification doc');
+      await addDoc(colRef, {
+        content:
+          'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
+        notificationID: 1,
+        postID: '',
+        userID: loggedInUser.userDocId,
+        wasSeen: false,
+      });
+    }
+  };
 
   function forgotPassword() {
-		console.log('forgot password');
-	}
+    console.log('forgot password');
+  }
 
   return (
     <SafeAreaView>
@@ -163,7 +163,7 @@ const Login = ({ navigation }) => {
               style={[theme.container, { alignItems: 'flex-end' }]}
             >
               <Text
-              onPress={forgotPassword}
+                onPress={forgotPassword}
                 style={[
                   styleVariables.fontSizes.callout,
                   {

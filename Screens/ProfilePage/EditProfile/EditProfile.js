@@ -12,37 +12,40 @@ import {
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection, getDocs, deleteDoc } from '@firebase/firestore';
+import { collection, doc, updateDoc } from '@firebase/firestore'
+
+
 import { db } from '../../../firebase-config';
 import ModalPicker from '../../../components/ModalBuildingPicker'
 import { useTheme } from '../../../ThemeContext';
 import { StatusBar } from 'expo-status-bar';
 import { useAppContext } from '../../../Context/AppContext';
 import { async } from '@firebase/util';
-import ProfileGeneral from '../ProfileGeneral/ProfileGeneral';
+//import ProfileGeneral from '../ProfileGeneral/ProfileGeneral';
+import {ProfileNavigator} from '../../customNavigator';
 
 const auth = getAuth()
-
 const EditProfile = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [buildingAddress, setBuildingAddress] = useState('Select building')
-  const [buildingID, setBuildingID] = useState('')
-  const [modalVisible, setModalVisible] = useState(false)
-  const [unitNumber, setUnitNumber] = useState('')
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [tenantAuthorized, setTenantAuthorized] = useState(false)
-  const [myMarketplacePosts, setMyMarketplacePosts] = useState([])
-  const [myPosts, setMyPosts] = useState([])
-  const [visibleNotices, setVisibileNotices] = useState([])
-  const [visibleAnnouncements, setVisibleAnnouncements] = useState([])
-  const defaultProfileImage =
-    'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=80cd4281-4842-42b6-90ca-0828f00ceb82'
-
   const { currentUser, setCurrentUser } = useAppContext();
+  console.log("CUURENT USER: ", currentUser)
+  const [theme, styleVariables] = useTheme()
+  const [email, setEmail] = useState(currentUser.email)
+  const [userID, setUserID] = useState(currentUser.userID)
+  // const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState(currentUser.firstName)
+  const [lastName, setLastName] = useState(currentUser.lastName)
+  const [buildingAddress, setBuildingAddress] = useState(currentUser.buildingAddress)
+  const [buildingID, setBuildingID] = useState(currentUser.buildingID)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [unitNumber, setUnitNumber] = useState(currentUser.unitNumber)
+  const [isAdmin, setIsAdmin] = useState(currentUser.isAdmin)
+  const [tenantAuthorized, setTenantAuthorized] = useState(currentUser.tenantAuthorized)
+  const [myMarketplacePosts, setMyMarketplacePosts] = useState(currentUser.myMarketplacePosts)
+  const [myPosts, setMyPosts] = useState(currentUser.myPosts)
+  const [visibleNotices, setVisibileNotices] = useState(currentUser.visibleNotices)
+  const [visibleAnnouncements, setVisibleAnnouncements] = useState(currentUser.visibleAnnouncements)
+  const [userProfileImage, setUserProfileImage] = useState(currentUser.userProfileImage)
+
 
   const changeModalVisibility = bool => {
     setModalVisible(bool)
@@ -71,9 +74,6 @@ const EditProfile = ({ navigation }) => {
     } else if (!email) {
       alert('Please Enter Your Email Address')
       return false
-    } else if (!password) {
-      alert('Please Enter Your Password, at least 6 characters')
-      return false
     }
     return true
   }
@@ -82,9 +82,83 @@ const EditProfile = ({ navigation }) => {
     navigation.navigate('ProfileGeneral');
   }
 
-  function saveProfileInfo() {
+  async function saveProfileInfo() {
     console.log('save profile info')
+
+    // let newUserObj = {
+    //   userID,
+    //   firstName,
+    //   lastName,
+    //   buildingID,
+    //   buildingAddress,
+    //   email,
+    //   unitNumber,
+    //   isAdmin,
+    //   tenantAuthorized,
+    //   myMarketplacePosts,
+    //   myPosts,
+    //   visibleNotices,
+    //   visibleAnnouncements,
+    //   userProfileImage
+    // }
+
+    //console.log("new user object", newUserObj)
+    //make a fetch call to update the appropriate user object on firestore
+    //-- try addDoc with the new values --
+
+
+    const usersColRef = collection(db, 'Users', currentUser.userDocId)
+
+    console.log(usersColRef)
+
+    try {
+      // Set the "capital" field of the city 'DC'
+      await updateDoc(usersColRef, {
+        userID,
+        firstName,
+        lastName,
+        buildingID,
+        buildingAddress,
+        email,
+        unitNumber,
+        isAdmin,
+        tenantAuthorized,
+        myMarketplacePosts,
+        myPosts,
+        visibleNotices,
+        visibleAnnouncements,
+        userProfileImage
+      })
+    }
+    catch (error) {
+      console.log(error);
+    }
+
+
+
+    // try {
+    //   await addDoc(usersColRef, {
+    //     userID,
+    //     firstName,
+    //     lastName,
+    //     buildingID,
+    //     buildingAddress,
+    //     email,
+    //     unitNumber,
+    //     isAdmin,
+    //     tenantAuthorized,
+    //     myMarketplacePosts,
+    //     myPosts,
+    //     visibleNotices,
+    //     visibleAnnouncements,
+    //     userProfileImage
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
+
+
 
   return (
     <SafeAreaView>
@@ -100,7 +174,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder='John'
-                value={currentUser.firstName}
+                defaultValue={currentUser.firstName}
                 onChangeText={text => setFirstName(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
@@ -113,7 +187,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder='Doe'
-                value={currentUser.lastName}
+                defaultValue={currentUser.lastName}
                 onChangeText={text => setLastName(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
@@ -127,7 +201,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder='1234'
-                value={currentUser.unitNumber}
+                defaultValue={currentUser.unitNumber}
                 onChangeText={text => setUnitNumber(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
@@ -156,7 +230,7 @@ const EditProfile = ({ navigation }) => {
                   ]}
                 >
                   {currentUser.buildingAddress}
-                 
+
                 </Text>
               </TouchableOpacity>
             </View>
@@ -181,7 +255,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder='name@company.com'
-                value={currentUser.email}
+                defaultValue={currentUser.email}
                 onChangeText={text => {
                   setEmail(text)
                 }}
@@ -191,8 +265,8 @@ const EditProfile = ({ navigation }) => {
 
           </View>
 
-            <TouchableOpacity onPress={() => { navigation.navigate('Profile') }}>
-          <View style={[theme.secondaryButton, { marginTop: 17 }]}>
+          <TouchableOpacity onPress={() => { navigation.navigate('Profile') }}>
+            <View style={[theme.secondaryButton, { marginTop: 17 }]}>
               <Text
                 style={[
                   theme.secondaryButtonText,
@@ -201,13 +275,13 @@ const EditProfile = ({ navigation }) => {
               >
                 Cancel
               </Text>
-          </View>
-            </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
 
           <View id='signupCTA'>
             <TouchableOpacity
               onPress={saveProfileInfo}
-              >
+            >
               <View style={[theme.primaryButton, { marginTop: 17 }]}>
                 <Text
                   style={[
