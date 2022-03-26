@@ -27,7 +27,7 @@ const NewsfeedNavigator = () => {
 				<Stack.Screen
 					name="Newsfeed"
 					component={Newsfeed}
-					options={{ title: 'Newsfeed', headerLeft: null }}
+					options={{ title: 'Newsfeed', headerLeft: null, headerShown: false }}
 				/>
 				<Stack.Screen
 					name="BuildingInfo"
@@ -83,6 +83,16 @@ const ProfileNavigator = () => {
 				name="EditProfile"
 				component={EditProfile}
 				options={{ title: "Edit Profile" }}
+			/>
+			<Stack.Screen
+				name="MyPosts"
+				component={MyPosts}
+				options={{ title: "My Posts" }}
+			/>
+			<Stack.Screen
+				name="Login"
+				component={Login}
+				options={{ title: "Login", headerLeft: null }}
 			/>
 
 			<Stack.Screen

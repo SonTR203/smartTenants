@@ -27,7 +27,7 @@ import {ProfileNavigator} from '../../customNavigator';
 const auth = getAuth()
 const EditProfile = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
-  console.log("CUURENT USER: ", currentUser)
+  console.log("CUURENT USER: ",currentUser)
   const [theme, styleVariables] = useTheme()
   const [email, setEmail] = useState(currentUser.email)
   const [userID, setUserID] = useState(currentUser.userID)
@@ -281,8 +281,8 @@ const EditProfile = ({ navigation }) => {
           <View id='signupCTA'>
             <TouchableOpacity
               onPress={saveProfileInfo}
-            >
-              <View style={[theme.primaryButton, { marginTop: 17 }]}>
+              >
+              <View style={[theme.primaryButton, { marginTop: 17}]}>
                 <Text
                   style={[
                     theme.primaryButtonText,

@@ -49,9 +49,9 @@ const Login = ({ navigation }) => {
     let loggedInUser
 
     data.docs.map(item => {
-      let userUID = item._document.data.value.mapValue.fields.userID.stringValue
-      if (userUID) {
-        if (userUID == user.uid) {
+      let userID = item._document.data.value.mapValue.fields.userID.stringValue
+      if (userID) {
+        if (userID == user.uid) {
           let object = item._document.data.value.mapValue.fields
           loggedInUser = {
             buildingID: object.buildingID.stringValue,
@@ -64,15 +64,14 @@ const Login = ({ navigation }) => {
             myPosts: object.myPosts.arrayValue,
             tenantAuthorized: object.tenantAuthorized.booleanValue,
             unitNumber: object.unitNumber.integerValue,
-            userUID: object.userID.stringValue,
+            userID: object.userID.stringValue,
             userDocId: item._key.path.segments[6],
             visibleNotices: object.visibleNotices.arrayValue,
             visibleAnnouncements: object.visibleAnnouncements.arrayValue,
             userProfileImage: object.userProfileImage.stringValue
           }
           globalSetCurrentUser(loggedInUser)
-          createNotificationCollection(loggedInUser);
-
+          createNotificationCollection(loggedInUser)
         }
       }
     })
@@ -84,29 +83,29 @@ const Login = ({ navigation }) => {
     }
   }
 
-  const createNotificationCollection = async (loggedInUser) => {
+  const createNotificationCollection = async loggedInUser => {
     const colRef = collection(
       db,
       `Users/${loggedInUser.userDocId}/Notifications`
-    );
-    let data = await getDocs(colRef);
+    )
+    let data = await getDocs(colRef)
     if (data.docs.length > 0) {
-      console.log('Notifications Subcollection already exists');
+      console.log('Notifications Subcollection already exists')
     } else {
-      console.log('creating notification doc');
+      console.log('creating notification doc')
       await addDoc(colRef, {
         content:
           'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
         notificationID: 1,
         postID: '',
         userID: loggedInUser.userDocId,
-        wasSeen: false,
-      });
+        wasSeen: false
+      })
     }
-  };
+  }
 
-  function forgotPassword() {
-    console.log('forgot password');
+  function forgotPassword () {
+    console.log('forgot password')
   }
 
   return (
@@ -127,7 +126,7 @@ const Login = ({ navigation }) => {
             />
           </View>
 
-          <View id='LoginContainer'>
+          <View id='LoginContainer' style={theme.globalMargins}>
             {/* textInput */}
             <View id='emailInput'>
               <Text
@@ -229,7 +228,11 @@ const Login = ({ navigation }) => {
           {/* BrowseListingsRedirect */}
           <View
             id='browseListingsRedirect'
-            style={[theme.container, { marginTop: 34, marginBottom: 8 }]}
+            style={[
+              theme.container,
+              theme.globalMargins,
+              { marginTop: 34, marginBottom: 8 }
+            ]}
           >
             <Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
               Looking to be one of our future tenants?

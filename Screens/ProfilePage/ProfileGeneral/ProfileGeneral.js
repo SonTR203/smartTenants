@@ -30,8 +30,8 @@ const ProfileGeneral = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
 
 	const logUserOut = () => {
-		console.log("logging user out");
-		navigation.navigate('Login');
+		console.log("logging user out")
+		navigation.navigate("Login")
 	}
 
 
