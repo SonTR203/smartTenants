@@ -31,6 +31,9 @@ const ProfileGeneral = ({ navigation }) => {
 
 	const logUserOut = () => {
 		console.log("logging user out")
+		auth.signOut().then(
+			console.log("Tenant signed out")
+		)
 		navigation.navigate("Login")
 	}
 

@@ -87,12 +87,9 @@ const EditProfile = ({ navigation }) => {
 
   async function saveProfileInfo() {
     console.log('save profile info')
-
-
     const userDocRef = doc(db, 'Users', currentUser.userDocId);
 
     try {
-      // Set the "capital" field of the city 'DC'
       await updateDoc(userDocRef, {
         userID,
         firstName,
