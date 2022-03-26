@@ -1,7 +1,3 @@
-//import { View, Text } from 'react-native';
-//import React from 'react';
-// import { useAppContext } from '../../../Context/AppContext';
-
 import React, { useEffect, useState } from 'react'
 import {
 	KeyboardAvoidingView,
@@ -22,6 +18,7 @@ import { ProfilePages } from '../../customNavigator'
 import { db } from '../../../firebase-config'
 import { useAppContext } from '../../../Context/AppContext'
 import EditProfile from '../EditProfile/EditProfile'
+import { ProfileNavigator } from '../../customNavigator';
 
 const auth = getAuth()
 let globalSetCurrentUser
@@ -34,13 +31,27 @@ const ProfileGeneral = ({ navigation }) => {
 
 	const logUserOut = () => {
 		console.log("logging user out")
-		navigation.navigate("Login")
+		auth.signOut().then(
+			console.log("Tenant signed out")
+		)
+		//============this navigates the user to the login screen within the ProfileNavigator, and when they log back in and try to go 
+		//to profile again, they can only see the login screen again. We'll need to think of a clever way to do this=============
+		// navigation.navigate("Login")
 	}
 
 
 	return (
 		<SafeAreaView>
 			<StatusBar style='auto' />
+			<TouchableOpacity onPress={()=>{navigation.navigate("BuildingInfo")}}>
+            <Text>{currentUser.buildingAddress}</Text>
+      </TouchableOpacity>
+			<View>
+				<Image
+					source={{ uri: currentUser.userProfileImage }}
+					style={{ height: 43, width: 43, borderRadius: 12 }}
+				/>
+			</View>
 			<View>
 				<Text>{currentUser.firstName + " " + currentUser.lastName}</Text>
 			</View>
@@ -51,7 +62,7 @@ const ProfileGeneral = ({ navigation }) => {
 				<View className="postOwnerInfo" style={{ flexDirection: 'row' }}>
 					<TouchableOpacity
 						id=''
-						onPress={() => {navigation.navigate('EditProfile')}}
+						onPress={() => { navigation.navigate('EditProfile') }}
 						style={theme.primaryButton}
 					>
 
@@ -116,6 +127,11 @@ const ProfileGeneral = ({ navigation }) => {
 							Log Out
 						</Text>
 					</TouchableOpacity>
+				</View>
+				<View>
+					<Text>
+						Created by IntelliDev Solutions
+					</Text>
 				</View>
 			</View>
 		</SafeAreaView >

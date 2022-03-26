@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native'
 import {
-	useFonts,
-	Roboto_400Regular,
-	Roboto_500Medium,
-	Roboto_700Bold,
+  useFonts,
+  Roboto_400Regular,
+  Roboto_500Medium,
+  Roboto_700Bold,
 } from '@expo-google-fonts/roboto';
 import { ThemeProvider } from './ThemeContext';
 import AppLoading from 'expo-app-loading';
@@ -22,7 +22,7 @@ const Tab = createBottomTabNavigator()
 let globalShowSplashscreen
 let globalSetShowSplashscreen
 
-export default function App () {
+export default function App() {
   const [resourcesLoaded, setResourcesLoaded] = useState(false)
   const [showSplashscreen, setShowSplashscreen] = useState(true)
   globalShowSplashscreen = showSplashscreen
@@ -55,7 +55,7 @@ export default function App () {
   }
 }
 
-function AppContainer () {
+function AppContainer() {
   setTimeout(() => {
     globalSetShowSplashscreen(false)
   }, 2000)
@@ -88,21 +88,21 @@ function AppContainer () {
               {/* ======= Notifications ======= */}
               <Tab.Screen name='Notifications ' component={Notifications} />
 
-							{/* ======= Profile ======= */}
-							<Tab.Screen
-								name='Profile '
-								component={ProfileNavigator}
-								options={{ headerShown: false }}
-								tabBarOptions={{
-									display: 'none'
-								}}
-							/>
-						</Tab.Navigator>
-					</NavigationContainer>
-				)}
-			</AppProvider>
-		</ThemeProvider>
-	);
+              {/* ======= Profile ======= */}
+              <Tab.Screen
+                name='Profile'
+                component={ProfileNavigator}
+                options={{ headerShown: false }}
+                tabBarOptions={{
+                  display: 'none'
+                }}
+              />
+            </Tab.Navigator>
+          </NavigationContainer>
+        )}
+      </AppProvider>
+    </ThemeProvider>
+  );
 }
 
 const getRouteName = route => {
