@@ -12,8 +12,7 @@ import {
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { collection, doc, updateDoc } from '@firebase/firestore'
-
+import { collection, doc, updateDoc } from '@firebase/firestore';
 
 import { db } from '../../../firebase-config';
 import ModalPicker from '../../../components/ModalBuildingPicker'
@@ -21,13 +20,13 @@ import { useTheme } from '../../../ThemeContext';
 import { StatusBar } from 'expo-status-bar';
 import { useAppContext } from '../../../Context/AppContext';
 import { async } from '@firebase/util';
-//import ProfileGeneral from '../ProfileGeneral/ProfileGeneral';
-import {ProfileNavigator} from '../../customNavigator';
+import { ProfileNavigator } from '../../customNavigator';
 
-const auth = getAuth()
+const auth = getAuth();
+
 const EditProfile = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
-  console.log("CUURENT USER: ",currentUser)
+  console.log("CURRENT USER: ", currentUser)
   const [theme, styleVariables] = useTheme()
   const [email, setEmail] = useState(currentUser.email)
   const [userID, setUserID] = useState(currentUser.userID)
@@ -38,6 +37,9 @@ const EditProfile = ({ navigation }) => {
   const [buildingID, setBuildingID] = useState(currentUser.buildingID)
   const [modalVisible, setModalVisible] = useState(false)
   const [unitNumber, setUnitNumber] = useState(currentUser.unitNumber)
+
+console.log(unitNumber);
+
   const [isAdmin, setIsAdmin] = useState(currentUser.isAdmin)
   const [tenantAuthorized, setTenantAuthorized] = useState(currentUser.tenantAuthorized)
   const [myMarketplacePosts, setMyMarketplacePosts] = useState(currentUser.myMarketplacePosts)
@@ -85,35 +87,17 @@ const EditProfile = ({ navigation }) => {
   async function saveProfileInfo() {
     console.log('save profile info')
 
-    // let newUserObj = {
-    //   userID,
-    //   firstName,
-    //   lastName,
-    //   buildingID,
-    //   buildingAddress,
-    //   email,
-    //   unitNumber,
-    //   isAdmin,
-    //   tenantAuthorized,
-    //   myMarketplacePosts,
-    //   myPosts,
-    //   visibleNotices,
-    //   visibleAnnouncements,
-    //   userProfileImage
-    // }
 
     //console.log("new user object", newUserObj)
     //make a fetch call to update the appropriate user object on firestore
     //-- try addDoc with the new values --
 
 
-    const usersColRef = collection(db, 'Users', currentUser.userDocId)
-
-    console.log(usersColRef)
+    const userDocRef = doc(db, 'Users', currentUser.userDocId);
 
     try {
       // Set the "capital" field of the city 'DC'
-      await updateDoc(usersColRef, {
+      await updateDoc(userDocRef, {
         userID,
         firstName,
         lastName,
@@ -121,44 +105,13 @@ const EditProfile = ({ navigation }) => {
         buildingAddress,
         email,
         unitNumber,
-        isAdmin,
-        tenantAuthorized,
-        myMarketplacePosts,
-        myPosts,
-        visibleNotices,
-        visibleAnnouncements,
-        userProfileImage
       })
+      navigation.navigate('ProfileGeneral');
     }
     catch (error) {
       console.log(error);
     }
-
-
-
-    // try {
-    //   await addDoc(usersColRef, {
-    //     userID,
-    //     firstName,
-    //     lastName,
-    //     buildingID,
-    //     buildingAddress,
-    //     email,
-    //     unitNumber,
-    //     isAdmin,
-    //     tenantAuthorized,
-    //     myMarketplacePosts,
-    //     myPosts,
-    //     visibleNotices,
-    //     visibleAnnouncements,
-    //     userProfileImage
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
   }
-
-
 
   return (
     <SafeAreaView>
@@ -281,8 +234,8 @@ const EditProfile = ({ navigation }) => {
           <View id='signupCTA'>
             <TouchableOpacity
               onPress={saveProfileInfo}
-              >
-              <View style={[theme.primaryButton, { marginTop: 17}]}>
+            >
+              <View style={[theme.primaryButton, { marginTop: 17 }]}>
                 <Text
                   style={[
                     theme.primaryButtonText,

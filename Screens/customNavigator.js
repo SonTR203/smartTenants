@@ -75,7 +75,7 @@ const ProfileNavigator = () => {
 	return (
 		<Stack.Navigator>
 			<Stack.Screen
-				name="Profile"
+				name="ProfileGeneral"
 				component={ProfileGeneral}
 				options={{ title: 'Profile' }}
 			/>
@@ -94,19 +94,6 @@ const ProfileNavigator = () => {
 				component={Login}
 				options={{ title: "Login", headerLeft: null }}
 			/>
-
-			<Stack.Screen
-				name="MyPosts"
-				component={MyPosts}
-				options={{ title: "My Posts" }}
-			/>
-
-			<Stack.Screen
-				name="Login"
-				component={Login}
-				options={{ title: "Login" }}
-			/>
-
 		</Stack.Navigator>
 	)
 };
