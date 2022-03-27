@@ -45,7 +45,15 @@ const ProfileGeneral = ({ navigation }) => {
       </View>
       {currentUser.isAdmin && (
         <View>
-          <Text>Admin Panel</Text>
+          <TouchableOpacity
+            id=""
+            onPress={() => {
+              navigation.navigate('AdminPanel');
+            }}
+            // style={theme.primaryButton}
+          >
+            <Text>Admin Panel</Text>
+          </TouchableOpacity>
         </View>
       )}
       <View style={{ borderColor: 'black', borderWidth: 1, margin: 20 }}>

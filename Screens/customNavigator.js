@@ -10,93 +10,98 @@ import Login from './Login/Login';
 import Signup from './Signup/Signup';
 import AccountApprovalPending from './AccountApprovalPending/AccountApprovalPending';
 import IndividualPosts from './IndividualPosts/IndividualPosts';
-import EditProfile from './ProfilePage/EditProfile/EditProfile'
-import MyPosts from './ProfilePage/MyPosts/MyPosts'
+import EditProfile from './ProfilePage/EditProfile/EditProfile';
+import MyPosts from './ProfilePage/MyPosts/MyPosts';
 import ProfileGeneral from './ProfilePage/ProfileGeneral/ProfileGeneral';
+import AdminPanel from './Admin/AdminPanel/AdminPanel';
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator();
 
 const NewsfeedNavigator = () => {
+  const { post, setPost } = useAppContext();
+  const { currentUser, setCurrentUser } = useAppContext();
 
-	const { post, setPost } = useAppContext();
-	const { currentUser, setCurrentUser } = useAppContext();
-
-	if (currentUser && currentUser.tenantAuthorized) {
-		return (
-			<Stack.Navigator>
-				<Stack.Screen
-					name="Newsfeed"
-					component={Newsfeed}
-					options={{ title: 'Newsfeed', headerLeft: null, headerShown: false }}
-				/>
-				<Stack.Screen
-					name="BuildingInfo"
-					component={BuildingInfo}
-					options={{ title: 'Building Info' }}
-				/>
-				<Stack.Screen
-					name="CreatePost"
-					component={CreatePost}
-					options={{ title: 'Create Post' }}
-				/>
-				<Stack.Screen
-					name="IndividualPosts"
-					component={IndividualPosts}
-					options={{ title: `${post.userFirstName}'s Post` }}
-				/>
-			</Stack.Navigator>
-		)
-	} else {
-		return (
-			<Stack.Navigator>
-				<Stack.Screen
-					name="Login"
-					component={Login}
-					options={{ title: 'Login' }}
-				/>
-				<Stack.Screen
-					name="Signup"
-					component={Signup}
-					options={{ title: 'Signup' }}
-				/>
-				<Stack.Screen
-					name="AccountApprovalPending"
-					component={AccountApprovalPending}
-					options={{ title: 'Account Approval Pending' }}
-				/>
-			</Stack.Navigator>
-		);
-	}
+  if (currentUser && currentUser.tenantAuthorized) {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Newsfeed"
+          component={Newsfeed}
+          options={{ title: 'Newsfeed', headerLeft: null, headerShown: false }}
+        />
+        <Stack.Screen
+          name="BuildingInfo"
+          component={BuildingInfo}
+          options={{ title: 'Building Info' }}
+        />
+        <Stack.Screen
+          name="CreatePost"
+          component={CreatePost}
+          options={{ title: 'Create Post' }}
+        />
+        <Stack.Screen
+          name="IndividualPosts"
+          component={IndividualPosts}
+          options={{ title: `${post.userFirstName}'s Post` }}
+        />
+      </Stack.Navigator>
+    );
+  } else {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ title: 'Login' }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={Signup}
+          options={{ title: 'Signup' }}
+        />
+        <Stack.Screen
+          name="AccountApprovalPending"
+          component={AccountApprovalPending}
+          options={{ title: 'Account Approval Pending' }}
+        />
+      </Stack.Navigator>
+    );
+  }
 };
-
 
 const ProfileNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Profile"
+        component={ProfileGeneral}
+        options={{ title: 'Profile' }}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{ title: 'Edit Profile' }}
+      />
+      <Stack.Screen
+        name="MyPosts"
+        component={MyPosts}
+        options={{ title: 'My Posts' }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{ title: 'Login', headerLeft: null }}
+      />
 
-	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="Profile"
-				component={ProfileGeneral}
-				options={{ title: 'Profile' }}
-			/>
-			<Stack.Screen
-				name="EditProfile"
-				component={EditProfile}
-				options={{ title: "Edit Profile" }}
-			/>
-			<Stack.Screen
-				name="MyPosts"
-				component={MyPosts}
-				options={{ title: "My Posts" }}
-			/>
-			<Stack.Screen
-				name="Login"
-				component={Login}
-				options={{ title: "Login", headerLeft: null }}
-			/>
+      {/* Admin Pages */}
 
-		</Stack.Navigator>
-	)
+      <Stack.Screen
+        name="AdminPanel"
+        component={AdminPanel}
+        options={{ title: 'AdminPanel', headerLeft: null }}
+      />
+    </Stack.Navigator>
+  );
 };
 
-export { NewsfeedNavigator, ProfileNavigator }
+export { NewsfeedNavigator, ProfileNavigator };
