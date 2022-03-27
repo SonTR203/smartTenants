@@ -11,6 +11,9 @@ import Signup from './Signup/Signup';
 import AccountApprovalPending from './AccountApprovalPending/AccountApprovalPending';
 import IndividualPosts from './IndividualPosts/IndividualPosts';
 import DeletePost from '../components/DeletePost';
+import EditProfile from './ProfilePage/EditProfile/EditProfile'
+import MyPosts from './ProfilePage/MyPosts/MyPosts'
+import ProfileGeneral from './ProfilePage/ProfileGeneral/ProfileGeneral';
 
 const Stack = createStackNavigator()
 
@@ -19,7 +22,7 @@ const NewsfeedNavigator = () => {
 	const { post, setPost } = useAppContext();
 	const { currentUser, setCurrentUser } = useAppContext();
 
-	if(currentUser && currentUser.tenantAuthorized){
+	if (currentUser && currentUser.tenantAuthorized) {
 		return (
 			<Stack.Navigator>
 				<Stack.Screen
@@ -77,4 +80,34 @@ const NewsfeedNavigator = () => {
 	}
 };
 
-export { NewsfeedNavigator }
+
+const ProfileNavigator = () => {
+
+	return (
+		<Stack.Navigator>
+			<Stack.Screen
+				name="Profile"
+				component={ProfileGeneral}
+				options={{ title: 'Profile' }}
+			/>
+			<Stack.Screen
+				name="EditProfile"
+				component={EditProfile}
+				options={{ title: "Edit Profile" }}
+			/>
+			<Stack.Screen
+				name="MyPosts"
+				component={MyPosts}
+				options={{ title: "My Posts" }}
+			/>
+			<Stack.Screen
+				name="Login"
+				component={Login}
+				options={{ title: "Login", headerLeft: null }}
+			/>
+
+		</Stack.Navigator>
+	)
+};
+
+export { NewsfeedNavigator, ProfileNavigator }
