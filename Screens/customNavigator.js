@@ -14,6 +14,10 @@ import EditProfile from './ProfilePage/EditProfile/EditProfile';
 import MyPosts from './ProfilePage/MyPosts/MyPosts';
 import ProfileGeneral from './ProfilePage/ProfileGeneral/ProfileGeneral';
 import AdminPanel from './Admin/AdminPanel/AdminPanel';
+import ManageBuildings from './Admin/ManageBuildings/ManageBuildings';
+import ApproveUsers from './Admin/ApproveUsers/ApproveUsers';
+import ManageUsers from './Admin/ManageUsers/ManageUsers';
+import SendNotice from './Admin/SendNotice/SendNotice';
 
 const Stack = createStackNavigator();
 
@@ -98,7 +102,27 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name="AdminPanel"
         component={AdminPanel}
-        options={{ title: 'AdminPanel', headerLeft: null }}
+        options={{ title: 'Admin Panel', headerLeft: null }}
+      />
+      <Stack.Screen
+        name="ApproveUsers"
+        component={ApproveUsers}
+        options={{ title: 'Approve Users', headerLeft: null }}
+      />
+      <Stack.Screen
+        name="ManageUsers"
+        component={ManageUsers}
+        options={{ title: 'Manage Users', headerLeft: null }}
+      />
+      <Stack.Screen
+        name="SendNotice"
+        component={SendNotice}
+        options={{ title: 'Send Notice', headerLeft: null }}
+      />
+      <Stack.Screen
+        name="ManageBuildings"
+        component={ManageBuildings}
+        options={{ title: 'Manage Buildings', headerLeft: null }}
       />
     </Stack.Navigator>
   );

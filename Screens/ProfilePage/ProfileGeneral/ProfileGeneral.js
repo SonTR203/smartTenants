@@ -50,7 +50,7 @@ const ProfileGeneral = ({ navigation }) => {
             onPress={() => {
               navigation.navigate('AdminPanel');
             }}
-            // style={theme.primaryButton}
+            style={theme.primaryButton}
           >
             <Text>Admin Panel</Text>
           </TouchableOpacity>
