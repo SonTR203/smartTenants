@@ -85,8 +85,9 @@ const theme = StyleSheet.create({
   },
   card: {
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: styleVariables.colors.white,
     padding: 17,
     borderRadius: 24,
     shadowColor: styleVariables.colors.primary,
