@@ -44,6 +44,8 @@ const IndividualPosts = ({ route, navigation }) => {
 			`Newsfeed/${post.id}/peopleWhoCommented`
 		);
 
+		if (!textInputValue) return 
+
 		try {
 			await addDoc(peopleWhoCommentedColRef, {
 				firstName: currentUser.firstName,
@@ -107,7 +109,8 @@ const IndividualPosts = ({ route, navigation }) => {
 					onChangeText={(text) => setTextInputValue(text)}
 					value={textInputValue}
 				/>
-
+					{/* disable button class if no text input for comments */}
+					
 				<Button title="comment" onPress={postComment}></Button>
 			</View>
 		</View>
