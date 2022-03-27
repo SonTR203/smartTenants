@@ -102,27 +102,27 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name="AdminPanel"
         component={AdminPanel}
-        options={{ title: 'Admin Panel', headerLeft: null }}
+        options={{ title: 'Admin Panel' }}
       />
       <Stack.Screen
         name="ApproveUsers"
         component={ApproveUsers}
-        options={{ title: 'Approve Users', headerLeft: null }}
+        options={{ title: 'Approve Users' }}
       />
       <Stack.Screen
         name="ManageUsers"
         component={ManageUsers}
-        options={{ title: 'Manage Users', headerLeft: null }}
+        options={{ title: 'Manage Users' }}
       />
       <Stack.Screen
         name="SendNotice"
         component={SendNotice}
-        options={{ title: 'Send Notice', headerLeft: null }}
+        options={{ title: 'Send Notice' }}
       />
       <Stack.Screen
         name="ManageBuildings"
         component={ManageBuildings}
-        options={{ title: 'Manage Buildings', headerLeft: null }}
+        options={{ title: 'Manage Buildings' }}
       />
     </Stack.Navigator>
   );
