@@ -14,14 +14,39 @@ import EditProfile from './ProfilePage/EditProfile/EditProfile'
 import MyPosts from './ProfilePage/MyPosts/MyPosts'
 import ProfileGeneral from './ProfilePage/ProfileGeneral/ProfileGeneral';
 
-const Stack = createStackNavigator()
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+
+const auth = getAuth();
+
+const Stack = createStackNavigator();
+
+var logged;
+
+onAuthStateChanged(auth, (user) => {
+	if (user) {
+		// User is signed in, see docs for a list of available properties
+		// https://firebase.google.com/docs/reference/js/firebase.User
+		//const uid = user.uid;
+		logged = true;
+		console.log(user.is)
+		// ...
+	} else {
+		// User is signed out
+		// ...
+		logged = false
+		console.log("user is signed out")
+	}
+});
+
+
+
 
 const NewsfeedNavigator = () => {
 
 	const { post, setPost } = useAppContext();
 	const { currentUser, setCurrentUser } = useAppContext();
 
-	if (currentUser && currentUser.tenantAuthorized) {
+	if (currentUser && currentUser.tenantAuthorized, logged) {
 		return (
 			<Stack.Navigator>
 				<Stack.Screen
@@ -90,17 +115,14 @@ const ProfileNavigator = () => {
 				options={{ title: "My Posts" }}
 			/>
 			<Stack.Screen
-				name="Login"
-				component={Login}
-				options={{ title: "Login", headerLeft: null }}
+				name="BuildingInfo"
+				component={BuildingInfo}
+				options={{ title: 'Building Info' }}
 			/>
-			<Stack.Screen
-					name="BuildingInfo"
-					component={BuildingInfo}
-					options={{ title: 'Building Info' }}
-				/>
 		</Stack.Navigator>
 	)
 };
 
+
 export { NewsfeedNavigator, ProfileNavigator }
+

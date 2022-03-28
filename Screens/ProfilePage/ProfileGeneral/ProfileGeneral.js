@@ -11,7 +11,7 @@ import {
 	Linking
 } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { collection, getDocs, addDoc } from '@firebase/firestore'
 import { useTheme } from '../../../ThemeContext'
 import { ProfilePages } from '../../customNavigator'
@@ -19,10 +19,14 @@ import { db } from '../../../firebase-config'
 import { useAppContext } from '../../../Context/AppContext'
 import EditProfile from '../EditProfile/EditProfile'
 import { ProfileNavigator } from '../../customNavigator';
+import { NewsfeedNavigator } from '../../customNavigator';
 
 const auth = getAuth()
 let globalSetCurrentUser
-let globalCurrentUser
+let globalCurrentUser;
+
+let logged = true;
+
 
 const ProfileGeneral = ({ navigation }) => {
 	const [theme, styleVariables] = useTheme()
@@ -36,16 +40,34 @@ const ProfileGeneral = ({ navigation }) => {
 		)
 		//============this navigates the user to the login screen within the ProfileNavigator, and when they log back in and try to go 
 		//to profile again, they can only see the login screen again. We'll need to think of a clever way to do this=============
-		// navigation.navigate("Login")
+		logged = false;
+		logBackIn();
+	}
+
+	function logBackIn() {
+
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				// User is signed in
+			} else {
+				// User is signed out
+			
+				console.log("user is signed out");
+				logged ? true : ProfileNavigator = NewsfeedNavigator;
+				navigation.navigate('Login')
+				return;
+			}
+		});
+
 	}
 
 
 	return (
 		<SafeAreaView>
 			<StatusBar style='auto' />
-			<TouchableOpacity onPress={()=>{navigation.navigate("BuildingInfo")}}>
-            <Text>{currentUser.buildingAddress}</Text>
-      </TouchableOpacity>
+			<TouchableOpacity onPress={() => { navigation.navigate("BuildingInfo") }}>
+				<Text>{currentUser.buildingAddress}</Text>
+			</TouchableOpacity>
 			<View>
 				<Image
 					source={{ uri: currentUser.userProfileImage }}
@@ -137,5 +159,6 @@ const ProfileGeneral = ({ navigation }) => {
 		</SafeAreaView >
 	);
 };
+
 
 export default ProfileGeneral;
