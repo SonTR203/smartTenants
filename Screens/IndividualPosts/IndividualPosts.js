@@ -9,7 +9,7 @@ import {
 	TextInput,
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../../Context/AppContext';
 import { db } from '../../firebase-config';
 import { collection, getDocs, deleteDoc, addDoc } from '@firebase/firestore';
@@ -19,35 +19,69 @@ const IndividualPosts = ({ route, navigation }) => {
 	const { post } = useAppContext();
 	const { currentUser } = useAppContext();
 
-	const [likes, setLikes] = useState();
 	const [textInputValue, setTextInputValue] = useState('');
 
-	let data = [
-		{ name: 'ben', image: 'url', comment: 'This is the best post' },
-		{ name: 'ken', image: 'url', comment: 'This is the best post' },
-		{ name: 'shen', image: 'url', comment: 'This is the best post' },
-		{ name: 'ten', image: 'url', comment: 'This is the best post' },
-	];
+	const [comments, setComments] = useState([]);
 
-	const Comment = ({ item }) => (
-		<View>
-			<Text>{item.name} </Text>
-			<Text>{item.comment} </Text>
-		</View>
-	);
+	// Get all Comments
+	const getComments = () => {
+		console.log('fetching all comments');
+		 let id = '5w4FRE3tKt45t5tMcUEc';
+		// Create Comments collection Reference
 
-	const renderItem = ({ item }) => <Comment item={item} />;
+		// Need to replace id to post.id
+		const colRef = collection(
+			db,
+			`/Newsfeed/${post.id}/peopleWhoCommented`
+		);
 
-	const postComment = async () => {
+		// Get collections data
+		getDocs(colRef).then((snapshot) => {
+			let commentsArray = [];
+			snapshot.docs.forEach((doc) => {
+				commentsArray.push({ ...doc.data(), id: doc.id });
+			});
+			setComments(commentsArray);
+		});
+	};
+
+	console.log(post.id)
+
+	// execute function
+	useEffect(() => {
+		getComments();
+	}, [post.id]);
+
+	//  render comment structure
+	const renderItem = ({ item }) => {
+		return (
+			<View>
+				<View>
+					<Image src={item.userProfileImage}></Image>
+					<Text>
+						{item.firstName}
+						{item.lastName}{' '}
+					</Text>
+				</View>
+
+				<View>
+					<Text>{item.commentContent}</Text>
+				</View>
+			</View>
+		);
+	};
+
+	// Post Comments
+	const postComment = () => {
 		const peopleWhoCommentedColRef = collection(
 			db,
 			`Newsfeed/${post.id}/peopleWhoCommented`
 		);
 
-		if (!textInputValue) return 
+		if (!textInputValue) return;
 
 		try {
-			await addDoc(peopleWhoCommentedColRef, {
+			addDoc(peopleWhoCommentedColRef, {
 				firstName: currentUser.firstName,
 				lastName: currentUser.lastName,
 				userProfileImage: currentUser.userProfileImage,
@@ -58,10 +92,6 @@ const IndividualPosts = ({ route, navigation }) => {
 			console.log(err);
 		}
 	};
-
-	// Todo: get likes count
-
-	console.log(textInputValue);
 
 	return (
 		<View style={{ borderColor: 'black', borderWidth: 1, margin: 20 }}>
@@ -96,10 +126,11 @@ const IndividualPosts = ({ route, navigation }) => {
 			{/* post comments */}
 
 			<View>
+				<Text>Comments</Text>
 				<FlatList
-					data={data}
+					data={comments}
 					renderItem={renderItem}
-					keyExtractor={(item) => item.name}
+					keyExtractor={(item) => item.id}
 				/>
 			</View>
 
@@ -109,8 +140,8 @@ const IndividualPosts = ({ route, navigation }) => {
 					onChangeText={(text) => setTextInputValue(text)}
 					value={textInputValue}
 				/>
-					{/* disable button class if no text input for comments */}
-					
+				{/* disable button class if no text input for comments */}
+
 				<Button title="comment" onPress={postComment}></Button>
 			</View>
 		</View>
