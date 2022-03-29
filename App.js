@@ -93,6 +93,7 @@ function AppContainer() {
 							<Tab.Screen
 								name="Notifications "
 								component={NotificationNavigator}
+								options={{ unmountOnBlur: true }}
 							/>
 
 							{/* ======= Profile ======= */}

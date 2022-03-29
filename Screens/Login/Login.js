@@ -75,7 +75,7 @@ const Login = ({ navigation }) => {
 					};
 					globalSetCurrentUser(loggedInUser);
 					createNotificationCollection(loggedInUser);
-					setNotificationsContext(loggedInUser);
+					//setNotificationsContext(loggedInUser);
 				}
 			}
 		});
@@ -100,33 +100,12 @@ const Login = ({ navigation }) => {
 			await addDoc(colRef, {
 				content:
 					'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
-				notificationID: 1,
 				postID: '',
 				userID: loggedInUser.userDocId,
 				wasSeen: false,
+				timestamp: 0,
 			});
 		}
-	};
-
-	const setNotificationsContext = async (loggedInUser) => {
-		const colReference = collection(
-			db,
-			'Users',
-			`${loggedInUser.userDocId}`,
-			'Notifications'
-		);
-		let notificationList = [];
-
-		await getDocs(colReference)
-			.then((snapshot) => {
-				snapshot.docs.forEach((doc) => {
-					notificationList.push({ ...doc.data(), id: doc.id });
-					setNotifications(notificationList);
-				});
-			})
-			.catch((err) => {
-				console.log(err.message);
-			});
 	};
 
 	function forgotPassword() {

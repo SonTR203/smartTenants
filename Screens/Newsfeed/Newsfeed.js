@@ -182,10 +182,10 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 		try {
 			await addDoc(notificationColRef, {
 				content: `${globalCurrentUser.firstName} ${globalCurrentUser.lastName} liked your post.`,
-				notificationID: 2,
 				postID: posts.id,
 				userID: posts.userID,
 				wasSeen: false,
+				timestamp: Date.now(),
 			}).then(() => {
 				getLikes();
 			});
@@ -290,7 +290,7 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 			<TouchableOpacity
 				id="postContent"
 				onPress={() => {
-					navigation.navigate('IndividualPosts');
+					navigation.push('IndividualPosts');
 					setGlobalPost(posts);
 				}}
 			>
