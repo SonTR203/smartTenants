@@ -4,32 +4,19 @@ import { React, useState, useEffect } from 'react';
 import { FlatList } from 'react-native';
 import { useAppContext } from '../../Context/AppContext';
 import { db } from '../../firebase-config';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+let notificationCount;
+let setNotifPost;
 
 const Notifications = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
-	const [notifications, setNotifications] = useState([]);
-	const colReference = collection(
-		db,
-		'Users',
-		`${currentUser.userDocId}`,
-		'Notifications'
-	);
-
-	useEffect(() => {
-		getDocs(colReference)
-			.then((snapshot) => {
-				let notificationList = [];
-				snapshot.docs.forEach((doc) => {
-					notificationList.push({ ...doc.data(), id: doc.id });
-				});
-				setNotifications(notificationList);
-			})
-			.catch((err) => {
-				console.log(err.message);
-			});
-	}, []);
+	const { post, setPost } = useAppContext();
+	const { notifications, setNotifications } = useAppContext();
+	// const [notifications, setNotifications] = useState([]);
+	notificationCount = notifications.length;
+	setNotifPost = setPost;
 
 	return (
 		<SafeAreaView>
@@ -48,13 +35,56 @@ const Notifications = ({ navigation }) => {
 };
 
 function NotificationItem({ notifications, navigation }) {
-	console.log(notifications);
 	return (
 		// navigate to post page on press
-		<TouchableOpacity>
+		<TouchableOpacity
+			onPress={() => {
+				navigation.navigate('IndividualPosts');
+				viewNotificationPost(notifications);
+			}}
+		>
 			<Text>{notifications.content}</Text>
 		</TouchableOpacity>
 	);
+}
+
+async function viewNotificationPost(notifications) {
+	const docRef = doc(db, 'Newsfeed', `${notifications.postID}`);
+	const docSnap = await getDoc(docRef);
+	let postData = docSnap.data();
+	const likesColReference = collection(
+		db,
+		'Newsfeed',
+		`${docSnap.id}`,
+		'peopleWhoLiked'
+	);
+	const data = await getDocs(likesColReference);
+	console.log('DATA: ', data.docs);
+	let numberOfLikes = data.docs.length;
+	console.log('NUMBER OF LIKES: ', numberOfLikes);
+
+	console.log(postData);
+
+	let post = {
+		comments: postData.comments.arrayValue,
+		id: docSnap.id,
+		image: postData.images,
+		peopleWhoLiked: postData.peopleWhoLiked,
+		postContent: postData.postContent,
+		userID: postData.userID,
+		userProfileImage: postData.userProfileImage,
+		userFirstName: postData.userFirstName,
+		userLastName: postData.userLastName,
+		numberOfLikes: numberOfLikes,
+		timestamp: postData.timestamp,
+	};
+
+	if (docSnap.exists()) {
+		setNotifPost(post);
+	} else {
+		// doc.data() will be undefined in this case
+		console.log('No such document!');
+	}
 }
 
 export default Notifications;

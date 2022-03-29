@@ -10,14 +10,20 @@ import Login from './Login/Login';
 import Signup from './Signup/Signup';
 import AccountApprovalPending from './AccountApprovalPending/AccountApprovalPending';
 import IndividualPosts from './IndividualPosts/IndividualPosts';
-import EditProfile from './ProfilePage/EditProfile/EditProfile'
-import MyPosts from './ProfilePage/MyPosts/MyPosts'
+import EditProfile from './ProfilePage/EditProfile/EditProfile';
+import MyPosts from './ProfilePage/MyPosts/MyPosts';
 import ProfileGeneral from './ProfilePage/ProfileGeneral/ProfileGeneral';
+import AdminPanel from './Admin/AdminPanel/AdminPanel';
+import ManageBuildings from './Admin/ManageBuildings/ManageBuildings';
+import ApproveUsers from './Admin/ApproveUsers/ApproveUsers';
+import ManageUsers from './Admin/ManageUsers/ManageUsers';
+import SendNotice from './Admin/SendNotice/SendNotice';
+import DeletePost from '../components/DeletePost';
+import Notifications from './Notifications/Notifications';
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator();
 
 const NewsfeedNavigator = () => {
-
 	const { post, setPost } = useAppContext();
 	const { currentUser, setCurrentUser } = useAppContext();
 
@@ -42,10 +48,20 @@ const NewsfeedNavigator = () => {
 				<Stack.Screen
 					name="IndividualPosts"
 					component={IndividualPosts}
-					options={{ title: `${post.userFirstName}'s Post` }}
+					options={{
+						title: `${post.userFirstName}'s Post`,
+						headerRight: () => {
+							if (
+								currentUser.userDocId === post.userID ||
+								currentUser.isAdmin
+							) {
+								return <DeletePost />;
+							}
+						},
+					}}
 				/>
 			</Stack.Navigator>
-		)
+		);
 	} else {
 		return (
 			<Stack.Navigator>
@@ -69,9 +85,7 @@ const NewsfeedNavigator = () => {
 	}
 };
 
-
 const ProfileNavigator = () => {
-
 	return (
 		<Stack.Navigator>
 			<Stack.Screen
@@ -82,25 +96,72 @@ const ProfileNavigator = () => {
 			<Stack.Screen
 				name="EditProfile"
 				component={EditProfile}
-				options={{ title: "Edit Profile" }}
+				options={{ title: 'Edit Profile' }}
 			/>
 			<Stack.Screen
 				name="MyPosts"
 				component={MyPosts}
-				options={{ title: "My Posts" }}
+				options={{ title: 'My Posts' }}
 			/>
 			<Stack.Screen
 				name="Login"
 				component={Login}
-				options={{ title: "Login", headerLeft: null }}
+				options={{ title: 'Login', headerLeft: null }}
 			/>
 			<Stack.Screen
-					name="BuildingInfo"
-					component={BuildingInfo}
-					options={{ title: 'Building Info' }}
-				/>
+				name="BuildingInfo"
+				component={BuildingInfo}
+				options={{ title: 'Building Info' }}
+			/>
+
+			{/* Admin Pages */}
+
+			<Stack.Screen
+				name="AdminPanel"
+				component={AdminPanel}
+				options={{ title: 'Admin Panel' }}
+			/>
+			<Stack.Screen
+				name="ApproveUsers"
+				component={ApproveUsers}
+				options={{ title: 'Approve Users' }}
+			/>
+			<Stack.Screen
+				name="ManageUsers"
+				component={ManageUsers}
+				options={{ title: 'Manage Users' }}
+			/>
+			<Stack.Screen
+				name="SendNotice"
+				component={SendNotice}
+				options={{ title: 'Send Notice' }}
+			/>
+			<Stack.Screen
+				name="ManageBuildings"
+				component={ManageBuildings}
+				options={{ title: 'Manage Buildings' }}
+			/>
 		</Stack.Navigator>
-	)
+	);
 };
 
-export { NewsfeedNavigator, ProfileNavigator }
+const NotificationNavigator = () => {
+	const { post, setPost } = useAppContext();
+
+	return (
+		<Stack.Navigator>
+			<Stack.Screen
+				name="Notifications"
+				component={Notifications}
+				options={{ title: 'Notifications' }}
+			/>
+			<Stack.Screen
+				name="IndividualPosts"
+				component={IndividualPosts}
+				options={{ title: `${post.userFirstName}'s Post` }}
+			/>
+		</Stack.Navigator>
+	);
+};
+
+export { NewsfeedNavigator, ProfileNavigator, NotificationNavigator };
