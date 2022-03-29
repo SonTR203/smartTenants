@@ -22,14 +22,10 @@ const IndividualPosts = ({ route, navigation }) => {
 	const [textInputValue, setTextInputValue] = useState('');
 	const [peoplePerson, setPeoplePerson] = useState('people');
 	const [comments, setComments] = useState([]);
+	// console.log('POST', post);
 
 	// Get all Comments
 	const getComments = () => {
-		console.log('fetching all comments');
-		let id = '5w4FRE3tKt45t5tMcUEc';
-		// Create Comments collection Reference
-
-		// Need to replace id to post.id
 		const colRef = collection(db, `/Newsfeed/${post.id}/peopleWhoCommented`);
 
 		// Get collections data
