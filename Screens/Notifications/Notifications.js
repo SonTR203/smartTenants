@@ -6,6 +6,7 @@ import { useAppContext } from '../../Context/AppContext';
 import { db } from '../../firebase-config';
 import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import _ from 'lodash';
 
 let notificationCount;
 let setNotifPost;
@@ -13,10 +14,28 @@ let setNotifPost;
 const Notifications = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
 	const { post, setPost } = useAppContext();
-	const { notifications, setNotifications } = useAppContext();
-	// const [notifications, setNotifications] = useState([]);
+	const [notifications, setNotifications] = useState([]);
 	notificationCount = notifications.length;
 	setNotifPost = setPost;
+
+	const colReference = collection(
+		db,
+		'Users',
+		`${currentUser.userDocId}`,
+		'Notifications'
+	);
+	let notificationList = [];
+
+	getDocs(colReference).then((snapshot) => {
+		snapshot.docs.forEach((doc) => {
+			notificationList.push({ ...doc.data(), id: doc.id });
+		});
+		let sortedNotificationList = _.sortBy(
+			notificationList,
+			'timestamp'
+		).reverse();
+		setNotifications(sortedNotificationList);
+	});
 
 	return (
 		<SafeAreaView>
@@ -59,11 +78,7 @@ async function viewNotificationPost(notifications) {
 		'peopleWhoLiked'
 	);
 	const data = await getDocs(likesColReference);
-	console.log('DATA: ', data.docs);
 	let numberOfLikes = data.docs.length;
-	console.log('NUMBER OF LIKES: ', numberOfLikes);
-
-	console.log(postData);
 
 	let post = {
 		comments: postData.comments.arrayValue,

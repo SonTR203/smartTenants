@@ -14,6 +14,7 @@ import { useAppContext } from '../../Context/AppContext';
 import { db } from '../../firebase-config';
 import { collection, getDocs, deleteDoc, addDoc } from '@firebase/firestore';
 import { Component } from 'react/cjs/react.production.min';
+import _ from 'lodash';
 
 const IndividualPosts = ({ route, navigation }) => {
 	const { post } = useAppContext();
@@ -22,7 +23,6 @@ const IndividualPosts = ({ route, navigation }) => {
 	const [textInputValue, setTextInputValue] = useState('');
 	const [peoplePerson, setPeoplePerson] = useState('people');
 	const [comments, setComments] = useState([]);
-	// console.log('POST', post);
 
 	// Get all Comments
 	const getComments = () => {
@@ -34,11 +34,12 @@ const IndividualPosts = ({ route, navigation }) => {
 			snapshot.docs.forEach((doc) => {
 				commentsArray.push({ ...doc.data(), id: doc.id });
 			});
-			setComments(commentsArray);
+
+			let sortedComments = _.sortBy(commentsArray, 'timestamp');
+
+			setComments(sortedComments);
 		});
 	};
-
-	console.log(post.id);
 
 	// execute function
 	useEffect(() => {
@@ -88,7 +89,13 @@ const IndividualPosts = ({ route, navigation }) => {
 					userProfileImage: currentUser.userProfileImage,
 					commentContent: textInputValue,
 					postUserID: post.userID,
+					timestamp: Date.now(),
+				}).then(() => {
+					getComments();
+					setTextInputValue('');
 				});
+
+				addCommentNotifications(post);
 			} catch (err) {
 				console.log(err);
 			}
@@ -97,6 +104,24 @@ const IndividualPosts = ({ route, navigation }) => {
 			alert('No Comment to Post');
 		}
 	};
+
+	function addCommentNotifications(post) {
+		const peopleWhoCommentedColRef = collection(
+			db,
+			`Users/${post.userID}/Notifications`
+		);
+		try {
+			addDoc(peopleWhoCommentedColRef, {
+				content: `${currentUser.firstName} ${currentUser.lastName} commented on your post.`,
+				postID: post.id,
+				userID: post.userID,
+				wasSeen: false,
+				timestamp: Date.now(),
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
 	return (
 		<View style={{ borderColor: 'black', borderWidth: 1, margin: 20 }}>
