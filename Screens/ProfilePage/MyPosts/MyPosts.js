@@ -3,13 +3,16 @@ import { React, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import { useAppContext } from '../../../Context/AppContext';
 import { db } from '../../../firebase-config';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+let setUserPost;
 
 const MyPosts = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
+  const { post, setPost } = useAppContext();
   const [userPosts, setUserPosts] = useState([]);
-
+  setUserPost = setPost;
   const colReference = collection(
     db,
     'Users',
@@ -53,10 +56,27 @@ const MyPosts = ({ navigation }) => {
 
 function MyPostItem({ userPosts, navigation }) {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('IndividualPosts');
+        viewUserPost(userPosts);
+      }}
+    >
       <Text>{userPosts.postContent}</Text>
     </TouchableOpacity>
   );
+}
+
+async function viewUserPost(userPosts) {
+  const docRef = doc(db, 'Newsfeed', `${userPosts.postID}`);
+  const docSnap = await getDoc(docRef);
+  console.log(docSnap.data());
+  if (docSnap.exists()) {
+    console.log('Document data: ', docSnap.data());
+    setUserPost(docSnap.data());
+  } else {
+    console.log('No such document.');
+  }
 }
 
 export default MyPosts;
