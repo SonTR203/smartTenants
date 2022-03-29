@@ -2,10 +2,8 @@ import { Text } from 'react-native';
 import React from 'react';
 import { SafeAreaView, StatusBar, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../../ThemeContext';
-import { useAppContext } from '../../../Context/AppContext';
 
 const AdminPanel = ({ navigation }) => {
-  const { currentUser, setCurrentUser } = useAppContext();
   const [theme, styleVariables] = useTheme();
   return (
     <SafeAreaView>
