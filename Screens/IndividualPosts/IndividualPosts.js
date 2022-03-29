@@ -79,23 +79,26 @@ const IndividualPosts = ({ route, navigation }) => {
 
 	// Post Comments
 	const postComment = () => {
-		const peopleWhoCommentedColRef = collection(
-			db,
-			`Newsfeed/${post.id}/peopleWhoCommented`
-		);
+		if (textInputValue != '') {
+			const peopleWhoCommentedColRef = collection(
+				db,
+				`Newsfeed/${post.id}/peopleWhoCommented`
+			);
 
-		if (!textInputValue) return;
-
-		try {
-			addDoc(peopleWhoCommentedColRef, {
-				firstName: currentUser.firstName,
-				lastName: currentUser.lastName,
-				userProfileImage: currentUser.userProfileImage,
-				commentContent: textInputValue,
-				postUserID: post.userID,
-			});
-		} catch (err) {
-			console.log(err);
+			try {
+				addDoc(peopleWhoCommentedColRef, {
+					firstName: currentUser.firstName,
+					lastName: currentUser.lastName,
+					userProfileImage: currentUser.userProfileImage,
+					commentContent: textInputValue,
+					postUserID: post.userID,
+				});
+			} catch (err) {
+				console.log(err);
+			}
+			navigation.navigate('Newsfeed');
+		} else {
+			alert('No Comment to Post');
 		}
 	};
 

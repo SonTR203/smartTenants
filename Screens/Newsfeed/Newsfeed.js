@@ -55,16 +55,6 @@ const Newsfeed = ({ navigation }) => {
 		setRefreshing(false);
 	};
 
-	let comparePosts = (a, b) => {
-		if (a.timestamp < b.timestamp) {
-			return -1;
-		}
-		if (a.timestamp > b.timestamp) {
-			return 1;
-		}
-		return 0;
-	};
-
 	return (
 		<SafeAreaView
 			style={{ flex: 1, backgroundColor: styleVariables.colors.primary }}
@@ -136,6 +126,7 @@ const Newsfeed = ({ navigation }) => {
 //============================== Individual Post Cards ==========================
 function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 	const [numberOfLikes, setNumberOfLikes] = useState(0);
+	const [numberOfComments, setNumberOfComments] = useState(0);
 	posts = {
 		comments: posts.comments.arrayValue,
 		id: posts.id,
@@ -161,6 +152,18 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 		setNumberOfLikes(data.docs.length);
 	};
 	getLikes();
+
+	const getComments = async () => {
+		const likesColReference = collection(
+			db,
+			'Newsfeed',
+			`${posts.id}`,
+			'peopleWhoCommented'
+		);
+		const data = await getDocs(likesColReference);
+		setNumberOfComments(data.docs.length);
+	};
+	getComments();
 
 	const likePost = async () => {
 		const notificationColRef = collection(
@@ -338,7 +341,7 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 							{ color: styleVariables.colors.black },
 						]}
 					>
-						8
+						{numberOfComments}
 					</Text>
 				</TouchableOpacity>
 			</View>
