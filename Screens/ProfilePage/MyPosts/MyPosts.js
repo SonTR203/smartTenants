@@ -8,6 +8,13 @@ const MyPosts = () => {
   const { currentUser, setCurrentUser } = useAppContext();
   const { userPosts, setUserPosts } = useState([]);
 
+  const colReference = collection(
+    db,
+    'Users',
+    `${currentUser.userDocID}`,
+    'myPosts'
+  );
+
   return (
     <View>
       <Text>MyPosts</Text>
