@@ -96,7 +96,7 @@ const IndividualPosts = ({ route, navigation }) => {
 			} catch (err) {
 				console.log(err);
 			}
-			navigation.navigate('Newsfeed');
+			navigation.push('Newsfeed');
 		} else {
 			alert('No Comment to Post');
 		}
