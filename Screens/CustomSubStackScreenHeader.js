@@ -6,7 +6,6 @@ import { useTheme } from '../ThemeContext.js'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Dimensions } from 'react-native'
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable'
-const windowWidth = Dimensions.get('window').width
 
 export default function CustomSubStackScreenHeader ({ ...props }) {
   const [theme, styleVariables] = useTheme()
@@ -27,7 +26,6 @@ export default function CustomSubStackScreenHeader ({ ...props }) {
         <Text style={styleVariables.fontSizes.title}>
           {props.title && props.title}
         </Text>
-        {/* {console.log(props.navigation)} */}
         <MaterialCommunityIcons
           name='dots-horizontal'
           size={36}
