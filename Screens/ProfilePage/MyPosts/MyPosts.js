@@ -6,6 +6,7 @@ import { collection, getDocs } from 'firebase/firestore';
 
 const MyPosts = () => {
   const { currentUser, setCurrentUser } = useAppContext();
+  const { userPosts, setUserPosts } = useState([]);
 
   return (
     <View>
