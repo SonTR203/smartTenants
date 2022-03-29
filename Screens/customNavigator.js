@@ -19,6 +19,7 @@ import ApproveUsers from './Admin/ApproveUsers/ApproveUsers';
 import ManageUsers from './Admin/ManageUsers/ManageUsers';
 import SendNotice from './Admin/SendNotice/SendNotice';
 import DeletePost from '../components/DeletePost';
+import Notifications from './Notifications/Notifications';
 
 const Stack = createStackNavigator();
 
@@ -144,4 +145,23 @@ const ProfileNavigator = () => {
 	);
 };
 
-export { NewsfeedNavigator, ProfileNavigator };
+const NotificationNavigator = () => {
+	const { post, setPost } = useAppContext();
+
+	return (
+		<Stack.Navigator>
+			<Stack.Screen
+				name="Notifications"
+				component={Notifications}
+				options={{ title: 'Notifications' }}
+			/>
+			<Stack.Screen
+				name="IndividualPosts"
+				component={IndividualPosts}
+				options={{ title: `${post.userFirstName}'s Post` }}
+			/>
+		</Stack.Navigator>
+	);
+};
+
+export { NewsfeedNavigator, ProfileNavigator, NotificationNavigator };

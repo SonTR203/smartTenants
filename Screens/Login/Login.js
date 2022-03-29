@@ -29,6 +29,8 @@ const Login = ({ navigation }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const { currentUser, setCurrentUser } = useAppContext();
+	const { notifications, setNotifications } = useAppContext();
+
 	globalSetCurrentUser = setCurrentUser;
 	globalCurrentUser = currentUser;
 
@@ -48,34 +50,35 @@ const Login = ({ navigation }) => {
 		const data = await getDocs(colRef);
 		let loggedInUser;
 
-    data.docs.map(item => {
-      let userID = item._document.data.value.mapValue.fields.userID.stringValue
-      
-      if (userID) {
-        if (userID == user.uid) {
-          let object = item._document.data.value.mapValue.fields
-          loggedInUser = {
-            buildingID: object.buildingID.stringValue,
-            buildingAddress: object.buildingAddress.stringValue,
-            email: object.email.stringValue,
-            firstName: object.firstName.stringValue,
-            lastName: object.lastName.stringValue,
-            isAdmin: object.isAdmin.booleanValue,
-            myMarketplacePosts: object.myMarketplacePosts.arrayValue,
-            myPosts: object.myPosts.arrayValue,
-            tenantAuthorized: object.tenantAuthorized.booleanValue,
-            unitNumber: object.unitNumber.stringValue,
-            userID: object.userID.stringValue,
-            userDocId: item._key.path.segments[6],
-            visibleNotices: object.visibleNotices.arrayValue,
-            visibleAnnouncements: object.visibleAnnouncements.arrayValue,
-            userProfileImage: object.userProfileImage.stringValue
-          }
-          globalSetCurrentUser(loggedInUser)
-          createNotificationCollection(loggedInUser)
-        }
-      }
-    })
+		data.docs.map((item) => {
+			let userID = item._document.data.value.mapValue.fields.userID.stringValue;
+
+			if (userID) {
+				if (userID == user.uid) {
+					let object = item._document.data.value.mapValue.fields;
+					loggedInUser = {
+						buildingID: object.buildingID.stringValue,
+						buildingAddress: object.buildingAddress.stringValue,
+						email: object.email.stringValue,
+						firstName: object.firstName.stringValue,
+						lastName: object.lastName.stringValue,
+						isAdmin: object.isAdmin.booleanValue,
+						myMarketplacePosts: object.myMarketplacePosts.arrayValue,
+						myPosts: object.myPosts.arrayValue,
+						tenantAuthorized: object.tenantAuthorized.booleanValue,
+						unitNumber: object.unitNumber.stringValue,
+						userID: object.userID.stringValue,
+						userDocId: item._key.path.segments[6],
+						visibleNotices: object.visibleNotices.arrayValue,
+						visibleAnnouncements: object.visibleAnnouncements.arrayValue,
+						userProfileImage: object.userProfileImage.stringValue,
+					};
+					globalSetCurrentUser(loggedInUser);
+					createNotificationCollection(loggedInUser);
+					setNotificationsContext(loggedInUser);
+				}
+			}
+		});
 
 		if (loggedInUser.tenantAuthorized) {
 			navigation.navigate('Newsfeed');
@@ -84,31 +87,51 @@ const Login = ({ navigation }) => {
 		}
 	};
 
+	const createNotificationCollection = async (loggedInUser) => {
+		const colRef = collection(
+			db,
+			`Users/${loggedInUser.userDocId}/Notifications`
+		);
+		let data = await getDocs(colRef);
+		if (data.docs.length > 0) {
+			console.log('Notifications Subcollection already exists');
+		} else {
+			console.log('creating notification doc');
+			await addDoc(colRef, {
+				content:
+					'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
+				notificationID: 1,
+				postID: '',
+				userID: loggedInUser.userDocId,
+				wasSeen: false,
+			});
+		}
+	};
 
-  const createNotificationCollection = async loggedInUser => {
-    const colRef = collection(
-      db,
-      `Users/${loggedInUser.userDocId}/Notifications`
-    )
-    let data = await getDocs(colRef)
-    if (data.docs.length > 0) {
-      console.log('Notifications Subcollection already exists')
-    } else {
-      console.log('creating notification doc')
-      await addDoc(colRef, {
-        content:
-          'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
-        notificationID: 1,
-        postID: '',
-        userID: loggedInUser.userDocId,
-        wasSeen: false
-      })
-    }
-  }
+	const setNotificationsContext = async (loggedInUser) => {
+		const colReference = collection(
+			db,
+			'Users',
+			`${loggedInUser.userDocId}`,
+			'Notifications'
+		);
+		let notificationList = [];
 
-  function forgotPassword () {
-    console.log('forgot password')
-  }
+		await getDocs(colReference)
+			.then((snapshot) => {
+				snapshot.docs.forEach((doc) => {
+					notificationList.push({ ...doc.data(), id: doc.id });
+					setNotifications(notificationList);
+				});
+			})
+			.catch((err) => {
+				console.log(err.message);
+			});
+	};
+
+	function forgotPassword() {
+		console.log('forgot password');
+	}
 
 	return (
 		<SafeAreaView>
@@ -128,55 +151,55 @@ const Login = ({ navigation }) => {
 						/>
 					</View>
 
-          <View id='LoginContainer' style={theme.globalMargins}>
-            {/* textInput */}
-            <View id='emailInput'>
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Email
-              </Text>
-              <TextInput
-                placeholder='name@company.com'
-                value={email}
-                onChangeText={text => setEmail(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
-            <View id='passwordInput'>
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Password
-              </Text>
-              <TextInput
-                placeholder='••••••••••'
-                value={password}
-                onChangeText={text => setPassword(text)}
-                secureTextEntry
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
+					<View id="LoginContainer" style={theme.globalMargins}>
+						{/* textInput */}
+						<View id="emailInput">
+							<Text
+								style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+							>
+								Email
+							</Text>
+							<TextInput
+								placeholder="name@company.com"
+								value={email}
+								onChangeText={(text) => setEmail(text)}
+								style={[theme.textInput, styleVariables.fontSizes.body]}
+							/>
+						</View>
+						<View id="passwordInput">
+							<Text
+								style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+							>
+								Password
+							</Text>
+							<TextInput
+								placeholder="••••••••••"
+								value={password}
+								onChangeText={(text) => setPassword(text)}
+								secureTextEntry
+								style={[theme.textInput, styleVariables.fontSizes.body]}
+							/>
+						</View>
 
-            {/* forgotPassword */}
-            <View
-              id='forgotPassword'
-              style={[theme.container, { alignItems: 'flex-end' }]}
-            >
-              <Text
-                onPress={forgotPassword}
-                style={[
-                  styleVariables.fontSizes.callout,
-                  {
-                    color: styleVariables.colors.primary,
-                    opacity: 0.66,
-                    marginBottom: 8
-                  }
-                ]}
-              >
-                Forgot password?
-              </Text>
-            </View>
+						{/* forgotPassword */}
+						<View
+							id="forgotPassword"
+							style={[theme.container, { alignItems: 'flex-end' }]}
+						>
+							<Text
+								onPress={forgotPassword}
+								style={[
+									styleVariables.fontSizes.callout,
+									{
+										color: styleVariables.colors.primary,
+										opacity: 0.66,
+										marginBottom: 8,
+									},
+								]}
+							>
+								Forgot password?
+							</Text>
+						</View>
 
 						{/* loginButton */}
 						<TouchableOpacity
@@ -227,38 +250,38 @@ const Login = ({ navigation }) => {
 						</View>
 					</View>
 
-          {/* BrowseListingsRedirect */}
-          <View
-            id='browseListingsRedirect'
-            style={[
-              theme.container,
-              theme.globalMargins,
-              { marginTop: 34, marginBottom: 8 }
-            ]}
-          >
-            <Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
-              Looking to be one of our future tenants?
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                Linking.openURL('https://www.smartlivingproperties.ca/')
-              }}
-            >
-              <Text
-                style={[
-                  styleVariables.fontSizes.calloutBold,
-                  { color: styleVariables.colors.primary }
-                ]}
-              >
-                Browse our current listings
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-      </View>
-    </SafeAreaView>
-  )
-}
+					{/* BrowseListingsRedirect */}
+					<View
+						id="browseListingsRedirect"
+						style={[
+							theme.container,
+							theme.globalMargins,
+							{ marginTop: 34, marginBottom: 8 },
+						]}
+					>
+						<Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
+							Looking to be one of our future tenants?
+						</Text>
+						<TouchableOpacity
+							onPress={() => {
+								Linking.openURL('https://www.smartlivingproperties.ca/');
+							}}
+						>
+							<Text
+								style={[
+									styleVariables.fontSizes.calloutBold,
+									{ color: styleVariables.colors.primary },
+								]}
+							>
+								Browse our current listings
+							</Text>
+						</TouchableOpacity>
+					</View>
+				</KeyboardAvoidingView>
+			</View>
+		</SafeAreaView>
+	);
+};
 
 export default Login;
 
