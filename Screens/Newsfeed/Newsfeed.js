@@ -186,6 +186,8 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 				postID: posts.id,
 				userID: posts.userID,
 				wasSeen: false,
+			}).then(() => {
+				getLikes();
 			});
 		} catch (error) {
 			console.log(error);

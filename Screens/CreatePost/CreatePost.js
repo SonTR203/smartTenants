@@ -185,7 +185,7 @@ const CreatePost = ({ navigation }) => {
 					onShow={() => {
 						setTimeout(() => {
 							setModalVisible(!modalVisible);
-							navigation.navigate('Newsfeed');
+							navigation.push('Newsfeed');
 						}, 2000);
 					}}
 				>
