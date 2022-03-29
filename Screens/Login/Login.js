@@ -50,6 +50,7 @@ const Login = ({ navigation }) => {
 
     data.docs.map(item => {
       let userID = item._document.data.value.mapValue.fields.userID.stringValue
+      
       if (userID) {
         if (userID == user.uid) {
           let object = item._document.data.value.mapValue.fields
@@ -63,7 +64,7 @@ const Login = ({ navigation }) => {
             myMarketplacePosts: object.myMarketplacePosts.arrayValue,
             myPosts: object.myPosts.arrayValue,
             tenantAuthorized: object.tenantAuthorized.booleanValue,
-            unitNumber: object.unitNumber.integerValue,
+            unitNumber: object.unitNumber.stringValue,
             userID: object.userID.stringValue,
             userDocId: item._key.path.segments[6],
             visibleNotices: object.visibleNotices.arrayValue,

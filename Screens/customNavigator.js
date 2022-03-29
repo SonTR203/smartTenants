@@ -77,7 +77,7 @@ const ProfileNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Profile"
+        name="ProfileGeneral"
         component={ProfileGeneral}
         options={{ title: 'Profile' }}
       />
@@ -96,6 +96,11 @@ const ProfileNavigator = () => {
         component={Login}
         options={{ title: 'Login', headerLeft: null }}
       />
+			<Stack.Screen
+					name="BuildingInfo"
+					component={BuildingInfo}
+					options={{ title: 'Building Info' }}
+				/>
 
       {/* Admin Pages */}
 
