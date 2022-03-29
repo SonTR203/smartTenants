@@ -26,14 +26,11 @@ const IndividualPosts = ({ route, navigation }) => {
 	// Get all Comments
 	const getComments = () => {
 		console.log('fetching all comments');
-		 let id = '5w4FRE3tKt45t5tMcUEc';
+		let id = '5w4FRE3tKt45t5tMcUEc';
 		// Create Comments collection Reference
 
 		// Need to replace id to post.id
-		const colRef = collection(
-			db,
-			`/Newsfeed/${post.id}/peopleWhoCommented`
-		);
+		const colRef = collection(db, `/Newsfeed/${post.id}/peopleWhoCommented`);
 
 		// Get collections data
 		getDocs(colRef).then((snapshot) => {
@@ -45,7 +42,7 @@ const IndividualPosts = ({ route, navigation }) => {
 		});
 	};
 
-	console.log(post.id)
+	console.log(post.id);
 
 	// execute function
 	useEffect(() => {
@@ -120,7 +117,7 @@ const IndividualPosts = ({ route, navigation }) => {
 					/>
 				)}
 
-				<Text> Liked by {}</Text>
+				<Text> Liked by 3 People</Text>
 			</View>
 
 			{/* post comments */}
