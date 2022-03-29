@@ -4,12 +4,19 @@ import { React, useState, useEffect } from 'react';
 import { FlatList } from 'react-native';
 import { useAppContext } from '../../Context/AppContext';
 import { db } from '../../firebase-config';
-import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
+import {
+	collection,
+	getDocs,
+	getDoc,
+	doc,
+	updateDoc,
+} from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import _ from 'lodash';
 
 let notificationCount;
 let setNotifPost;
+let globalCurrentUser;
 
 const Notifications = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
@@ -17,6 +24,7 @@ const Notifications = ({ navigation }) => {
 	const [notifications, setNotifications] = useState([]);
 	notificationCount = notifications.length;
 	setNotifPost = setPost;
+	globalCurrentUser = currentUser;
 
 	const colReference = collection(
 		db,
@@ -54,15 +62,30 @@ const Notifications = ({ navigation }) => {
 };
 
 function NotificationItem({ notifications, navigation }) {
+	const setWasSeenToTrue = async (notifications) => {
+		const colRef = doc(
+			db,
+			'Users',
+			`${globalCurrentUser.userDocId}`,
+			'Notifications',
+			notifications.id
+		);
+		await updateDoc(colRef, {
+			wasSeen: true,
+		});
+	};
 	return (
 		// navigate to post page on press
 		<TouchableOpacity
 			onPress={() => {
 				navigation.navigate('IndividualPosts');
 				viewNotificationPost(notifications);
+				setWasSeenToTrue(notifications);
 			}}
+			style={{ display: 'flex', flexDirection: 'row' }}
 		>
 			<Text>{notifications.content}</Text>
+			{notifications.wasSeen == false && <Text>*unread*</Text>}
 		</TouchableOpacity>
 	);
 }
