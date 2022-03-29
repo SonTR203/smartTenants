@@ -20,7 +20,7 @@ const IndividualPosts = ({ route, navigation }) => {
 	const { currentUser } = useAppContext();
 
 	const [textInputValue, setTextInputValue] = useState('');
-
+	const [peoplePerson, setPeoplePerson] = useState('people');
 	const [comments, setComments] = useState([]);
 
 	// Get all Comments
@@ -47,6 +47,12 @@ const IndividualPosts = ({ route, navigation }) => {
 	// execute function
 	useEffect(() => {
 		getComments();
+
+		if (post.numberOfLikes == 1) {
+			setPeoplePerson('person');
+		} else {
+			setPeoplePerson('people');
+		}
 	}, [post.id]);
 
 	//  render comment structure
@@ -54,7 +60,10 @@ const IndividualPosts = ({ route, navigation }) => {
 		return (
 			<View>
 				<View>
-					<Image src={item.userProfileImage}></Image>
+					<Image
+						source={{ uri: item.userProfileImage }}
+						style={{ width: 20, height: 20 }}
+					/>
 					<Text>
 						{item.firstName}
 						{item.lastName}{' '}
@@ -117,7 +126,10 @@ const IndividualPosts = ({ route, navigation }) => {
 					/>
 				)}
 
-				<Text> Liked by 3 People</Text>
+				<Text>
+					{' '}
+					Liked by {post.numberOfLikes} {peoplePerson}
+				</Text>
 			</View>
 
 			{/* post comments */}

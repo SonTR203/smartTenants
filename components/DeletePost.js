@@ -4,7 +4,7 @@ import { db } from '../firebase-config';
 import { useAppContext } from '../Context/AppContext';
 
 import { Alert, Button } from 'react-native';
-const deletePost = () => {
+const DeletePost = () => {
 	const { post, setPost } = useAppContext();
 
 	const optionsAlert = () => {
@@ -31,4 +31,4 @@ const deletePost = () => {
 	return <Button title="options" onPress={optionsAlert} />;
 };
 
-export default deletePost;
+export default DeletePost;
