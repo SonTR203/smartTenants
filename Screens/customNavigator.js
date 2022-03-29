@@ -33,18 +33,33 @@ const NewsfeedNavigator = () => {
           name='BuildingInfo'
           component={BuildingInfo}
           options={{
-            header: props => <CustomSubStackScreenHeader {...props} />
+            header: props => (
+              <CustomSubStackScreenHeader {...props} title={'Building Info'} />
+            )
           }}
         />
         <Stack.Screen
           name='CreatePost'
           component={CreatePost}
-          options={{ title: 'Create Post' }}
+          options={{
+            header: props => (
+              <CustomSubStackScreenHeader {...props} title={'Create post'} />
+            )
+          }}
         />
         <Stack.Screen
           name='IndividualPosts'
           component={IndividualPosts}
-          options={{ title: `${post.userFirstName}'s Post` }}
+          options={{
+            header: props => (
+              <CustomSubStackScreenHeader
+                {...props}
+                title={
+                  post.userFirstName ? `${post.userFirstName}'s post` : 'Post'
+                }
+              />
+            )
+          }}
         />
       </Stack.Navigator>
     )

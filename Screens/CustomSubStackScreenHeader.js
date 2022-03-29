@@ -5,28 +5,29 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTheme } from '../ThemeContext.js'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Dimensions } from 'react-native'
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable'
 const windowWidth = Dimensions.get('window').width
 
 export default function CustomSubStackScreenHeader ({ ...props }) {
   const [theme, styleVariables] = useTheme()
   return (
     <SafeAreaView edges={['top']} style={{ backgroundColor: 'white' }}>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backgroundColor: styleVariables.colors.white,
-          padding: 17
-        }}
-      >
-        <MaterialCommunityIcons
-          name='chevron-left'
-          size={36}
-          color={styleVariables.colors.black}
-        />
-        <Text>Testing Custom Header</Text>
+      <View style={theme.stackHeader}>
+        <Pressable
+          onPress={() => {
+            props.navigation && props.navigation.goBack()
+          }}
+        >
+          <MaterialCommunityIcons
+            name='chevron-left'
+            size={36}
+            color={styleVariables.colors.black}
+          />
+        </Pressable>
+        <Text style={styleVariables.fontSizes.title}>
+          {props.title && props.title}
+        </Text>
+        {/* {console.log(props.navigation)} */}
         <MaterialCommunityIcons
           name='dots-horizontal'
           size={36}

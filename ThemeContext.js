@@ -276,6 +276,14 @@ const theme = StyleSheet.create({
     borderRadius: 14,
     marginRight: 8,
     overflow: 'hidden'
+  },
+  stackHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: styleVariables.colors.white,
+    padding: 17
   }
 })
 
