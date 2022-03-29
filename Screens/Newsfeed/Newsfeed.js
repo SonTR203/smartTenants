@@ -17,6 +17,7 @@ import { useAppContext } from '../../Context/AppContext'
 import { useTheme } from '../../ThemeContext'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Dimensions } from 'react-native'
+import _ from 'lodash'
 const windowWidth = Dimensions.get('window').width
 
 let globalPost
@@ -41,13 +42,26 @@ const Newsfeed = ({ navigation }) => {
 
   const getPosts = async () => {
     const data = await getDocs(colRef)
-    setPosts(
-      data.docs.map(item => ({
-        ...item._document.data.value.mapValue.fields,
-        id: item._key.path.segments[6]
-      }))
-    )
+    let listOfPosts = data.docs.map(item => ({
+          ...item._document.data.value.mapValue.fields,
+          id: item._key.path.segments[6]
+        }))
+    let sortedListOfPosts = _.sortBy( listOfPosts, 'timestamp.integerValue' ).reverse();
+    setPosts(sortedListOfPosts)    
+
+   
     setRefreshing(false)
+  }
+
+  let comparePosts = (a , b) =>{
+    if ( a.timestamp < b.timestamp ){
+      return -1;
+    }
+    if ( a.timestamp > b.timestamp ){
+      return 1;
+    }
+    return 0;
+
   }
 
   return (
@@ -120,6 +134,7 @@ const Newsfeed = ({ navigation }) => {
 
 //============================== Individual Post Cards ==========================
 function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
+  const [numberOfLikes, setNumberOfLikes] = useState(0)
   posts = {
     comments: posts.comments.arrayValue,
     id: posts.id,
@@ -132,10 +147,27 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
     userLastName: posts.userLastName.stringValue
   }
 
+  const getLikes = async() => {
+    const likesColReference = collection(
+      db,
+      'Newsfeed',
+      `${posts.id}`,
+      'peopleWhoLiked'
+    );
+
+    const data = await getDocs(likesColReference)
+    setNumberOfLikes(data.docs.length)  
+  }
+  getLikes()
+
   const likePost = async () => {
     const notificationColRef = collection(
       db,
       `Users/${posts.userID}/Notifications`
+    )
+    const peopleWhoLikedColRef = collection(
+      db,
+      `Newsfeed/${posts.id}/peopleWhoLiked`
     )
 
     try {
@@ -147,6 +179,18 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
         wasSeen: false
       })
     } catch (error) {
+      console.log(error)
+    }
+
+    try{
+      await addDoc(peopleWhoLikedColRef, {
+        firstName: globalCurrentUser.firstName,
+        lastName: globalCurrentUser.lastName,
+        postID: posts.id,
+        userID: posts.userID
+      })
+      
+    }catch(error){
       console.log(error)
     }
   }
@@ -241,6 +285,7 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
           marginBottom: 5
         }}
       >
+        {/* =========================== LIKE ============================= */}
         <TouchableOpacity
           id='like'
           onPress={likePost}
@@ -256,16 +301,18 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
             color={styleVariables.colors.black}
             style={{ marginRight: 8 }}
           />
-          <Text
-            style={[
-              styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black }
-            ]}
-          >
-            12
+              <Text
+              style={[
+                styleVariables.fontSizes.body,
+                { color: styleVariables.colors.black }
+              ]}
+            >
+              {numberOfLikes}
           </Text>
         </TouchableOpacity>
 
+
+        {/* =========================== COMMENT ============================= */}
         <TouchableOpacity
           id='comment'
           onPress={() => {
