@@ -127,6 +127,8 @@ const Newsfeed = ({ navigation }) => {
 function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 	const [numberOfLikes, setNumberOfLikes] = useState(0);
 	const [numberOfComments, setNumberOfComments] = useState(0);
+	const [timeSincePost, setTimeSincePost] = useState('');
+
 	posts = {
 		comments: posts.comments.arrayValue,
 		id: posts.id,
@@ -138,6 +140,7 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 		userFirstName: posts.userFirstName.stringValue,
 		userLastName: posts.userLastName.stringValue,
 		numberOfLikes: numberOfLikes,
+		timestamp: posts.timestamp,
 	};
 
 	const getLikes = async () => {
@@ -150,6 +153,8 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 
 		const data = await getDocs(likesColReference);
 		setNumberOfLikes(data.docs.length);
+		setTime();
+		getComments();
 	};
 	getLikes();
 
@@ -163,7 +168,6 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 		const data = await getDocs(likesColReference);
 		setNumberOfComments(data.docs.length);
 	};
-	getComments();
 
 	const likePost = async () => {
 		const notificationColRef = collection(
@@ -196,6 +200,41 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 			});
 		} catch (error) {
 			console.log(error);
+		}
+	};
+
+	const setTime = () => {
+		let time = posts.timestamp;
+		if (time != undefined) {
+			let timePosted = time.integerValue;
+			let currentTime = Date.now();
+			let timeDifferenceMinutes = ((currentTime - timePosted) / 60000).toFixed(
+				0
+			);
+			let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0);
+			let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0);
+			let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
+
+			if (timeDifferenceMinutes < 59) {
+				setTimeSincePost(`${timeDifferenceMinutes} minutes ago`);
+			} else if (timeDifferenceMinutes > 59 && timeDifferenceHours < 23) {
+				setTimeSincePost(`${timeDifferenceHours} hours ago`);
+			} else if (
+				timeDifferenceDays < 6 &&
+				timeDifferenceMinutes > 59 &&
+				timeDifferenceHours > 23
+			) {
+				setTimeSincePost(`${timeDifferenceDays} days ago`);
+			} else if (
+				timeDifferenceWeeks < 10 &&
+				timeDifferenceDays > 6 &&
+				timeDifferenceMinutes > 59 &&
+				timeDifferenceHours > 23
+			) {
+				setTimeSincePost(timeDifferenceWeeks, ' weeks ago');
+			} else {
+				setTimeSincePost('10+ weeks ago');
+			}
 		}
 	};
 
@@ -241,7 +280,7 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 						{ color: styleVariables.colors.black, opacity: 0.66 },
 					]}
 				>
-					30m
+					{timeSincePost}
 				</Text>
 			</View>
 
