@@ -1,52 +1,52 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import {
-  KeyboardAvoidingView,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Image,
-  Linking
-} from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { collection, getDocs, addDoc } from '@firebase/firestore'
-import { useTheme } from '../../ThemeContext'
+	KeyboardAvoidingView,
+	SafeAreaView,
+	StyleSheet,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
+	Image,
+	Linking,
+} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { collection, getDocs, addDoc } from '@firebase/firestore';
+import { useTheme } from '../../ThemeContext';
 
 // import Signup from '../Signup/Signup';
 
-import { db } from '../../firebase-config'
-import { useAppContext } from '../../Context/AppContext'
+import { db } from '../../firebase-config';
+import { useAppContext } from '../../Context/AppContext';
 
-const auth = getAuth()
-let globalSetCurrentUser
-let globalCurrentUser
+const auth = getAuth();
+let globalSetCurrentUser;
+let globalCurrentUser;
 
 const Login = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const { currentUser, setCurrentUser } = useAppContext()
-  globalSetCurrentUser = setCurrentUser
-  globalCurrentUser = currentUser
+	const [theme, styleVariables] = useTheme();
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const { currentUser, setCurrentUser } = useAppContext();
+	globalSetCurrentUser = setCurrentUser;
+	globalCurrentUser = currentUser;
 
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async userCredentials => {
-        console.log('Logged in with:', userCredentials.user.email)
-        if (userCredentials.user.email) {
-          findUser(userCredentials.user)
-        }
-      })
-      .catch(error => alert(error.message))
-  }
+	const handleLogin = () => {
+		signInWithEmailAndPassword(auth, email, password)
+			.then(async (userCredentials) => {
+				console.log('Logged in with:', userCredentials.user.email);
+				if (userCredentials.user.email) {
+					findUser(userCredentials.user);
+				}
+			})
+			.catch((error) => alert(error.message));
+	};
 
-  const findUser = async user => {
-    const colRef = collection(db, 'Users')
-    const data = await getDocs(colRef)
-    let loggedInUser
+	const findUser = async (user) => {
+		const colRef = collection(db, 'Users');
+		const data = await getDocs(colRef);
+		let loggedInUser;
 
     data.docs.map(item => {
       let userID = item._document.data.value.mapValue.fields.userID.stringValue
@@ -77,12 +77,13 @@ const Login = ({ navigation }) => {
       }
     })
 
-    if (loggedInUser.tenantAuthorized) {
-      navigation.navigate('Newsfeed')
-    } else {
-      navigation.navigate('AccountApprovalPending')
-    }
-  }
+		if (loggedInUser.tenantAuthorized) {
+			navigation.navigate('Newsfeed');
+		} else {
+			navigation.navigate('AccountApprovalPending');
+		}
+	};
+
 
   const createNotificationCollection = async loggedInUser => {
     const colRef = collection(
@@ -109,23 +110,23 @@ const Login = ({ navigation }) => {
     console.log('forgot password')
   }
 
-  return (
-    <SafeAreaView>
-      <View style={theme.pageContainer}>
-        <StatusBar style='auto' />
-        <KeyboardAvoidingView behavior='padding' style={theme.fullHeight}>
-          {/* Logo image */}
-          <View style={[theme.container, {}]}>
-            <Image
-              source={require('../../assets/SmartLiving_Logo.png')}
-              style={{
-                width: 187,
-                height: 111,
-                margin: 'auto'
-              }}
-              resizeMode='contain'
-            />
-          </View>
+	return (
+		<SafeAreaView>
+			<View style={theme.pageContainer}>
+				<StatusBar style="auto" />
+				<KeyboardAvoidingView behavior="padding" style={theme.fullHeight}>
+					{/* Logo image */}
+					<View style={[theme.container, {}]}>
+						<Image
+							source={require('../../assets/SmartLiving_Logo.png')}
+							style={{
+								width: 187,
+								height: 111,
+								margin: 'auto',
+							}}
+							resizeMode="contain"
+						/>
+					</View>
 
           <View id='LoginContainer' style={theme.globalMargins}>
             {/* textInput */}
@@ -177,54 +178,54 @@ const Login = ({ navigation }) => {
               </Text>
             </View>
 
-            {/* loginButton */}
-            <TouchableOpacity
-              id='loginButton'
-              onPress={handleLogin}
-              style={theme.primaryButton}
-            >
-              <Text
-                style={[
-                  theme.primaryButtonText,
-                  styleVariables.fontSizes.bodyBold
-                ]}
-              >
-                Login
-              </Text>
-            </TouchableOpacity>
+						{/* loginButton */}
+						<TouchableOpacity
+							id="loginButton"
+							onPress={handleLogin}
+							style={theme.primaryButton}
+						>
+							<Text
+								style={[
+									theme.primaryButtonText,
+									styleVariables.fontSizes.bodyBold,
+								]}
+							>
+								Login
+							</Text>
+						</TouchableOpacity>
 
-            {/* no account CTA */}
-            <View
-              id='noAccountCTA'
-              style={[
-                theme.container,
-                { flexDirection: 'row', marginBottom: 8 }
-              ]}
-            >
-              <Text
-                style={[
-                  styleVariables.fontSizes.callout,
-                  { color: styleVariables.colors.black }
-                ]}
-              >
-                Don't have an account?{' '}
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Signup')
-                }}
-              >
-                <Text
-                  style={[
-                    styleVariables.fontSizes.calloutBold,
-                    { color: styleVariables.colors.primary }
-                  ]}
-                >
-                  Sign up here
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+						{/* no account CTA */}
+						<View
+							id="noAccountCTA"
+							style={[
+								theme.container,
+								{ flexDirection: 'row', marginBottom: 8 },
+							]}
+						>
+							<Text
+								style={[
+									styleVariables.fontSizes.callout,
+									{ color: styleVariables.colors.black },
+								]}
+							>
+								Don't have an account?{' '}
+							</Text>
+							<TouchableOpacity
+								onPress={() => {
+									navigation.navigate('Signup');
+								}}
+							>
+								<Text
+									style={[
+										styleVariables.fontSizes.calloutBold,
+										{ color: styleVariables.colors.primary },
+									]}
+								>
+									Sign up here
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
 
           {/* BrowseListingsRedirect */}
           <View
@@ -259,12 +260,12 @@ const Login = ({ navigation }) => {
   )
 }
 
-export default Login
+export default Login;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+});
