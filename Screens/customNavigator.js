@@ -18,6 +18,7 @@ import ManageBuildings from './Admin/ManageBuildings/ManageBuildings';
 import ApproveUsers from './Admin/ApproveUsers/ApproveUsers';
 import ManageUsers from './Admin/ManageUsers/ManageUsers';
 import SendNotice from './Admin/SendNotice/SendNotice';
+import DeletePost from '../components/DeletePost';
 
 const Stack = createStackNavigator();
 
@@ -46,7 +47,17 @@ const NewsfeedNavigator = () => {
 				<Stack.Screen
 					name="IndividualPosts"
 					component={IndividualPosts}
-					options={{ title: `${post.userFirstName}'s Post` }}
+					options={{
+						title: `${post.userFirstName}'s Post`,
+						headerRight: () => {
+							if (
+								currentUser.userDocId === post.userID ||
+								currentUser.isAdmin
+							) {
+								return <DeletePost />;
+							}
+						},
+					}}
 				/>
 			</Stack.Navigator>
 		);
