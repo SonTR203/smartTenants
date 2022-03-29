@@ -1,31 +1,14 @@
-//import { View, Text } from 'react-native';
-//import React from 'react';
-// import { useAppContext } from '../../../Context/AppContext';
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
-  KeyboardAvoidingView,
   SafeAreaView,
-  StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
-  Image,
   Linking,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { collection, getDocs, addDoc } from '@firebase/firestore';
 import { useTheme } from '../../../ThemeContext';
-import { ProfilePages } from '../../customNavigator';
-import { db } from '../../../firebase-config';
 import { useAppContext } from '../../../Context/AppContext';
-import EditProfile from '../EditProfile/EditProfile';
-
-const auth = getAuth();
-let globalSetCurrentUser;
-let globalCurrentUser;
 
 const ProfileGeneral = ({ navigation }) => {
   const [theme, styleVariables] = useTheme();
