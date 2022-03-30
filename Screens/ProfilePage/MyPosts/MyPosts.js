@@ -3,6 +3,7 @@ import { React, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import { useAppContext } from '../../../Context/AppContext';
 import { db } from '../../../firebase-config';
+import { useTheme } from '../../../ThemeContext';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -10,6 +11,7 @@ let setUserPost;
 
 const MyPosts = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
+  const [theme, styleVariables] = useTheme();
   const { post, setPost } = useAppContext();
   const [userPosts, setUserPosts] = useState([]);
   setUserPost = setPost;
