@@ -1,28 +1,5 @@
 import { StyleSheet } from 'react-native';
 import {
-<<<<<<< styleNavigation
-  useFonts,
-  Roboto_400Regular,
-  Roboto_500Medium,
-  Roboto_700Bold
-} from '@expo-google-fonts/roboto'
-import { ThemeProvider } from './ThemeContext'
-import AppLoading from 'expo-app-loading'
-import { useState } from 'react'
-import { NavigationContainer } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import Notifications from './Screens/Notifications/Notifications'
-import Marketplace from './Screens/Marketplace/Marketplace'
-import ProfileGeneral from './Screens/ProfilePage/ProfileGeneral/ProfileGeneral'
-import { AppProvider } from './Context/AppContext'
-import Splashscreen from './Screens/Splashscreen/Splashscreen'
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
-import {
-  NewsfeedNavigator,
-  ProfileNavigator
-} from './Screens/customNavigator.js'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-=======
 	useFonts,
 	Roboto_400Regular,
 	Roboto_500Medium,
@@ -44,7 +21,7 @@ import {
 	ProfileNavigator,
 	NotificationNavigator,
 } from './Screens/customNavigator.js';
->>>>>>> Dev
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 let globalShowSplashscreen;
@@ -83,52 +60,6 @@ export default function App() {
 	}
 }
 
-<<<<<<< styleNavigation
-function AppContainer () {
-  setTimeout(() => {
-    globalSetShowSplashscreen(false)
-  }, 2000)
-  return (
-    <ThemeProvider>
-      <AppProvider>
-        {globalShowSplashscreen ? (
-          <Splashscreen />
-        ) : (
-          <NavigationContainer>
-            <Tab.Navigator
-              initialRouteName='Newsfeed '
-              screenOptions={({ route }) => ({
-                tabBarIcon: ({ focused }) => {
-                  let iconName
-                  let color
-                  if (route.name === 'Marketplace ') {
-                    iconName = 'store'
-                    color = focused ? '#395E66' : '#395E6654'
-                  } else if (route.name === 'Newsfeed ') {
-                    iconName = 'newspaper'
-                    color = focused ? '#395E66' : '#395E6654'
-                  } else if (route.name === 'Notifications ') {
-                    iconName = 'bell'
-                    color = focused ? '#395E66' : '#395E6654'
-                  } else if (route.name === 'Profile ') {
-                    iconName = 'account'
-                    color = focused ? '#395E66' : '#395E6654'
-                  }
-                  return (
-                    <MaterialCommunityIcons
-                      name={iconName}
-                      size={28}
-                      color={color}
-                    />
-                  )
-                },
-                headerShown: false,
-                tabBarActiveTintColor: '#395E66'
-              })}
-            >
-              {/* ======= Marketplace ======= */}
-              <Tab.Screen name='Marketplace ' component={Marketplace} />
-=======
 function AppContainer() {
 	setTimeout(() => {
 		globalSetShowSplashscreen(false);
@@ -142,11 +73,37 @@ function AppContainer() {
 					<NavigationContainer>
 						<Tab.Navigator
 							initialRouteName="Newsfeed "
-							screenOptions={{ headerShown: false }}
+							screenOptions={({ route }) => ({
+								tabBarIcon: ({ focused }) => {
+									let iconName;
+									let color;
+									if (route.name === 'Marketplace ') {
+										iconName = 'store';
+										color = focused ? '#395E66' : '#395E6654';
+									} else if (route.name === 'Newsfeed ') {
+										iconName = 'newspaper';
+										color = focused ? '#395E66' : '#395E6654';
+									} else if (route.name === 'Notifications ') {
+										iconName = 'bell';
+										color = focused ? '#395E66' : '#395E6654';
+									} else if (route.name === 'Profile ') {
+										iconName = 'account';
+										color = focused ? '#395E66' : '#395E6654';
+									}
+									return (
+										<MaterialCommunityIcons
+											name={iconName}
+											size={28}
+											color={color}
+										/>
+									);
+								},
+								headerShown: false,
+								tabBarActiveTintColor: '#395E66',
+							})}
 						>
 							{/* ======= Marketplace ======= */}
 							<Tab.Screen name="Marketplace " component={Marketplace} />
->>>>>>> Dev
 
 							{/* ======= Newsfeed ======= */}
 							<Tab.Screen
@@ -166,26 +123,9 @@ function AppContainer() {
 								component={NotificationNavigator}
 							/>
 
-<<<<<<< styleNavigation
-              {/* ======= Profile ======= */}
-              <Tab.Screen
-                name='Profile '
-                component={ProfileNavigator}
-                options={{ headerShown: false }}
-                tabBarOptions={{
-                  display: 'none'
-                }}
-              />
-            </Tab.Navigator>
-          </NavigationContainer>
-        )}
-      </AppProvider>
-    </ThemeProvider>
-  )
-=======
 							{/* ======= Profile ======= */}
 							<Tab.Screen
-								name="Profile"
+								name="Profile "
 								component={ProfileNavigator}
 								options={{ headerShown: false }}
 								tabBarOptions={{
@@ -198,7 +138,6 @@ function AppContainer() {
 			</AppProvider>
 		</ThemeProvider>
 	);
->>>>>>> Dev
 }
 
 const getRouteName = (route) => {
