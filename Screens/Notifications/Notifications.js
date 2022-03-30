@@ -14,16 +14,19 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import _ from 'lodash';
 
-let notificationCount;
 let setNotifPost;
 let globalCurrentUser;
+let globalSetWasSeenVar;
+let globalWasSeenVar;
 
 const Notifications = ({ navigation }) => {
 	console.log('IN NOTIFICATIONS');
 	const { currentUser, setCurrentUser } = useAppContext();
 	const { post, setPost } = useAppContext();
 	const [notifications, setNotifications] = useState([]);
-	notificationCount = notifications.length;
+	const [wasSeenVar, setWasSeenVar] = useState();
+	globalSetWasSeenVar = setWasSeenVar;
+	globalWasSeenVar = wasSeenVar;
 	setNotifPost = setPost;
 	globalCurrentUser = currentUser;
 	const colReference = collection(
@@ -35,7 +38,7 @@ const Notifications = ({ navigation }) => {
 
 	useEffect(() => {
 		getNotifications();
-	}, []);
+	}, [globalWasSeenVar]);
 
 	const getNotifications = async () => {
 		const data = await getDocs(colReference);
@@ -48,16 +51,13 @@ const Notifications = ({ navigation }) => {
 		let sortedListOfNotifications = _.sortBy(
 			notificationsList,
 			'timestamp.integerValue'
-		);
+		).reverse();
 
 		setNotifications(sortedListOfNotifications);
 	};
 
-	console.log('NOTIFICATIONS: ', notifications);
-
 	return (
 		<SafeAreaView>
-			<Text>Notifications</Text>
 			{notifications.length > 0 && (
 				<FlatList
 					data={notifications}
@@ -91,6 +91,8 @@ function NotificationItem({ notifications, navigation }) {
 		);
 		await updateDoc(colRef, {
 			wasSeen: true,
+		}).then(() => {
+			globalSetWasSeenVar(!globalWasSeenVar);
 		});
 	};
 	return (
@@ -101,7 +103,12 @@ function NotificationItem({ notifications, navigation }) {
 				viewNotificationPost(notifications);
 				setWasSeenToTrue(notifications);
 			}}
-			style={{ display: 'flex', flexDirection: 'row' }}
+			style={{
+				display: 'flex',
+				flexDirection: 'row',
+				backgroundColor: 'lightgrey',
+				marginBottom: 10,
+			}}
 		>
 			<Text>{notifications.content}</Text>
 			{notifications.wasSeen == false && <Text>*unread*</Text>}
