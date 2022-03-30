@@ -19,31 +19,41 @@ let setNotifPost;
 let globalCurrentUser;
 
 const Notifications = ({ navigation }) => {
+	console.log('IN NOTIFICATIONS');
 	const { currentUser, setCurrentUser } = useAppContext();
 	const { post, setPost } = useAppContext();
 	const [notifications, setNotifications] = useState([]);
 	notificationCount = notifications.length;
 	setNotifPost = setPost;
 	globalCurrentUser = currentUser;
-
 	const colReference = collection(
 		db,
 		'Users',
 		`${currentUser.userDocId}`,
 		'Notifications'
 	);
-	let notificationList = [];
 
-	getDocs(colReference).then((snapshot) => {
-		snapshot.docs.forEach((doc) => {
-			notificationList.push({ ...doc.data(), id: doc.id });
-		});
-		let sortedNotificationList = _.sortBy(
-			notificationList,
-			'timestamp'
-		).reverse();
-		setNotifications(sortedNotificationList);
-	});
+	useEffect(() => {
+		getNotifications();
+	}, []);
+
+	const getNotifications = async () => {
+		const data = await getDocs(colReference);
+
+		let notificationsList = data.docs.map((item) => ({
+			...item._document.data.value.mapValue.fields,
+			id: item._key.path.segments[8],
+		}));
+
+		let sortedListOfNotifications = _.sortBy(
+			notificationsList,
+			'timestamp.integerValue'
+		);
+
+		setNotifications(sortedListOfNotifications);
+	};
+
+	console.log('NOTIFICATIONS: ', notifications);
 
 	return (
 		<SafeAreaView>
@@ -62,6 +72,15 @@ const Notifications = ({ navigation }) => {
 };
 
 function NotificationItem({ notifications, navigation }) {
+	notifications = {
+		content: notifications.content.stringValue,
+		id: notifications.id,
+		postID: notifications.postID.stringValue,
+		timestamp: notifications.timestamp,
+		userID: notifications.userID.stringValue,
+		wasSeen: notifications.wasSeen.booleanValue,
+	};
+
 	const setWasSeenToTrue = async (notifications) => {
 		const colRef = doc(
 			db,
