@@ -27,7 +27,7 @@ const NewsfeedNavigator = () => {
 	const { post, setPost } = useAppContext();
 	const { currentUser, setCurrentUser } = useAppContext();
 
-	if (currentUser && currentUser.tenantAuthorized, logged) {
+	if (currentUser && currentUser.tenantAuthorized) {
 		return (
 			<Stack.Navigator>
 				<Stack.Screen
