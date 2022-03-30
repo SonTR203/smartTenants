@@ -5,8 +5,18 @@ const AppContext = createContext();
 function AppProvider({ children }) {
 	const [post, setPost] = useState({});
 	const [currentUser, setCurrentUser] = useState({});
+	const [notifications, setNotifications] = useState({});
 	return (
-		<AppContext.Provider value={{ post, setPost, currentUser, setCurrentUser }}>
+		<AppContext.Provider
+			value={{
+				post,
+				setPost,
+				currentUser,
+				setCurrentUser,
+				notifications,
+				setNotifications,
+			}}
+		>
 			{children}
 		</AppContext.Provider>
 	);

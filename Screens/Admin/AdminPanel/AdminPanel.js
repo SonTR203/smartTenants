@@ -1,11 +1,46 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { Text } from 'react-native';
+import React from 'react';
+import { SafeAreaView, StatusBar, TouchableOpacity } from 'react-native';
+import { useTheme } from '../../../ThemeContext';
 
-const AdminPanel = () => {
+const AdminPanel = ({ navigation }) => {
+  const [theme, styleVariables] = useTheme();
   return (
-    <View>
-      <Text>AdminPanel</Text>
-    </View>
+    <SafeAreaView>
+      <StatusBar style="auto" />
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('ApproveUsers');
+        }}
+        style={theme.primaryButton}
+      >
+        <Text>Approve users</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('ManageUsers');
+        }}
+        style={theme.primaryButton}
+      >
+        <Text>Manage users</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('SendNotice');
+        }}
+        style={theme.primaryButton}
+      >
+        <Text>Send notices</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('ManageBuildings');
+        }}
+        style={theme.primaryButton}
+      >
+        <Text>Manage buildings</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 

@@ -1,117 +1,87 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react';
 import {
-	KeyboardAvoidingView,
 	SafeAreaView,
-	StyleSheet,
 	Text,
-	TextInput,
 	TouchableOpacity,
 	View,
+	Linking,
 	Image,
-	Linking
-} from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { collection, getDocs, addDoc } from '@firebase/firestore'
-import { useTheme } from '../../../ThemeContext'
-import { ProfilePages } from '../../customNavigator'
-import { db } from '../../../firebase-config'
-import { useAppContext } from '../../../Context/AppContext'
-import EditProfile from '../EditProfile/EditProfile'
-import { ProfileNavigator } from '../../customNavigator';
-import { NewsfeedNavigator } from '../../customNavigator';
-
-const auth = getAuth()
-let globalSetCurrentUser
-let globalCurrentUser;
-
-let logged = true;
-
+} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useTheme } from '../../../ThemeContext';
+import { useAppContext } from '../../../Context/AppContext';
 
 const ProfileGeneral = ({ navigation }) => {
-	const [theme, styleVariables] = useTheme()
+	const [theme, styleVariables] = useTheme();
 
 	const { currentUser, setCurrentUser } = useAppContext();
+	console.log(currentUser.userProfileImage);
 
 	const logUserOut = () => {
-		console.log("logging user out")
-		auth.signOut().then(
-			console.log("Tenant signed out")
-		)
-		//============this navigates the user to the login screen within the ProfileNavigator, and when they log back in and try to go 
-		//to profile again, they can only see the login screen again. We'll need to think of a clever way to do this=============
-		logged = false;
-		logBackIn();
-	}
-
-	function logBackIn() {
-
-		onAuthStateChanged(auth, (user) => {
-			if (user) {
-				// User is signed in
-			} else {
-				// User is signed out
-			
-				console.log("user is signed out");
-				logged ? true : ProfileNavigator = NewsfeedNavigator;
-				navigation.navigate('Login')
-				return;
-			}
-		});
-
-	}
-
+		console.log('logging user out');
+		navigation.navigate('Login');
+	};
 
 	return (
 		<SafeAreaView>
-			<StatusBar style='auto' />
-			<TouchableOpacity onPress={() => { navigation.navigate("BuildingInfo") }}>
+			<StatusBar style="auto" />
+			<TouchableOpacity
+				onPress={() => {
+					navigation.navigate('BuildingInfo');
+				}}
+			>
 				<Text>{currentUser.buildingAddress}</Text>
 			</TouchableOpacity>
 			<View>
 				<Image
-					source={{ uri: currentUser.userProfileImage }}
-					style={{ height: 43, width: 43, borderRadius: 12 }}
+					source={{ uri: `${currentUser.userProfileImage}` }}
+					style={{ height: 50, width: 50 }}
 				/>
 			</View>
 			<View>
-				<Text>{currentUser.firstName + " " + currentUser.lastName}</Text>
+				<Text>{currentUser.firstName + ' ' + currentUser.lastName}</Text>
 			</View>
-			{currentUser.isAdmin && <View>
-				<Text>Admin Panel</Text>
-			</View>}
+			{currentUser.isAdmin && (
+				<View>
+					<TouchableOpacity
+						id=""
+						onPress={() => {
+							navigation.navigate('AdminPanel');
+						}}
+						style={theme.primaryButton}
+					>
+						<Text>Admin Panel</Text>
+					</TouchableOpacity>
+				</View>
+			)}
 			<View style={{ borderColor: 'black', borderWidth: 1, margin: 20 }}>
 				<View className="postOwnerInfo" style={{ flexDirection: 'row' }}>
 					<TouchableOpacity
-						id=''
-						onPress={() => { navigation.navigate('EditProfile') }}
+						id=""
+						onPress={() => {
+							navigation.navigate('EditProfile');
+						}}
 						style={theme.primaryButton}
 					>
-
-						<Text
-							style={[
-								theme.textInput,
-								styleVariables.fontSizes.bodyBold
-							]}
-						>
+						<Text style={[theme.textInput, styleVariables.fontSizes.bodyBold]}>
 							Edit Info
 						</Text>
 					</TouchableOpacity>
 				</View>
 
-
 				<View style={{ borderColor: 'black', borderWidth: 1, margin: 20 }}>
 					<View className="postOwnerInfo" style={{ flexDirection: 'row' }}>
 						<TouchableOpacity
-
 							onPress={() => {
-								Linking.openURL('https://www.smartlivingproperties.ca/')
+								Linking.openURL(
+									'https://smartlivinggroup.securecafe.com/residentservices/apartmentsforrent/userlogin.aspx'
+								);
 							}}
 						>
 							<Text
 								style={[
 									styleVariables.fontSizes.calloutBold,
-									{ color: styleVariables.colors.primary }
+									{ color: styleVariables.colors.primary },
 								]}
 							>
 								Residential Portal
@@ -121,42 +91,26 @@ const ProfileGeneral = ({ navigation }) => {
 				</View>
 				<View>
 					<TouchableOpacity
-						id=''
 						onPress={() => navigation.navigate('MyPosts')}
 						style={theme.primaryButton}
 					>
-						<Text
-							style={[
-								theme.textInput,
-								styleVariables.fontSizes.bodyBold
-							]}
-						>
+						<Text style={[theme.textInput, styleVariables.fontSizes.bodyBold]}>
 							My Posts
 						</Text>
 					</TouchableOpacity>
 				</View>
 				<View>
-					<TouchableOpacity
-						onPress={logUserOut}
-						style={theme.primaryButton}
-					>
-						<Text
-							style={[
-								theme.textInput,
-								styleVariables.fontSizes.bodyBold
-							]}
-						>
+					<TouchableOpacity onPress={logUserOut} style={theme.primaryButton}>
+						<Text style={[theme.textInput, styleVariables.fontSizes.bodyBold]}>
 							Log Out
 						</Text>
 					</TouchableOpacity>
 				</View>
 				<View>
-					<Text>
-						Created by IntelliDev Solutions
-					</Text>
+					<Text>Created by IntelliDev Solutions</Text>
 				</View>
 			</View>
-		</SafeAreaView >
+		</SafeAreaView>
 	);
 };
 
