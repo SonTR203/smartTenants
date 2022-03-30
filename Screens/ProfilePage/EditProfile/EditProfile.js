@@ -6,43 +6,36 @@ import {
   Text,
   SafeAreaView,
   KeyboardAvoidingView,
+  Image,
   TextInput,
   TouchableOpacity,
   Modal
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection, getDocs, deleteDoc } from '@firebase/firestore';
+import { collection, doc, updateDoc } from '@firebase/firestore';
+
 import { db } from '../../../firebase-config';
 import ModalPicker from '../../../components/ModalBuildingPicker'
 import { useTheme } from '../../../ThemeContext';
 import { StatusBar } from 'expo-status-bar';
 import { useAppContext } from '../../../Context/AppContext';
 import { async } from '@firebase/util';
-import ProfileGeneral from '../ProfileGeneral/ProfileGeneral';
+import { ProfileNavigator } from '../../customNavigator';
 
-const auth = getAuth()
+const auth = getAuth();
+
 const EditProfile = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
-  console.log("CUURENT USER: ",currentUser)
   const [theme, styleVariables] = useTheme()
   const [email, setEmail] = useState(currentUser.email)
-  const [userID, setUserID] = useState(currentUser.userID)
-  // const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState(currentUser.firstName)
   const [lastName, setLastName] = useState(currentUser.lastName)
   const [buildingAddress, setBuildingAddress] = useState(currentUser.buildingAddress)
   const [buildingID, setBuildingID] = useState(currentUser.buildingID)
   const [modalVisible, setModalVisible] = useState(false)
   const [unitNumber, setUnitNumber] = useState(currentUser.unitNumber)
-  const [isAdmin, setIsAdmin] = useState(currentUser.isAdmin)
-  const [tenantAuthorized, setTenantAuthorized] = useState(currentUser.tenantAuthorized)
-  const [myMarketplacePosts, setMyMarketplacePosts] = useState(currentUser.myMarketplacePosts)
-  const [myPosts, setMyPosts] = useState(currentUser.myPosts)
-  const [visibleNotices, setVisibileNotices] = useState(currentUser.visibleNotices)
-  const [visibleAnnouncements, setVisibleAnnouncements] = useState(currentUser.visibleAnnouncements)
   const [userProfileImage, setUserProfileImage] = useState(currentUser.userProfileImage)
-
 
   const changeModalVisibility = bool => {
     setModalVisible(bool)
@@ -71,9 +64,6 @@ const EditProfile = ({ navigation }) => {
     } else if (!email) {
       alert('Please Enter Your Email Address')
       return false
-    } else if (!password) {
-      alert('Please Enter Your Password, at least 6 characters')
-      return false
     }
     return true
   }
@@ -82,30 +72,29 @@ const EditProfile = ({ navigation }) => {
     navigation.navigate('ProfileGeneral');
   }
 
-  function saveProfileInfo() {
+  async function saveProfileInfo() {
     console.log('save profile info')
-  
-    let newUserObj = {
-        userID, 
+    const userDocRef = doc(db, 'Users', currentUser.userDocId);
+
+    try {
+      await updateDoc(userDocRef, {
+        //userID,
         firstName,
         lastName,
         buildingID,
         buildingAddress,
         email,
         unitNumber,
-        isAdmin,
-        tenantAuthorized,
-        myMarketplacePosts,
-        myPosts,
-        visibleNotices,
-        visibleAnnouncements,
-        userProfileImage
+      })
+      navigation.navigate('ProfileGeneral');
     }
+    catch (error) {
+      console.log(error);
+    }
+  }
 
-    console.log("new user object" , newUserObj)
-    //make a fetch call to update the appropriate user object on firestore
-    //-- try addDoc with the new values --
-
+  function changeProfilePic(){
+    console.log("Change profile pic")
   }
 
   return (
@@ -113,6 +102,16 @@ const EditProfile = ({ navigation }) => {
       <ScrollView style={theme.pageContainer}>
         <StatusBar style='auto' />
         <KeyboardAvoidingView behavior='padding'>
+          <View>
+            <Image
+              source={{ uri: userProfileImage }}
+              style={{ height: 43, width: 43, borderRadius: 12 }}
+            />
+            <Text>{currentUser.firstName} {currentUser.lastName}</Text>
+            <TouchableOpacity onPress={changeProfilePic}>
+              <Text>Change Profile Picture</Text>
+            </TouchableOpacity>
+          </View>
           <View id='signupInputs'>
             <View id='firstNameInput'>
               <Text
@@ -177,8 +176,8 @@ const EditProfile = ({ navigation }) => {
                     { color: '#00000080' }
                   ]}
                 >
-                  {currentUser.buildingAddress}
-                 
+                  {buildingAddress}
+
                 </Text>
               </TouchableOpacity>
             </View>
@@ -199,6 +198,7 @@ const EditProfile = ({ navigation }) => {
               <Text
                 style={[theme.textInputLabel, styleVariables.fontSizes.body]}
               >
+                {/* ================== will need to research to see if we can set this email to change the one in the authentication tab in firebase========== */}
                 Email
               </Text>
               <TextInput
@@ -210,11 +210,28 @@ const EditProfile = ({ navigation }) => {
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
             </View>
+            <View id='passwordInput'>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Password
+              </Text>
+              <TextInput
+                placeholder='*******'
+                secureTextEntry={true}
+                //================================= will need to research how to do this SAFELY ==========================
+                // defaultValue={currentUser.ema}
+                // onChangeText={text => {
+                //   setEmail(text)
+                // }}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
+            </View>
 
           </View>
 
-            <TouchableOpacity onPress={() => { navigation.navigate('Profile') }}>
-          <View style={[theme.secondaryButton, { marginTop: 17 }]}>
+          <TouchableOpacity onPress={() => { navigation.navigate('ProfileGeneral') }}>
+            <View style={[theme.secondaryButton, { marginTop: 17 }]}>
               <Text
                 style={[
                   theme.secondaryButtonText,
@@ -223,14 +240,14 @@ const EditProfile = ({ navigation }) => {
               >
                 Cancel
               </Text>
-          </View>
-            </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
 
           <View id='signupCTA'>
             <TouchableOpacity
               onPress={saveProfileInfo}
-              >
-              <View style={[theme.primaryButton, { marginTop: 17}]}>
+            >
+              <View style={[theme.primaryButton, { marginTop: 17 }]}>
                 <Text
                   style={[
                     theme.primaryButtonText,
