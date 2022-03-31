@@ -250,7 +250,7 @@ const theme = StyleSheet.create({
     backgroundColor: 'white',
     minHeight: 66,
     margin: 17,
-    marginBottom: 22,
+    marginTop: 0,
     padding: 22,
     borderRadius: 24,
     shadowColor: styleVariables.colors.primary,
