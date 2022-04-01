@@ -20,6 +20,8 @@ import ManageUsers from './Admin/ManageUsers/ManageUsers'
 import SendNotice from './Admin/SendNotice/SendNotice'
 import DeletePost from '../components/DeletePost'
 import Notifications from './Notifications/Notifications'
+import CustomSubStackScreenHeader from './CustomSubStackScreenHeader.js';
+
 
 const Stack = createStackNavigator()
 
@@ -27,92 +29,108 @@ const NewsfeedNavigator = () => {
   const { post, setPost } = useAppContext()
   const { currentUser, setCurrentUser } = useAppContext()
 
-  if (currentUser && currentUser.tenantAuthorized) {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name='Newsfeed'
-          component={Newsfeed}
-          options={{ title: 'Newsfeed', headerLeft: null, headerShown: false }}
-        />
-        <Stack.Screen
-          name='BuildingInfo'
-          component={BuildingInfo}
-          options={{ title: 'Building Info' }}
-        />
-        <Stack.Screen
-          name='CreatePost'
-          component={CreatePost}
-          options={{ title: 'Create Post' }}
-        />
-        <Stack.Screen
-          name='IndividualPosts'
-          component={IndividualPosts}
-          options={{
-            title: `${post.userFirstName}'s Post`,
-            headerRight: () => {
-              if (
-                currentUser.userDocId === post.userID ||
-                currentUser.isAdmin
-              ) {
-                return <DeletePost />
-              }
-            }
-          }}
-        />
-      </Stack.Navigator>
-    )
-  } else {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name='Login'
-          component={Login}
-          options={{ title: 'Login' }}
-        />
-        <Stack.Screen
-          name='Signup'
-          component={Signup}
-          options={{ title: 'Signup' }}
-        />
-        <Stack.Screen
-          name='AccountApprovalPending'
-          component={AccountApprovalPending}
-          options={{ title: 'Account Approval Pending' }}
-        />
-      </Stack.Navigator>
-    )
-  }
-}
+
+	if (currentUser && currentUser.tenantAuthorized) {
+		return (
+			<Stack.Navigator>
+				<Stack.Screen
+					name="Newsfeed"
+					component={Newsfeed}
+					options={{ title: 'Newsfeed', headerLeft: null, headerShown: false }}
+				/>
+				<Stack.Screen
+					name="BuildingInfo"
+					component={BuildingInfo}
+					options={{
+						header: (props) => (
+							<CustomSubStackScreenHeader {...props} title={'Building Info'} />
+						),
+					}}
+				/>
+				<Stack.Screen
+					name="CreatePost"
+					component={CreatePost}
+					options={{
+						header: (props) => (
+							<CustomSubStackScreenHeader {...props} title={'Create post'} />
+						),
+					}}
+				/>
+				<Stack.Screen
+					name="IndividualPosts"
+					component={IndividualPosts}
+					options={{
+						title: `${post.userFirstName}'s Post`,
+						headerRight: () => {
+							if (
+								currentUser.userDocId === post.userID ||
+								currentUser.isAdmin
+							) {
+								return <DeletePost />;
+							}
+						},
+					}}
+				/>
+			</Stack.Navigator>
+		);
+	} else {
+		return (
+			<Stack.Navigator>
+				<Stack.Screen
+					name="Login"
+					component={Login}
+					options={{ title: 'Login' }}
+				/>
+				<Stack.Screen
+					name="Signup"
+					component={Signup}
+					options={{ title: 'Signup' }}
+				/>
+				<Stack.Screen
+					name="AccountApprovalPending"
+					component={AccountApprovalPending}
+					options={{ title: 'Account Approval Pending' }}
+				/>
+			</Stack.Navigator>
+		);
+	}
+};
 
 const ProfileNavigator = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name='ProfileGeneral'
-        component={ProfileGeneral}
-        options={{ title: 'Profile', headerLeft: null, headerShown: false }}
-      />
-      <Stack.Screen
-        name='EditProfile'
-        component={EditProfile}
-        options={{ title: 'Edit Profile' }}
-      />
-      <Stack.Screen
-        name='MyPosts'
-        component={MyPosts}
-        options={{ title: 'My Posts' }}
-      />
-      <Stack.Screen
-        name='Login'
-        component={Login}
-        options={{ title: 'Login', headerLeft: null }}
-      />
-      <Stack.Screen
-        name='BuildingInfo'
-        component={BuildingInfo}
-        options={{ title: 'Building Info' }}
-      />
+	const { post, setPost } = useAppContext();
+
+	return (
+		<Stack.Navigator>
+			<Stack.Screen
+				name="ProfileGeneral"
+				component={ProfileGeneral}
+				options={{ title: 'Profile' }}
+			/>
+			<Stack.Screen
+				name="EditProfile"
+				component={EditProfile}
+				options={{ title: 'Edit Profile' }}
+			/>
+			<Stack.Screen
+				name="MyPosts"
+				component={MyPosts}
+				options={{ title: 'My Posts' }}
+			/>
+			<Stack.Screen
+				name="IndividualPosts"
+				component={IndividualPosts}
+				options={{ title: `${post.userFirstName}'s Post` }}
+			/>
+			<Stack.Screen
+				name="Login"
+				component={Login}
+				options={{ title: 'Login', headerLeft: null }}
+			/>
+			<Stack.Screen
+				name="BuildingInfo"
+				component={BuildingInfo}
+				options={{ title: 'Building Info' }}
+			/>
 
       {/* Admin Pages */}
 

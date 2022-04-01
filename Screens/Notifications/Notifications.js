@@ -14,40 +14,50 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import _ from 'lodash';
 
-let notificationCount;
 let setNotifPost;
 let globalCurrentUser;
+let globalSetWasSeenVar;
+let globalWasSeenVar;
 
 const Notifications = ({ navigation }) => {
+	console.log('IN NOTIFICATIONS');
 	const { currentUser, setCurrentUser } = useAppContext();
 	const { post, setPost } = useAppContext();
 	const [notifications, setNotifications] = useState([]);
-	notificationCount = notifications.length;
+	const [wasSeenVar, setWasSeenVar] = useState();
+	globalSetWasSeenVar = setWasSeenVar;
+	globalWasSeenVar = wasSeenVar;
 	setNotifPost = setPost;
 	globalCurrentUser = currentUser;
-
 	const colReference = collection(
 		db,
 		'Users',
 		`${currentUser.userDocId}`,
 		'Notifications'
 	);
-	let notificationList = [];
 
-	getDocs(colReference).then((snapshot) => {
-		snapshot.docs.forEach((doc) => {
-			notificationList.push({ ...doc.data(), id: doc.id });
-		});
-		let sortedNotificationList = _.sortBy(
-			notificationList,
-			'timestamp'
+	useEffect(() => {
+		getNotifications();
+	}, [globalWasSeenVar]);
+
+	const getNotifications = async () => {
+		const data = await getDocs(colReference);
+
+		let notificationsList = data.docs.map((item) => ({
+			...item._document.data.value.mapValue.fields,
+			id: item._key.path.segments[8],
+		}));
+
+		let sortedListOfNotifications = _.sortBy(
+			notificationsList,
+			'timestamp.integerValue'
 		).reverse();
-		setNotifications(sortedNotificationList);
-	});
+
+		setNotifications(sortedListOfNotifications);
+	};
 
 	return (
 		<SafeAreaView>
-			<Text>Notifications</Text>
 			{notifications.length > 0 && (
 				<FlatList
 					data={notifications}
@@ -62,6 +72,15 @@ const Notifications = ({ navigation }) => {
 };
 
 function NotificationItem({ notifications, navigation }) {
+	notifications = {
+		content: notifications.content.stringValue,
+		id: notifications.id,
+		postID: notifications.postID.stringValue,
+		timestamp: notifications.timestamp,
+		userID: notifications.userID.stringValue,
+		wasSeen: notifications.wasSeen.booleanValue,
+	};
+
 	const setWasSeenToTrue = async (notifications) => {
 		const colRef = doc(
 			db,
@@ -72,6 +91,8 @@ function NotificationItem({ notifications, navigation }) {
 		);
 		await updateDoc(colRef, {
 			wasSeen: true,
+		}).then(() => {
+			globalSetWasSeenVar(!globalWasSeenVar);
 		});
 	};
 	return (
@@ -82,7 +103,12 @@ function NotificationItem({ notifications, navigation }) {
 				viewNotificationPost(notifications);
 				setWasSeenToTrue(notifications);
 			}}
-			style={{ display: 'flex', flexDirection: 'row' }}
+			style={{
+				display: 'flex',
+				flexDirection: 'row',
+				backgroundColor: 'lightgrey',
+				marginBottom: 10,
+			}}
 		>
 			<Text>{notifications.content}</Text>
 			{notifications.wasSeen == false && <Text>*unread*</Text>}

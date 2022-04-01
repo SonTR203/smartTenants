@@ -19,6 +19,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Dimensions } from 'react-native'
 import _ from 'lodash'
 const windowWidth = Dimensions.get('window').width
+import Notifications from '../Notifications/Notifications';
 
 let globalPost
 let setGlobalPost

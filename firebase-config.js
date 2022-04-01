@@ -1,19 +1,19 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app';
 import { getFirestore } from '@firebase/firestore';
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBcLMeVcvIWwgqWge30T42845sb6RH-unM",
-  authDomain: "smarttenant-19566.firebaseapp.com",
-  projectId: "smarttenant-19566",
-  storageBucket: "smarttenant-19566.appspot.com",
-  messagingSenderId: "348416283267",
-  appId: "1:348416283267:web:4c0bbb40b8c29cb87841b6"
+	apiKey: 'AIzaSyB6kad25pEG1rnSiqpQ8a0fvy-00DfONKo',
+	authDomain: 'smarttenant-b6a64.firebaseapp.com',
+	projectId: 'smarttenant-b6a64',
+	storageBucket: 'smarttenant-b6a64.appspot.com',
+	messagingSenderId: '126361854035',
+	appId: '1:126361854035:web:5d277ed92ade2277a526a6',
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 //Export Access to DB
-export const db = getFirestore(app)
+export const db = getFirestore(app);
