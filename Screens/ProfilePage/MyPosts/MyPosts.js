@@ -18,7 +18,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const windowWidth = Dimensions.get('window').width;
 
 let setUserPost;
-let globalNumberOfLikes;
 
 const MyPosts = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
@@ -83,7 +82,6 @@ function MyPostItem({
 	const [numberOfLikes, setNumberOfLikes] = useState(0);
 	const [numberOfComments, setNumberOfComments] = useState(0);
 	const [timeSincePost, setTimeSincePost] = useState('');
-	globalNumberOfLikes = numberOfLikes;
 
 	const getLikes = async () => {
 		const likesColReference = collection(
@@ -172,7 +170,7 @@ function MyPostItem({
 			<TouchableOpacity
 				onPress={() => {
 					navigation.navigate('IndividualPosts');
-					viewUserPost(userPosts);
+					viewUserPost(userPosts, numberOfLikes);
 				}}
 			>
 				<Text style={{ marginVertical: 20, marginLeft: 10 }}>
@@ -210,12 +208,12 @@ function MyPostItem({
 	);
 }
 
-async function viewUserPost(userPosts) {
+async function viewUserPost(userPosts, numberOfLikes) {
+	console.log('USER POST', userPosts.postID);
 	const docRef = doc(db, 'Newsfeed', `${userPosts.postID}`);
 	const docSnap = await getDoc(docRef);
 	if (docSnap.exists()) {
 		let postData = docSnap;
-		console.log('THIS ONE', postData._document.data.value.mapValue.fields);
 		let post = {
 			comments:
 				postData._document.data.value.mapValue.fields.comments.arrayValue,
@@ -235,7 +233,7 @@ async function viewUserPost(userPosts) {
 				postData._document.data.value.mapValue.fields.userFirstName.stringValue,
 			userLastName:
 				postData._document.data.value.mapValue.fields.userLastName.stringValue,
-			numberOfLikes: globalNumberOfLikes,
+			numberOfLikes: numberOfLikes,
 			timestamp:
 				postData._document.data.value.mapValue.fields.timestamp.integerValue,
 		};
