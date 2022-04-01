@@ -1,32 +1,34 @@
 //mix tab and stack navigators: https://www.youtube.com/watch?v=dkriklWelm0&t=139s
 
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import Newsfeed from './Newsfeed/Newsfeed';
-import BuildingInfo from './BuildingInfo/BuildingInfo';
-import CreatePost from './CreatePost/CreatePost';
-import { useAppContext } from '../Context/AppContext';
-import Login from './Login/Login';
-import Signup from './Signup/Signup';
-import AccountApprovalPending from './AccountApprovalPending/AccountApprovalPending';
-import IndividualPosts from './IndividualPosts/IndividualPosts';
-import EditProfile from './ProfilePage/EditProfile/EditProfile';
-import MyPosts from './ProfilePage/MyPosts/MyPosts';
-import ProfileGeneral from './ProfilePage/ProfileGeneral/ProfileGeneral';
+import React from 'react'
+import { createStackNavigator } from '@react-navigation/stack'
+import Newsfeed from './Newsfeed/Newsfeed'
+import BuildingInfo from './BuildingInfo/BuildingInfo'
+import CreatePost from './CreatePost/CreatePost'
+import { useAppContext } from '../Context/AppContext'
+import Login from './Login/Login'
+import Signup from './Signup/Signup'
+import AccountApprovalPending from './AccountApprovalPending/AccountApprovalPending'
+import IndividualPosts from './IndividualPosts/IndividualPosts'
+import EditProfile from './ProfilePage/EditProfile/EditProfile'
+import MyPosts from './ProfilePage/MyPosts/MyPosts'
+import ProfileGeneral from './ProfilePage/ProfileGeneral/ProfileGeneral'
+import AdminPanel from './Admin/AdminPanel/AdminPanel'
+import ManageBuildings from './Admin/ManageBuildings/ManageBuildings'
+import ApproveUsers from './Admin/ApproveUsers/ApproveUsers'
+import ManageUsers from './Admin/ManageUsers/ManageUsers'
+import SendNotice from './Admin/SendNotice/SendNotice'
+import DeletePost from '../components/DeletePost'
+import Notifications from './Notifications/Notifications'
 import CustomSubStackScreenHeader from './CustomSubStackScreenHeader.js';
-import AdminPanel from './Admin/AdminPanel/AdminPanel';
-import ManageBuildings from './Admin/ManageBuildings/ManageBuildings';
-import ApproveUsers from './Admin/ApproveUsers/ApproveUsers';
-import ManageUsers from './Admin/ManageUsers/ManageUsers';
-import SendNotice from './Admin/SendNotice/SendNotice';
-import DeletePost from '../components/DeletePost';
-import Notifications from './Notifications/Notifications';
 
-const Stack = createStackNavigator();
+
+const Stack = createStackNavigator()
 
 const NewsfeedNavigator = () => {
-	const { post, setPost } = useAppContext();
-	const { currentUser, setCurrentUser } = useAppContext();
+  const { post, setPost } = useAppContext()
+  const { currentUser, setCurrentUser } = useAppContext()
+
 
 	if (currentUser && currentUser.tenantAuthorized) {
 		return (
@@ -130,54 +132,54 @@ const ProfileNavigator = () => {
 				options={{ title: 'Building Info' }}
 			/>
 
-			{/* Admin Pages */}
+      {/* Admin Pages */}
 
-			<Stack.Screen
-				name="AdminPanel"
-				component={AdminPanel}
-				options={{ title: 'Admin Panel' }}
-			/>
-			<Stack.Screen
-				name="ApproveUsers"
-				component={ApproveUsers}
-				options={{ title: 'Approve Users' }}
-			/>
-			<Stack.Screen
-				name="ManageUsers"
-				component={ManageUsers}
-				options={{ title: 'Manage Users' }}
-			/>
-			<Stack.Screen
-				name="SendNotice"
-				component={SendNotice}
-				options={{ title: 'Send Notice' }}
-			/>
-			<Stack.Screen
-				name="ManageBuildings"
-				component={ManageBuildings}
-				options={{ title: 'Manage Buildings' }}
-			/>
-		</Stack.Navigator>
-	);
-};
+      <Stack.Screen
+        name='AdminPanel'
+        component={AdminPanel}
+        options={{ title: 'Admin Panel' }}
+      />
+      <Stack.Screen
+        name='ApproveUsers'
+        component={ApproveUsers}
+        options={{ title: 'Approve Users' }}
+      />
+      <Stack.Screen
+        name='ManageUsers'
+        component={ManageUsers}
+        options={{ title: 'Manage Users' }}
+      />
+      <Stack.Screen
+        name='SendNotice'
+        component={SendNotice}
+        options={{ title: 'Send Notice' }}
+      />
+      <Stack.Screen
+        name='ManageBuildings'
+        component={ManageBuildings}
+        options={{ title: 'Manage Buildings' }}
+      />
+    </Stack.Navigator>
+  )
+}
 
 const NotificationNavigator = () => {
-	const { post, setPost } = useAppContext();
+  const { post, setPost } = useAppContext()
 
-	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="Notifications"
-				component={Notifications}
-				options={{ title: 'Notifications' }}
-			/>
-			<Stack.Screen
-				name="IndividualPosts"
-				component={IndividualPosts}
-				options={{ title: `${post.userFirstName}'s Post` }}
-			/>
-		</Stack.Navigator>
-	);
-};
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name='Notifications'
+        component={Notifications}
+        options={{ title: 'Notifications' }}
+      />
+      <Stack.Screen
+        name='IndividualPosts'
+        component={IndividualPosts}
+        options={{ title: `${post.userFirstName}'s Post` }}
+      />
+    </Stack.Navigator>
+  )
+}
 
-export { NewsfeedNavigator, ProfileNavigator, NotificationNavigator };
+export { NewsfeedNavigator, ProfileNavigator, NotificationNavigator }
