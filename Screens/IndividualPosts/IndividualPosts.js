@@ -8,6 +8,8 @@ import {
   FlatList,
   TextInput
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import React, { useState, useEffect } from 'react'
 import { useAppContext } from '../../Context/AppContext'
@@ -57,8 +59,10 @@ const IndividualPosts = ({ route, navigation }) => {
     }
   }, [post.id])
 
-  //  render comment structure
-  const renderItem = ({ item }) => {
+  {
+    /* postComments */
+  }
+  const Comment = ({ item, theme, styleVariables, width }) => {
     return (
       <View id='userComment' style={theme.cardContainer}>
         <View
@@ -166,166 +170,208 @@ const IndividualPosts = ({ route, navigation }) => {
   }
 
   return (
-    <View style={theme.pageContainer}>
-      <View style={theme.globalMargins}>
-        {/* userPost */}
-        <View
-          id='userPost'
-          style={[theme.cardContainer, { marginHorizontal: 0 }]}
-        >
-          {/* postOwnerInfo */}
-          <View
-            className='postOwnerInfo'
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '100%',
-              marginBottom: 12
-            }}
-          >
-            <View
-              className='ownerImageAndName'
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center'
-              }}
-            >
-              <Image
-                source={{ uri: `${post.userProfileImage}` }}
-                style={{ width: 43, height: 43, borderRadius: 12 }}
-              />
-              <Text
-                style={[
-                  styleVariables.fontSizes.bodyBold,
-                  { color: styleVariables.colors.black, marginLeft: 8 }
-                ]}
-              >
-                {post.userFirstName} {post.userLastName}
-              </Text>
-            </View>
-            <Text
-              id='timePosted'
-              style={[
-                styleVariables.fontSizes.callout,
-                { color: styleVariables.colors.black, opacity: 0.66 }
-              ]}
-            >
-              {'2h'}
-            </Text>
-          </View>
-
-          {/* postContent */}
-          <View className='postContent'>
-            {/* postTextContent */}
-            <Text
-              style={[
-                styleVariables.fontSizes.body,
-                { color: styleVariables.colors.black, marginBottom: 17 }
-              ]}
-            >
-              {post.postContent}
-            </Text>
-            {/* postImageContent */}
-            {post.image != 'no image posted' && (
-              <View
-                style={{
-                  width: width - 68,
-                  height: (width - 68) * 0.66,
-                  borderRadius: 16,
-                  marginBottom: 17,
-                  shadowColor: styleVariables.colors.black,
-                  shadowOffset: {
-                    width: 0,
-                    height: 8
-                  },
-                  shadowOpacity: 0.28,
-                  shadowRadius: 34,
-                  elevation: 20
-                }}
-              >
-                <Image
-                  source={{
-                    uri: `${post.image}`
-                  }}
-                  style={{
-                    width: width - 68,
-                    height: (width - 68) * 0.66,
-                    borderRadius: 16,
-                    marginBottom: 17
-                  }}
-                />
-              </View>
-            )}
-          </View>
-
-          {/* likeCount */}
-          <View
-            id='likeCount'
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'row',
-              marginBottom: 5
-            }}
-          >
-            <TouchableOpacity
-              id='like'
-              onPress={() => {
-                alert('like post function')
-              }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                flexDirection: 'row'
-              }}
-            >
-              <MaterialCommunityIcons
-                name='heart-outline'
-                size={24}
-                color={styleVariables.colors.black}
-                style={{ marginRight: 8 }}
-              />
-              <Text
-                style={[
-                  styleVariables.fontSizes.callout,
-                  { color: styleVariables.colors.black }
-                ]}
-              >
-                Liked by
-              </Text>
-              <Text
-                style={[
-                  styleVariables.fontSizes.calloutBold,
-                  { color: styleVariables.colors.black }
-                ]}
-              >
-                {` ${post.numberOfLikes} ${peoplePerson}`}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* postComments */}
+    <View>
+      <StatusBar style='auto' />
+      <View style={theme.pageContainer}>
         <FlatList
+          ListHeaderComponent={
+            <ListHeader
+              post={post}
+              peoplePerson={peoplePerson}
+              theme={theme}
+              styleVariables={styleVariables}
+            />
+          }
           data={comments}
-          renderItem={renderItem}
           keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <Comment
+              item={item}
+              navigation={navigation}
+              theme={theme}
+              styleVariables={styleVariables}
+              width={width}
+            />
+          )}
+          ListFooterComponent={
+            <ListFooter
+              post={post}
+              textInputValue={textInputValue}
+              postComment={postComment}
+              theme={theme}
+              styleVariables={styleVariables}
+            />
+          }
         />
-
-        <View>
-          <TextInput
-            placeholder='say something'
-            onChangeText={text => setTextInputValue(text)}
-            value={textInputValue}
-          />
-          {/* disable button class if no text input for comments */}
-
-          <Button title='comment' onPress={postComment}></Button>
-        </View>
       </View>
+    </View>
+  )
+}
+
+{
+  /* userPost */
+}
+function ListHeader ({ post, peoplePerson, theme, styleVariables }) {
+  return (
+    <View id='userPost' style={[theme.cardContainer, { marginHorizontal: 0 }]}>
+      {/* postOwnerInfo */}
+      <View
+        className='postOwnerInfo'
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          marginBottom: 12
+        }}
+      >
+        <View
+          className='ownerImageAndName'
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}
+        >
+          <Image
+            source={{ uri: `${post.userProfileImage}` }}
+            style={{ width: 43, height: 43, borderRadius: 12 }}
+          />
+          <Text
+            style={[
+              styleVariables.fontSizes.bodyBold,
+              { color: styleVariables.colors.black, marginLeft: 8 }
+            ]}
+          >
+            {post.userFirstName} {post.userLastName}
+          </Text>
+        </View>
+        <Text
+          id='timePosted'
+          style={[
+            styleVariables.fontSizes.callout,
+            { color: styleVariables.colors.black, opacity: 0.66 }
+          ]}
+        >
+          {'2h'}
+        </Text>
+      </View>
+
+      {/* postContent */}
+      <View className='postContent'>
+        {/* postTextContent */}
+        <Text
+          style={[
+            styleVariables.fontSizes.body,
+            { color: styleVariables.colors.black, marginBottom: 17 }
+          ]}
+        >
+          {post.postContent}
+        </Text>
+        {/* postImageContent */}
+        {post.image != 'no image posted' && (
+          <View
+            style={{
+              width: width - 68,
+              height: (width - 68) * 0.66,
+              borderRadius: 16,
+              marginBottom: 17,
+              shadowColor: styleVariables.colors.black,
+              shadowOffset: {
+                width: 0,
+                height: 8
+              },
+              shadowOpacity: 0.28,
+              shadowRadius: 34,
+              elevation: 20
+            }}
+          >
+            <Image
+              source={{
+                uri: `${post.image}`
+              }}
+              style={{
+                width: width - 68,
+                height: (width - 68) * 0.66,
+                borderRadius: 16,
+                marginBottom: 17
+              }}
+            />
+          </View>
+        )}
+      </View>
+
+      {/* likeCount */}
+      <View
+        id='likeCount'
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'row',
+          marginBottom: 5
+        }}
+      >
+        <TouchableOpacity
+          id='like'
+          onPress={() => {
+            alert('like post function')
+          }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'row'
+          }}
+        >
+          <MaterialCommunityIcons
+            name='heart-outline'
+            size={24}
+            color={styleVariables.colors.black}
+            style={{ marginRight: 8 }}
+          />
+          <Text
+            style={[
+              styleVariables.fontSizes.callout,
+              { color: styleVariables.colors.black }
+            ]}
+          >
+            Liked by
+          </Text>
+          <Text
+            style={[
+              styleVariables.fontSizes.calloutBold,
+              { color: styleVariables.colors.black }
+            ]}
+          >
+            {` ${post.numberOfLikes} ${peoplePerson}`}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+}
+
+{
+  /* addComment */
+}
+function ListFooter ({
+  post,
+  textInputValue,
+  setTextInputValue,
+  postComment,
+  theme,
+  styleVariables
+}) {
+  return (
+    <View>
+      <TextInput
+        placeholder='say something'
+        onChangeText={text => setTextInputValue(text)}
+        value={textInputValue}
+      />
+      {/* disable button class if no text input for comments */}
+
+      <Button title='comment' onPress={postComment}></Button>
     </View>
   )
 }
