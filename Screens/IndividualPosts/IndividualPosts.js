@@ -64,7 +64,13 @@ const IndividualPosts = ({ route, navigation }) => {
   }
   const Comment = ({ item, theme, styleVariables, width }) => {
     return (
-      <View id='userComment' style={theme.cardContainer}>
+      <View
+        id='userComment'
+        style={[
+          theme.cardContainer,
+          { shadowColor: styleVariables.colors.primary }
+        ]}
+      >
         <View
           className='commentOwnerInfo'
           style={{
@@ -197,6 +203,7 @@ const IndividualPosts = ({ route, navigation }) => {
             <ListFooter
               post={post}
               textInputValue={textInputValue}
+              setTextInputValue={setTextInputValue}
               postComment={postComment}
               theme={theme}
               styleVariables={styleVariables}
@@ -208,12 +215,10 @@ const IndividualPosts = ({ route, navigation }) => {
   )
 }
 
-{
-  /* userPost */
-}
+//* userPost */
 function ListHeader ({ post, peoplePerson, theme, styleVariables }) {
   return (
-    <View id='userPost' style={[theme.cardContainer, { marginHorizontal: 0 }]}>
+    <View id='userPost' style={theme.cardContainer}>
       {/* postOwnerInfo */}
       <View
         className='postOwnerInfo'
@@ -351,9 +356,7 @@ function ListHeader ({ post, peoplePerson, theme, styleVariables }) {
   )
 }
 
-{
-  /* addComment */
-}
+//* addComment */
 function ListFooter ({
   post,
   textInputValue,
@@ -363,15 +366,33 @@ function ListFooter ({
   styleVariables
 }) {
   return (
-    <View>
-      <TextInput
-        placeholder='say something'
-        onChangeText={text => setTextInputValue(text)}
-        value={textInputValue}
-      />
-      {/* disable button class if no text input for comments */}
+    <View style={[theme.globalMargins, { paddingTop: 34, paddingBottom: 136 }]}>
+      <View>
+        <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+          Reply
+        </Text>
+        <TextInput
+          onChangeText={text => setTextInputValue(text)}
+          value={textInputValue}
+          placeholder='280 characters maximum'
+          multiline={true}
+          maxLength={280}
+          style={[
+            theme.textInput,
+            styleVariables.fontSizes.body,
+            { minHeight: 68 + 44, paddingTop: 22 }
+          ]}
+        />
+      </View>
 
-      <Button title='comment' onPress={postComment}></Button>
+      {/* disable button class if no text input for comments */}
+      <TouchableOpacity onPress={postComment} style={theme.primaryButton}>
+        <Text
+          style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}
+        >
+          Send reply
+        </Text>
+      </TouchableOpacity>
     </View>
   )
 }
