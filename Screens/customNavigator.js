@@ -57,17 +57,6 @@ const NewsfeedNavigator = () => {
         <Stack.Screen
           name='IndividualPosts'
           component={IndividualPosts}
-          // options={{
-          // 	title: `${post.userFirstName}'s Post`,
-          // 	headerRight: () => {
-          // 		if (
-          // 			currentUser.userDocId === post.userID ||
-          // 			currentUser.isAdmin
-          // 		) {
-          // 			return <DeletePost />;
-          // 		}
-          // 	},
-          // }}
           options={{
             header: props => {
               if (

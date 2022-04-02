@@ -5,7 +5,7 @@ import { useAppContext } from '../Context/AppContext'
 import { useTheme } from '../ThemeContext.js'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Alert, Button } from 'react-native'
+import { Alert } from 'react-native'
 
 const DeletePost = () => {
   const [theme, styleVariables] = useTheme()
