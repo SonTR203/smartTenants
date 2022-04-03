@@ -8,21 +8,20 @@ import { useEffect, useState } from 'react';
 
 const AdminPanel = ({ navigation }) => {
   const colRef = collection(db, 'Users');
+  const [unauthorizedUsers, setUnauthorizedUsers] = useState([]);
   const [theme, styleVariables] = useTheme();
-  const [count, setCount] = useState([]);
 
   const getCount = async () => {
     const data = await getDocs(colRef);
     const users = data.docs.map((user) => user.data());
-    const unauthorizedUsers = users.filter((user) => !user.tenantAuthorized);
-    setCount(unauthorizedUsers.length);
+    setUnauthorizedUsers(users.filter((user) => !user.tenantAuthorized));
   };
 
   useEffect(() => {
     getCount();
   }, []);
 
-  console.log(count);
+  console.log(unauthorizedUsers.length);
 
   return (
     <SafeAreaView>
@@ -35,7 +34,7 @@ const AdminPanel = ({ navigation }) => {
       >
         <Text
           style={{ color: 'white', fontWeight: 'bold' }}
-        >{`Approve users \t\t ${count}`}</Text>
+        >{`Approve users \t\t ${unauthorizedUsers.length}`}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
