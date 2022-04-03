@@ -28,7 +28,9 @@ const AdminPanel = ({ navigation }) => {
       <StatusBar style="auto" />
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('ApproveUsers');
+          navigation.navigate('ApproveUsers', {
+            unauthorizedUsers,
+          });
         }}
         style={theme.primaryButton}
       >
