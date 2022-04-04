@@ -2,19 +2,41 @@ import { Text } from 'react-native';
 import React from 'react';
 import { SafeAreaView, StatusBar, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../../ThemeContext';
+import { collection, getDocs } from '@firebase/firestore';
+import { db } from '../../../firebase-config';
+import { useEffect, useState } from 'react';
 
 const AdminPanel = ({ navigation }) => {
+  const colRef = collection(db, 'Users');
+  const [unauthorizedUsers, setUnauthorizedUsers] = useState([]);
   const [theme, styleVariables] = useTheme();
+
+  const getCount = async () => {
+    const data = await getDocs(colRef);
+    const users = data.docs.map((user) => user.data());
+    setUnauthorizedUsers(users.filter((user) => !user.tenantAuthorized));
+  };
+
+  useEffect(() => {
+    getCount();
+  }, []);
+
+  console.log(unauthorizedUsers.length);
+
   return (
     <SafeAreaView>
       <StatusBar style="auto" />
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('ApproveUsers');
+          navigation.navigate('ApproveUsers', {
+            unauthorizedUsers,
+          });
         }}
         style={theme.primaryButton}
       >
-        <Text>Approve users</Text>
+        <Text
+          style={{ color: 'white', fontWeight: 'bold' }}
+        >{`Approve users \t\t ${unauthorizedUsers.length}`}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -22,7 +44,7 @@ const AdminPanel = ({ navigation }) => {
         }}
         style={theme.primaryButton}
       >
-        <Text>Manage users</Text>
+        <Text style={{ color: 'white', fontWeight: 'bold' }}>Manage users</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -30,7 +52,7 @@ const AdminPanel = ({ navigation }) => {
         }}
         style={theme.primaryButton}
       >
-        <Text>Send notices</Text>
+        <Text style={{ color: 'white', fontWeight: 'bold' }}>Send notices</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -38,7 +60,9 @@ const AdminPanel = ({ navigation }) => {
         }}
         style={theme.primaryButton}
       >
-        <Text>Manage buildings</Text>
+        <Text style={{ color: 'white', fontWeight: 'bold' }}>
+          Manage buildings
+        </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

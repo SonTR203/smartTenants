@@ -5,6 +5,7 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+
   Image
 } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -26,6 +27,7 @@ let setGlobalPost
 let globalCurrentUser
 
 const Newsfeed = ({ navigation }) => {
+
   const [theme, styleVariables] = useTheme()
   const [posts, setPosts] = useState([])
   const { post, setPost } = useAppContext()
@@ -75,6 +77,7 @@ const Newsfeed = ({ navigation }) => {
               />
             }
             data={posts}
+
             keyExtractor={item => item.id}
             renderItem={({ item }) => (
               <Post
@@ -107,6 +110,7 @@ const Newsfeed = ({ navigation }) => {
 
         {/* FAB */}
         <Pressable
+
           id='FAB'
           onPress={() => {
             navigation.navigate('CreatePost')
@@ -141,6 +145,7 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
     userFirstName: posts.userFirstName.stringValue,
     userLastName: posts.userLastName.stringValue,
     numberOfLikes: numberOfLikes,
+
     timestamp: posts.timestamp
   }
 
@@ -150,6 +155,7 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
       'Newsfeed',
       `${posts.id}`,
       'peopleWhoLiked'
+
     )
 
     const data = await getDocs(likesColReference)
@@ -165,6 +171,7 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
       'Newsfeed',
       `${posts.id}`,
       'peopleWhoCommented'
+
     )
     const data = await getDocs(likesColReference)
     setNumberOfComments(data.docs.length)
