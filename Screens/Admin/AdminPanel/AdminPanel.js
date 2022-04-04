@@ -13,7 +13,12 @@ const AdminPanel = ({ navigation }) => {
 
   const getCount = async () => {
     const data = await getDocs(colRef);
-    const users = data.docs.map((user) => user.data());
+    let userID;
+    const users = data.docs.map((user) => {
+      userID = user._key.path.segments[6];
+      console.log('my user**', user.ID);
+      user.data();
+    });
     setUnauthorizedUsers(users.filter((user) => !user.tenantAuthorized));
   };
 

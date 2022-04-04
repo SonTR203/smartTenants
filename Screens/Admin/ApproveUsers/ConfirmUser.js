@@ -23,7 +23,7 @@ const auth = getAuth();
 
 const ConfirmUser = ({ route, navigation }) => {
   const { user } = route.params;
-  console.log(user.unitNumber.toString());
+  console.log(user.userDocId);
   const [theme, styleVariables] = useTheme();
   const [email, setEmail] = useState(user.email);
   const [firstName, setFirstName] = useState(user.firstName);
@@ -32,6 +32,9 @@ const ConfirmUser = ({ route, navigation }) => {
   const [buildingID, setBuildingID] = useState(user.buildingID);
   const [modalVisible, setModalVisible] = useState(false);
   const [unitNumber, setUnitNumber] = useState(user.unitNumber);
+  const [tenantAuthorized, setTenantAuthorized] = useState(
+    user.tenantAuthorized
+  );
   const [userProfileImage, setUserProfileImage] = useState(
     user.userProfileImage
   );
@@ -67,24 +70,27 @@ const ConfirmUser = ({ route, navigation }) => {
     return true;
   };
 
-  async function saveProfileInfo() {
+  async function confirmUser() {
+    setTenantAuthorized(true);
     console.log('save profile info');
     const userDocRef = doc(db, 'Users', user.userDocId);
+    console.log(user.userDocId);
 
-    try {
-      await updateDoc(userDocRef, {
-        //userID,
-        firstName,
-        lastName,
-        buildingID,
-        buildingAddress,
-        email,
-        unitNumber,
-      });
-      navigation.navigate('ApproveUsers');
-    } catch (error) {
-      console.log(error);
-    }
+    //   try {
+    //     await updateDoc(userDocRef, {
+    //       //userID,
+    //       firstName,
+    //       lastName,
+    //       buildingID,
+    //       buildingAddress,
+    //       email,
+    //       unitNumber,
+    //       tenantAuthorized,
+    //     });
+    //     navigation.goBack();
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
   }
 
   function removeProfilePic() {
@@ -226,7 +232,7 @@ const ConfirmUser = ({ route, navigation }) => {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('ApproveUsers');
+              navigation.goBack();
             }}
           >
             <View style={[theme.secondaryButton, { marginTop: 17 }]}>
@@ -242,7 +248,7 @@ const ConfirmUser = ({ route, navigation }) => {
           </TouchableOpacity>
 
           <View id="signupCTA">
-            <TouchableOpacity onPress={saveProfileInfo}>
+            <TouchableOpacity onPress={confirmUser}>
               <View style={[theme.primaryButton, { marginTop: 17 }]}>
                 <Text
                   style={[
