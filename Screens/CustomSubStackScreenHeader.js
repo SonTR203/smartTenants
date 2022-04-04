@@ -26,11 +26,7 @@ export default function CustomSubStackScreenHeader ({ ...props }) {
         <Text style={styleVariables.fontSizes.title}>
           {props.title && props.title}
         </Text>
-        <MaterialCommunityIcons
-          name='dots-horizontal'
-          size={36}
-          color={styleVariables.colors.black}
-        />
+        <View>{props.headerFunc && props.headerFunc}</View>
       </View>
     </SafeAreaView>
   )
