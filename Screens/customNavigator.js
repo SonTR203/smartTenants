@@ -58,25 +58,14 @@ const NewsfeedNavigator = () => {
           name='IndividualPosts'
           component={IndividualPosts}
           options={{
-            header: props => {
+            title: `${post.userFirstName}'s Post`,
+            headerRight: () => {
+
               if (
                 currentUser.userDocId === post.userID ||
                 currentUser.isAdmin
               ) {
-                return (
-                  <CustomSubStackScreenHeader
-                    {...props}
-                    title={`${post.userFirstName}'s Post`}
-                    headerFunc={<DeletePost />}
-                  />
-                )
-              } else {
-                return (
-                  <CustomSubStackScreenHeader
-                    {...props}
-                    title={`${post.userFirstName}'s Post`}
-                  />
-                )
+                return <DeletePost />
               }
             }
           }}
@@ -181,7 +170,7 @@ const NotificationNavigator = () => {
       <Stack.Screen
         name='Notifications'
         component={Notifications}
-        options={{ title: 'Notifications' }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='IndividualPosts'
