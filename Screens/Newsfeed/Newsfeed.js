@@ -5,63 +5,65 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
-  Image,
-} from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect, useContext } from 'react';
-import { collection, getDocs, deleteDoc, addDoc } from '@firebase/firestore';
-import { db } from '../../firebase-config';
-import { useAppContext } from '../../Context/AppContext';
-import { useTheme } from '../../ThemeContext';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Dimensions } from 'react-native';
-import _ from 'lodash';
-import Notifications from '../Notifications/Notifications';
-const windowWidth = Dimensions.get('window').width;
 
-let globalPost;
-let setGlobalPost;
-let globalCurrentUser;
+  Image
+} from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar'
+import React, { useState, useEffect, useContext } from 'react'
+import { collection, getDocs, deleteDoc, addDoc } from '@firebase/firestore'
+import { db } from '../../firebase-config'
+import { useAppContext } from '../../Context/AppContext'
+import { useTheme } from '../../ThemeContext'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { Dimensions } from 'react-native'
+import _ from 'lodash'
+const windowWidth = Dimensions.get('window').width
+import Notifications from '../Notifications/Notifications';
+
+let globalPost
+let setGlobalPost
+let globalCurrentUser
 
 const Newsfeed = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme();
-  const [posts, setPosts] = useState([]);
-  const { post, setPost } = useAppContext();
-  const { currentUser, setCurrentUser } = useAppContext();
-  const colRef = collection(db, 'Newsfeed');
-  const [refreshing, setRefreshing] = useState(true);
 
-  globalPost = post;
-  setGlobalPost = setPost;
-  globalCurrentUser = currentUser;
+  const [theme, styleVariables] = useTheme()
+  const [posts, setPosts] = useState([])
+  const { post, setPost } = useAppContext()
+  const { currentUser, setCurrentUser } = useAppContext()
+  const colRef = collection(db, 'Newsfeed')
+  const [refreshing, setRefreshing] = useState(true)
+
+  globalPost = post
+  setGlobalPost = setPost
+  globalCurrentUser = currentUser
 
   useEffect(() => {
-    getPosts();
-  }, []);
+    getPosts()
+  }, [])
 
   const getPosts = async () => {
-    const data = await getDocs(colRef);
-    let listOfPosts = data.docs.map((item) => ({
+    const data = await getDocs(colRef)
+    let listOfPosts = data.docs.map(item => ({
       ...item._document.data.value.mapValue.fields,
-      id: item._key.path.segments[6],
-    }));
+      id: item._key.path.segments[6]
+    }))
     let sortedListOfPosts = _.sortBy(
       listOfPosts,
       'timestamp.integerValue'
-    ).reverse();
-    setPosts(sortedListOfPosts);
+    ).reverse()
+    setPosts(sortedListOfPosts)
 
-    setRefreshing(false);
-  };
+    setRefreshing(false)
+  }
 
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: styleVariables.colors.primary }}
       edges={['top']}
     >
-      <StatusBar style="auto" />
+      <StatusBar style='auto' />
       <View style={theme.pageContainer}>
         {refreshing ? <ActivityIndicator /> : null}
 
@@ -75,7 +77,8 @@ const Newsfeed = ({ navigation }) => {
               />
             }
             data={posts}
-            keyExtractor={(item) => item.id}
+
+            keyExtractor={item => item.id}
             renderItem={({ item }) => (
               <Post
                 posts={item}
@@ -107,28 +110,29 @@ const Newsfeed = ({ navigation }) => {
 
         {/* FAB */}
         <Pressable
-          id="FAB"
+
+          id='FAB'
           onPress={() => {
-            navigation.navigate('CreatePost');
+            navigation.navigate('CreatePost')
           }}
           style={theme.fab}
         >
           <MaterialCommunityIcons
-            name="plus"
+            name='plus'
             size={24}
             color={styleVariables.colors.white}
           />
         </Pressable>
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}
 
 //============================== Individual Post Cards ==========================
-function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
-  const [numberOfLikes, setNumberOfLikes] = useState(0);
-  const [numberOfComments, setNumberOfComments] = useState(0);
-  const [timeSincePost, setTimeSincePost] = useState('');
+function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
+  const [numberOfLikes, setNumberOfLikes] = useState(0)
+  const [numberOfComments, setNumberOfComments] = useState(0)
+  const [timeSincePost, setTimeSincePost] = useState('')
 
   posts = {
     comments: posts.comments.arrayValue,
@@ -141,8 +145,9 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
     userFirstName: posts.userFirstName.stringValue,
     userLastName: posts.userLastName.stringValue,
     numberOfLikes: numberOfLikes,
-    timestamp: posts.timestamp,
-  };
+
+    timestamp: posts.timestamp
+  }
 
   const getLikes = async () => {
     const likesColReference = collection(
@@ -150,14 +155,15 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
       'Newsfeed',
       `${posts.id}`,
       'peopleWhoLiked'
-    );
 
-    const data = await getDocs(likesColReference);
-    setNumberOfLikes(data.docs.length);
-    setTime();
-    getComments();
-  };
-  getLikes();
+    )
+
+    const data = await getDocs(likesColReference)
+    setNumberOfLikes(data.docs.length)
+    setTime()
+    getComments()
+  }
+  getLikes()
 
   const getComments = async () => {
     const likesColReference = collection(
@@ -165,20 +171,21 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
       'Newsfeed',
       `${posts.id}`,
       'peopleWhoCommented'
-    );
-    const data = await getDocs(likesColReference);
-    setNumberOfComments(data.docs.length);
-  };
+
+    )
+    const data = await getDocs(likesColReference)
+    setNumberOfComments(data.docs.length)
+  }
 
   const likePost = async () => {
     const notificationColRef = collection(
       db,
       `Users/${posts.userID}/Notifications`
-    );
+    )
     const peopleWhoLikedColRef = collection(
       db,
       `Newsfeed/${posts.id}/peopleWhoLiked`
-    );
+    )
 
     try {
       await addDoc(notificationColRef, {
@@ -186,12 +193,12 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
         postID: posts.id,
         userID: posts.userID,
         wasSeen: false,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       }).then(() => {
-        getLikes();
-      });
+        getLikes()
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
 
     try {
@@ -199,68 +206,68 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
         firstName: globalCurrentUser.firstName,
         lastName: globalCurrentUser.lastName,
         postID: posts.id,
-        userID: posts.userID,
-      });
+        userID: posts.userID
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const setTime = () => {
-    let time = posts.timestamp;
+    let time = posts.timestamp
     if (time != undefined) {
-      let timePosted = time.integerValue;
-      let currentTime = Date.now();
+      let timePosted = time.integerValue
+      let currentTime = Date.now()
       let timeDifferenceMinutes = ((currentTime - timePosted) / 60000).toFixed(
         0
-      );
-      let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0);
-      let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0);
-      let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
+      )
+      let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0)
+      let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0)
+      let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0)
 
       if (timeDifferenceMinutes < 59) {
-        setTimeSincePost(`${timeDifferenceMinutes} minutes ago`);
+        setTimeSincePost(`${timeDifferenceMinutes} minutes ago`)
       } else if (timeDifferenceMinutes > 59 && timeDifferenceHours < 23) {
-        setTimeSincePost(`${timeDifferenceHours} hours ago`);
+        setTimeSincePost(`${timeDifferenceHours} hours ago`)
       } else if (
         timeDifferenceDays < 6 &&
         timeDifferenceMinutes > 59 &&
         timeDifferenceHours > 23
       ) {
-        setTimeSincePost(`${timeDifferenceDays} days ago`);
+        setTimeSincePost(`${timeDifferenceDays} days ago`)
       } else if (
         timeDifferenceWeeks < 10 &&
         timeDifferenceDays > 6 &&
         timeDifferenceMinutes > 59 &&
         timeDifferenceHours > 23
       ) {
-        setTimeSincePost(timeDifferenceWeeks, ' weeks ago');
+        setTimeSincePost(timeDifferenceWeeks, ' weeks ago')
       } else {
-        setTimeSincePost('10+ weeks ago');
+        setTimeSincePost('10+ weeks ago')
       }
     }
-  };
+  }
 
   return (
-    <View id="post" style={theme.cardContainer}>
+    <View id='post' style={theme.cardContainer}>
       {/* ownerInfo */}
       <View
-        id="ownerInfo"
+        id='ownerInfo'
         style={{
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
           width: '100%',
-          marginBottom: 12,
+          marginBottom: 12
         }}
       >
         <View
-          className="ownerImageAndName"
+          className='ownerImageAndName'
           style={{
             display: 'flex',
             flexDirection: 'row',
-            alignItems: 'center',
+            alignItems: 'center'
           }}
         >
           <Image
@@ -270,17 +277,17 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
           <Text
             style={[
               styleVariables.fontSizes.bodyBold,
-              { color: styleVariables.colors.black, marginLeft: 8 },
+              { color: styleVariables.colors.black, marginLeft: 8 }
             ]}
           >
             {posts.userFirstName} {posts.userLastName}
           </Text>
         </View>
         <Text
-          id="timePosted"
+          id='timePosted'
           style={[
             styleVariables.fontSizes.callout,
-            { color: styleVariables.colors.black, opacity: 0.66 },
+            { color: styleVariables.colors.black, opacity: 0.66 }
           ]}
         >
           {timeSincePost}
@@ -289,17 +296,17 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 
       {/* postContent */}
       <TouchableOpacity
-        id="postContent"
+        id='postContent'
         onPress={() => {
-          navigation.push('IndividualPosts');
-          setGlobalPost(posts);
+          navigation.push('IndividualPosts')
+          setGlobalPost(posts)
         }}
       >
-        <View className="postTextContent">
+        <View className='postTextContent'>
           <Text
             style={[
               styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black, marginBottom: 17 },
+              { color: styleVariables.colors.black, marginBottom: 17 }
             ]}
           >
             {posts.postContent}
@@ -309,13 +316,13 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
         {posts.image != 'no image posted' && (
           <Image
             source={{
-              uri: `${posts.image}`,
+              uri: `${posts.image}`
             }}
             style={{
               height: windowWidth - 68,
               width: windowWidth - 68,
               borderRadius: 16,
-              marginBottom: 17,
+              marginBottom: 17
             }}
           />
         )}
@@ -323,26 +330,26 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 
       {/* likeAndComment */}
       <View
-        className="likeAndComment"
+        className='likeAndComment'
         style={{
           display: 'flex',
           alignItems: 'center',
           flexDirection: 'row',
-          marginBottom: 5,
+          marginBottom: 5
         }}
       >
         {/* =========================== LIKE ============================= */}
         <TouchableOpacity
-          id="like"
+          id='like'
           onPress={likePost}
           style={{
             display: 'flex',
             alignItems: 'center',
-            flexDirection: 'row',
+            flexDirection: 'row'
           }}
         >
           <MaterialCommunityIcons
-            name="heart-outline"
+            name='heart-outline'
             size={24}
             color={styleVariables.colors.black}
             style={{ marginRight: 8 }}
@@ -350,7 +357,7 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
           <Text
             style={[
               styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black },
+              { color: styleVariables.colors.black }
             ]}
           >
             {numberOfLikes}
@@ -359,20 +366,20 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 
         {/* =========================== COMMENT ============================= */}
         <TouchableOpacity
-          id="comment"
+          id='comment'
           onPress={() => {
-            navigation.navigate('IndividualPosts');
-            setGlobalPost(posts);
+            navigation.navigate('IndividualPosts')
+            setGlobalPost(posts)
           }}
           style={{
             display: 'flex',
             alignItems: 'center',
             flexDirection: 'row',
-            marginLeft: 17,
+            marginLeft: 17
           }}
         >
           <MaterialCommunityIcons
-            name="message-outline"
+            name='message-outline'
             size={24}
             color={styleVariables.colors.black}
             style={{ marginRight: 8 }}
@@ -380,7 +387,7 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
           <Text
             style={[
               styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black },
+              { color: styleVariables.colors.black }
             ]}
           >
             {numberOfComments}
@@ -388,49 +395,49 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
         </TouchableOpacity>
       </View>
     </View>
-  );
+  )
 }
 
-function ListHeader({ navigation, styleVariables, theme }) {
+function ListHeader ({ navigation, styleVariables, theme }) {
   return (
     <>
-      <View id="header" style={theme.header}>
+      <View id='header' style={theme.header}>
         {/* headerPageTitle */}
         <Text
-          id="headerPageTitle"
+          id='headerPageTitle'
           style={[
             styleVariables.fontSizes.header,
             {
               color: styleVariables.colors.white,
-              marginBottom: 4,
-            },
+              marginBottom: 4
+            }
           ]}
         >
           Newsfeed
         </Text>
         {/* buildingInfo */}
         <Pressable
-          id="buildingInfo"
+          id='buildingInfo'
           onPress={() => {
-            navigation.navigate('BuildingInfo');
+            navigation.navigate('BuildingInfo')
           }}
           style={{
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            opacity: 0.66,
+            opacity: 0.66
           }}
         >
           <Text
             style={[
               styleVariables.fontSizes.body,
-              { color: styleVariables.colors.white },
+              { color: styleVariables.colors.white }
             ]}
           >
             Building Info
           </Text>
           <MaterialCommunityIcons
-            name="chevron-right"
+            name='chevron-right'
             size={24}
             color={styleVariables.colors.white}
           />
@@ -439,35 +446,35 @@ function ListHeader({ navigation, styleVariables, theme }) {
 
       {/* announcements */}
       <View style={theme.firstListItem}>
-        <View id="topCard" style={theme.topCard}>
+        <View id='topCard' style={theme.topCard}>
           <Pressable
-            id="announcements"
+            id='announcements'
             onPress={() => {
-              alert('navigate to announcements (not yet implemented)');
+              alert('navigate to announcements (not yet implemented)')
             }}
-            style={theme.cardButton}
+            style={[theme.cardButton, { marginTop: 17, marginBottom: 22 }]}
           >
             <Text
               style={[
                 styleVariables.fontSizes.title,
-                { color: styleVariables.colors.primary },
+                { color: styleVariables.colors.primary }
               ]}
             >
               Announcements
             </Text>
-            <View id="counter" style={theme.counter}>
+            <View id='counter' style={theme.counter}>
               <Text
-                id="notificationCounter"
+                id='notificationCounter'
                 style={[
                   theme.notificationCounter,
                   styleVariables.fontSizes.callout,
-                  { color: styleVariables.colors.white },
+                  { color: styleVariables.colors.white }
                 ]}
               >
                 99+
               </Text>
               <MaterialCommunityIcons
-                name="chevron-right"
+                name='chevron-right'
                 size={24}
                 color={styleVariables.colors.primary}
               />
@@ -476,10 +483,10 @@ function ListHeader({ navigation, styleVariables, theme }) {
         </View>
       </View>
     </>
-  );
+  )
 }
 
-function ListFooter({ theme, styleVariables }) {
+function ListFooter ({ theme, styleVariables }) {
   return (
     <View
       style={{
@@ -488,7 +495,7 @@ function ListFooter({ theme, styleVariables }) {
         paddingHorizontal: 34,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
       }}
     >
       <Text
@@ -497,8 +504,8 @@ function ListFooter({ theme, styleVariables }) {
           {
             color: styleVariables.colors.black,
             opacity: 0.66,
-            paddingBottom: 8,
-          },
+            paddingBottom: 8
+          }
         ]}
       >
         Oh oh! Seems like you've reached the end.
@@ -509,14 +516,14 @@ function ListFooter({ theme, styleVariables }) {
           {
             color: styleVariables.colors.black,
             opacity: 0.66,
-            paddingBottom: 102,
-          },
+            paddingBottom: 102
+          }
         ]}
       >
         Refresh at the top for new posts!
       </Text>
     </View>
-  );
+  )
 }
 
-export default Newsfeed;
+export default Newsfeed
