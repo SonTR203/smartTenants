@@ -60,6 +60,7 @@ const NewsfeedNavigator = () => {
           options={{
             title: `${post.userFirstName}'s Post`,
             headerRight: () => {
+
               if (
                 currentUser.userDocId === post.userID ||
                 currentUser.isAdmin
