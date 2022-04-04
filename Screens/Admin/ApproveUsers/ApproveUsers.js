@@ -10,13 +10,18 @@ const ApproveUsers = ({ route, navigation }) => {
     <SafeAreaView>
       <StatusBar style="auto" />
       <View>
-        {console.log(unauthorizedUsers)}
         {unauthorizedUsers.length > 0 && (
           <FlatList
             data={unauthorizedUsers}
             keyExtractor={(user) => user.userID}
             renderItem={({ item }) => (
-              <UnauthorizedUserItem user={item} navigation={navigation} />
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('ConfirmUser', { user: item });
+                }}
+              >
+                <UnauthorizedUserItem user={item} />
+              </TouchableOpacity>
             )}
           />
         )}
@@ -28,12 +33,10 @@ const ApproveUsers = ({ route, navigation }) => {
 function UnauthorizedUserItem(user) {
   user = user.user;
   return (
-    <TouchableOpacity>
-      <View style={{ marginBottom: 10 }}>
-        <Text>{user.firstName + ' ' + user.lastName}</Text>
-        <Text>{user.buildingAddress}</Text>
-      </View>
-    </TouchableOpacity>
+    <View style={{ marginBottom: 10 }}>
+      <Text>{user.firstName + ' ' + user.lastName}</Text>
+      <Text>{user.buildingAddress}</Text>
+    </View>
   );
 }
 

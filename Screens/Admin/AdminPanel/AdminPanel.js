@@ -21,8 +21,6 @@ const AdminPanel = ({ navigation }) => {
     getCount();
   }, []);
 
-  console.log(unauthorizedUsers.length);
-
   return (
     <SafeAreaView>
       <StatusBar style="auto" />
