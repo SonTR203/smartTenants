@@ -6,6 +6,7 @@ function AppProvider({ children }) {
 	const [post, setPost] = useState({});
 	const [currentUser, setCurrentUser] = useState({});
 	const [notifications, setNotifications] = useState({});
+	const [unauthorizedUsers, setUnauthorizedUsers] = useState({});
 	return (
 		<AppContext.Provider
 			value={{
@@ -15,6 +16,8 @@ function AppProvider({ children }) {
 				setCurrentUser,
 				notifications,
 				setNotifications,
+				unauthorizedUsers,
+				setUnauthorizedUsers,
 			}}
 		>
 			{children}
