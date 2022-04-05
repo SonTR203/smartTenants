@@ -85,8 +85,9 @@ const theme = StyleSheet.create({
   },
   card: {
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: styleVariables.colors.white,
     padding: 17,
     borderRadius: 24,
     shadowColor: styleVariables.colors.primary,
@@ -250,7 +251,7 @@ const theme = StyleSheet.create({
     backgroundColor: 'white',
     minHeight: 66,
     margin: 17,
-    marginBottom: 22,
+    marginTop: 0,
     padding: 22,
     borderRadius: 24,
     shadowColor: styleVariables.colors.primary,
@@ -275,6 +276,14 @@ const theme = StyleSheet.create({
     borderRadius: 14,
     marginRight: 8,
     overflow: 'hidden'
+  },
+  stackHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: styleVariables.colors.white,
+    padding: 17
   }
 })
 

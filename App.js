@@ -21,6 +21,7 @@ import {
 	ProfileNavigator,
 	NotificationNavigator,
 } from './Screens/customNavigator.js';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 let globalShowSplashscreen;
@@ -72,7 +73,34 @@ function AppContainer() {
 					<NavigationContainer>
 						<Tab.Navigator
 							initialRouteName="Newsfeed "
-							screenOptions={{ headerShown: false }}
+							screenOptions={({ route }) => ({
+								tabBarIcon: ({ focused }) => {
+									let iconName;
+									let color;
+									if (route.name === 'Marketplace ') {
+										iconName = 'store';
+										color = focused ? '#395E66' : '#395E6654';
+									} else if (route.name === 'Newsfeed ') {
+										iconName = 'newspaper';
+										color = focused ? '#395E66' : '#395E6654';
+									} else if (route.name === 'Notifications ') {
+										iconName = 'bell';
+										color = focused ? '#395E66' : '#395E6654';
+									} else if (route.name === 'Profile ') {
+										iconName = 'account';
+										color = focused ? '#395E66' : '#395E6654';
+									}
+									return (
+										<MaterialCommunityIcons
+											name={iconName}
+											size={28}
+											color={color}
+										/>
+									);
+								},
+								headerShown: false,
+								tabBarActiveTintColor: '#395E66',
+							})}
 						>
 							{/* ======= Marketplace ======= */}
 							<Tab.Screen name="Marketplace " component={Marketplace} />
@@ -97,7 +125,7 @@ function AppContainer() {
 
 							{/* ======= Profile ======= */}
 							<Tab.Screen
-								name="Profile"
+								name="Profile "
 								component={ProfileNavigator}
 								options={{ headerShown: false }}
 								tabBarOptions={{

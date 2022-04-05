@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
 
 const BuildingInfo = () => {
 	const { currentUser, setCurrentUser } = useAppContext();
-	console.log('CURRENT USER', currentUser);
 
 	const [theme, styleVariables] = useTheme();
 
@@ -48,11 +47,10 @@ const BuildingInfo = () => {
 		// Get collections data
 		getDocs(colRef).then((snapshot) => {
 			snapshot.docs.forEach((doc) => {
-				console.log(userBuilding);
-				if (
-					doc._document.data.value.mapValue.fields.buildingID.stringValue ==
-					userBuilding
-				) {
+				let currentBuildingInLoop =
+					doc._document.data.value.mapValue.fields.buildingAddress.stringValue;
+				currentBuildingInLoop = currentBuildingInLoop.replace(/\s/g, '');
+				if (currentBuildingInLoop == userBuilding) {
 					setBuilding({ ...doc.data(), id: doc.id });
 				} else {
 					console.log('No building found');
@@ -87,130 +85,134 @@ const BuildingInfo = () => {
 
 	return (
 		<ScrollView style={theme.pageContainer}>
-			<View id="buildingInfoCard" style={theme.card}>
-				<Image
-					style={theme.buildingImagePreview}
-					source={require('../../assets/icon.png')}
-				/>
-
-				<View
-					id="buildingInfoAddress"
-					style={{
-						display: 'flex',
-						alignContent: 'center',
-						justifyContent: 'space-between',
-						flexDirection: 'row',
-						width: '100%',
-						marginTop: 17,
-					}}
-				>
-					<Text style={styleVariables.fontSizes.header}>{address}</Text>
-					<MaterialCommunityIcons
-						name="arrow-top-right"
-						size={24}
-						color={styleVariables.colors.primary}
+			<View style={theme.globalMargins}>
+				<View id="buildingInfoCard" style={theme.card}>
+					<Image
+						style={theme.buildingImagePreview}
+						source={require('../../assets/icon.png')}
 					/>
+
+					<View
+						id="buildingInfoAddress"
+						style={{
+							display: 'flex',
+							alignContent: 'center',
+							justifyContent: 'space-between',
+							flexDirection: 'row',
+							width: '100%',
+							marginTop: 17,
+						}}
+					>
+						<Text style={styleVariables.fontSizes.header}>{address}</Text>
+						<MaterialCommunityIcons
+							name="arrow-top-right"
+							size={24}
+							color={styleVariables.colors.primary}
+						/>
+					</View>
+
+					<View
+						id="buildingInfoLocation"
+						style={{
+							display: 'flex',
+							alignContent: 'center',
+							flexDirection: 'row',
+							width: '100%',
+							marginTop: 6,
+							marginBottom: 4,
+						}}
+					>
+						<MaterialCommunityIcons
+							name="map-marker-outline"
+							size={18}
+							color={styleVariables.colors.primary}
+							style={{ marginRight: 8 }}
+						/>
+						<Text
+							style={[
+								styleVariables.fontSizes.body,
+								{ color: styleVariables.colors.primary },
+							]}
+						>
+							{location}
+						</Text>
+					</View>
 				</View>
 
-				<View
-					id="buildingInfoLocation"
-					style={{
-						display: 'flex',
-						alignContent: 'center',
-						flexDirection: 'row',
-						width: '100%',
-						marginTop: 6,
-						marginBottom: 4,
-					}}
-				>
-					<MaterialCommunityIcons
-						name="map-marker-outline"
-						size={18}
-						color={styleVariables.colors.primary}
-						style={{ marginRight: 8 }}
-					/>
+				<View id="contacts" style={{ marginTop: 17, padding: 17 }}>
 					<Text
 						style={[
-							styleVariables.fontSizes.body,
-							{ color: styleVariables.colors.primary },
+							styleVariables.fontSizes.secondaryHeader,
+							{ marginBottom: 14 },
 						]}
 					>
-						{location}
+						Contacts
 					</Text>
-				</View>
-			</View>
 
-			<View id="contacts" style={{ marginTop: 17, padding: 17 }}>
-				<Text
-					style={[
-						styleVariables.fontSizes.secondaryHeader,
-						{ marginBottom: 14 },
-					]}
-				>
-					Contacts
-				</Text>
-
-				<View>
-					<Text style={[styleVariables.fontSizes.title, { marginBottom: 10 }]}>
-						{name}
-					</Text>
-					<View
-						style={{
-							display: 'flex',
-							alignContent: 'center',
-							flexDirection: 'row',
-							width: '100%',
-							marginTop: 6,
-							marginBottom: 4,
-							opacity: 0.66,
-						}}
-					>
-						<MaterialCommunityIcons
-							name="email-outline"
-							size={18}
-							color={styleVariables.colors.primary}
-							style={{ marginRight: 8 }}
-						/>
-						<TouchableOpacity
-							onPress={() => Linking.openURL(`mailto:${email}`)}
+					<View>
+						<Text
+							style={[styleVariables.fontSizes.title, { marginBottom: 10 }]}
 						>
-							<Text
-								style={[
-									styleVariables.fontSizes.body,
-									{ color: styleVariables.colors.primary },
-								]}
+							{name}
+						</Text>
+						<View
+							style={{
+								display: 'flex',
+								alignContent: 'center',
+								flexDirection: 'row',
+								width: '100%',
+								marginTop: 6,
+								marginBottom: 4,
+								opacity: 0.66,
+							}}
+						>
+							<MaterialCommunityIcons
+								name="email-outline"
+								size={18}
+								color={styleVariables.colors.primary}
+								style={{ marginRight: 8 }}
+							/>
+							<TouchableOpacity
+								onPress={() => Linking.openURL(`mailto:${email}`)}
 							>
-								{email}
-							</Text>
-						</TouchableOpacity>
-					</View>
-					<View
-						style={{
-							display: 'flex',
-							alignContent: 'center',
-							flexDirection: 'row',
-							width: '100%',
-							marginTop: 6,
-							marginBottom: 4,
-							opacity: 0.66,
-						}}
-					>
-						<MaterialCommunityIcons
-							name="phone-outline"
-							size={18}
-							color={styleVariables.colors.primary}
-							style={{ marginRight: 8 }}
-						/>
-						<TouchableOpacity onPress={makePhoneCall}>
-							<Text
-								style={[
-									styleVariables.fontSizes.body,
-									{ color: styleVariables.colors.primary },
-								]}
-							>
-								{phone}
-							</Text>
-						</TouchableOpacity>
+								<Text
+									style={[
+										styleVariables.fontSizes.body,
+										{ color: styleVariables.colors.primary },
+									]}
+								>
+									{email}
+								</Text>
+							</TouchableOpacity>
+						</View>
+						<View
+							style={{
+								display: 'flex',
+								alignContent: 'center',
+								flexDirection: 'row',
+								width: '100%',
+								marginTop: 6,
+								marginBottom: 4,
+								opacity: 0.66,
+							}}
+						>
+							<MaterialCommunityIcons
+								name="phone-outline"
+								size={18}
+								color={styleVariables.colors.primary}
+								style={{ marginRight: 8 }}
+							/>
+							<TouchableOpacity onPress={makePhoneCall}>
+								<Text
+									style={[
+										styleVariables.fontSizes.body,
+										{ color: styleVariables.colors.primary },
+									]}
+								>
+									{phone}
+								</Text>
+							</TouchableOpacity>
+						</View>
 					</View>
 				</View>
 			</View>

@@ -1,34 +1,47 @@
-import React from 'react';
-import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../firebase-config';
-import { useAppContext } from '../Context/AppContext';
+import React from 'react'
+import { deleteDoc, doc } from 'firebase/firestore'
+import { db } from '../firebase-config'
+import { useAppContext } from '../Context/AppContext'
+import { useTheme } from '../ThemeContext.js'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Alert } from 'react-native'
 
-import { Alert, Button } from 'react-native';
 const DeletePost = () => {
-	const { post, setPost } = useAppContext();
+  const [theme, styleVariables] = useTheme()
 
-	const optionsAlert = () => {
-		console.log('Displaying Alert for options');
+  const { post, setPost } = useAppContext()
 
-		Alert.alert('Delete Post', 'This will permanently delete your post', [
-			{
-				text: 'Delete',
-				onPress: deletePost,
-				style: 'cancel',
-			},
-			{
-				text: 'Cancel',
-				onPress: () => console.log('Cancelled delete post'),
-			},
-		]);
-	};
+  const optionsAlert = () => {
+    console.log('Displaying Alert for options')
 
-	const deletePost = async () => {
-		const singleDoc = doc(db, 'Newsfeed', post.id);
-		await deleteDoc(singleDoc);
-	};
+    Alert.alert('Delete Post', 'This will permanently delete your post', [
+      {
+        text: 'Delete',
+        onPress: deletePost,
+        style: 'cancel'
+      },
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancelled delete post')
+      }
+    ])
+  }
 
-	return <Button title="options" onPress={optionsAlert} />;
-};
+  const deletePost = async () => {
+    const singleDoc = doc(db, 'Newsfeed', post.id)
+    await deleteDoc(singleDoc)
+  }
 
-export default DeletePost;
+  return (
+    <TouchableOpacity onPress={optionsAlert}>
+      <MaterialCommunityIcons
+        name='dots-horizontal'
+        size={36}
+        color={styleVariables.colors.black}
+      />
+    </TouchableOpacity>
+  )
+}
+
+export default DeletePost

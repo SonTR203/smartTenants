@@ -102,7 +102,7 @@ const Login = ({ navigation }) => {
 					'Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.',
 				postID: '',
 				userID: loggedInUser.userDocId,
-				wasSeen: false,
+				wasSeen: true,
 				timestamp: 0,
 			});
 		}
