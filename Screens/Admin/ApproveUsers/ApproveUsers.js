@@ -13,7 +13,7 @@ const ApproveUsers = ({ route, navigation }) => {
         {unauthorizedUsers.length > 0 && (
           <FlatList
             data={unauthorizedUsers}
-            keyExtractor={(user) => user.userID}
+            keyExtractor={(user) => user.userDocId}
             renderItem={({ item }) => (
               <TouchableOpacity
                 onPress={() => {
@@ -36,6 +36,7 @@ function UnauthorizedUserItem(user) {
     <View style={{ marginBottom: 10 }}>
       <Text>{user.firstName + ' ' + user.lastName}</Text>
       <Text>{user.buildingAddress}</Text>
+      <Text>{user.userDocId}</Text>
     </View>
   );
 }

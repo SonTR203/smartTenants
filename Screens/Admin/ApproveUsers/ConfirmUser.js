@@ -39,6 +39,11 @@ const ConfirmUser = ({ route, navigation }) => {
     user.userProfileImage
   );
 
+  if (!tenantAuthorized) {
+    console.log('setting to true');
+    setTenantAuthorized(true);
+  }
+
   const changeModalVisibility = (bool) => {
     setModalVisible(bool);
   };
@@ -70,27 +75,28 @@ const ConfirmUser = ({ route, navigation }) => {
     return true;
   };
 
-  async function confirmUser() {
-    setTenantAuthorized(true);
+  async function confirmUserBtn() {
     console.log('save profile info');
+    // setTenantAuthorized(true);
+    console.log('tenantAuthorized', tenantAuthorized);
     const userDocRef = doc(db, 'Users', user.userDocId);
     console.log(user.userDocId);
 
-    //   try {
-    //     await updateDoc(userDocRef, {
-    //       //userID,
-    //       firstName,
-    //       lastName,
-    //       buildingID,
-    //       buildingAddress,
-    //       email,
-    //       unitNumber,
-    //       tenantAuthorized,
-    //     });
-    //     navigation.goBack();
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
+    try {
+      await updateDoc(userDocRef, {
+        firstName,
+        lastName,
+        buildingID,
+        buildingAddress,
+        email,
+        unitNumber,
+        tenantAuthorized,
+      });
+
+      navigation.goBack();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function removeProfilePic() {
@@ -248,7 +254,12 @@ const ConfirmUser = ({ route, navigation }) => {
           </TouchableOpacity>
 
           <View id="signupCTA">
-            <TouchableOpacity onPress={confirmUser}>
+            <TouchableOpacity
+              onPress={() => {
+                setTenantAuthorized(true);
+                confirmUserBtn();
+              }}
+            >
               <View style={[theme.primaryButton, { marginTop: 17 }]}>
                 <Text
                   style={[
