@@ -56,6 +56,7 @@ const Login = ({ navigation }) => {
 			if (userID) {
 				if (userID == user.uid) {
 					let object = item._document.data.value.mapValue.fields;
+					console.log('KARIM: ', object);
 					loggedInUser = {
 						buildingID: object.buildingID.stringValue,
 						buildingAddress: object.buildingAddress.stringValue,
@@ -66,7 +67,7 @@ const Login = ({ navigation }) => {
 						myMarketplacePosts: object.myMarketplacePosts.arrayValue,
 						myPosts: object.myPosts.arrayValue,
 						tenantAuthorized: object.tenantAuthorized.booleanValue,
-						unitNumber: object.unitNumber.stringValue,
+						unitNumber: object.unitNumber.integerValue,
 						userID: object.userID.stringValue,
 						userDocId: item._key.path.segments[6],
 						visibleNotices: object.visibleNotices.arrayValue,

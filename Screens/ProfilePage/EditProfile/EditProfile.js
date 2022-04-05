@@ -1,15 +1,15 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
 import React, { useEffect, useState } from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  Modal,
+	StyleSheet,
+	View,
+	Text,
+	SafeAreaView,
+	KeyboardAvoidingView,
+	Image,
+	TextInput,
+	TouchableOpacity,
+	Modal,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -26,256 +26,258 @@ import { ProfileNavigator } from '../../customNavigator';
 const auth = getAuth();
 
 const EditProfile = ({ navigation }) => {
-  const { currentUser, setCurrentUser } = useAppContext();
-  const [theme, styleVariables] = useTheme();
-  const [email, setEmail] = useState(currentUser.email);
-  const [firstName, setFirstName] = useState(currentUser.firstName);
-  const [lastName, setLastName] = useState(currentUser.lastName);
-  const [buildingAddress, setBuildingAddress] = useState(
-    currentUser.buildingAddress
-  );
-  const [buildingID, setBuildingID] = useState(currentUser.buildingID);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [unitNumber, setUnitNumber] = useState(currentUser.unitNumber);
-  const [userProfileImage, setUserProfileImage] = useState(
-    currentUser.userProfileImage
-  );
+	const { currentUser, setCurrentUser } = useAppContext();
+	const [theme, styleVariables] = useTheme();
+	const [email, setEmail] = useState(currentUser.email);
+	const [firstName, setFirstName] = useState(currentUser.firstName);
+	const [lastName, setLastName] = useState(currentUser.lastName);
+	const [buildingAddress, setBuildingAddress] = useState(
+		currentUser.buildingAddress
+	);
+	const [buildingID, setBuildingID] = useState(currentUser.buildingID);
+	const [modalVisible, setModalVisible] = useState(false);
+	const [unitNumber, setUnitNumber] = useState(currentUser.unitNumber);
+	const [userProfileImage, setUserProfileImage] = useState(
+		currentUser.userProfileImage
+	);
 
-  const changeModalVisibility = (bool) => {
-    setModalVisible(bool);
-  };
+	console.log('USSERRRRR', currentUser);
 
-  const setData = (building) => {
-    building = building.buildingAddress.stringValue;
-    setBuildingAddress(building);
-    setBuildingID(building.replace(/\s/g, ''));
-  };
+	const changeModalVisibility = (bool) => {
+		setModalVisible(bool);
+	};
 
-  const checkTextInputs = () => {
-    if (!firstName.trim()) {
-      alert('Please Enter Your First Name');
-      return false;
-    } else if (!lastName.trim()) {
-      alert('Please Enter Your last Name');
-      return false;
-    } else if (!unitNumber.trim() || isNaN(unitNumber.trim())) {
-      console.log(+unitNumber);
-      alert('Please Enter a Unit Number');
-      return false;
-    } else if (!buildingID.trim()) {
-      alert('Please Enter Your Building Id');
-      return false;
-    } else if (!email) {
-      alert('Please Enter Your Email Address');
-      return false;
-    }
-    return true;
-  };
+	const setData = (building) => {
+		building = building.buildingAddress.stringValue;
+		setBuildingAddress(building);
+		setBuildingID(building.replace(/\s/g, ''));
+	};
 
-  function goToProfile(navigation) {
-    navigation.navigate('ProfileGeneral');
-  }
+	const checkTextInputs = () => {
+		if (!firstName.trim()) {
+			alert('Please Enter Your First Name');
+			return false;
+		} else if (!lastName.trim()) {
+			alert('Please Enter Your last Name');
+			return false;
+		} else if (!unitNumber.trim() || isNaN(unitNumber.trim())) {
+			console.log(+unitNumber);
+			alert('Please Enter a Unit Number');
+			return false;
+		} else if (!buildingID.trim()) {
+			alert('Please Enter Your Building Id');
+			return false;
+		} else if (!email) {
+			alert('Please Enter Your Email Address');
+			return false;
+		}
+		return true;
+	};
 
-  async function saveProfileInfo() {
-    console.log('save profile info');
-    const userDocRef = doc(db, 'Users', currentUser.userDocId);
+	function goToProfile(navigation) {
+		navigation.navigate('ProfileGeneral');
+	}
 
-    try {
-      await updateDoc(userDocRef, {
-        //userID,
-        firstName,
-        lastName,
-        buildingID,
-        buildingAddress,
-        email,
-        unitNumber,
-      });
-      navigation.navigate('ProfileGeneral');
-    } catch (error) {
-      console.log(error);
-    }
-  }
+	async function saveProfileInfo() {
+		console.log('save profile info');
+		const userDocRef = doc(db, 'Users', currentUser.userDocId);
 
-  function changeProfilePic() {
-    console.log('Change profile pic');
-  }
+		try {
+			await updateDoc(userDocRef, {
+				//userID,
+				firstName,
+				lastName,
+				buildingID,
+				buildingAddress,
+				email,
+				unitNumber,
+			});
+			navigation.navigate('ProfileGeneral');
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
-  return (
-    <SafeAreaView>
-      <ScrollView style={theme.pageContainer}>
-        <StatusBar style="auto" />
-        <KeyboardAvoidingView behavior="padding">
-          <View>
-            <Image
-              source={{ uri: userProfileImage }}
-              style={{ height: 43, width: 43, borderRadius: 12 }}
-            />
-            <Text>
-              {currentUser.firstName} {currentUser.lastName}
-            </Text>
-            <TouchableOpacity onPress={changeProfilePic}>
-              <Text>Change Profile Picture</Text>
-            </TouchableOpacity>
-          </View>
-          <View id="signupInputs">
-            <View id="firstNameInput">
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Name
-              </Text>
-              <TextInput
-                placeholder="John"
-                defaultValue={currentUser.firstName}
-                onChangeText={(text) => setFirstName(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
-            <View id="lastNameInput">
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Last Name
-              </Text>
-              <TextInput
-                placeholder="Doe"
-                defaultValue={currentUser.lastName}
-                onChangeText={(text) => setLastName(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
+	function changeProfilePic() {
+		console.log('Change profile pic');
+	}
 
-            <View id="unitNumberInput">
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Unit number
-              </Text>
-              <TextInput
-                placeholder="1234"
-                defaultValue={currentUser.unitNumber.toString()}
-                onChangeText={(text) => setUnitNumber(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
+	return (
+		<SafeAreaView>
+			<ScrollView style={theme.pageContainer}>
+				<StatusBar style="auto" />
+				<KeyboardAvoidingView behavior="padding">
+					<View>
+						<Image
+							source={{ uri: userProfileImage }}
+							style={{ height: 43, width: 43, borderRadius: 12 }}
+						/>
+						<Text>
+							{currentUser.firstName} {currentUser.lastName}
+						</Text>
+						<TouchableOpacity onPress={changeProfilePic}>
+							<Text>Change Profile Picture</Text>
+						</TouchableOpacity>
+					</View>
+					<View id="signupInputs">
+						<View id="firstNameInput">
+							<Text
+								style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+							>
+								Name
+							</Text>
+							<TextInput
+								placeholder="John"
+								defaultValue={currentUser.firstName}
+								onChangeText={(text) => setFirstName(text)}
+								style={[theme.textInput, styleVariables.fontSizes.body]}
+							/>
+						</View>
+						<View id="lastNameInput">
+							<Text
+								style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+							>
+								Last Name
+							</Text>
+							<TextInput
+								placeholder="Doe"
+								defaultValue={currentUser.lastName}
+								onChangeText={(text) => setLastName(text)}
+								style={[theme.textInput, styleVariables.fontSizes.body]}
+							/>
+						</View>
 
-            <View id="buildingSelect">
-              <Text
-                style={[
-                  theme.textInputLabel,
-                  styleVariables.fontSizes.body,
-                  { zIndex: 2 },
-                ]}
-              >
-                Building Address
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  changeModalVisibility(true);
-                }}
-              >
-                <Text
-                  style={[
-                    theme.textInput,
-                    styleVariables.fontSizes.body,
-                    { color: '#00000080' },
-                  ]}
-                >
-                  {buildingAddress}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Modal
-              transparent={true}
-              animationType="fade"
-              visible={modalVisible}
-              nRequestClose={() => {
-                changeModalVisibility(false);
-              }}
-            >
-              <ModalPicker
-                changeModalVisibility={changeModalVisibility}
-                setData={setData}
-              />
-            </Modal>
-            <View id="emailInput">
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                {/* ================== will need to research to see if we can set this email to change the one in the authentication tab in firebase========== */}
-                Email
-              </Text>
-              <TextInput
-                placeholder="name@company.com"
-                defaultValue={currentUser.email}
-                onChangeText={(text) => {
-                  setEmail(text);
-                }}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
-            <View id="passwordInput">
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Password
-              </Text>
-              <TextInput
-                placeholder="*******"
-                secureTextEntry={true}
-                //================================= will need to research how to do this SAFELY ==========================
-                // defaultValue={currentUser.ema}
-                // onChangeText={text => {
-                //   setEmail(text)
-                // }}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
-          </View>
+						<View id="unitNumberInput">
+							<Text
+								style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+							>
+								Unit number
+							</Text>
+							<TextInput
+								placeholder="1234"
+								defaultValue={currentUser.unitNumber}
+								onChangeText={(text) => setUnitNumber(parseInt(text))}
+								style={[theme.textInput, styleVariables.fontSizes.body]}
+							/>
+						</View>
 
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('ProfileGeneral');
-            }}
-          >
-            <View style={[theme.secondaryButton, { marginTop: 17 }]}>
-              <Text
-                style={[
-                  theme.secondaryButtonText,
-                  styleVariables.fontSizes.bodyBold,
-                ]}
-              >
-                Cancel
-              </Text>
-            </View>
-          </TouchableOpacity>
+						<View id="buildingSelect">
+							<Text
+								style={[
+									theme.textInputLabel,
+									styleVariables.fontSizes.body,
+									{ zIndex: 2 },
+								]}
+							>
+								Building Address
+							</Text>
+							<TouchableOpacity
+								onPress={() => {
+									changeModalVisibility(true);
+								}}
+							>
+								<Text
+									style={[
+										theme.textInput,
+										styleVariables.fontSizes.body,
+										{ color: '#00000080' },
+									]}
+								>
+									{buildingAddress}
+								</Text>
+							</TouchableOpacity>
+						</View>
+						<Modal
+							transparent={true}
+							animationType="fade"
+							visible={modalVisible}
+							nRequestClose={() => {
+								changeModalVisibility(false);
+							}}
+						>
+							<ModalPicker
+								changeModalVisibility={changeModalVisibility}
+								setData={setData}
+							/>
+						</Modal>
+						<View id="emailInput">
+							<Text
+								style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+							>
+								{/* ================== will need to research to see if we can set this email to change the one in the authentication tab in firebase========== */}
+								Email
+							</Text>
+							<TextInput
+								placeholder="name@company.com"
+								defaultValue={currentUser.email}
+								onChangeText={(text) => {
+									setEmail(text);
+								}}
+								style={[theme.textInput, styleVariables.fontSizes.body]}
+							/>
+						</View>
+						<View id="passwordInput">
+							<Text
+								style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+							>
+								Password
+							</Text>
+							<TextInput
+								placeholder="*******"
+								secureTextEntry={true}
+								//================================= will need to research how to do this SAFELY ==========================
+								// defaultValue={currentUser.ema}
+								// onChangeText={text => {
+								//   setEmail(text)
+								// }}
+								style={[theme.textInput, styleVariables.fontSizes.body]}
+							/>
+						</View>
+					</View>
 
-          <View id="signupCTA">
-            <TouchableOpacity onPress={saveProfileInfo}>
-              <View style={[theme.primaryButton, { marginTop: 17 }]}>
-                <Text
-                  style={[
-                    theme.primaryButtonText,
-                    styleVariables.fontSizes.bodyBold,
-                  ]}
-                >
-                  Save
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-      </ScrollView>
-    </SafeAreaView>
-  );
+					<TouchableOpacity
+						onPress={() => {
+							navigation.navigate('ProfileGeneral');
+						}}
+					>
+						<View style={[theme.secondaryButton, { marginTop: 17 }]}>
+							<Text
+								style={[
+									theme.secondaryButtonText,
+									styleVariables.fontSizes.bodyBold,
+								]}
+							>
+								Cancel
+							</Text>
+						</View>
+					</TouchableOpacity>
+
+					<View id="signupCTA">
+						<TouchableOpacity onPress={saveProfileInfo}>
+							<View style={[theme.primaryButton, { marginTop: 17 }]}>
+								<Text
+									style={[
+										theme.primaryButtonText,
+										styleVariables.fontSizes.bodyBold,
+									]}
+								>
+									Save
+								</Text>
+							</View>
+						</TouchableOpacity>
+					</View>
+				</KeyboardAvoidingView>
+			</ScrollView>
+		</SafeAreaView>
+	);
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
 });
 
 export default EditProfile;
