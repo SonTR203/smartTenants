@@ -18,10 +18,10 @@ import { db } from '../../firebase-config';
 // Import required functions
 import { collection, getDocs } from '@firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { deepCopy } from '@firebase/util';
 
 // Create collection Reference
 const colRef = collection(db, 'Buildings');
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -35,20 +35,13 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 	},
 });
-let numberAndStreet;
-let addressCityProvPostal;
-let address;
-let name;
-let email;
-let phone;
-let location;
-let image;
 
 const BuildingInfo = () => {
 	const { currentUser, setCurrentUser } = useAppContext();
-	const [theme, styleVariables] = useTheme();
-	const [building, setBuilding] = useState({});
 
+	const [theme, styleVariables] = useTheme();
+
+	const [building, setBuilding] = useState({});
 	let userBuilding = currentUser.buildingID;
 	useEffect(() => {
 		// Get collections data
@@ -58,9 +51,7 @@ const BuildingInfo = () => {
 					doc._document.data.value.mapValue.fields.buildingAddress.stringValue;
 				currentBuildingInLoop = currentBuildingInLoop.replace(/\s/g, '');
 				if (currentBuildingInLoop == userBuilding) {
-					console.log('HEY SETTING THE BUILDING');
 					setBuilding({ ...doc.data(), id: doc.id });
-					setBuildingInfo({ ...doc.data(), id: doc.id });
 				} else {
 					console.log('No building found');
 				}
@@ -68,18 +59,12 @@ const BuildingInfo = () => {
 		});
 	}, []);
 
-	const setBuildingInfo = (buildingObject) => {
-		image = buildingObject.buildingImage;
-		address = buildingObject.buildingAddress;
-		location = buildingObject.buildingLocation;
-		name = buildingObject.fullName;
-		email = buildingObject.email;
-		phone = buildingObject.phone;
-
-		let addressSegments = address && address.split(',');
-		numberAndStreet = address && addressSegments[0];
-		addressCityProvPostal = `${addressSegments[1]}, ${addressSegments[2]}, ${addressSegments[3]}`;
-	};
+	let image = building.buildingImage;
+	let address = building.buildingAddress;
+	let location = building.buildingLocation;
+	let name = building.fullName;
+	let email = building.email;
+	let phone = building.phone;
 
 	const makePhoneCall = () => {
 		if (Platform.OS !== 'android') {
@@ -98,7 +83,6 @@ const BuildingInfo = () => {
 			.catch((err) => console.log(err));
 	};
 
-	console.log(numberAndStreet, addressCityProvPostal);
 	return (
 		<ScrollView style={theme.pageContainer}>
 			<View style={theme.globalMargins}>
@@ -119,9 +103,7 @@ const BuildingInfo = () => {
 							marginTop: 17,
 						}}
 					>
-						<Text style={styleVariables.fontSizes.header}>
-							{numberAndStreet && numberAndStreet}
-						</Text>
+						<Text style={styleVariables.fontSizes.header}>{address}</Text>
 						<MaterialCommunityIcons
 							name="arrow-top-right"
 							size={24}
@@ -152,7 +134,7 @@ const BuildingInfo = () => {
 								{ color: styleVariables.colors.primary },
 							]}
 						>
-							{addressCityProvPostal && addressCityProvPostal}
+							{location}
 						</Text>
 					</View>
 				</View>
