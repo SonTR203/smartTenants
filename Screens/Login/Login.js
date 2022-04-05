@@ -165,19 +165,24 @@ const Login = ({ navigation }) => {
 							id="forgotPassword"
 							style={[theme.container, { alignItems: 'flex-end' }]}
 						>
-							<Text
-								onPress={forgotPassword}
-								style={[
-									styleVariables.fontSizes.callout,
-									{
-										color: styleVariables.colors.primary,
-										opacity: 0.66,
-										marginBottom: 8,
-									},
-								]}
+							<TouchableOpacity
+								onPress={() => {
+									navigation.navigate("ForgotPassword");
+								}}
 							>
-								Forgot password?
-							</Text>
+								<Text
+									style={[
+										styleVariables.fontSizes.callout,
+										{
+											color: styleVariables.colors.primary,
+											opacity: 0.66,
+											marginBottom: 8,
+										},
+									]}
+								>
+									Forgot password?
+								</Text>
+							</TouchableOpacity>
 						</View>
 
 						{/* loginButton */}

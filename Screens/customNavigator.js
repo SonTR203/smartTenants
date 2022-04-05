@@ -21,7 +21,7 @@ import SendNotice from './Admin/SendNotice/SendNotice';
 import DeletePost from '../components/DeletePost';
 import Notifications from './Notifications/Notifications';
 import CustomSubStackScreenHeader from './CustomSubStackScreenHeader.js';
-
+import ForgotPassword from './ForgotPassword/ForgotPassword'
 const Stack = createStackNavigator();
 
 const NewsfeedNavigator = () => {
@@ -89,6 +89,11 @@ const NewsfeedNavigator = () => {
 					component={AccountApprovalPending}
 					options={{ title: 'Account Approval Pending' }}
 				/>
+				<Stack.Screen
+					name="ForgotPassword"
+					component={ForgotPassword}
+					options={{ title: 'Reset Password' }}
+				/>
 			</Stack.Navigator>
 		);
 	}
@@ -129,6 +134,7 @@ const ProfileNavigator = () => {
 				component={BuildingInfo}
 				options={{ title: 'Building Info' }}
 			/>
+
 
 			{/* Admin Pages */}
 
