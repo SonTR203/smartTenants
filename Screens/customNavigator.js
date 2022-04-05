@@ -170,26 +170,42 @@ const ProfileNavigator = () => {
         options={{ title: 'Approve Users' }}
       />
       <Stack.Screen
-        name='ManageUsers'
+        name="ConfirmUser"
+        component={ConfirmUser}
+        options={{ title: 'Confirm User' }}
+      />
+      <Stack.Screen
+        name="ManageUsers"
         component={ManageUsers}
         options={{ title: 'Manage Users' }}
       />
       <Stack.Screen
-        name='SendNotice'
+        name="ManageUser"
+        component={ManageUser}
+        options={{ title: 'Manage User' }}
+      />
+      <Stack.Screen
+        name="SendNotice"
         component={SendNotice}
         options={{ title: 'Send Notice' }}
       />
       <Stack.Screen
-        name='ManageBuildings'
+        name="ManageBuildings"
         component={ManageBuildings}
         options={{ title: 'Manage Buildings' }}
       />
+      <Stack.Screen
+        name="ManageBuilding"
+        component={ManageBuilding}
+        options={{ title: 'Manage Building' }}
+      />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 const NotificationNavigator = () => {
-  const { post, setPost } = useAppContext()
+  const { post, setPost } = useAppContext();
+
 
   return (
     <Stack.Navigator>

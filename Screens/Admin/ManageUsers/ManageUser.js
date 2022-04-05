@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -12,33 +12,30 @@ import {
   Modal,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { collection, doc, updateDoc } from '@firebase/firestore';
-
+import { getAuth } from 'firebase/auth';
+import { doc, updateDoc } from '@firebase/firestore';
 import { db } from '../../../firebase-config';
 import ModalPicker from '../../../components/ModalBuildingPicker';
 import { useTheme } from '../../../ThemeContext';
 import { StatusBar } from 'expo-status-bar';
-import { useAppContext } from '../../../Context/AppContext';
-import { async } from '@firebase/util';
-import { ProfileNavigator } from '../../customNavigator';
 
 const auth = getAuth();
 
-const EditProfile = ({ navigation }) => {
-  const { currentUser, setCurrentUser } = useAppContext();
+const ManageUser = ({ route, navigation }) => {
+  const { user } = route.params;
   const [theme, styleVariables] = useTheme();
-  const [email, setEmail] = useState(currentUser.email);
-  const [firstName, setFirstName] = useState(currentUser.firstName);
-  const [lastName, setLastName] = useState(currentUser.lastName);
-  const [buildingAddress, setBuildingAddress] = useState(
-    currentUser.buildingAddress
-  );
-  const [buildingID, setBuildingID] = useState(currentUser.buildingID);
+  const [email, setEmail] = useState(user.email);
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [buildingAddress, setBuildingAddress] = useState(user.buildingAddress);
+  const [buildingID, setBuildingID] = useState(user.buildingID);
   const [modalVisible, setModalVisible] = useState(false);
-  const [unitNumber, setUnitNumber] = useState(currentUser.unitNumber);
+  const [unitNumber, setUnitNumber] = useState(user.unitNumber);
+  const [tenantAuthorized, setTenantAuthorized] = useState(
+    user.tenantAuthorized
+  );
   const [userProfileImage, setUserProfileImage] = useState(
-    currentUser.userProfileImage
+    user.userProfileImage
   );
 
   const changeModalVisibility = (bool) => {
@@ -72,31 +69,30 @@ const EditProfile = ({ navigation }) => {
     return true;
   };
 
-  function goToProfile(navigation) {
-    navigation.navigate('ProfileGeneral');
-  }
-
-  async function saveProfileInfo() {
+  async function confirmUser() {
+    setTenantAuthorized(true);
     console.log('save profile info');
-    const userDocRef = doc(db, 'Users', currentUser.userDocId);
+    const userDocRef = doc(db, 'Users', user.userDocId);
+    console.log(user.userDocId);
 
-    try {
-      await updateDoc(userDocRef, {
-        //userID,
-        firstName,
-        lastName,
-        buildingID,
-        buildingAddress,
-        email,
-        unitNumber,
-      });
-      navigation.navigate('ProfileGeneral');
-    } catch (error) {
-      console.log(error);
-    }
+    //   try {
+    //     await updateDoc(userDocRef, {
+    //       //userID,
+    //       firstName,
+    //       lastName,
+    //       buildingID,
+    //       buildingAddress,
+    //       email,
+    //       unitNumber,
+    //       tenantAuthorized,
+    //     });
+    //     navigation.goBack();
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
   }
 
-  function changeProfilePic() {
+  function removeProfilePic() {
     console.log('Change profile pic');
   }
 
@@ -111,10 +107,10 @@ const EditProfile = ({ navigation }) => {
               style={{ height: 43, width: 43, borderRadius: 12 }}
             />
             <Text>
-              {currentUser.firstName} {currentUser.lastName}
+              {user.firstName} {user.lastName}
             </Text>
-            <TouchableOpacity onPress={changeProfilePic}>
-              <Text>Change Profile Picture</Text>
+            <TouchableOpacity onPress={removeProfilePic}>
+              <Text>Remove Profile Picture</Text>
             </TouchableOpacity>
           </View>
           <View id="signupInputs">
@@ -126,7 +122,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder="John"
-                defaultValue={currentUser.firstName}
+                defaultValue={user.firstName}
                 onChangeText={(text) => setFirstName(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
@@ -139,7 +135,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder="Doe"
-                defaultValue={currentUser.lastName}
+                defaultValue={user.lastName}
                 onChangeText={(text) => setLastName(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
@@ -153,7 +149,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder="1234"
-                defaultValue={currentUser.unitNumber.toString()}
+                defaultValue={user.unitNumber.toString()}
                 onChangeText={(text) => setUnitNumber(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
@@ -207,7 +203,7 @@ const EditProfile = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholder="name@company.com"
-                defaultValue={currentUser.email}
+                defaultValue={user.email}
                 onChangeText={(text) => {
                   setEmail(text);
                 }}
@@ -224,7 +220,7 @@ const EditProfile = ({ navigation }) => {
                 placeholder="*******"
                 secureTextEntry={true}
                 //================================= will need to research how to do this SAFELY ==========================
-                // defaultValue={currentUser.ema}
+                // defaultValue={user.ema}
                 // onChangeText={text => {
                 //   setEmail(text)
                 // }}
@@ -235,7 +231,7 @@ const EditProfile = ({ navigation }) => {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('ProfileGeneral');
+              navigation.goBack();
             }}
           >
             <View style={[theme.secondaryButton, { marginTop: 17 }]}>
@@ -251,7 +247,7 @@ const EditProfile = ({ navigation }) => {
           </TouchableOpacity>
 
           <View id="signupCTA">
-            <TouchableOpacity onPress={saveProfileInfo}>
+            <TouchableOpacity onPress={confirmUser}>
               <View style={[theme.primaryButton, { marginTop: 17 }]}>
                 <Text
                   style={[
@@ -259,7 +255,7 @@ const EditProfile = ({ navigation }) => {
                     styleVariables.fontSizes.bodyBold,
                   ]}
                 >
-                  Save
+                  Confirm
                 </Text>
               </View>
             </TouchableOpacity>
@@ -278,4 +274,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditProfile;
+export default ManageUser;
