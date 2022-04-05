@@ -9,16 +9,17 @@ import { useEffect, useState } from 'react';
 const AdminPanel = ({ navigation }) => {
   const colRef = collection(db, 'Users');
   const [unauthorizedUsers, setUnauthorizedUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [theme, styleVariables] = useTheme();
 
   const getCount = async () => {
     const data = await getDocs(colRef);
-    let userID;
-    const users = data.docs.map((user) => {
-      userID = user._key.path.segments[6];
-      console.log('my user**', user.ID);
-      user.data();
-    });
+    const users = data.docs.map((user) => user.data());
+
+    // let userID = user._key.path.segments[6];
+    // console.log('my user**', userID);
+
+    setAllUsers(users);
     setUnauthorizedUsers(users.filter((user) => !user.tenantAuthorized));
   };
 
@@ -43,7 +44,7 @@ const AdminPanel = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('ManageUsers');
+          navigation.navigate('ManageUsers', { allUsers });
         }}
         style={theme.primaryButton}
       >

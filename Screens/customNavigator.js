@@ -15,9 +15,11 @@ import MyPosts from './ProfilePage/MyPosts/MyPosts';
 import ProfileGeneral from './ProfilePage/ProfileGeneral/ProfileGeneral';
 import AdminPanel from './Admin/AdminPanel/AdminPanel';
 import ManageBuildings from './Admin/ManageBuildings/ManageBuildings';
+import ManageBuilding from './Admin/ManageBuildings/ManageBuilding';
 import ApproveUsers from './Admin/ApproveUsers/ApproveUsers';
 import ConfirmUser from './Admin/ApproveUsers/ConfirmUser';
 import ManageUsers from './Admin/ManageUsers/ManageUsers';
+import ManageUser from './Admin/ManageUsers/ManageUser';
 import SendNotice from './Admin/SendNotice/SendNotice';
 import DeletePost from '../components/DeletePost';
 import Notifications from './Notifications/Notifications';
@@ -154,6 +156,11 @@ const ProfileNavigator = () => {
         options={{ title: 'Manage Users' }}
       />
       <Stack.Screen
+        name="ManageUser"
+        component={ManageUser}
+        options={{ title: 'Manage User' }}
+      />
+      <Stack.Screen
         name="SendNotice"
         component={SendNotice}
         options={{ title: 'Send Notice' }}
@@ -162,6 +169,11 @@ const ProfileNavigator = () => {
         name="ManageBuildings"
         component={ManageBuildings}
         options={{ title: 'Manage Buildings' }}
+      />
+      <Stack.Screen
+        name="ManageBuilding"
+        component={ManageBuilding}
+        options={{ title: 'Manage Building' }}
       />
     </Stack.Navigator>
   );
