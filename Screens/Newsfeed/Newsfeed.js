@@ -219,18 +219,18 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 			let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0);
 			let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
 
-			if (timeDifferenceMinutes < 59) {
+			if (timeDifferenceMinutes <= 59) {
 				setTimeSincePost(`${timeDifferenceMinutes} minutes ago`);
-			} else if (timeDifferenceMinutes > 59 && timeDifferenceHours < 23) {
+			} else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
 				setTimeSincePost(`${timeDifferenceHours} hours ago`);
 			} else if (
-				timeDifferenceDays < 6 &&
+				timeDifferenceDays <= 6 &&
 				timeDifferenceMinutes > 59 &&
 				timeDifferenceHours > 23
 			) {
 				setTimeSincePost(`${timeDifferenceDays} days ago`);
 			} else if (
-				timeDifferenceWeeks < 10 &&
+				timeDifferenceWeeks <= 10 &&
 				timeDifferenceDays > 6 &&
 				timeDifferenceMinutes > 59 &&
 				timeDifferenceHours > 23
