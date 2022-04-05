@@ -108,7 +108,7 @@ const BuildingInfo = () => {
             }}
           >
             <Text style={styleVariables.fontSizes.header}>
-              {numberAndStreet}
+              {numberAndStreet && numberAndStreet}
             </Text>
             <MaterialCommunityIcons
               name='arrow-top-right'
@@ -140,7 +140,7 @@ const BuildingInfo = () => {
                 { color: styleVariables.colors.primary }
               ]}
             >
-              {addressCityProvPostal}
+              {addressCityProvPostal && addressCityProvPostal}
             </Text>
           </View>
         </View>
