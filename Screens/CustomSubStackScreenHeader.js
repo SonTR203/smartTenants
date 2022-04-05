@@ -11,7 +11,12 @@ export default function CustomSubStackScreenHeader ({ ...props }) {
   const [theme, styleVariables] = useTheme()
   return (
     <SafeAreaView edges={['top']} style={{ backgroundColor: 'white' }}>
-      <View style={theme.stackHeader}>
+      <View
+        style={[
+          theme.stackHeader,
+          { backgroundColor: 'red', paddingHorizontal: 17 }
+        ]}
+      >
         <Pressable
           onPress={() => {
             props.navigation && props.navigation.goBack()
@@ -26,7 +31,9 @@ export default function CustomSubStackScreenHeader ({ ...props }) {
         <Text style={styleVariables.fontSizes.title}>
           {props.title && props.title}
         </Text>
-        <View>{props.headerFunc && props.headerFunc}</View>
+        <View style={{ minWidth: 36 }}>
+          {props.headerFunc && props.headerFunc}
+        </View>
       </View>
     </SafeAreaView>
   )
