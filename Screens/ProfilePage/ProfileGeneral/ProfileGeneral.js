@@ -1,30 +1,35 @@
-import React from 'react'
+import React from 'react';
 import {
   SafeAreaView,
   Text,
   TouchableOpacity,
   View,
   Linking,
-  Image
-} from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import { useTheme } from '../../../ThemeContext'
-import { useAppContext } from '../../../Context/AppContext'
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { FontAwesome5 } from '@expo/vector-icons/'
-import { ScrollView } from 'react-native-gesture-handler'
+  Image,
+  NativeModules,
+} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useTheme } from '../../../ThemeContext';
+import { useAppContext } from '../../../Context/AppContext';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons/';
+import { ScrollView } from 'react-native-gesture-handler';
+import { getAuth } from 'firebase/auth';
 
 const ProfileGeneral = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme()
+  const [theme, styleVariables] = useTheme();
 
-  const { currentUser, setCurrentUser } = useAppContext()
-  console.log(currentUser.userProfileImage)
+  const { currentUser, setCurrentUser } = useAppContext();
+  console.log(currentUser.userProfileImage);
+
+  const auth = getAuth();
 
   const logUserOut = () => {
-    console.log('logging user out')
-    navigation.navigate('Login')
-  }
+    console.log('logging user out');
+    auth.signOut().then(console.log('Tenant signed out'));
+    NativeModules.DevSettings.reload();
+  };
 
   return (
     <SafeAreaView
@@ -43,8 +48,8 @@ const ProfileGeneral = ({ navigation }) => {
                 styleVariables.fontSizes.header,
                 {
                   color: styleVariables.colors.white,
-                  marginBottom: 4
-                }
+                  marginBottom: 4,
+                },
               ]}
             >
               Profile
@@ -53,19 +58,19 @@ const ProfileGeneral = ({ navigation }) => {
             <Pressable
               id='buildingInfo'
               onPress={() => {
-                navigation.navigate('BuildingInfo')
+                navigation.navigate('BuildingInfo');
               }}
               style={{
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
-                opacity: 0.66
+                opacity: 0.66,
               }}
             >
               <Text
                 style={[
                   styleVariables.fontSizes.body,
-                  { color: styleVariables.colors.white }
+                  { color: styleVariables.colors.white },
                 ]}
               >
                 {currentUser.buildingAddress}
@@ -86,7 +91,7 @@ const ProfileGeneral = ({ navigation }) => {
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  paddingTop: 34
+                  paddingTop: 34,
                 }}
               >
                 {/* userImage */}
@@ -97,12 +102,12 @@ const ProfileGeneral = ({ navigation }) => {
                     shadowColor: styleVariables.colors.black,
                     shadowOffset: {
                       width: 0,
-                      height: 8
+                      height: 8,
                     },
                     shadowOpacity: 0.14,
                     shadowRadius: 17,
                     elevation: 20,
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
                   }}
                 >
                   <Image
@@ -110,7 +115,7 @@ const ProfileGeneral = ({ navigation }) => {
                     style={{
                       width: 85,
                       height: 85,
-                      borderRadius: 99
+                      borderRadius: 99,
                     }}
                   />
                 </View>
@@ -120,7 +125,7 @@ const ProfileGeneral = ({ navigation }) => {
                   id='userFullName'
                   style={[
                     styleVariables.fontSizes.header,
-                    { paddingTop: 17, paddingBottom: 8 }
+                    { paddingTop: 17, paddingBottom: 8 },
                   ]}
                 >
                   {`${currentUser.firstName}${currentUser.lastName}`}
@@ -132,18 +137,18 @@ const ProfileGeneral = ({ navigation }) => {
                     <TouchableOpacity
                       id='goToAdmin'
                       onPress={() => {
-                        navigation.navigate('AdminPanel')
+                        navigation.navigate('AdminPanel');
                       }}
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
                       }}
                     >
                       <Text
                         style={[
                           styleVariables.fontSizes.bodyBold,
-                          { color: styleVariables.colors.primary }
+                          { color: styleVariables.colors.primary },
                         ]}
                       >
                         Admin Panel
@@ -160,12 +165,12 @@ const ProfileGeneral = ({ navigation }) => {
                       id='goToRewards'
                       onPress={() => {
                         // navigation.navigate('Rewards')
-                        alert('navigate to rewards (not yet implemented)')
+                        alert('navigate to rewards (not yet implemented)');
                       }}
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
                       }}
                     >
                       <FontAwesome5
@@ -177,7 +182,7 @@ const ProfileGeneral = ({ navigation }) => {
                       <Text
                         style={[
                           styleVariables.fontSizes.bodyBold,
-                          { color: styleVariables.colors.primary }
+                          { color: styleVariables.colors.primary },
                         ]}
                       >
                         12,531
@@ -199,7 +204,7 @@ const ProfileGeneral = ({ navigation }) => {
           <TouchableOpacity
             id='editInfo'
             onPress={() => {
-              navigation.navigate('EditProfile')
+              navigation.navigate('EditProfile');
             }}
             style={[theme.cardButton, { marginTop: 34 }]}
           >
@@ -213,7 +218,7 @@ const ProfileGeneral = ({ navigation }) => {
               <Text
                 style={[
                   styleVariables.fontSizes.title,
-                  { color: styleVariables.colors.primary }
+                  { color: styleVariables.colors.primary },
                 ]}
               >
                 Edit Info
@@ -231,7 +236,7 @@ const ProfileGeneral = ({ navigation }) => {
             onPress={() => {
               Linking.openURL(
                 'https://smartlivinggroup.securecafe.com/residentservices/apartmentsforrent/userlogin.aspx'
-              )
+              );
             }}
             style={theme.cardButton}
           >
@@ -245,7 +250,7 @@ const ProfileGeneral = ({ navigation }) => {
               <Text
                 style={[
                   styleVariables.fontSizes.title,
-                  { color: styleVariables.colors.primary }
+                  { color: styleVariables.colors.primary },
                 ]}
               >
                 Resident Portal
@@ -273,7 +278,7 @@ const ProfileGeneral = ({ navigation }) => {
               <Text
                 style={[
                   styleVariables.fontSizes.title,
-                  { color: styleVariables.colors.primary }
+                  { color: styleVariables.colors.primary },
                 ]}
               >
                 My Posts
@@ -301,7 +306,7 @@ const ProfileGeneral = ({ navigation }) => {
               <Text
                 style={[
                   styleVariables.fontSizes.title,
-                  { color: styleVariables.colors.primary }
+                  { color: styleVariables.colors.primary },
                 ]}
               >
                 Log Out
@@ -324,7 +329,7 @@ const ProfileGeneral = ({ navigation }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              flexDirection: 'row'
+              flexDirection: 'row',
             }}
           >
             <Text
@@ -332,8 +337,8 @@ const ProfileGeneral = ({ navigation }) => {
                 styleVariables.fontSizes.callout,
                 {
                   color: styleVariables.colors.black,
-                  opacity: 0.66
-                }
+                  opacity: 0.66,
+                },
               ]}
             >
               Created by{' '}
@@ -350,8 +355,8 @@ const ProfileGeneral = ({ navigation }) => {
                   styleVariables.fontSizes.calloutBold,
                   {
                     color: styleVariables.colors.primary,
-                    opacity: 0.66
-                  }
+                    opacity: 0.66,
+                  },
                 ]}
               >
                 IntelliDev Solutions
@@ -361,7 +366,7 @@ const ProfileGeneral = ({ navigation }) => {
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default ProfileGeneral
+export default ProfileGeneral;
