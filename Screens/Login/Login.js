@@ -21,7 +21,6 @@ const auth = getAuth();
 let globalSetCurrentUser;
 let globalCurrentUser;
 
-
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation }) => {
 	const [theme, styleVariables] = useTheme();
