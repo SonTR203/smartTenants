@@ -6,7 +6,6 @@ import {
   View,
   Linking,
   Image,
-  NativeModules,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '../../../ThemeContext';
@@ -16,6 +15,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons/';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';
+import * as Updates from 'expo-updates';
 
 const ProfileGeneral = ({ navigation }) => {
   const [theme, styleVariables] = useTheme();
@@ -25,10 +25,10 @@ const ProfileGeneral = ({ navigation }) => {
 
   const auth = getAuth();
 
-  const logUserOut = () => {
+  const logUserOut = async () => {
     console.log('logging user out');
     auth.signOut().then(console.log('Tenant signed out'));
-    NativeModules.DevSettings.reload();
+    await Updates.reloadAsync();
   };
 
   return (
