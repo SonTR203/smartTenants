@@ -9,7 +9,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  Modal
+  Modal,
 } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
@@ -100,7 +100,7 @@ const EditProfile = ({ navigation }) => {
   }
 
   function changeProfilePic () {
-    Alert('Not yet implemented.')
+    alert('Not yet implemented.')
   }
 
   return (
