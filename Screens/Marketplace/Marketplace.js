@@ -7,6 +7,7 @@ const Marketplace = () => {
     <SafeAreaView>
       <View>
         <Text>Marketplace</Text>
+        <Text>Under construction</Text>
       </View>
     </SafeAreaView>
   );

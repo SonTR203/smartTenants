@@ -1,10 +1,11 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View, Text } from 'react-native';
+import React from 'react';
 
 const CreateAnnouncement = () => {
   return (
     <View>
-      <Text>CreateAnnouncement</Text>
+      <Text>Create Announcement</Text>
+      <Text>Under construction</Text>
     </View>
   );
 };
