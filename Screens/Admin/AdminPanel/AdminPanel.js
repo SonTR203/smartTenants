@@ -57,6 +57,16 @@ const AdminPanel = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          navigation.navigate('ManageBuildings');
+        }}
+        style={theme.primaryButton}
+      >
+        <Text style={{ color: 'white', fontWeight: 'bold' }}>
+          Manage buildings
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
           navigation.navigate('SendNotice');
         }}
         style={theme.primaryButton}
@@ -65,12 +75,12 @@ const AdminPanel = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('ManageBuildings');
+          navigation.navigate('CreateAnnouncement');
         }}
         style={theme.primaryButton}
       >
         <Text style={{ color: 'white', fontWeight: 'bold' }}>
-          Manage buildings
+          Create announcement
         </Text>
       </TouchableOpacity>
     </SafeAreaView>
