@@ -11,16 +11,26 @@ import { db } from '../../../firebase-config';
 import { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView } from 'react-native-gesture-handler';
+import { useAppContext } from '../../../Context/AppContext';
 
 const ManageBuildings = ({ navigation }) => {
   const colRef = collection(db, 'Buildings');
-  const [buildings, setBuildings] = useState([]);
+  const { buildings, setBuildings } = useAppContext();
   const [fetching, setFetching] = useState(true);
 
   const getBuildings = async () => {
     const data = await getDocs(colRef);
-    setBuildings(data.docs.map((building) => building.data()));
+    setBuildings(
+      data.docs.map((building) => {
+        console.log('the building object', building);
+        let buildingDocId = building._key.path.segments[6];
+
+        return (building = {
+          ...building.data(),
+          buildingDocId,
+        });
+      })
+    );
     setFetching(false);
   };
 
@@ -28,32 +38,28 @@ const ManageBuildings = ({ navigation }) => {
     getBuildings();
   }, []);
 
-  console.log(buildings);
-
   return (
     <SafeAreaView>
       <StatusBar style="auto" />
-      <ScrollView>
-        {fetching && <ActivityIndicator />}
-        <View>
-          {buildings.length > 0 && (
-            <FlatList
-              data={buildings}
-              // buildingName is temp. should be id
-              keyExtractor={(building) => building.buildingName}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('ManageBuilding', { building: item });
-                  }}
-                >
-                  <BuildingsItem building={item} />
-                </TouchableOpacity>
-              )}
-            />
-          )}
-        </View>
-      </ScrollView>
+      {fetching && <ActivityIndicator />}
+      <View>
+        {buildings.length > 0 && (
+          <FlatList
+            data={buildings}
+            // buildingName is temp. should be id
+            keyExtractor={(building) => building.buildingName}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('ManageBuilding', { building: item });
+                }}
+              >
+                <BuildingsItem building={item} />
+              </TouchableOpacity>
+            )}
+          />
+        )}
+      </View>
     </SafeAreaView>
   );
 };

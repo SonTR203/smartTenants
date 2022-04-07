@@ -12,14 +12,12 @@ import {
   Modal,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { getAuth } from 'firebase/auth';
-import { doc, updateDoc } from '@firebase/firestore';
+import { doc, updateDoc, collection, getDocs } from '@firebase/firestore';
 import { db } from '../../../firebase-config';
 import ModalPicker from '../../../components/ModalBuildingPicker';
 import { useTheme } from '../../../ThemeContext';
 import { StatusBar } from 'expo-status-bar';
-
-const auth = getAuth();
+import { useAppContext } from '../../../Context/AppContext';
 
 const ManageBuilding = ({ route, navigation }) => {
   const { building } = route.params;
@@ -31,8 +29,11 @@ const ManageBuilding = ({ route, navigation }) => {
   const [buildingLocation, setBuildingLocation] = useState(
     building.buildingLocation
   );
-  // const [buildingID, setBuildingID] = useState(building.buildingID);
+  const [fullName, setFullName] = useState(building.fullName);
+  const [email, setEmail] = useState(building.email);
+  const [phone, setPhone] = useState(building.phone);
   const [modalVisible, setModalVisible] = useState(false);
+  const { setBuildings } = useAppContext();
 
   const changeModalVisibility = (bool) => {
     setModalVisible(bool);
@@ -66,23 +67,40 @@ const ManageBuilding = ({ route, navigation }) => {
   };
 
   async function confirmBuilding() {
-    setTenantAuthorized(true);
-    console.log('save profile info');
-    const buildingDocRef = doc(db, 'buildings', building.buildingDocId);
-    console.log(building.buildingDocId);
+    console.log('save building info');
+    console.log('build Doc ID', building.buildingDocId);
+    const buildingDocRef = doc(db, 'Buildings', building.buildingDocId);
 
-    //   try {
-    //     await updateDoc(buildingDocRef, {
-    //
-    //       buildingName,
-    //       buildingLocation,
-    //       buildingID,
-    //       buildingAddress,
-    //     });
-    //     navigation.goBack();
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
+    try {
+      await updateDoc(buildingDocRef, {
+        fullName,
+        buildingName,
+        buildingAddress,
+        buildingLocation,
+        // buildingImage,
+        email,
+        phone,
+      });
+      fetchUpdatedListOfBuildings();
+      navigation.goBack();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function fetchUpdatedListOfBuildings() {
+    const colRef = collection(db, 'Buildings');
+
+    const data = await getDocs(colRef);
+    const buildings = data.docs.map((building) => {
+      let buildingDocId = building._key.path.segments[6];
+
+      return (building = {
+        ...building.data(),
+        buildingDocId,
+      });
+    });
+    setBuildings(buildings);
   }
 
   function uploadBuildingPic() {
@@ -91,9 +109,9 @@ const ManageBuilding = ({ route, navigation }) => {
 
   return (
     <SafeAreaView>
-      <ScrollView style={theme.pageContainer}>
-        <StatusBar style="auto" />
-        <KeyboardAvoidingView behavior="padding">
+      <StatusBar style="auto" />
+      <KeyboardAvoidingView behavior="padding">
+        <ScrollView style={theme.pageContainer}>
           <View>
             {/* <Image
               source={{ uri: buildingProfileImage }}
@@ -108,33 +126,84 @@ const ManageBuilding = ({ route, navigation }) => {
           <View>
             <Text>Location</Text>
           </View>
-          <View id="signupInputs">
-            <View id="firstNameInput">
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Address
-              </Text>
-              <TextInput
-                placeholder="253 York St. Ottawa, Ontario, K1N 1C6"
-                defaultValue={building.buildingAddress}
-                onChangeText={(text) => setBuildingAddress(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
+          {/* <View id="signupInputs"> */}
+          <View id="firstNameInput">
+            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+              Address
+            </Text>
+            <TextInput
+              placeholder="253 York St. Ottawa, Ontario, K1N 1C6"
+              defaultValue={building.buildingAddress}
+              onChangeText={(text) => setBuildingAddress(text)}
+              style={[theme.textInput, styleVariables.fontSizes.body]}
+            />
+          </View>
+          <View>
             <View>
-              <Text>Contacts</Text>
-            </View>
-            <View id="lastNameInput">
               <Text
                 style={[theme.textInputLabel, styleVariables.fontSizes.body]}
               >
                 Name
               </Text>
               <TextInput
-                placeholder="Mike Smith"
+                placeholder="253 York St. Ottawa, Ontario, K1N 1C6"
                 defaultValue={building.buildingName}
-                onChangeText={(text) => setLastName(text)}
+                onChangeText={(text) => setBuildingName(text)}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
+            </View>
+            <View>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Location
+              </Text>
+              <TextInput
+                placeholder="253 York St. Ottawa, Ontario, K1N 1C6"
+                defaultValue={building.buildingLocation}
+                onChangeText={(text) => setBuildingLocation(text)}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
+            </View>
+            <View>
+              <Text>Contact</Text>
+            </View>
+            <View>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Full name
+              </Text>
+              <TextInput
+                placeholder="Mike Smith"
+                defaultValue={building.fullName}
+                onChangeText={(text) => setFullName(text)}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
+            </View>
+            <View>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Email
+              </Text>
+              <TextInput
+                placeholder="mike@email.com"
+                defaultValue={building.email}
+                onChangeText={(text) => setEmail(text)}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
+            </View>
+            <View>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Phone
+              </Text>
+              <TextInput
+                placeholder="(555)555-5555"
+                defaultValue={building.phone}
+                onChangeText={(text) => setPhone(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
             </View>
@@ -158,7 +227,7 @@ const ManageBuilding = ({ route, navigation }) => {
           </TouchableOpacity>
 
           <View id="signupCTA">
-            <TouchableOpacity onPress={confirmbuilding}>
+            <TouchableOpacity onPress={confirmBuilding}>
               <View style={[theme.primaryButton, { marginTop: 17 }]}>
                 <Text
                   style={[
@@ -171,8 +240,8 @@ const ManageBuilding = ({ route, navigation }) => {
               </View>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

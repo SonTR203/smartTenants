@@ -12,14 +12,12 @@ import {
   Modal,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { getAuth } from 'firebase/auth';
-import { doc, updateDoc } from '@firebase/firestore';
+import { doc, updateDoc, collection, getDocs } from '@firebase/firestore';
 import { db } from '../../../firebase-config';
 import ModalPicker from '../../../components/ModalBuildingPicker';
 import { useTheme } from '../../../ThemeContext';
 import { StatusBar } from 'expo-status-bar';
-
-const auth = getAuth();
+import { useAppContext } from '../../../Context/AppContext';
 
 const ManageUser = ({ route, navigation }) => {
   const { user } = route.params;
@@ -37,6 +35,7 @@ const ManageUser = ({ route, navigation }) => {
   const [userProfileImage, setUserProfileImage] = useState(
     user.userProfileImage
   );
+  const { setAllUsers } = useAppContext();
 
   const changeModalVisibility = (bool) => {
     setModalVisible(bool);
@@ -75,21 +74,37 @@ const ManageUser = ({ route, navigation }) => {
     const userDocRef = doc(db, 'Users', user.userDocId);
     console.log(user.userDocId);
 
-    //   try {
-    //     await updateDoc(userDocRef, {
-    //       //userID,
-    //       firstName,
-    //       lastName,
-    //       buildingID,
-    //       buildingAddress,
-    //       email,
-    //       unitNumber,
-    //       tenantAuthorized,
-    //     });
-    //     navigation.goBack();
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
+    try {
+      await updateDoc(userDocRef, {
+        firstName,
+        lastName,
+        buildingID,
+        buildingAddress,
+        email,
+        unitNumber,
+        tenantAuthorized,
+      });
+      fetchUpdatedListOfUsers();
+      navigation.goBack();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function fetchUpdatedListOfUsers() {
+    const colRef = collection(db, 'Users');
+
+    const data = await getDocs(colRef);
+    const users = data.docs.map((user) => {
+      let userDocId = user._key.path.segments[6];
+
+      return (user = {
+        ...user.data(),
+        userDocId,
+      });
+    });
+
+    setAllUsers(users.filter((user) => user.tenantAuthorized));
   }
 
   function removeProfilePic() {
@@ -98,8 +113,8 @@ const ManageUser = ({ route, navigation }) => {
 
   return (
     <SafeAreaView>
+      <StatusBar style="auto" />
       <ScrollView style={theme.pageContainer}>
-        <StatusBar style="auto" />
         <KeyboardAvoidingView behavior="padding">
           <View>
             <Image
