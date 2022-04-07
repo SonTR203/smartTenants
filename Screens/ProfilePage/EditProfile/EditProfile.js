@@ -82,19 +82,39 @@ const EditProfile = ({ navigation }) => {
 		console.log('save profile info');
 		const userDocRef = doc(db, 'Users', currentUser.userDocId);
 
-		try {
-			await updateDoc(userDocRef, {
-				//userID,
-				firstName,
-				lastName,
-				buildingID,
-				buildingAddress,
-				email,
-				unitNumber,
-			});
-			navigation.navigate('ProfileGeneral');
-		} catch (error) {
-			console.log(error);
+		if (checkTextInputs) {
+			try {
+				await updateDoc(userDocRef, {
+					firstName,
+					lastName,
+					buildingID,
+					buildingAddress,
+					email,
+					unitNumber,
+				});
+
+				setCurrentUser({
+					firstName,
+					lastName,
+					buildingID,
+					buildingAddress,
+					email,
+					unitNumber,
+					isAdmin: currentUser.isAdmin,
+					myMarketplacePosts: currentUser.myMarketplacePosts,
+					myPosts: currentUser.myPosts,
+					tenantAuthorized: currentUser.tenantAuthorized,
+					userID: currentUser.userID,
+					userDocId: currentUser.userDocId,
+					visibleNotices: currentUser.visibleNotices,
+					visibleAnnouncements: currentUser.visibleAnnouncements,
+					userProfileImage: currentUser.userProfileImage,
+				});
+
+				navigation.navigate('ProfileGeneral');
+			} catch (error) {
+				console.log(error);
+			}
 		}
 	}
 
@@ -179,6 +199,24 @@ const EditProfile = ({ navigation }) => {
 
 		try {
 			await updateDoc(userDocRef, {
+				userProfileImage: imgUrl,
+			});
+
+			setCurrentUser({
+				firstName: currentUser.firstName,
+				lastName: currentUser.lastName,
+				buildingID: currentUser.buildingID,
+				buildingAddress: currentUser.buildingAddress,
+				email: currentUser.email,
+				unitNumber: currentUser.unitNumber,
+				isAdmin: currentUser.isAdmin,
+				myMarketplacePosts: currentUser.myMarketplacePosts,
+				myPosts: currentUser.myPosts,
+				tenantAuthorized: currentUser.tenantAuthorized,
+				userID: currentUser.userID,
+				userDocId: currentUser.userDocId,
+				visibleNotices: currentUser.visibleNotices,
+				visibleAnnouncements: currentUser.visibleAnnouncements,
 				userProfileImage: imgUrl,
 			});
 		} catch (error) {
