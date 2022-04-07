@@ -2,11 +2,10 @@ import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { useAppContext } from '../../../Context/AppContext';
 
-const ManageUsers = ({ route, navigation }) => {
-  const { allUsers } = route.params;
-
-  console.log(allUsers);
+const ManageUsers = ({ navigation }) => {
+  const { allUsers } = useAppContext();
 
   return (
     <SafeAreaView>
