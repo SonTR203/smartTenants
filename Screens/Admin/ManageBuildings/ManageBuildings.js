@@ -11,23 +11,32 @@ import { db } from '../../../firebase-config';
 import { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { useAppContext } from '../../../Context/AppContext';
 
 const ManageBuildings = ({ navigation }) => {
   const colRef = collection(db, 'Buildings');
-  const [buildings, setBuildings] = useState([]);
+  const { buildings, setBuildings } = useAppContext();
   const [fetching, setFetching] = useState(true);
 
   const getBuildings = async () => {
     const data = await getDocs(colRef);
-    setBuildings(data.docs.map((building) => building.data()));
+    setBuildings(
+      data.docs.map((building) => {
+        console.log('the building object', building);
+        let buildingDocId = building._key.path.segments[6];
+
+        return (building = {
+          ...building.data(),
+          buildingDocId,
+        });
+      })
+    );
     setFetching(false);
   };
 
   useEffect(() => {
     getBuildings();
   }, []);
-
-  console.log(buildings);
 
   return (
     <SafeAreaView>

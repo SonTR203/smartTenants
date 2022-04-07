@@ -12,11 +12,12 @@ import {
   Modal,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { doc, updateDoc } from '@firebase/firestore';
+import { doc, updateDoc, collection, getDocs } from '@firebase/firestore';
 import { db } from '../../../firebase-config';
 import ModalPicker from '../../../components/ModalBuildingPicker';
 import { useTheme } from '../../../ThemeContext';
 import { StatusBar } from 'expo-status-bar';
+import { useAppContext } from '../../../Context/AppContext';
 
 const ManageBuilding = ({ route, navigation }) => {
   const { building } = route.params;
@@ -30,6 +31,7 @@ const ManageBuilding = ({ route, navigation }) => {
   );
   // const [buildingID, setBuildingID] = useState(building.buildingID);
   const [modalVisible, setModalVisible] = useState(false);
+  const { setBuildings } = useAppContext();
 
   const changeModalVisibility = (bool) => {
     setModalVisible(bool);
@@ -63,23 +65,40 @@ const ManageBuilding = ({ route, navigation }) => {
   };
 
   async function confirmBuilding() {
-    setTenantAuthorized(true);
-    console.log('save profile info');
-    const buildingDocRef = doc(db, 'buildings', building.buildingDocId);
-    console.log(building.buildingDocId);
+    console.log('save building info');
+    console.log('build Doc ID', building.buildingDocId);
+    const buildingDocRef = doc(db, 'Buildings', building.buildingDocId);
 
-    //   try {
-    //     await updateDoc(buildingDocRef, {
-    //
-    //       buildingName,
-    //       buildingLocation,
-    //       buildingID,
-    //       buildingAddress,
-    //     });
-    //     navigation.goBack();
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
+    try {
+      await updateDoc(buildingDocRef, {
+        // fullName,
+        buildingName,
+        buildingAddress,
+        buildingLocation,
+        // buildingImage,
+        // email,
+        // phone,
+      });
+      fetchUpdatedListOfBuildings();
+      navigation.goBack();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function fetchUpdatedListOfBuildings() {
+    const colRef = collection(db, 'Buildings');
+
+    const data = await getDocs(colRef);
+    const buildings = data.docs.map((building) => {
+      let buildingDocId = building._key.path.segments[6];
+
+      return (building = {
+        ...building.data(),
+        buildingDocId,
+      });
+    });
+    setBuildings(buildings);
   }
 
   function uploadBuildingPic() {
@@ -92,11 +111,10 @@ const ManageBuilding = ({ route, navigation }) => {
       <KeyboardAvoidingView behavior="padding">
         <ScrollView style={theme.pageContainer}>
           <View>
-            <Text>{`Editing ${building.buildingName}`}</Text>
             {/* <Image
               source={{ uri: buildingProfileImage }}
               style={{ height: 43, width: 43, borderRadius: 12 }}
-            />
+            /> */}
             <Text>{building.buildingName}</Text>
             <Text>{building.buildingAddress}</Text>
             <TouchableOpacity onPress={uploadBuildingPic}>
@@ -106,24 +124,49 @@ const ManageBuilding = ({ route, navigation }) => {
           <View>
             <Text>Location</Text>
           </View>
-          <View id="signupInputs">
-            <View id="firstNameInput">
+          {/* <View id="signupInputs"> */}
+          <View id="firstNameInput">
+            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+              Address
+            </Text>
+            <TextInput
+              placeholder="253 York St. Ottawa, Ontario, K1N 1C6"
+              defaultValue={building.buildingAddress}
+              onChangeText={(text) => setBuildingAddress(text)}
+              style={[theme.textInput, styleVariables.fontSizes.body]}
+            />
+          </View>
+          <View>
+            <View>
               <Text
                 style={[theme.textInputLabel, styleVariables.fontSizes.body]}
               >
-                Address
+                Name
               </Text>
               <TextInput
                 placeholder="253 York St. Ottawa, Ontario, K1N 1C6"
-                defaultValue={building.buildingAddress}
-                onChangeText={(text) => setBuildingAddress(text)}
+                defaultValue={building.buildingName}
+                onChangeText={(text) => setBuildingName(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
             </View>
             <View>
-              <Text>Contacts</Text>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Location
+              </Text>
+              <TextInput
+                placeholder="253 York St. Ottawa, Ontario, K1N 1C6"
+                defaultValue={building.buildingLocation}
+                onChangeText={(text) => setBuildingLocation(text)}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
             </View>
-            <View id="lastNameInput">
+            <View>
+              <Text>Contact</Text>
+            </View>
+            {/* <View id="lastNameInput">
               <Text
                 style={[theme.textInputLabel, styleVariables.fontSizes.body]}
               >
@@ -135,7 +178,7 @@ const ManageBuilding = ({ route, navigation }) => {
                 onChangeText={(text) => setLastName(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
-            </View>
+            </View> */}
           </View>
 
           <TouchableOpacity
@@ -156,7 +199,7 @@ const ManageBuilding = ({ route, navigation }) => {
           </TouchableOpacity>
 
           <View id="signupCTA">
-            <TouchableOpacity onPress={confirmbuilding}>
+            <TouchableOpacity onPress={confirmBuilding}>
               <View style={[theme.primaryButton, { marginTop: 17 }]}>
                 <Text
                   style={[
@@ -167,7 +210,7 @@ const ManageBuilding = ({ route, navigation }) => {
                   Confirm
                 </Text>
               </View>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
