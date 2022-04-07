@@ -113,8 +113,8 @@ const ManageUser = ({ route, navigation }) => {
 
   return (
     <SafeAreaView>
+      <StatusBar style="auto" />
       <ScrollView style={theme.pageContainer}>
-        <StatusBar style="auto" />
         <KeyboardAvoidingView behavior="padding">
           <View>
             <Image

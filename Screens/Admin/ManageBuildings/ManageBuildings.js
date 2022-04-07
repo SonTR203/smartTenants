@@ -11,7 +11,6 @@ import { db } from '../../../firebase-config';
 import { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const ManageBuildings = ({ navigation }) => {
   const colRef = collection(db, 'Buildings');
@@ -33,27 +32,25 @@ const ManageBuildings = ({ navigation }) => {
   return (
     <SafeAreaView>
       <StatusBar style="auto" />
-      <ScrollView>
-        {fetching && <ActivityIndicator />}
-        <View>
-          {buildings.length > 0 && (
-            <FlatList
-              data={buildings}
-              // buildingName is temp. should be id
-              keyExtractor={(building) => building.buildingName}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('ManageBuilding', { building: item });
-                  }}
-                >
-                  <BuildingsItem building={item} />
-                </TouchableOpacity>
-              )}
-            />
-          )}
-        </View>
-      </ScrollView>
+      {fetching && <ActivityIndicator />}
+      <View>
+        {buildings.length > 0 && (
+          <FlatList
+            data={buildings}
+            // buildingName is temp. should be id
+            keyExtractor={(building) => building.buildingName}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('ManageBuilding', { building: item });
+                }}
+              >
+                <BuildingsItem building={item} />
+              </TouchableOpacity>
+            )}
+          />
+        )}
+      </View>
     </SafeAreaView>
   );
 };

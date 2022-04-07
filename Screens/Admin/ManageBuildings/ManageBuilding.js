@@ -12,14 +12,11 @@ import {
   Modal,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from '@firebase/firestore';
 import { db } from '../../../firebase-config';
 import ModalPicker from '../../../components/ModalBuildingPicker';
 import { useTheme } from '../../../ThemeContext';
 import { StatusBar } from 'expo-status-bar';
-
-const auth = getAuth();
 
 const ManageBuilding = ({ route, navigation }) => {
   const { building } = route.params;
@@ -91,14 +88,15 @@ const ManageBuilding = ({ route, navigation }) => {
 
   return (
     <SafeAreaView>
-      <ScrollView style={theme.pageContainer}>
-        <StatusBar style="auto" />
-        <KeyboardAvoidingView behavior="padding">
+      <StatusBar style="auto" />
+      <KeyboardAvoidingView behavior="padding">
+        <ScrollView style={theme.pageContainer}>
           <View>
+            <Text>{`Editing ${building.buildingName}`}</Text>
             {/* <Image
               source={{ uri: buildingProfileImage }}
               style={{ height: 43, width: 43, borderRadius: 12 }}
-            /> */}
+            />
             <Text>{building.buildingName}</Text>
             <Text>{building.buildingAddress}</Text>
             <TouchableOpacity onPress={uploadBuildingPic}>
@@ -169,10 +167,10 @@ const ManageBuilding = ({ route, navigation }) => {
                   Confirm
                 </Text>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
-        </KeyboardAvoidingView>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
