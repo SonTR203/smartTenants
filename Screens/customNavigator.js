@@ -135,7 +135,11 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name='MyPosts'
         component={MyPosts}
-        options={{ title: 'My Posts' }}
+        options={{
+          header: props => (
+            <CustomSubStackScreenHeader {...props} title={'My posts'} />
+          )
+        }}
       />
       <Stack.Screen
         name='IndividualPosts'
