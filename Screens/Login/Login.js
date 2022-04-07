@@ -14,7 +14,7 @@ import { StatusBar } from 'expo-status-bar';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { collection, getDocs, addDoc } from '@firebase/firestore';
 import { useTheme } from '../../ThemeContext';
-
+import ForgotPassword from '../ForgotPassword/ForgotPassword'
 // import Signup from '../Signup/Signup';
 
 import { db } from '../../firebase-config';
@@ -165,9 +165,10 @@ const Login = ({ navigation }) => {
 							id="forgotPassword"
 							style={[theme.container, { alignItems: 'flex-end' }]}
 						>
+					
 							<TouchableOpacity
 								onPress={() => {
-									navigation.navigate("ForgotPassword");
+									navigation.navigate('ForgotPassword');
 								}}
 							>
 								<Text

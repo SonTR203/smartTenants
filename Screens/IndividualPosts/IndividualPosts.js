@@ -31,9 +31,12 @@ const IndividualPosts = ({ route, navigation }) => {
   const [peoplePerson, setPeoplePerson] = useState('people')
   const [comments, setComments] = useState([])
 
+  
   // Get all Comments
   const getComments = () => {
     const colRef = collection(db, `/Newsfeed/${post.id}/peopleWhoCommented`)
+
+
 
     // Get collections data
     getDocs(colRef).then(snapshot => {
@@ -63,6 +66,8 @@ const IndividualPosts = ({ route, navigation }) => {
     /* postComments */
   }
   const Comment = ({ item, theme, styleVariables, width }) => {
+
+        
     return (
       <View
         id='userComment'
@@ -128,6 +133,9 @@ const IndividualPosts = ({ route, navigation }) => {
 
   // Post Comments
   const postComment = () => {
+
+    console.log('Post Comment');
+
     if (textInputValue != '') {
       const peopleWhoCommentedColRef = collection(
         db,
@@ -158,6 +166,7 @@ const IndividualPosts = ({ route, navigation }) => {
   }
 
   function addCommentNotifications (post) {
+  
     const peopleWhoCommentedColRef = collection(
       db,
       `Users/${post.userID}/Notifications`
@@ -217,6 +226,7 @@ const IndividualPosts = ({ route, navigation }) => {
 
 //* userPost */
 function ListHeader ({ post, peoplePerson, theme, styleVariables }) {
+
   return (
     <View id='userPost' style={theme.cardContainer}>
       {/* postOwnerInfo */}
