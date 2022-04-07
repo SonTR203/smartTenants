@@ -314,7 +314,7 @@ const EditProfile = ({ navigation }) => {
 							</Text>
 							<TextInput
 								placeholder="1234"
-								defaultValue={currentUser.unitNumber.toString()}
+								defaultValue={`${currentUser.unitNumber}`}
 								onChangeText={(text) => setUnitNumber(parseInt(text))}
 								style={[theme.textInput, styleVariables.fontSizes.body]}
 							/>
