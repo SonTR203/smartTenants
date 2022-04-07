@@ -29,7 +29,9 @@ const ManageBuilding = ({ route, navigation }) => {
   const [buildingLocation, setBuildingLocation] = useState(
     building.buildingLocation
   );
-  // const [buildingID, setBuildingID] = useState(building.buildingID);
+  const [fullName, setFullName] = useState(building.fullName);
+  const [email, setEmail] = useState(building.email);
+  const [phone, setPhone] = useState(building.phone);
   const [modalVisible, setModalVisible] = useState(false);
   const { setBuildings } = useAppContext();
 
@@ -71,13 +73,13 @@ const ManageBuilding = ({ route, navigation }) => {
 
     try {
       await updateDoc(buildingDocRef, {
-        // fullName,
+        fullName,
         buildingName,
         buildingAddress,
         buildingLocation,
         // buildingImage,
-        // email,
-        // phone,
+        email,
+        phone,
       });
       fetchUpdatedListOfBuildings();
       navigation.goBack();
@@ -166,19 +168,45 @@ const ManageBuilding = ({ route, navigation }) => {
             <View>
               <Text>Contact</Text>
             </View>
-            {/* <View id="lastNameInput">
+            <View>
               <Text
                 style={[theme.textInputLabel, styleVariables.fontSizes.body]}
               >
-                Name
+                Full name
               </Text>
               <TextInput
                 placeholder="Mike Smith"
-                defaultValue={building.buildingName}
-                onChangeText={(text) => setLastName(text)}
+                defaultValue={building.fullName}
+                onChangeText={(text) => setFullName(text)}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
-            </View> */}
+            </View>
+            <View>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Email
+              </Text>
+              <TextInput
+                placeholder="mike@email.com"
+                defaultValue={building.email}
+                onChangeText={(text) => setEmail(text)}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
+            </View>
+            <View>
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Phone
+              </Text>
+              <TextInput
+                placeholder="(555)555-5555"
+                defaultValue={building.phone}
+                onChangeText={(text) => setPhone(text)}
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
+            </View>
           </View>
 
           <TouchableOpacity
