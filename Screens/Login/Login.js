@@ -14,9 +14,6 @@ import { StatusBar } from 'expo-status-bar';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { collection, getDocs, addDoc } from '@firebase/firestore';
 import { useTheme } from '../../ThemeContext';
-
-// import Signup from '../Signup/Signup';
-
 import { db } from '../../firebase-config';
 import { useAppContext } from '../../Context/AppContext';
 
@@ -24,6 +21,7 @@ const auth = getAuth();
 let globalSetCurrentUser;
 let globalCurrentUser;
 
+/* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation }) => {
 	const [theme, styleVariables] = useTheme();
 	const [email, setEmail] = useState('');
@@ -34,6 +32,10 @@ const Login = ({ navigation }) => {
 	globalSetCurrentUser = setCurrentUser;
 	globalCurrentUser = currentUser;
 
+	/* This function logs the user to the application only if he/she * is registered on Firebase as an authenticated registered user.
+	* inputs: none
+	* outputs: return the undefined (the default for JS functions) 
+	*/
 	const handleLogin = () => {
 		signInWithEmailAndPassword(auth, email, password)
 			.then(async (userCredentials) => {
@@ -45,6 +47,11 @@ const Login = ({ navigation }) => {
 			.catch((error) => alert(error.message));
 	};
 
+	/* This function gets the logged in user data from Firebase and  * navigates him/her to to the Newsfeed screen (Home screen) if * * authorized or to the Account Approval Pending screen if not
+	* yet approved by an Admin.
+	* inputs: authenticated user object From Firebase
+	* outputs: sets the current user object as the Logged in user as stored as per stored data on Firebase
+	*/
 	const findUser = async (user) => {
 		const colRef = collection(db, 'Users');
 		const data = await getDocs(colRef);
@@ -56,6 +63,7 @@ const Login = ({ navigation }) => {
 			if (userID) {
 				if (userID == user.uid) {
 					let object = item._document.data.value.mapValue.fields;
+					console.log('KARIM: ', object);
 					loggedInUser = {
 						buildingID: object.buildingID.stringValue,
 						buildingAddress: object.buildingAddress.stringValue,
@@ -66,7 +74,7 @@ const Login = ({ navigation }) => {
 						myMarketplacePosts: object.myMarketplacePosts.arrayValue,
 						myPosts: object.myPosts.arrayValue,
 						tenantAuthorized: object.tenantAuthorized.booleanValue,
-						unitNumber: object.unitNumber.stringValue,
+						unitNumber: object.unitNumber.integerValue,
 						userID: object.userID.stringValue,
 						userDocId: item._key.path.segments[6],
 						visibleNotices: object.visibleNotices.arrayValue,
@@ -87,6 +95,10 @@ const Login = ({ navigation }) => {
 		}
 	};
 
+	/* This function creates notifications for the logged in user   * and stores them on Firebase
+	*inputs: logged in user object
+	*outputs: notification doc object on Firebase
+	*/
 	const createNotificationCollection = async (loggedInUser) => {
 		const colRef = collection(
 			db,
@@ -108,6 +120,7 @@ const Login = ({ navigation }) => {
 		}
 	};
 
+	// This function to be fully implemented in phase two of the app  
 	function forgotPassword() {
 		console.log('forgot password');
 	}

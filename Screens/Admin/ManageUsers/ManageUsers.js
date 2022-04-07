@@ -1,37 +1,45 @@
-import { View, Text, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import React from 'react';
-import { collection, getDocs } from '@firebase/firestore';
-import { db } from '../../../firebase-config';
-import { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
-const ManageUsers = () => {
-  const colRef = collection(db, 'Users');
-  const [users, setUsers] = useState([]);
-  const [fetching, setFetching] = useState(true);
+const ManageUsers = ({ route, navigation }) => {
+  const { allUsers } = route.params;
 
-  const getUsers = async () => {
-    const data = await getDocs(colRef);
-    setUsers(data.docs.map((user) => user.data()));
-    setFetching(false);
-  };
-
-  useEffect(() => {
-    getUsers();
-  }, []);
-
-  console.log(users);
+  console.log(allUsers);
 
   return (
     <SafeAreaView>
       <StatusBar style="auto" />
       <View>
-        {fetching ? <ActivityIndicator /> : null}
-        <Text>ManageUsers</Text>
+        {allUsers.length > 0 && (
+          <FlatList
+            data={allUsers}
+            keyExtractor={(user) => user.userID}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('ManageUser', { user: item });
+                }}
+              >
+                <AllUsersItem user={item} />
+              </TouchableOpacity>
+            )}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
 };
+
+function AllUsersItem(user) {
+  user = user.user;
+  return (
+    <View style={{ marginBottom: 10 }}>
+      <Text>{user.firstName + ' ' + user.lastName}</Text>
+      <Text>{user.buildingAddress}</Text>
+    </View>
+  );
+}
 
 export default ManageUsers;
