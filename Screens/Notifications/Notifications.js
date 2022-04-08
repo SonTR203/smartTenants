@@ -157,9 +157,17 @@ function NotificationItem({
       let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
 
       if (timeDifferenceMinutes <= 59) {
-        setTimeSincePost(`${timeDifferenceMinutes} minutes ago`);
+        setTimeSincePost(
+          timeDifferenceMinutes > 1
+            ? `${timeDifferenceMinutes} minutes ago`
+            : `${timeDifferenceMinutes} minute ago`
+        );
       } else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
-        setTimeSincePost(`${timeDifferenceHours} hours ago`);
+        setTimeSincePost(
+          timeDifferenceHours > 1
+            ? `${timeDifferenceHours} hours ago`
+            : `${timeDifferenceHours} hour ago`
+        );
       } else if (
         timeDifferenceDays <= 6 &&
         timeDifferenceMinutes > 59 &&
