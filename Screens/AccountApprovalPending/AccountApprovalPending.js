@@ -1,59 +1,90 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import {
+  View,
+  Text,
+  FlatList,
+  Pressable,
+  ActivityIndicator,
+  RefreshControl,
+  Image,
+  Dimensions
+} from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar'
+import { useTheme } from '../../ThemeContext'
+const windowWidth = Dimensions.get('window').width
 
-const AccountApprovalPending = () => {
-    return (
-        <View>
-            <Text>AccountApprovalPending</Text>
+function AccountApprovalPending ({ navigation }) {
+  const [theme, styleVariables] = useTheme()
+
+  return (
+    <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
+      <StatusBar style='auto' />
+
+      <View
+        style={[
+          theme.globalMargins,
+          {
+            display: 'flex',
+            justifyContent: 'space-between',
+            paddingTop: 27,
+            paddingBottom: 34,
+            flex: 1
+          }
+        ]}
+      >
+        {/* pageContent */}
+        <View id='pageContent'>
+          <View id='textContent'>
+            <Text
+              style={[
+                styleVariables.fontSizes.header,
+                { color: styleVariables.colors.primary, marginBottom: 17 }
+              ]}
+            >
+              Account pending approval
+            </Text>
+            <Text
+              style={[
+                styleVariables.fontSizes.body,
+                { color: styleVariables.colors.black, marginBottom: 68 }
+              ]}
+            >
+              Your information has been received. Your account will be approved
+              momentarily.
+            </Text>
+          </View>
+          <Image
+            source={require('../../assets/undraw_fill_form.png')}
+            style={{
+              width: windowWidth - 68,
+              height: (windowWidth - 68) / 1.5,
+              marginHorizontal: 17
+            }}
+          />
         </View>
-    )
+
+        {/* backButton */}
+        <TouchableOpacity
+          id='backButton'
+          onPress={() => {
+            navigation.goBack()
+          }}
+          style={theme.secondaryButton}
+        >
+          <Text
+            style={[
+              theme.secondaryButtonText,
+              styleVariables.fontSizes.bodyBold
+            ]}
+          >
+            Go back
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
 }
 
 export default AccountApprovalPending
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    inputContainer: {
-        width: '80%'
-    },
-    input: {
-        backgroundColor: 'white',
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        borderRadius: 10,
-        marginTop: 5,
-    },
-    buttonContainer: {
-        width: '60%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 40,
-    },
-    button: {
-        backgroundColor: '#0782F9',
-        width: '100%',
-        padding: 15,
-        borderRadius: 10,
-        alignItems: 'center',
-    },
-    buttonOutline: {
-        backgroundColor: 'white',
-        marginTop: 5,
-        borderColor: '#0782F9',
-        borderWidth: 2,
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: '700',
-        fontSize: 16,
-    },
-    buttonOutlineText: {
-        color: '#0782F9',
-        fontWeight: '700',
-        fontSize: 16,
-    },
-})
