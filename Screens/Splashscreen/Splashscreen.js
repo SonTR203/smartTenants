@@ -42,8 +42,8 @@ const Splashscreen = () => {
         <Image
           source={require('../../assets/SmartLiving_Logo.png')}
           style={{
-            width: 187,
-            height: 111,
+            width: 146,
+            height: 87,
             margin: 'auto'
           }}
           resizeMode='contain'
