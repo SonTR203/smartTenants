@@ -22,6 +22,9 @@ const windowHeight = Dimensions.get('window').height
 
 const auth = getAuth()
 
+/* New users sign up screen. Users get authorized by Firebase then
+ * and admin approve their request before they are allowe to the 
+* home screen (Newsfeed) */
 const Signup = ({ navigation }) => {
   const [theme, styleVariables] = useTheme()
   const [email, setEmail] = useState('')
@@ -45,12 +48,19 @@ const Signup = ({ navigation }) => {
     setModalVisible(bool)
   }
 
+  /*This function extracts user's building address data and formats it for the user's object building address property 
+  *inputs:building object 
+  *outputs building ID property value
+  */
   const setData = building => {
     building = building.buildingAddress.stringValue
     setBuildingAddress(building)
     setBuildingID(building.replace(/\s/g, ''))
   }
 
+  /* This function validates inputs of the sign up screen not to be  *empty and prompts the user to enter data into empty fields *inputs: none 
+  *outputs: alert messages for empty fields
+  */
   const checkTextInputs = () => {
     if (!firstName.trim()) {
       alert('Please Enter Your First Name')
@@ -75,7 +85,10 @@ const Signup = ({ navigation }) => {
     return true
   }
 
-  async function createNewUser (user) {
+  /* This function stores new user object on Firebase database *inputs: user object 
+  *outputs: a user object document stored on Firebase  
+  */
+  async function createNewUser(user) {
     try {
       await addDoc(collection(db, 'Users'), {
         userID: user.uid,
@@ -98,15 +111,26 @@ const Signup = ({ navigation }) => {
     }
   }
 
-  function signUpSuccess (user) {
+  /* This function is called upon successful authorization of the *user, and once the new user object is created and store on *Firebase navigates the user to the AccountApprovalPending 
+  *inputs: user object
+  *outputs: none
+  */
+  function signUpSuccess(user) {
     createNewUser(user)
     navigation.navigate('AccountApprovalPending')
   }
 
-  function signUpFailure () {
+  /* This function alerts the user to failure of the sign up process *inputs: none
+  *outputs: alert message
+  */
+  function signUpFailure() {
     alert('You have not been signed up, please try again')
   }
 
+  /* This function handles the entire sign up process in conjunction *with the nested functions ensuring the user is registered on *Firebase
+  *inputs: none 
+  *outputs: either undefined or an alert message depending on the *error 
+  */
   const handleSignup = () => {
     if (!checkTextInputs()) return
 
