@@ -10,9 +10,7 @@ import AppLoading from 'expo-app-loading';
 import { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Notifications from './Screens/Notifications/Notifications';
 import Marketplace from './Screens/Marketplace/Marketplace';
-import ProfileGeneral from './Screens/ProfilePage/ProfileGeneral/ProfileGeneral';
 import { AppProvider } from './Context/AppContext';
 import Splashscreen from './Screens/Splashscreen/Splashscreen';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
@@ -142,7 +140,6 @@ function AppContainer() {
 
 const getRouteName = (route) => {
 	const routeName = getFocusedRouteNameFromRoute(route);
-	console.log(routeName);
 	if (
 		routeName?.includes('Login') ||
 		routeName?.includes('Signup') ||
@@ -154,12 +151,3 @@ const getRouteName = (route) => {
 	}
 	return 'flex';
 };
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#fff',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-});
