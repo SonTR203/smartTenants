@@ -2,10 +2,10 @@ import {
 	API_KEY,
 	AUTH_DOMAIN,
 	PROJECT_ID,
-  STORAGE_BUCKET,
-	MESSAGING_SENDER_ID, 
-	APP_ID
-} from '@env'
+	STORAGE_BUCKET,
+	MESSAGING_SENDER_ID,
+	APP_ID,
+} from '@env';
 
 const firebaseConfig = {
 	apiKey: `${API_KEY}`,
@@ -16,4 +16,4 @@ const firebaseConfig = {
 	appId: `${APP_ID}`,
 };
 
-export default firebaseConfig
+export default firebaseConfig;
