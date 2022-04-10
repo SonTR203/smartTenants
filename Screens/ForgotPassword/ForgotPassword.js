@@ -1,37 +1,22 @@
 import React, { useState } from 'react';
-import {
-	KeyboardAvoidingView,
-	SafeAreaView,
-	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-	Image,
-	Linking,
-  Button
-} from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+// Import Required functions from FireStore
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
-
 
 const ForgotPassword = () => {
 	const [email, setEmail] = useState('');
-
 	const auth = getAuth();
 
 	const handleReset = async () => {
 		try {
-			console.log('sent');
-			await sendPasswordResetEmail(auth, email);
+			await sendPasswordResetEmail(auth, email.trim());
 			alert('Password reset link sent!');
 		} catch (err) {
 			console.error(err);
 			alert(err.message);
 		}
 	};
-
-
 
 	return (
 		<>
@@ -43,15 +28,8 @@ const ForgotPassword = () => {
 					value={email}
 					onChangeText={(text) => setEmail(text)}
 				></TextInput>
-				<TouchableOpacity
-					id="SendResetEmail"
-					onPress={handleReset}
-				>
-					<Text
-				
-					>
-						Reset
-					</Text>
+				<TouchableOpacity id="SendResetEmail" onPress={handleReset}>
+					<Text>Reset</Text>
 				</TouchableOpacity>
 			</View>
 		</>
