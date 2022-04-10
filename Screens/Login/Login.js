@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import {
-  KeyboardAvoidingView,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Image,
-  Linking
-} from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { collection, getDocs, addDoc } from '@firebase/firestore'
-import { useTheme } from '../../ThemeContext'
-import { db } from '../../firebase-config'
-import { useAppContext } from '../../Context/AppContext'
+	KeyboardAvoidingView,
+	SafeAreaView,
+	StyleSheet,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
+	Image,
+	Linking,
+} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { collection, getDocs, addDoc } from '@firebase/firestore';
+import { useTheme } from '../../ThemeContext';
+import ForgotPassword from '../ForgotPassword/ForgotPassword'
+import { db } from '../../firebase-config';
+import { useAppContext } from '../../Context/AppContext';
 import { Dimensions } from 'react-native'
+
 const windowHeight = Dimensions.get('window').height
 
-const auth = getAuth()
-let globalSetCurrentUser
-let globalCurrentUser
+const auth = getAuth();
+let globalSetCurrentUser;
+let globalCurrentUser;
+
 
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation }) => {
@@ -178,25 +181,32 @@ const Login = ({ navigation }) => {
               />
             </View>
 
-            {/* forgotPassword */}
-            <View
-              id='forgotPassword'
-              style={[theme.container, { alignItems: 'flex-end' }]}
-            >
-              <Text
-                onPress={forgotPassword}
-                style={[
-                  styleVariables.fontSizes.callout,
-                  {
-                    color: styleVariables.colors.primary,
-                    opacity: 0.66,
-                    marginBottom: 8
-                  }
-                ]}
-              >
-                Forgot password?
-              </Text>
-            </View>
+						{/* forgotPassword */}
+						<View
+							id="forgotPassword"
+							style={[theme.container, { alignItems: 'flex-end' }]}
+						>
+					
+							<TouchableOpacity
+								onPress={() => {
+									navigation.navigate('ForgotPassword');
+								}}
+							>
+								<Text
+									style={[
+										styleVariables.fontSizes.callout,
+										{
+											color: styleVariables.colors.primary,
+											opacity: 0.66,
+											marginBottom: 8,
+										},
+									]}
+								>
+									Forgot password?
+								</Text>
+							</TouchableOpacity>
+						</View>
+
 
             {/* loginButton */}
             <TouchableOpacity
