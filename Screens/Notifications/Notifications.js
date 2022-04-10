@@ -37,6 +37,7 @@ const Notifications = ({ navigation }) => {
   globalWasSeenVar = wasSeenVar
   setNotifPost = setPost
   globalCurrentUser = currentUser
+  
   const colReference = collection(
     db,
     'Users',
@@ -107,39 +108,97 @@ function NotificationItem ({
   navigation,
   theme,
   styleVariables,
-  windowWidth
+  windowWidth,
 }) {
+  const [timeSincePost, setTimeSincePost] = useState('');
+
   notifications = {
     content: notifications.content.stringValue,
     id: notifications.id,
     postID: notifications.postID.stringValue,
     timestamp: notifications.timestamp,
     userID: notifications.userID.stringValue,
-    wasSeen: notifications.wasSeen.booleanValue
-  }
+    wasSeen: notifications.wasSeen.booleanValue,
+  };
 
-  const setWasSeenToTrue = async notifications => {
+  useEffect(() => {
+    setTime();
+  }, []);
+
+  const setWasSeenToTrue = async (notifications) => {
     const colRef = doc(
       db,
       'Users',
       `${globalCurrentUser.userDocId}`,
       'Notifications',
       notifications.id
-    )
+    );
     await updateDoc(colRef, {
-      wasSeen: true
+      wasSeen: true,
     }).then(() => {
-      globalSetWasSeenVar(!globalWasSeenVar)
-    })
-  }
+      globalSetWasSeenVar(!globalWasSeenVar);
+    });
+  };
+
+  const setTime = () => {
+    let time = notifications.timestamp;
+    if (time != undefined) {
+      let timePosted = time.integerValue;
+      let currentTime = Date.now();
+      let timeDifferenceMinutes = ((currentTime - timePosted) / 60000).toFixed(
+        0
+      );
+      let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0);
+      let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0);
+      let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
+
+      if (timeDifferenceMinutes <= 59) {
+        setTimeSincePost(
+          timeDifferenceMinutes > 1
+            ? `${timeDifferenceMinutes} minutes ago`
+            : `${timeDifferenceMinutes} minute ago`
+        );
+      } else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
+        setTimeSincePost(
+          timeDifferenceHours > 1
+            ? `${timeDifferenceHours} hours ago`
+            : `${timeDifferenceHours} hour ago`
+        );
+      } else if (
+        timeDifferenceDays <= 6 &&
+        timeDifferenceMinutes > 59 &&
+        timeDifferenceHours > 23
+      ) {
+        setTimeSincePost(
+          timeDifferenceDays > 1
+            ? `${timeDifferenceDays} days ago`
+            : `${timeDifferenceDays} day ago`
+        );
+      } else if (
+        timeDifferenceWeeks <= 10 &&
+        timeDifferenceDays > 6 &&
+        timeDifferenceMinutes > 59 &&
+        timeDifferenceHours > 23
+      ) {
+        setTimeSincePost(
+          timeDifferenceWeeks > 1
+            ? `${timeDifferenceWeeks} weeks ago`
+            : `${timeDifferenceWeeks} week ago`
+        );
+      } else {
+        setTimeSincePost('10+ weeks ago');
+      }
+    }
+  };
+
   return (
     <TouchableOpacity
       // navigate to post page on press
       id='post'
       onPress={() => {
-        navigation.navigate('IndividualPosts')
-        viewNotificationPost(notifications)
-        setWasSeenToTrue(notifications)
+        navigation.navigate('IndividualPosts');
+        viewNotificationPost(notifications);
+        setWasSeenToTrue(notifications);
       }}
       style={[theme.cardButton, { marginTop: 0, marginBottom: 17 }]}
     >
@@ -149,11 +208,11 @@ function NotificationItem ({
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            marginBottom: 8
+            marginBottom: 8,
           }}
         >
           <Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
-            27 minutes ago
+            {timeSincePost}
           </Text>
           {notifications.wasSeen == false && (
             <View
@@ -163,7 +222,7 @@ function NotificationItem ({
                 width: 8,
                 backgroundColor: styleVariables.colors.primary,
                 borderRadius: 99,
-                marginLeft: 8
+                marginLeft: 8,
               }}
             ></View>
           )}
@@ -171,6 +230,7 @@ function NotificationItem ({
         {console.log(notifications)}
         <Text>{notifications.content}</Text>
       </View>
+
 
       <MaterialCommunityIcons
         name='chevron-right'
