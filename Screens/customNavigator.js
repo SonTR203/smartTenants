@@ -178,7 +178,11 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name='AdminPanel'
         component={AdminPanel}
-        options={{ title: 'Admin Panel' }}
+        options={{
+          header: props => (
+            <CustomSubStackScreenHeader {...props} title={'Admin panel'} />
+          )
+        }}
       />
       <Stack.Screen
         name='ApproveUsers'
