@@ -5,69 +5,65 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
-  Image,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
-import { React, useState, useEffect } from 'react';
-import { useAppContext } from '../../Context/AppContext';
-import { db } from '../../firebase-config';
-import {
-  collection,
-  getDocs,
-  getDoc,
-  doc,
-  updateDoc,
-} from 'firebase/firestore';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useTheme } from '../../ThemeContext';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Dimensions } from 'react-native';
-const windowWidth = Dimensions.get('window').width;
-import _ from 'lodash';
+  Image
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar'
+import { React, useState, useEffect } from 'react'
+import { useAppContext } from '../../Context/AppContext'
+import { db } from '../../firebase-config'
+import { collection, getDocs, getDoc, doc, updateDoc } from 'firebase/firestore'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useTheme } from '../../ThemeContext'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { Dimensions } from 'react-native'
+const windowWidth = Dimensions.get('window').width
+import _ from 'lodash'
+import { Platform } from 'expo-modules-core'
 
-let setNotifPost;
-let globalCurrentUser;
-let globalSetWasSeenVar;
-let globalWasSeenVar;
+let setNotifPost
+let globalCurrentUser
+let globalSetWasSeenVar
+let globalWasSeenVar
 
 const Notifications = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme();
-  console.log('IN NOTIFICATIONS');
-  const { currentUser, setCurrentUser } = useAppContext();
-  const { post, setPost } = useAppContext();
-  const [notifications, setNotifications] = useState([]);
-  const [wasSeenVar, setWasSeenVar] = useState();
-  globalSetWasSeenVar = setWasSeenVar;
-  globalWasSeenVar = wasSeenVar;
-  setNotifPost = setPost;
-  globalCurrentUser = currentUser;
+  const [theme, styleVariables] = useTheme()
+  console.log('IN NOTIFICATIONS')
+  const { currentUser, setCurrentUser } = useAppContext()
+  const { post, setPost } = useAppContext()
+  const [notifications, setNotifications] = useState([])
+  const [wasSeenVar, setWasSeenVar] = useState()
+  globalSetWasSeenVar = setWasSeenVar
+  globalWasSeenVar = wasSeenVar
+  setNotifPost = setPost
+  globalCurrentUser = currentUser
+  
   const colReference = collection(
     db,
     'Users',
     `${currentUser.userDocId}`,
     'Notifications'
-  );
+  )
 
   useEffect(() => {
-    getNotifications();
-  }, [globalWasSeenVar]);
+    getNotifications()
+  }, [globalWasSeenVar])
 
   const getNotifications = async () => {
-    const data = await getDocs(colReference);
+    const data = await getDocs(colReference)
 
-    let notificationsList = data.docs.map((item) => ({
+    let notificationsList = data.docs.map(item => ({
       ...item._document.data.value.mapValue.fields,
-      id: item._key.path.segments[8],
-    }));
+      id: item._key.path.segments[8]
+    }))
 
     let sortedListOfNotifications = _.sortBy(
       notificationsList,
       'timestamp.integerValue'
-    ).reverse();
+    ).reverse()
 
-    setNotifications(sortedListOfNotifications);
-  };
+    setNotifications(sortedListOfNotifications)
+  }
 
   return (
     <SafeAreaView
@@ -96,7 +92,7 @@ const Notifications = ({ navigation }) => {
                 windowWidth={windowWidth}
               />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             ListFooterComponent={
               <ListFooter styleVariables={styleVariables} theme={theme} />
             }
@@ -104,10 +100,10 @@ const Notifications = ({ navigation }) => {
         )}
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-function NotificationItem({
+function NotificationItem ({
   notifications,
   navigation,
   theme,
@@ -235,6 +231,7 @@ function NotificationItem({
         <Text>{notifications.content}</Text>
       </View>
 
+
       <MaterialCommunityIcons
         name='chevron-right'
         size={24}
@@ -242,21 +239,21 @@ function NotificationItem({
         style={{ opacity: 0.33 }}
       />
     </TouchableOpacity>
-  );
+  )
 }
 
-async function viewNotificationPost(notifications) {
-  const docRef = doc(db, 'Newsfeed', `${notifications.postID}`);
-  const docSnap = await getDoc(docRef);
-  let postData = docSnap.data();
+async function viewNotificationPost (notifications) {
+  const docRef = doc(db, 'Newsfeed', `${notifications.postID}`)
+  const docSnap = await getDoc(docRef)
+  let postData = docSnap.data()
   const likesColReference = collection(
     db,
     'Newsfeed',
     `${docSnap.id}`,
     'peopleWhoLiked'
-  );
-  const data = await getDocs(likesColReference);
-  let numberOfLikes = data.docs.length;
+  )
+  const data = await getDocs(likesColReference)
+  let numberOfLikes = data.docs.length
 
   let post = {
     comments: postData.comments.arrayValue,
@@ -269,18 +266,18 @@ async function viewNotificationPost(notifications) {
     userFirstName: postData.userFirstName,
     userLastName: postData.userLastName,
     numberOfLikes: numberOfLikes,
-    timestamp: postData.timestamp,
-  };
+    timestamp: postData.timestamp
+  }
 
   if (docSnap.exists()) {
-    setNotifPost(post);
+    setNotifPost(post)
   } else {
     // doc.data() will be undefined in this case
-    console.log('No such document!');
+    console.log('No such document!')
   }
 }
 
-function ListHeader({ navigation, styleVariables, theme }) {
+function ListHeader ({ navigation, styleVariables, theme }) {
   return (
     <>
       <View id='header' style={theme.header}>
@@ -291,8 +288,8 @@ function ListHeader({ navigation, styleVariables, theme }) {
             styleVariables.fontSizes.header,
             {
               color: styleVariables.colors.white,
-              marginBottom: 4,
-            },
+              marginBottom: 4
+            }
           ]}
         >
           Notifications
@@ -301,19 +298,19 @@ function ListHeader({ navigation, styleVariables, theme }) {
         <Pressable
           id='buildingInfo'
           onPress={() => {
-            navigation.navigate('BuildingInfo');
+            navigation.navigate('BuildingInfo')
           }}
           style={{
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            opacity: 0.66,
+            opacity: 0.66
           }}
         >
           <Text
             style={[
               styleVariables.fontSizes.body,
-              { color: styleVariables.colors.white },
+              { color: styleVariables.colors.white }
             ]}
           >
             {globalCurrentUser.buildingAddress}
@@ -328,18 +325,24 @@ function ListHeader({ navigation, styleVariables, theme }) {
 
       {/* announcements */}
       <View style={theme.firstListItem}>
-        <View id='topCard' style={theme.topCard}>
+        <View
+          id='topCard'
+          style={[
+            theme.topCard,
+            { elevation: Platform.OS === 'android' ? 0 : 20 }
+          ]}
+        >
           <Pressable
             id='announcements'
             onPress={() => {
-              alert('navigate to announcements (not yet implemented)');
+              alert('navigate to announcements (not yet implemented)')
             }}
             style={[theme.cardButton, { marginTop: 17, marginBottom: 17 }]}
           >
             <Text
               style={[
                 styleVariables.fontSizes.title,
-                { color: styleVariables.colors.primary },
+                { color: styleVariables.colors.primary }
               ]}
             >
               Announcements
@@ -350,7 +353,7 @@ function ListHeader({ navigation, styleVariables, theme }) {
                 style={[
                   theme.notificationCounter,
                   styleVariables.fontSizes.callout,
-                  { color: styleVariables.colors.white },
+                  { color: styleVariables.colors.white }
                 ]}
               >
                 2
@@ -370,14 +373,14 @@ function ListHeader({ navigation, styleVariables, theme }) {
         <Pressable
           id='notices'
           onPress={() => {
-            alert('navigate to notices (not yet implemented)');
+            alert('navigate to notices (not yet implemented)')
           }}
           style={[theme.cardButton, { marginTop: 0, marginBottom: 17 }]}
         >
           <Text
             style={[
               styleVariables.fontSizes.title,
-              { color: styleVariables.colors.primary },
+              { color: styleVariables.colors.primary }
             ]}
           >
             Notices
@@ -388,7 +391,7 @@ function ListHeader({ navigation, styleVariables, theme }) {
               style={[
                 theme.notificationCounter,
                 styleVariables.fontSizes.callout,
-                { color: styleVariables.colors.white },
+                { color: styleVariables.colors.white }
               ]}
             >
               1
@@ -411,15 +414,15 @@ function ListHeader({ navigation, styleVariables, theme }) {
             backgroundColor: styleVariables.colors.primary,
             opacity: 0.33,
             borderRadius: 99,
-            marginBottom: 17,
+            marginBottom: 17
           }}
         ></Text>
       </View>
     </>
-  );
+  )
 }
 
-function ListFooter({ theme, styleVariables }) {
+function ListFooter ({ theme, styleVariables }) {
   return (
     <View
       style={{
@@ -428,7 +431,7 @@ function ListFooter({ theme, styleVariables }) {
         paddingHorizontal: 34,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
       }}
     >
       <Text
@@ -437,14 +440,14 @@ function ListFooter({ theme, styleVariables }) {
           {
             color: styleVariables.colors.black,
             opacity: 0.66,
-            paddingBottom: 17,
-          },
+            paddingBottom: 17
+          }
         ]}
       >
         You've reached the end
       </Text>
     </View>
-  );
+  )
 }
 
-export default Notifications;
+export default Notifications

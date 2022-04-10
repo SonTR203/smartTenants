@@ -16,6 +16,8 @@ import { collection, getDocs, addDoc } from '@firebase/firestore'
 import { useTheme } from '../../ThemeContext'
 import { db } from '../../firebase-config'
 import { useAppContext } from '../../Context/AppContext'
+import { Dimensions } from 'react-native'
+const windowHeight = Dimensions.get('window').height
 
 const auth = getAuth()
 let globalSetCurrentUser
@@ -129,7 +131,10 @@ const Login = ({ navigation }) => {
     <SafeAreaView style={{ backgroundColor: styleVariables.colors.white }}>
       <View style={theme.pageContainer}>
         <StatusBar style='auto' />
-        <KeyboardAvoidingView behavior='padding' style={theme.fullHeight}>
+        <KeyboardAvoidingView
+          behavior='padding'
+          style={[theme.fullHeight, { justifyContent: 'space-evenly' }]}
+        >
           {/* Logo image */}
           <View style={[theme.container, {}]}>
             <Image
