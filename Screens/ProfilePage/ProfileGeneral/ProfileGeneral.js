@@ -14,6 +14,9 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { FontAwesome5 } from '@expo/vector-icons/'
 import { ScrollView } from 'react-native-gesture-handler'
+import { getAuth } from 'firebase/auth'
+import * as Updates from 'expo-updates'
+import { Platform } from 'expo-modules-core'
 
 const ProfileGeneral = ({ navigation }) => {
   const [theme, styleVariables] = useTheme()
@@ -21,9 +24,12 @@ const ProfileGeneral = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext()
   console.log(currentUser.userProfileImage)
 
-  const logUserOut = () => {
+  const auth = getAuth()
+
+  const logUserOut = async () => {
     console.log('logging user out')
-    navigation.navigate('Login')
+    auth.signOut().then(console.log('Tenant signed out'))
+    await Updates.reloadAsync()
   }
 
   return (
@@ -80,7 +86,12 @@ const ProfileGeneral = ({ navigation }) => {
 
           {/* userHeader */}
           <View style={theme.firstListItem}>
-            <View style={theme.topCard}>
+            <View
+              style={[
+                theme.topCard,
+                { elevation: Platform.OS === 'android' ? 0 : 20 }
+              ]}
+            >
               <View
                 style={{
                   display: 'flex',
@@ -123,7 +134,7 @@ const ProfileGeneral = ({ navigation }) => {
                     { paddingTop: 17, paddingBottom: 8 }
                   ]}
                 >
-                  {`${currentUser.firstName}${currentUser.lastName}`}
+                  {`${currentUser.firstName} ${currentUser.lastName}`}
                 </Text>
 
                 {/* goToRewardsOrAdmin */}

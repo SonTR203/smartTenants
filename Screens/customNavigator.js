@@ -22,11 +22,17 @@ import DeletePost from '../components/DeletePost';
 import Notifications from './Notifications/Notifications';
 import CustomSubStackScreenHeader from './CustomSubStackScreenHeader.js';
 import ForgotPassword from './ForgotPassword/ForgotPassword'
-const Stack = createStackNavigator();
+import ManageBuilding from './Admin/ManageBuildings/ManageBuilding'
+import ConfirmUser from './Admin/ApproveUsers/ConfirmUser'
+import ManageUser from './Admin/ManageUsers/ManageUser'
+import CreateAnnouncement from './Admin/CreateAnnouncement/CreateAnnouncement'
+
+
+const Stack = createStackNavigator()
 
 const NewsfeedNavigator = () => {
-	const { post, setPost } = useAppContext();
-	const { currentUser, setCurrentUser } = useAppContext();
+  const { post, setPost } = useAppContext()
+  const { currentUser, setCurrentUser } = useAppContext()
 
 	if (currentUser && currentUser.tenantAuthorized) {
 		return (
@@ -99,100 +105,151 @@ const NewsfeedNavigator = () => {
 	}
 };
 
-const ProfileNavigator = () => {
-	const { post, setPost } = useAppContext();
 
-	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="ProfileGeneral"
-				component={ProfileGeneral}
-				options={{ title: 'Profile', headerShown: false }}
-			/>
-			<Stack.Screen
-				name="EditProfile"
-				component={EditProfile}
-				options={{ title: 'Edit Profile' }}
-			/>
-			<Stack.Screen
-				name="MyPosts"
-				component={MyPosts}
-				options={{ title: 'My Posts' }}
-			/>
-			<Stack.Screen
-				name="IndividualPosts"
-				component={IndividualPosts}
-				options={{ title: `${post.userFirstName}'s Post` }}
-			/>
-			<Stack.Screen
-				name="Login"
-				component={Login}
-				options={{ title: 'Login', headerLeft: null }}
-			/>
-			<Stack.Screen
-				name="BuildingInfo"
-				component={BuildingInfo}
-				options={{ title: 'Building Info' }}
-			/>
+const ProfileNavigator = () => {
+  const { post, setPost } = useAppContext()
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name='ProfileGeneral'
+        component={ProfileGeneral}
+        options={{ title: 'Profile', headerShown: false }}
+      />
+      <Stack.Screen
+        name='EditProfile'
+        component={EditProfile}
+        options={{
+          header: props => (
+            <CustomSubStackScreenHeader {...props} title={'Edit profile'} />
+          )
+        }}
+      />
+      <Stack.Screen
+        name='MyPosts'
+        component={MyPosts}
+        options={{
+          header: props => (
+            <CustomSubStackScreenHeader {...props} title={'My posts'} />
+          )
+        }}
+      />
+      <Stack.Screen
+        name='IndividualPosts'
+        component={IndividualPosts}
+        options={{
+          header: props => (
+            <CustomSubStackScreenHeader
+              {...props}
+              title={`${post.userFirstName}'s Post`}
+            />
+          )
+        }}
+      />
+      <Stack.Screen
+        name='Login'
+        component={Login}
+        options={{ title: 'Login', headerLeft: null }}
+      />
+      <Stack.Screen
+        name='BuildingInfo'
+        component={BuildingInfo}
+        options={{
+          header: props => (
+            <CustomSubStackScreenHeader {...props} title={'Building Info'} />
+          )
+        }}
+      />
 
 
 			{/* Admin Pages */}
 
-			<Stack.Screen
-				name="AdminPanel"
-				component={AdminPanel}
-				options={{ title: 'Admin Panel' }}
-			/>
-			<Stack.Screen
-				name="ApproveUsers"
-				component={ApproveUsers}
-				options={{ title: 'Approve Users' }}
-			/>
-			<Stack.Screen
-				name="ManageUsers"
-				component={ManageUsers}
-				options={{ title: 'Manage Users' }}
-			/>
-			<Stack.Screen
-				name="SendNotice"
-				component={SendNotice}
-				options={{ title: 'Send Notice' }}
-			/>
-			<Stack.Screen
-				name="ManageBuildings"
-				component={ManageBuildings}
-				options={{ title: 'Manage Buildings' }}
-			/>
-		</Stack.Navigator>
-	);
-};
+      <Stack.Screen
+        name='AdminPanel'
+        component={AdminPanel}
+        options={{
+          header: props => (
+            <CustomSubStackScreenHeader {...props} title={'Admin panel'} />
+          )
+        }}
+      />
+      <Stack.Screen
+        name='ApproveUsers'
+        component={ApproveUsers}
+        options={{ title: 'Approve Users' }}
+      />
+      <Stack.Screen
+        name='ConfirmUser'
+        component={ConfirmUser}
+        options={{ title: 'Confirm User' }}
+      />
+      <Stack.Screen
+        name='ManageUsers'
+        component={ManageUsers}
+        options={{ title: 'Manage Users' }}
+      />
+      <Stack.Screen
+        name='ManageUser'
+        component={ManageUser}
+        options={{ title: 'Manage User' }}
+      />
+      <Stack.Screen
+        name='CreateAnnouncement'
+        component={CreateAnnouncement}
+        options={{ title: 'Create Announcement' }}
+      />
+      <Stack.Screen
+        name='SendNotice'
+        component={SendNotice}
+        options={{ title: 'Send Notice' }}
+      />
+      <Stack.Screen
+        name='ManageBuildings'
+        component={ManageBuildings}
+        options={{ title: 'Manage Buildings' }}
+      />
+      <Stack.Screen
+        name='ManageBuilding'
+        component={ManageBuilding}
+        options={{ title: 'Manage Building' }}
+      />
+    </Stack.Navigator>
+  )
+}
 
 const NotificationNavigator = () => {
-	const { post, setPost } = useAppContext();
+  const { post, setPost } = useAppContext()
 
-	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="Notifications"
-				component={Notifications}
-				options={{ headerShown: false }}
-			/>
-			<Stack.Screen
-				name="IndividualPosts"
-				component={IndividualPosts}
-				options={{ title: `${post.userFirstName}'s Post` }}
-			/>
-			<Stack.Screen
-				name="BuildingInfo"
-				component={BuildingInfo}
-				options={{
-					header: (props) => (
-						<CustomSubStackScreenHeader {...props} title={'Building Info'} />
-					),
-				}}
-			/>
-		</Stack.Navigator>
-	);
-};
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name='Notifications'
+        component={Notifications}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='IndividualPosts'
+        component={IndividualPosts}
+        options={{
+          header: props => (
+            <CustomSubStackScreenHeader
+              {...props}
+              title={`${post.userFirstName}'s Post`}
+            />
+          )
+        }}
+      />
+      <Stack.Screen
+        name='BuildingInfo'
+        component={BuildingInfo}
+        options={{
+          header: props => (
+            <CustomSubStackScreenHeader {...props} title={'Building Info'} />
+          )
+        }}
+      />
+    </Stack.Navigator>
+  )
+}
 
-export { NewsfeedNavigator, ProfileNavigator, NotificationNavigator };
+export { NewsfeedNavigator, ProfileNavigator, NotificationNavigator }

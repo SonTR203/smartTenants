@@ -17,6 +17,8 @@ import { db } from '../../firebase-config'
 import ModalPicker from '../../components/ModalBuildingPicker'
 import { useTheme } from '../../ThemeContext'
 import { StatusBar } from 'expo-status-bar'
+import { Dimensions } from 'react-native'
+const windowHeight = Dimensions.get('window').height
 
 const auth = getAuth()
 
@@ -73,7 +75,7 @@ const Signup = ({ navigation }) => {
     return true
   }
 
-  async function createNewUser(user) {
+  async function createNewUser (user) {
     try {
       await addDoc(collection(db, 'Users'), {
         userID: user.uid,
@@ -96,12 +98,12 @@ const Signup = ({ navigation }) => {
     }
   }
 
-  function signUpSuccess(user) {
+  function signUpSuccess (user) {
     createNewUser(user)
     navigation.navigate('AccountApprovalPending')
   }
 
-  function signUpFailure() {
+  function signUpFailure () {
     alert('You have not been signed up, please try again')
   }
 
@@ -120,155 +122,159 @@ const Signup = ({ navigation }) => {
   }
 
   return (
-    // <SafeAreaView edges={['bottom']}>
-    <ScrollView style={theme.pageContainer}>
-      <View style={theme.globalMargins}>
-        <StatusBar style='auto' />
-        <KeyboardAvoidingView behavior='padding'>
-          <View id='signupInputs'>
-            <View id='firstNameInput'>
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Name
-              </Text>
-              <TextInput
-                placeholder='John'
-                value={firstName}
-                onChangeText={text => setFirstName(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
-            <View id='lastNameInput'>
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Last Name
-              </Text>
-              <TextInput
-                placeholder='Doe'
-                value={lastName}
-                onChangeText={text => setLastName(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
+    <SafeAreaView
+      edges={['bottom']}
+      style={{ backgroundColor: 'white', minHeight: windowHeight }}
+    >
+      <ScrollView style={theme.pageContainer}>
+        <View style={theme.globalMargins}>
+          <StatusBar style='auto' />
+          <KeyboardAvoidingView behavior='padding'>
+            <View id='signupInputs'>
+              <View id='firstNameInput'>
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Name
+                </Text>
+                <TextInput
+                  placeholder='John'
+                  value={firstName}
+                  onChangeText={text => setFirstName(text)}
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+              </View>
+              <View id='lastNameInput'>
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Last Name
+                </Text>
+                <TextInput
+                  placeholder='Doe'
+                  value={lastName}
+                  onChangeText={text => setLastName(text)}
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+              </View>
 
-            <View id='unitNumberInput'>
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Unit number
-              </Text>
-              <TextInput
-                placeholder='1234'
-                value={unitNumber}
-                onChangeText={text => setUnitNumber(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
+              <View id='unitNumberInput'>
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Unit number
+                </Text>
+                <TextInput
+                  placeholder='1234'
+                  value={unitNumber}
+                  onChangeText={text => setUnitNumber(text)}
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+              </View>
 
-            <View id='buildingSelect'>
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Building Address
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  changeModalVisibility(true)
+              <View id='buildingSelect'>
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Building Address
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    changeModalVisibility(true)
+                  }}
+                >
+                  <Text
+                    style={[
+                      theme.textInput,
+                      styleVariables.fontSizes.body,
+                      { color: '#00000080' }
+                    ]}
+                  >
+                    {buildingAddress}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <Modal
+                id='buildingSelectModal'
+                transparent={true}
+                animationType='fade'
+                visible={modalVisible}
+                nRequestClose={() => {
+                  changeModalVisibility(false)
                 }}
               >
+                <ModalPicker
+                  changeModalVisibility={changeModalVisibility}
+                  setData={setData}
+                />
+              </Modal>
+
+              <View id='emailInput'>
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Email
+                </Text>
+                <TextInput
+                  placeholder='name@company.com'
+                  value={email}
+                  onChangeText={text => {
+                    setEmail(text)
+                  }}
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+              </View>
+              <View id='passwordInput'>
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Password
+                </Text>
+                <TextInput
+                  placeholder='Minimum 8 characters'
+                  value={password}
+                  onChangeText={text => setPassword(text)}
+                  secureTextEntry
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+              </View>
+            </View>
+
+            <View id='signupCTA'>
+              <View style={[theme.primaryButton, { marginTop: 17 }]}>
+                <TouchableOpacity onPress={handleSignup}>
+                  <Text
+                    style={[
+                      theme.primaryButtonText,
+                      styleVariables.fontSizes.bodyBold
+                    ]}
+                  >
+                    Signup
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <Text style={{ textAlign: 'center' }}>
+                <Text style={styleVariables.fontSizes.callout}>
+                  Upon sign up, you accept our terms & conditions outlined in
+                  our
+                </Text>
                 <Text
                   style={[
-                    theme.textInput,
-                    styleVariables.fontSizes.body,
-                    { color: '#00000080' }
+                    styleVariables.fontSizes.calloutBold,
+                    { color: styleVariables.colors.primary }
                   ]}
                 >
-                  {buildingAddress}
+                  {' '}
+                  terms of use and privacy policy
                 </Text>
-              </TouchableOpacity>
-            </View>
-
-            <Modal
-              id='buildingSelectModal'
-              transparent={true}
-              animationType='fade'
-              visible={modalVisible}
-              nRequestClose={() => {
-                changeModalVisibility(false)
-              }}
-            >
-              <ModalPicker
-                changeModalVisibility={changeModalVisibility}
-                setData={setData}
-              />
-            </Modal>
-
-            <View id='emailInput'>
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Email
               </Text>
-              <TextInput
-                placeholder='name@company.com'
-                value={email}
-                onChangeText={text => {
-                  setEmail(text)
-                }}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
             </View>
-            <View id='passwordInput'>
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Password
-              </Text>
-              <TextInput
-                placeholder='Minimum 8 characters'
-                value={password}
-                onChangeText={text => setPassword(text)}
-                secureTextEntry
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
-          </View>
-
-          <View id='signupCTA'>
-            <View style={[theme.primaryButton, { marginTop: 17 }]}>
-              <TouchableOpacity onPress={handleSignup}>
-                <Text
-                  style={[
-                    theme.primaryButtonText,
-                    styleVariables.fontSizes.bodyBold
-                  ]}
-                >
-                  Signup
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <Text style={{ textAlign: 'center' }}>
-              <Text style={styleVariables.fontSizes.callout}>
-                Upon sign up, you accept our terms & conditions outlined in our
-              </Text>
-              <Text
-                style={[
-                  styleVariables.fontSizes.calloutBold,
-                  { color: styleVariables.colors.primary }
-                ]}
-              >
-                {' '}
-                terms of use and privacy policy
-              </Text>
-            </Text>
-          </View>
-        </KeyboardAvoidingView>
-      </View>
-    </ScrollView>
-    // </SafeAreaView>
+          </KeyboardAvoidingView>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 

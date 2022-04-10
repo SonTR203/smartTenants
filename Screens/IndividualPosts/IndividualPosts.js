@@ -228,7 +228,7 @@ const IndividualPosts = ({ route, navigation }) => {
 function ListHeader ({ post, peoplePerson, theme, styleVariables }) {
 
   return (
-    <View id='userPost' style={theme.cardContainer}>
+    <View id='userPost' style={[theme.cardContainer, { marginTop: 27 }]}>
       {/* postOwnerInfo */}
       <View
         className='postOwnerInfo'

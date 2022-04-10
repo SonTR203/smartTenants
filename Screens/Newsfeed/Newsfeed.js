@@ -5,7 +5,6 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
-
   Image
 } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -20,14 +19,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Dimensions } from 'react-native'
 import _ from 'lodash'
 const windowWidth = Dimensions.get('window').width
-import Notifications from '../Notifications/Notifications';
+import Notifications from '../Notifications/Notifications'
+import { Platform } from 'expo-modules-core'
 
 let globalPost
 let setGlobalPost
 let globalCurrentUser
 
 const Newsfeed = ({ navigation }) => {
-
   const [theme, styleVariables] = useTheme()
   const [posts, setPosts] = useState([])
   const { post, setPost } = useAppContext()
@@ -77,7 +76,6 @@ const Newsfeed = ({ navigation }) => {
               />
             }
             data={posts}
-
             keyExtractor={item => item.id}
             renderItem={({ item }) => (
               <Post
@@ -110,7 +108,6 @@ const Newsfeed = ({ navigation }) => {
 
         {/* FAB */}
         <Pressable
-
           id='FAB'
           onPress={() => {
             navigation.navigate('CreatePost')
@@ -155,7 +152,6 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
       'Newsfeed',
       `${posts.id}`,
       'peopleWhoLiked'
-
     )
 
     const data = await getDocs(likesColReference)
@@ -171,7 +167,6 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
       'Newsfeed',
       `${posts.id}`,
       'peopleWhoCommented'
-
     )
     const data = await getDocs(likesColReference)
     setNumberOfComments(data.docs.length)
@@ -225,18 +220,18 @@ function Post ({ posts, navigation, theme, styleVariables, windowWidth }) {
       let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0)
       let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0)
 
-      if (timeDifferenceMinutes < 59) {
+      if (timeDifferenceMinutes <= 59) {
         setTimeSincePost(`${timeDifferenceMinutes} minutes ago`)
-      } else if (timeDifferenceMinutes > 59 && timeDifferenceHours < 23) {
+      } else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
         setTimeSincePost(`${timeDifferenceHours} hours ago`)
       } else if (
-        timeDifferenceDays < 6 &&
+        timeDifferenceDays <= 6 &&
         timeDifferenceMinutes > 59 &&
         timeDifferenceHours > 23
       ) {
         setTimeSincePost(`${timeDifferenceDays} days ago`)
       } else if (
-        timeDifferenceWeeks < 10 &&
+        timeDifferenceWeeks <= 10 &&
         timeDifferenceDays > 6 &&
         timeDifferenceMinutes > 59 &&
         timeDifferenceHours > 23
@@ -415,7 +410,7 @@ function ListHeader ({ navigation, styleVariables, theme }) {
         >
           Newsfeed
         </Text>
-        {/* buildingInfo */}
+
         <Pressable
           id='buildingInfo'
           onPress={() => {
@@ -434,7 +429,7 @@ function ListHeader ({ navigation, styleVariables, theme }) {
               { color: styleVariables.colors.white }
             ]}
           >
-            Building Info
+            {globalCurrentUser.buildingAddress}
           </Text>
           <MaterialCommunityIcons
             name='chevron-right'
@@ -446,7 +441,13 @@ function ListHeader ({ navigation, styleVariables, theme }) {
 
       {/* announcements */}
       <View style={theme.firstListItem}>
-        <View id='topCard' style={theme.topCard}>
+        <View
+          id='topCard'
+          style={[
+            theme.topCard,
+            { elevation: Platform.OS === 'android' ? 0 : 20 }
+          ]}
+        >
           <Pressable
             id='announcements'
             onPress={() => {
