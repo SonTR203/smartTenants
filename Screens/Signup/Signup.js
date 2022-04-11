@@ -23,7 +23,7 @@ const windowHeight = Dimensions.get('window').height;
 const auth = getAuth();
 
 /* New users sign up screen. Users get authorized by Firebase then
- * and admin approve their request before they are allowed to the 
+ * an admin approve their request before they are allowed to the 
 * home screen (Newsfeed) */
 const Signup = ({ navigation }) => {
   const [theme, styleVariables] = useTheme();
