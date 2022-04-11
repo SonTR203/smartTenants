@@ -1,14 +1,14 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
 import React, { useState } from 'react';
 import {
-	StyleSheet,
-	View,
-	Text,
-	SafeAreaView,
-	KeyboardAvoidingView,
-	TextInput,
-	TouchableOpacity,
-	Modal,
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  TextInput,
+  TouchableOpacity,
+  Modal,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -23,30 +23,30 @@ const windowHeight = Dimensions.get('window').height;
 const auth = getAuth();
 
 /* New users sign up screen. Users get authorized by Firebase then
- * and admin approve their request before they are allowe to the 
+ * and admin approve their request before they are allowed to the 
 * home screen (Newsfeed) */
 const Signup = ({ navigation }) => {
-	const [theme, styleVariables] = useTheme();
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [firstName, setFirstName] = useState('');
-	const [lastName, setLastName] = useState('');
-	const [buildingAddress, setBuildingAddress] = useState('Select building');
-	const [buildingID, setBuildingID] = useState('');
-	const [modalVisible, setModalVisible] = useState(false);
-	const [unitNumber, setUnitNumber] = useState('');
-	const [isAdmin, setIsAdmin] = useState(false);
-	const [tenantAuthorized, setTenantAuthorized] = useState(false);
-	const [myMarketplacePosts, setMyMarketplacePosts] = useState([]);
-	const [myPosts, setMyPosts] = useState([]);
-	const [visibleNotices, setVisibileNotices] = useState([]);
-	const [visibleAnnouncements, setVisibleAnnouncements] = useState([]);
-	const defaultProfileImage =
-		'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=38f0365b-cb36-4964-ab8c-7a600073c244';
+  const [theme, styleVariables] = useTheme();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [buildingAddress, setBuildingAddress] = useState('Select building');
+  const [buildingID, setBuildingID] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [unitNumber, setUnitNumber] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [tenantAuthorized, setTenantAuthorized] = useState(false);
+  const [myMarketplacePosts, setMyMarketplacePosts] = useState([]);
+  const [myPosts, setMyPosts] = useState([]);
+  const [visibleNotices, setVisibileNotices] = useState([]);
+  const [visibleAnnouncements, setVisibleAnnouncements] = useState([]);
+  const defaultProfileImage =
+    'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=38f0365b-cb36-4964-ab8c-7a600073c244';
 
-	const changeModalVisibility = (bool) => {
-		setModalVisible(bool);
-	};
+  const changeModalVisibility = (bool) => {
+    setModalVisible(bool);
+  };
 
   /*This function extracts user's building address data and formats it for the user's object building address property 
   *inputs:building object 
@@ -111,7 +111,7 @@ const Signup = ({ navigation }) => {
     }
   }
 
-  /* This function is called upon successful authorization of the *user, and once the new user object is created and store on *Firebase navigates the user to the AccountApprovalPending 
+  /* This function is called upon successful authorization of the *user, and once the new user object is created and stored on *Firebase navigates the user to the AccountApprovalPending 
   *inputs: user object
   *outputs: none
   */
@@ -134,180 +134,180 @@ const Signup = ({ navigation }) => {
   const handleSignup = () => {
     if (!checkTextInputs()) return
 
-		createUserWithEmailAndPassword(auth, email, password)
-			.then((userCredentials) => {
-				const user = userCredentials.user;
-				signUpSuccess(user);
-			})
-			.catch((error) => {
-				alert(error.message);
-				signUpFailure();
-			});
-	};
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        signUpSuccess(user);
+      })
+      .catch((error) => {
+        alert(error.message);
+        signUpFailure();
+      });
+  };
 
-	return (
-		<SafeAreaView
-			edges={['bottom']}
-			style={{ backgroundColor: 'white', minHeight: windowHeight }}
-		>
-			<ScrollView style={theme.pageContainer}>
-				<View style={theme.globalMargins}>
-					<StatusBar style="auto" />
-					<KeyboardAvoidingView behavior="padding">
-						<View id="signupInputs">
-							<View id="firstNameInput">
-								<Text
-									style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-								>
-									Name
-								</Text>
-								<TextInput
-									placeholder="John"
-									value={firstName}
-									onChangeText={(text) => setFirstName(text)}
-									style={[theme.textInput, styleVariables.fontSizes.body]}
-								/>
-							</View>
-							<View id="lastNameInput">
-								<Text
-									style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-								>
-									Last Name
-								</Text>
-								<TextInput
-									placeholder="Doe"
-									value={lastName}
-									onChangeText={(text) => setLastName(text)}
-									style={[theme.textInput, styleVariables.fontSizes.body]}
-								/>
-							</View>
+  return (
+    <SafeAreaView
+      edges={['bottom']}
+      style={{ backgroundColor: 'white', minHeight: windowHeight }}
+    >
+      <ScrollView style={theme.pageContainer}>
+        <View style={theme.globalMargins}>
+          <StatusBar style="auto" />
+          <KeyboardAvoidingView behavior="padding">
+            <View id="signupInputs">
+              <View id="firstNameInput">
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Name
+                </Text>
+                <TextInput
+                  placeholder="John"
+                  value={firstName}
+                  onChangeText={(text) => setFirstName(text)}
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+              </View>
+              <View id="lastNameInput">
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Last Name
+                </Text>
+                <TextInput
+                  placeholder="Doe"
+                  value={lastName}
+                  onChangeText={(text) => setLastName(text)}
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+              </View>
 
-							<View id="unitNumberInput">
-								<Text
-									style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-								>
-									Unit number
-								</Text>
-								<TextInput
-									placeholder="1234"
-									value={unitNumber}
-									onChangeText={(text) => setUnitNumber(text)}
-									style={[theme.textInput, styleVariables.fontSizes.body]}
-								/>
-							</View>
+              <View id="unitNumberInput">
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Unit number
+                </Text>
+                <TextInput
+                  placeholder="1234"
+                  value={unitNumber}
+                  onChangeText={(text) => setUnitNumber(text)}
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+              </View>
 
-							<View id="buildingSelect">
-								<Text
-									style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-								>
-									Building Address
-								</Text>
-								<TouchableOpacity
-									onPress={() => {
-										changeModalVisibility(true);
-									}}
-								>
-									<Text
-										style={[
-											theme.textInput,
-											styleVariables.fontSizes.body,
-											{ color: '#00000080' },
-										]}
-									>
-										{buildingAddress}
-									</Text>
-								</TouchableOpacity>
-							</View>
+              <View id="buildingSelect">
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Building Address
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    changeModalVisibility(true);
+                  }}
+                >
+                  <Text
+                    style={[
+                      theme.textInput,
+                      styleVariables.fontSizes.body,
+                      { color: '#00000080' },
+                    ]}
+                  >
+                    {buildingAddress}
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
-							<Modal
-								id="buildingSelectModal"
-								transparent={true}
-								animationType="fade"
-								visible={modalVisible}
-								nRequestClose={() => {
-									changeModalVisibility(false);
-								}}
-							>
-								<ModalPicker
-									changeModalVisibility={changeModalVisibility}
-									setData={setData}
-								/>
-							</Modal>
+              <Modal
+                id="buildingSelectModal"
+                transparent={true}
+                animationType="fade"
+                visible={modalVisible}
+                nRequestClose={() => {
+                  changeModalVisibility(false);
+                }}
+              >
+                <ModalPicker
+                  changeModalVisibility={changeModalVisibility}
+                  setData={setData}
+                />
+              </Modal>
 
-							<View id="emailInput">
-								<Text
-									style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-								>
-									Email
-								</Text>
-								<TextInput
-									placeholder="name@company.com"
-									value={email}
-									onChangeText={(text) => {
-										setEmail(text);
-									}}
-									style={[theme.textInput, styleVariables.fontSizes.body]}
-								/>
-							</View>
-							<View id="passwordInput">
-								<Text
-									style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-								>
-									Password
-								</Text>
-								<TextInput
-									placeholder="Minimum 8 characters"
-									value={password}
-									onChangeText={(text) => setPassword(text)}
-									secureTextEntry
-									style={[theme.textInput, styleVariables.fontSizes.body]}
-								/>
-							</View>
-						</View>
+              <View id="emailInput">
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Email
+                </Text>
+                <TextInput
+                  placeholder="name@company.com"
+                  value={email}
+                  onChangeText={(text) => {
+                    setEmail(text);
+                  }}
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+              </View>
+              <View id="passwordInput">
+                <Text
+                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                >
+                  Password
+                </Text>
+                <TextInput
+                  placeholder="Minimum 8 characters"
+                  value={password}
+                  onChangeText={(text) => setPassword(text)}
+                  secureTextEntry
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+              </View>
+            </View>
 
-						<View id="signupCTA">
-							<View style={[theme.primaryButton, { marginTop: 17 }]}>
-								<TouchableOpacity onPress={handleSignup}>
-									<Text
-										style={[
-											theme.primaryButtonText,
-											styleVariables.fontSizes.bodyBold,
-										]}
-									>
-										Signup
-									</Text>
-								</TouchableOpacity>
-							</View>
+            <View id="signupCTA">
+              <View style={[theme.primaryButton, { marginTop: 17 }]}>
+                <TouchableOpacity onPress={handleSignup}>
+                  <Text
+                    style={[
+                      theme.primaryButtonText,
+                      styleVariables.fontSizes.bodyBold,
+                    ]}
+                  >
+                    Signup
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
-							<Text style={{ textAlign: 'center' }}>
-								<Text style={styleVariables.fontSizes.callout}>
-									Upon sign up, you accept our terms & conditions outlined in
-									our
-								</Text>
-								<Text
-									style={[
-										styleVariables.fontSizes.calloutBold,
-										{ color: styleVariables.colors.primary },
-									]}
-								>
-									{' '}
-									terms of use and privacy policy
-								</Text>
-							</Text>
-						</View>
-					</KeyboardAvoidingView>
-				</View>
-			</ScrollView>
-		</SafeAreaView>
-	);
+              <Text style={{ textAlign: 'center' }}>
+                <Text style={styleVariables.fontSizes.callout}>
+                  Upon sign up, you accept our terms & conditions outlined in
+                  our
+                </Text>
+                <Text
+                  style={[
+                    styleVariables.fontSizes.calloutBold,
+                    { color: styleVariables.colors.primary },
+                  ]}
+                >
+                  {' '}
+                  terms of use and privacy policy
+                </Text>
+              </Text>
+            </View>
+          </KeyboardAvoidingView>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default Signup;
