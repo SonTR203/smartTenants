@@ -1,11 +1,9 @@
 // Modal: https://reactnative.dev/docs/modal
 
 import {
-	StyleSheet,
 	Text,
 	View,
 	TextInput,
-	Button,
 	Image,
 	TouchableOpacity,
 	Modal,
@@ -17,7 +15,6 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase-config';
 import { addDoc, collection, getDocs } from '@firebase/firestore';
-import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useTheme } from '../../ThemeContext';
@@ -78,12 +75,6 @@ const CreatePost = ({ navigation }) => {
 
 	async function createMyPostsCollection(specificPostID, imgUrl) {
 		const colRef = collection(db, `Users/${currentUser.userDocId}/myPosts`);
-		let data = await getDocs(colRef);
-		if (data.docs.length > 0) {
-			console.log('myPosts Subcollection already exists');
-		} else {
-			console.log('creating myPosts doc');
-		}
 
 		await addDoc(colRef, {
 			postContent: postContent,
@@ -127,7 +118,6 @@ const CreatePost = ({ navigation }) => {
 		setIsloading(true);
 
 		if (image == null) {
-			console.log('no image found');
 			PostContent();
 		} else {
 			try {
@@ -142,7 +132,6 @@ const CreatePost = ({ navigation }) => {
 	}
 
 	async function uploadImage() {
-		console.log('UPLOADING');
 		const blob = await new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
 			xhr.onload = function () {
@@ -160,7 +149,6 @@ const CreatePost = ({ navigation }) => {
 		const fileRef = ref(getStorage(), imageName);
 		await uploadBytes(fileRef, blob);
 
-		// blob.close();
 		let imgUrl = await getDownloadURL(fileRef);
 
 		//set postContent to ImageURl hook in future, for some reason ImageUrl keeps coming back empty
@@ -192,7 +180,6 @@ const CreatePost = ({ navigation }) => {
 					<View style={theme.container}>
 						<View style={theme.modalView}>
 							<Text
-								//had to do style inline, theme provider caused an issue on post
 								style={{
 									fontSize: 17,
 									fontFamily: 'Roboto_400Regular',
@@ -214,13 +201,16 @@ const CreatePost = ({ navigation }) => {
 							setPostContent(text);
 						}}
 						placeholder="280 characters maximum"
-						// numberOfLines={5}
 						multiline={true}
 						maxLength={280}
 						style={[
 							theme.textInput,
 							styleVariables.fontSizes.body,
-							{ minHeight: 68 + 44, paddingTop: 22 },
+							{
+								minHeight: 68 + 44,
+								paddingTop: 22,
+								paddingBottom: Platform.OS === 'android' ? 70 : 0,
+							},
 						]}
 					></TextInput>
 				</View>
@@ -251,7 +241,7 @@ const CreatePost = ({ navigation }) => {
 				<TouchableOpacity
 					id="submitPostButton"
 					onPress={handleSelectedImage}
-					style={theme.primaryButton}
+					style={[theme.primaryButton, { marginBottom: 130 }]}
 				>
 					<Text
 						style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}

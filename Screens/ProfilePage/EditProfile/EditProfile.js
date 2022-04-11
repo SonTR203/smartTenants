@@ -1,7 +1,6 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
 import React, { useEffect, useState } from 'react';
 import {
-	StyleSheet,
 	View,
 	Text,
 	SafeAreaView,
@@ -12,20 +11,15 @@ import {
 	Modal,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { collection, doc, updateDoc } from '@firebase/firestore';
+import { doc, updateDoc } from '@firebase/firestore';
 import { db } from '../../../firebase-config';
 import ModalPicker from '../../../components/ModalBuildingPicker';
 import { useTheme } from '../../../ThemeContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useAppContext } from '../../../Context/AppContext';
-import { async } from '@firebase/util';
-import { ProfileNavigator } from '../../customNavigator';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
-
-const auth = getAuth();
 
 const EditProfile = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
@@ -61,7 +55,6 @@ const EditProfile = ({ navigation }) => {
 			alert('Please Enter Your last Name');
 			return false;
 		} else if (!unitNumber.trim() || isNaN(unitNumber.trim())) {
-			console.log(+unitNumber);
 			alert('Please Enter a Unit Number');
 			return false;
 		} else if (!buildingID.trim()) {
@@ -74,12 +67,7 @@ const EditProfile = ({ navigation }) => {
 		return true;
 	};
 
-	function goToProfile(navigation) {
-		navigation.navigate('ProfileGeneral');
-	}
-
 	async function saveProfileInfo() {
-		console.log('save profile info');
 		const userDocRef = doc(db, 'Users', currentUser.userDocId);
 
 		if (checkTextInputs) {
@@ -154,9 +142,7 @@ const EditProfile = ({ navigation }) => {
 			alert('no image found');
 		} else {
 			try {
-				console.log('trying to upload');
 				if (!newImage.cancelled) {
-					console.log('image hasnt been cancelled');
 					await uploadImage(newImage);
 				}
 			} catch (e) {
@@ -167,7 +153,6 @@ const EditProfile = ({ navigation }) => {
 	}
 
 	async function uploadImage(newImage) {
-		console.log('UPLOADING');
 		const blob = await new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
 			xhr.onload = function () {
@@ -185,7 +170,6 @@ const EditProfile = ({ navigation }) => {
 		const fileRef = ref(getStorage(), imageName);
 		await uploadBytes(fileRef, blob);
 
-		// blob.close();
 		let imgUrl = await getDownloadURL(fileRef);
 
 		setUserProfileImage(imgUrl);
@@ -225,7 +209,6 @@ const EditProfile = ({ navigation }) => {
 	}
 
 	function changeProfilePic() {
-		// alert('Not yet implemented.');
 		pickImage();
 	}
 
@@ -387,10 +370,6 @@ const EditProfile = ({ navigation }) => {
 								placeholder="*******"
 								secureTextEntry={true}
 								//================================= will need to research how to do this SAFELY ==========================
-								// defaultValue={currentUser.ema}
-								// onChangeText={text => {
-								//   setEmail(text)
-								// }}
 								style={[theme.textInput, styleVariables.fontSizes.body]}
 							/>
 						</View>

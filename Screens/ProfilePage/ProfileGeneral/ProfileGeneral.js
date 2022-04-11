@@ -16,17 +16,16 @@ import { FontAwesome5 } from '@expo/vector-icons/';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';
 import * as Updates from 'expo-updates';
+import { Platform } from 'expo-modules-core';
 
 const ProfileGeneral = ({ navigation }) => {
 	const [theme, styleVariables] = useTheme();
 
 	const { currentUser, setCurrentUser } = useAppContext();
-	console.log(currentUser.userProfileImage);
 
 	const auth = getAuth();
 
 	const logUserOut = async () => {
-		console.log('logging user out');
 		auth.signOut().then(console.log('Tenant signed out'));
 		await Updates.reloadAsync();
 	};
@@ -85,7 +84,12 @@ const ProfileGeneral = ({ navigation }) => {
 
 					{/* userHeader */}
 					<View style={theme.firstListItem}>
-						<View style={theme.topCard}>
+						<View
+							style={[
+								theme.topCard,
+								{ elevation: Platform.OS === 'android' ? 0 : 20 },
+							]}
+						>
 							<View
 								style={{
 									display: 'flex',

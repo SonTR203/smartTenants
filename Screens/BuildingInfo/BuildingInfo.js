@@ -3,7 +3,6 @@ import {
 	StyleSheet,
 	View,
 	Text,
-	SafeAreaView,
 	ScrollView,
 	Image,
 	Linking,
@@ -22,20 +21,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 // Create collection Reference
 const colRef = collection(db, 'Buildings');
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	scrollView: {
-		backgroundColor: 'pink',
-		marginHorizontal: 20,
-	},
-	title: {
-		fontSize: 20,
-		alignSelf: 'center',
-	},
-});
-
 const BuildingInfo = () => {
 	const { currentUser, setCurrentUser } = useAppContext();
 
@@ -52,14 +37,11 @@ const BuildingInfo = () => {
 				currentBuildingInLoop = currentBuildingInLoop.replace(/\s/g, '');
 				if (currentBuildingInLoop == userBuilding) {
 					setBuilding({ ...doc.data(), id: doc.id });
-				} else {
-					console.log('No building found');
 				}
 			});
 		});
 	}, []);
 
-	let image = building.buildingImage;
 	let address = building.buildingAddress;
 	let location = building.buildingLocation;
 	let name = building.fullName;

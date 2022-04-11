@@ -1,12 +1,4 @@
-import {
-	View,
-	Text,
-	Pressable,
-	FlatList,
-	ActivityIndicator,
-	RefreshControl,
-	Image,
-} from 'react-native';
+import { View, Text, Pressable, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { React, useState, useEffect } from 'react';
@@ -25,6 +17,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 import _ from 'lodash';
+import { Platform } from 'expo-modules-core';
 
 let setNotifPost;
 let globalCurrentUser;
@@ -33,7 +26,6 @@ let globalWasSeenVar;
 
 const Notifications = ({ navigation }) => {
 	const [theme, styleVariables] = useTheme();
-	console.log('IN NOTIFICATIONS');
 	const { currentUser, setCurrentUser } = useAppContext();
 	const { post, setPost } = useAppContext();
 	const [notifications, setNotifications] = useState([]);
@@ -42,6 +34,7 @@ const Notifications = ({ navigation }) => {
 	globalWasSeenVar = wasSeenVar;
 	setNotifPost = setPost;
 	globalCurrentUser = currentUser;
+
 	const colReference = collection(
 		db,
 		'Users',
@@ -112,8 +105,9 @@ function NotificationItem({
 	navigation,
 	theme,
 	styleVariables,
-	windowWidth,
 }) {
+	const [timeSincePost, setTimeSincePost] = useState('');
+
 	notifications = {
 		content: notifications.content.stringValue,
 		id: notifications.id,
@@ -122,6 +116,10 @@ function NotificationItem({
 		userID: notifications.userID.stringValue,
 		wasSeen: notifications.wasSeen.booleanValue,
 	};
+
+	useEffect(() => {
+		setTime();
+	}, []);
 
 	const setWasSeenToTrue = async (notifications) => {
 		const colRef = doc(
@@ -137,6 +135,58 @@ function NotificationItem({
 			globalSetWasSeenVar(!globalWasSeenVar);
 		});
 	};
+
+	const setTime = () => {
+		let time = notifications.timestamp;
+		if (time != undefined) {
+			let timePosted = time.integerValue;
+			let currentTime = Date.now();
+			let timeDifferenceMinutes = ((currentTime - timePosted) / 60000).toFixed(
+				0
+			);
+			let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0);
+			let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0);
+			let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
+
+			if (timeDifferenceMinutes <= 59) {
+				setTimeSincePost(
+					timeDifferenceMinutes > 1
+						? `${timeDifferenceMinutes} minutes ago`
+						: `${timeDifferenceMinutes} minute ago`
+				);
+			} else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
+				setTimeSincePost(
+					timeDifferenceHours > 1
+						? `${timeDifferenceHours} hours ago`
+						: `${timeDifferenceHours} hour ago`
+				);
+			} else if (
+				timeDifferenceDays <= 6 &&
+				timeDifferenceMinutes > 59 &&
+				timeDifferenceHours > 23
+			) {
+				setTimeSincePost(
+					timeDifferenceDays > 1
+						? `${timeDifferenceDays} days ago`
+						: `${timeDifferenceDays} day ago`
+				);
+			} else if (
+				timeDifferenceWeeks <= 10 &&
+				timeDifferenceDays > 6 &&
+				timeDifferenceMinutes > 59 &&
+				timeDifferenceHours > 23
+			) {
+				setTimeSincePost(
+					timeDifferenceWeeks > 1
+						? `${timeDifferenceWeeks} weeks ago`
+						: `${timeDifferenceWeeks} week ago`
+				);
+			} else {
+				setTimeSincePost('10+ weeks ago');
+			}
+		}
+	};
+
 	return (
 		<TouchableOpacity
 			// navigate to post page on press
@@ -158,7 +208,7 @@ function NotificationItem({
 					}}
 				>
 					<Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
-						27 minutes ago
+						{timeSincePost}
 					</Text>
 					{notifications.wasSeen == false && (
 						<View
@@ -173,7 +223,6 @@ function NotificationItem({
 						></View>
 					)}
 				</View>
-				{console.log(notifications)}
 				<Text>{notifications.content}</Text>
 			</View>
 
@@ -270,7 +319,13 @@ function ListHeader({ navigation, styleVariables, theme }) {
 
 			{/* announcements */}
 			<View style={theme.firstListItem}>
-				<View id="topCard" style={theme.topCard}>
+				<View
+					id="topCard"
+					style={[
+						theme.topCard,
+						{ elevation: Platform.OS === 'android' ? 0 : 20 },
+					]}
+				>
 					<Pressable
 						id="announcements"
 						onPress={() => {
@@ -361,7 +416,7 @@ function ListHeader({ navigation, styleVariables, theme }) {
 	);
 }
 
-function ListFooter({ theme, styleVariables }) {
+function ListFooter({ styleVariables }) {
 	return (
 		<View
 			style={{

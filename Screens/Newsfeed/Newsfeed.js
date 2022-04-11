@@ -10,8 +10,8 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect, useContext } from 'react';
-import { collection, getDocs, deleteDoc, addDoc } from '@firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs, addDoc } from '@firebase/firestore';
 import { db } from '../../firebase-config';
 import { useAppContext } from '../../Context/AppContext';
 import { useTheme } from '../../ThemeContext';
@@ -19,7 +19,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 import _ from 'lodash';
 const windowWidth = Dimensions.get('window').width;
-import Notifications from '../Notifications/Notifications';
+import { Platform } from 'expo-modules-core';
 
 let globalPost;
 let setGlobalPost;
@@ -409,6 +409,7 @@ function ListHeader({ navigation, styleVariables, theme }) {
 				>
 					Newsfeed
 				</Text>
+
 				<Pressable
 					id="buildingInfo"
 					onPress={() => {
@@ -439,7 +440,13 @@ function ListHeader({ navigation, styleVariables, theme }) {
 
 			{/* announcements */}
 			<View style={theme.firstListItem}>
-				<View id="topCard" style={theme.topCard}>
+				<View
+					id="topCard"
+					style={[
+						theme.topCard,
+						{ elevation: Platform.OS === 'android' ? 0 : 20 },
+					]}
+				>
 					<Pressable
 						id="announcements"
 						onPress={() => {
@@ -479,7 +486,7 @@ function ListHeader({ navigation, styleVariables, theme }) {
 	);
 }
 
-function ListFooter({ theme, styleVariables }) {
+function ListFooter({ styleVariables }) {
 	return (
 		<View
 			style={{
