@@ -18,6 +18,8 @@ import { getAuth } from 'firebase/auth';
 import * as Updates from 'expo-updates';
 import { Platform } from 'expo-modules-core';
 
+/* This is the profile/my info screen for the logged-in user. It *allows the user to navigate to various screens to edit his profile, *see his posts, visit Smart Living residential portal, navigate to *building info screen, admin panel screen if the user is an admin, *as well as logout of the application if the user wishes to
+*/
 const ProfileGeneral = ({ navigation }) => {
 	const [theme, styleVariables] = useTheme();
 
@@ -25,6 +27,10 @@ const ProfileGeneral = ({ navigation }) => {
 
 	const auth = getAuth();
 
+	/*This function logs out the user of both the Firebase database cloud service and the user application
+	*input: none
+	*output: none
+	*/
 	const logUserOut = async () => {
 		auth.signOut().then(console.log('Tenant signed out'));
 		await Updates.reloadAsync();
@@ -56,6 +62,7 @@ const ProfileGeneral = ({ navigation }) => {
 						{/* buildingInfo */}
 						<Pressable
 							id="buildingInfo"
+							/* Navigates to the Building info screen */
 							onPress={() => {
 								navigation.navigate('BuildingInfo');
 							}}
@@ -140,6 +147,8 @@ const ProfileGeneral = ({ navigation }) => {
 									{currentUser.isAdmin ? (
 										<TouchableOpacity
 											id="goToAdmin"
+											/* Navigate to the admin *panel screen if the *user is an admin
+											*/
 											onPress={() => {
 												navigation.navigate('AdminPanel');
 											}}
@@ -207,6 +216,7 @@ const ProfileGeneral = ({ navigation }) => {
 					{/* editInfo */}
 					<TouchableOpacity
 						id="editInfo"
+						/*Navigate to the Edit Profile screen */
 						onPress={() => {
 							navigation.navigate('EditProfile');
 						}}
@@ -237,6 +247,7 @@ const ProfileGeneral = ({ navigation }) => {
 					{/* residentPortal */}
 					<TouchableOpacity
 						id="residentPortal"
+						/*Link to the Smart Living residential portal*/
 						onPress={() => {
 							Linking.openURL(
 								'https://smartlivinggroup.securecafe.com/residentservices/apartmentsforrent/userlogin.aspx'
@@ -269,6 +280,7 @@ const ProfileGeneral = ({ navigation }) => {
 					{/* myPosts */}
 					<TouchableOpacity
 						id="myPosts"
+						/*Navigate to the My Posts screen*/
 						onPress={() => navigation.navigate('MyPosts')}
 						style={theme.cardButton}
 					>
@@ -297,6 +309,7 @@ const ProfileGeneral = ({ navigation }) => {
 					{/* logOut */}
 					<TouchableOpacity
 						id="logOut"
+						/*Logs out the user*/
 						onPress={logUserOut}
 						style={theme.cardButton}
 					>
@@ -348,6 +361,7 @@ const ProfileGeneral = ({ navigation }) => {
 							Created by{' '}
 						</Text>
 						<TouchableOpacity
+							/*Link to the application's developer team on google search*/
 							onPress={() =>
 								Linking.openURL(
 									`https://google.com/search?q=intelidev+solutions`
