@@ -141,7 +141,6 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 		userFirstName: posts.userFirstName.stringValue,
 		userLastName: posts.userLastName.stringValue,
 		numberOfLikes: numberOfLikes,
-
 		timestamp: posts.timestamp,
 	};
 
