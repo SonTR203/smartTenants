@@ -20,6 +20,9 @@ const IndividualPosts = ({ navigation }) => {
 	const [peoplePerson, setPeoplePerson] = useState('people');
 	const [comments, setComments] = useState([]);
 
+
+console.log(post);
+
 	// Get all Comments
 	const getComments = () => {
 		const colRef = collection(db, `/Newsfeed/${post.id}/peopleWhoCommented`);
@@ -37,6 +40,7 @@ const IndividualPosts = ({ navigation }) => {
 		});
 	};
 
+	
 	// execute function
 	useEffect(() => {
 		getComments();
@@ -206,6 +210,48 @@ const IndividualPosts = ({ navigation }) => {
 
 //* userPost */
 function ListHeader({ post, peoplePerson, theme, styleVariables }) {
+
+	const [timeSincePost, setTimeSincePost] = useState('');
+
+	const setTime = () => {
+		let time = post.timestamp;
+		if (time != undefined) {
+			let timePosted = time.integerValue;
+			let currentTime = Date.now();
+			let timeDifferenceMinutes = ((currentTime - timePosted) / 60000).toFixed(
+				0
+			);
+			let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0);
+			let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0);
+			let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
+
+			if (timeDifferenceMinutes <= 59) {
+				setTimeSincePost(`${timeDifferenceMinutes} minutes ago`);
+			} else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
+				setTimeSincePost(`${timeDifferenceHours} hours ago`);
+			} else if (
+				timeDifferenceDays <= 6 &&
+				timeDifferenceMinutes > 59 &&
+				timeDifferenceHours > 23
+			) {
+				setTimeSincePost(`${timeDifferenceDays} days ago`);
+			} else if (
+				timeDifferenceWeeks <= 10 &&
+				timeDifferenceDays > 6 &&
+				timeDifferenceMinutes > 59 &&
+				timeDifferenceHours > 23
+			) {
+				setTimeSincePost(timeDifferenceWeeks, ' weeks ago');
+			} else {
+				setTimeSincePost('10+ weeks ago');
+			}
+		}
+	};
+
+ useEffect(() => {
+	 		setTime();
+ }, []);
+
 	return (
 		<View id="userPost" style={[theme.cardContainer, { marginTop: 27 }]}>
 			{/* postOwnerInfo */}
@@ -248,7 +294,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 						{ color: styleVariables.colors.black, opacity: 0.66 },
 					]}
 				>
-					{'2h'}
+				{timeSincePost}
 				</Text>
 			</View>
 
