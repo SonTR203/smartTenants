@@ -11,7 +11,13 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, addDoc } from '@firebase/firestore';
+import {
+	collection,
+	getDocs,
+	addDoc,
+	deleteDoc,
+	doc,
+} from '@firebase/firestore';
 import { db } from '../../firebase-config';
 import { useAppContext } from '../../Context/AppContext';
 import { useTheme } from '../../ThemeContext';
@@ -129,6 +135,9 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 	const [numberOfLikes, setNumberOfLikes] = useState(0);
 	const [numberOfComments, setNumberOfComments] = useState(0);
 	const [timeSincePost, setTimeSincePost] = useState('');
+	const [userLiked, setUserLiked] = useState(false);
+	let peopleWhoLiked = [];
+	let peopleWhoLikedDocIds = [];
 
 	posts = {
 		comments: posts.comments.arrayValue,
@@ -154,10 +163,28 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 
 		const data = await getDocs(likesColReference);
 		setNumberOfLikes(data.docs.length);
+		data.docs.map((item) => {
+			peopleWhoLiked.push(item._document.data.value.mapValue.fields.userID);
+		});
+
+		//set new array of the docoument ids for all likes
+		data.docs.map((item) => {
+			peopleWhoLikedDocIds.push(item._document.key.path.segments[8]);
+		});
+
 		setTime();
 		getComments();
+		setHeartsToGreen();
 	};
 	getLikes();
+
+	const setHeartsToGreen = () => {
+		peopleWhoLiked.map((item) => {
+			if (item.stringValue == globalCurrentUser.userDocId) {
+				setUserLiked(true);
+			}
+		});
+	};
 
 	const getComments = async () => {
 		const likesColReference = collection(
@@ -171,6 +198,25 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 	};
 
 	const likePost = async () => {
+		// ================ checking is current user liked post ====================
+		if (peopleWhoLiked != 0) {
+			peopleWhoLiked.map((item) => {
+				if (item.stringValue == globalCurrentUser.userDocId) {
+					console.log('USER ALREADY LIKED');
+					setUserLiked(false);
+
+					removeLike();
+				} else {
+					createLikeInDB();
+				}
+			});
+		} else {
+			createLikeInDB();
+		}
+	};
+
+	const createLikeInDB = async () => {
+		console.log('CREATING NEW LIKE');
 		const notificationColRef = collection(
 			db,
 			`Users/${posts.userID}/Notifications`
@@ -180,6 +226,7 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 			`Newsfeed/${posts.id}/peopleWhoLiked`
 		);
 
+		//=========== adding like notification============
 		try {
 			await addDoc(notificationColRef, {
 				content: `${globalCurrentUser.firstName} ${globalCurrentUser.lastName} liked your post.`,
@@ -194,16 +241,35 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 			console.log(error);
 		}
 
+		// =============== adding user to peopleWhoLiked subcollection =============
 		try {
 			await addDoc(peopleWhoLikedColRef, {
 				firstName: globalCurrentUser.firstName,
 				lastName: globalCurrentUser.lastName,
 				postID: posts.id,
-				userID: posts.userID,
+				userID: globalCurrentUser.userDocId,
+			}).then(() => {
+				setUserLiked(true);
 			});
 		} catch (error) {
 			console.log(error);
 		}
+	};
+
+	const removeLike = async () => {
+		//remove user from list of peopleWhoLiked
+		peopleWhoLikedDocIds.map(async (item) => {
+			if ((item.userID = globalCurrentUser.userDocId)) {
+				const singleDoc = doc(
+					db,
+					`Newsfeed/${posts.id}/peopleWhoLiked/${item}`
+				);
+
+				await deleteDoc(singleDoc);
+			}
+		});
+
+		//delete notification that they liked
 	};
 
 	const setTime = () => {
@@ -341,12 +407,22 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 						flexDirection: 'row',
 					}}
 				>
-					<MaterialCommunityIcons
-						name="heart-outline"
-						size={24}
-						color={styleVariables.colors.black}
-						style={{ marginRight: 8 }}
-					/>
+					{userLiked && (
+						<MaterialCommunityIcons
+							name="heart"
+							size={24}
+							color="#0AA74C"
+							style={{ marginRight: 8 }}
+						/>
+					)}
+					{!userLiked && (
+						<MaterialCommunityIcons
+							name="heart-outline"
+							size={24}
+							color={styleVariables.colors.black}
+							style={{ marginRight: 8 }}
+						/>
+					)}
 					<Text
 						style={[
 							styleVariables.fontSizes.body,
