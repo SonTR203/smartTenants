@@ -137,7 +137,7 @@ function NotificationItem({
 
   useEffect(() => {
     setTime();
-  }, []);
+  }, [notifications]);
 
   const setWasSeenToTrue = async (notifications) => {
     const colRef = doc(
