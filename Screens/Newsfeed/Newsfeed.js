@@ -202,7 +202,6 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 		if (peopleWhoLiked != 0) {
 			peopleWhoLiked.map((item) => {
 				if (item.stringValue == globalCurrentUser.userDocId) {
-					console.log('USER ALREADY LIKED');
 					setUserLiked(false);
 
 					removeLike();
@@ -216,7 +215,6 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 	};
 
 	const createLikeInDB = async () => {
-		console.log('CREATING NEW LIKE');
 		const notificationColRef = collection(
 			db,
 			`Users/${posts.userID}/Notifications`
@@ -264,12 +262,14 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 					db,
 					`Newsfeed/${posts.id}/peopleWhoLiked/${item}`
 				);
-
 				await deleteDoc(singleDoc);
 			}
 		});
 
-		//delete notification that they liked
+		//========= TODO:  delete notification from other user that there was a like =========
+
+		// const notificationSingleDoc = doc(db, `Users/${posts.userID}/Notifications/${}`)
+		// await deleteDoc(notificationSingleDoc);
 	};
 
 	const setTime = () => {
