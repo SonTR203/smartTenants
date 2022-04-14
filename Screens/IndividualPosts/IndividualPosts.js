@@ -333,7 +333,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 							}}
 							style={{
 								width: width - 68,
-								height: (width - 68) * 0.66,
+								height: (width - 68),
 								borderRadius: 16,
 								marginBottom: 17,
 							}}
