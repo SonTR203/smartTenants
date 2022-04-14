@@ -30,9 +30,8 @@ const CreatePost = ({ navigation }) => {
 	const [isLoading, setIsloading] = useState(false);
 	const { currentUser, setCurrentUser } = useAppContext();
 
-	let imageName = `newsfeedImages/${currentUser.userDocId}/${
-		Date.now() + Math.floor(Math.random() * 20)
-	}.jpg`;
+	let imageName = `newsfeedImages/${currentUser.userDocId}/${Date.now() + Math.floor(Math.random() * 20)
+		}.jpg`;
 
 	useEffect(() => {
 		(async () => {
@@ -103,7 +102,7 @@ const CreatePost = ({ navigation }) => {
 
 	const pickImage = async () => {
 		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.All,
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			allowsEditing: true,
 			aspect: [4, 3],
 			quality: 1,
