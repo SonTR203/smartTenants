@@ -15,13 +15,8 @@ const IndividualPosts = ({ navigation }) => {
 	const [theme, styleVariables] = useTheme();
 	const { post } = useAppContext();
 	const { currentUser } = useAppContext();
-
-	const [textInputValue, setTextInputValue] = useState('');
 	const [peoplePerson, setPeoplePerson] = useState('people');
 	const [comments, setComments] = useState([]);
-
-
-	console.log(post);
 
 	// Get all Comments
 	const getComments = () => {
@@ -40,7 +35,6 @@ const IndividualPosts = ({ navigation }) => {
 		});
 	};
 
-
 	// execute function
 	useEffect(() => {
 		getComments();
@@ -52,9 +46,7 @@ const IndividualPosts = ({ navigation }) => {
 		}
 	}, [post.id]);
 
-	{
-		/* postComments */
-	}
+
 	const Comment = ({ item, theme, styleVariables, width }) => {
 		return (
 			<View
@@ -122,37 +114,6 @@ const IndividualPosts = ({ navigation }) => {
 		);
 	};
 
-	// Post Comments
-	const postComment = () => {
-		if (textInputValue != '') {
-			const peopleWhoCommentedColRef = collection(
-				db,
-				`Newsfeed/${post.id}/peopleWhoCommented`
-			);
-
-			try {
-				addDoc(peopleWhoCommentedColRef, {
-					firstName: currentUser.firstName,
-					lastName: currentUser.lastName,
-					userProfileImage: currentUser.userProfileImage,
-					commentContent: textInputValue,
-					postUserID: post.userID,
-					timestamp: Date.now(),
-				}).then(() => {
-					getComments();
-					setTextInputValue('');
-				});
-
-				addCommentNotifications(post);
-			} catch (err) {
-				console.log(err);
-			}
-			navigation.push('Newsfeed');
-		} else {
-			alert('No Comment to Post');
-		}
-	};
-
 	function addCommentNotifications(post) {
 		const peopleWhoCommentedColRef = collection(
 			db,
@@ -197,12 +158,12 @@ const IndividualPosts = ({ navigation }) => {
 					)}
 					ListFooterComponent={
 						<ListFooter
+							currentUser={currentUser}
 							post={post}
-							textInputValue={textInputValue}
-							setTextInputValue={setTextInputValue}
-							postComment={postComment}
 							theme={theme}
 							styleVariables={styleVariables}
+							getComments={getComments}
+							addCommentNotifications={addCommentNotifications}
 						/>
 					}
 				/>
@@ -213,7 +174,6 @@ const IndividualPosts = ({ navigation }) => {
 
 //* userPost */
 function ListHeader({ post, peoplePerson, theme, styleVariables }) {
-
 	const [timeSincePost, setTimeSincePost] = useState('');
 
 	const setTime = () => {
@@ -390,13 +350,45 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 
 //* addComment */
 function ListFooter({
-	post,
-	textInputValue,
-	setTextInputValue,
-	postComment,
 	theme,
 	styleVariables,
+	post,
+	currentUser,
+	getComments,
+	addCommentNotifications,
 }) {
+	const [textInputValue, setTextInputValue] = useState('');
+
+	// Post Comments
+	const postComment = () => {
+		if (textInputValue != '') {
+			const peopleWhoCommentedColRef = collection(
+				db,
+				`Newsfeed/${post.id}/peopleWhoCommented`
+			);
+
+			try {
+				addDoc(peopleWhoCommentedColRef, {
+					firstName: currentUser.firstName,
+					lastName: currentUser.lastName,
+					userProfileImage: currentUser.userProfileImage,
+					commentContent: textInputValue,
+					postUserID: post.userID,
+					timestamp: Date.now(),
+				}).then(() => {
+					setTextInputValue('');
+					getComments();
+				});
+
+				addCommentNotifications(post);
+			} catch (err) {
+				console.log(err);
+			}
+		} else {
+			alert('No Comment to Post');
+		}
+	};
+
 	return (
 		<View style={[theme.globalMargins, { paddingTop: 34, paddingBottom: 136 }]}>
 			<View>

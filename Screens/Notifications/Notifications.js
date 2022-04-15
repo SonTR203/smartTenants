@@ -1,4 +1,11 @@
-import { View, Text, Pressable, FlatList } from 'react-native';
+import {
+	View,
+	Text,
+	Pressable,
+	FlatList,
+	ActivityIndicator,
+	RefreshControl,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { React, useState, useEffect } from 'react';
@@ -30,6 +37,7 @@ const Notifications = ({ navigation }) => {
 	const { post, setPost } = useAppContext();
 	const [notifications, setNotifications] = useState([]);
 	const [wasSeenVar, setWasSeenVar] = useState();
+	const [refreshing, setRefreshing] = useState(true);
 	globalSetWasSeenVar = setWasSeenVar;
 	globalWasSeenVar = wasSeenVar;
 	setNotifPost = setPost;
@@ -60,6 +68,7 @@ const Notifications = ({ navigation }) => {
 		).reverse();
 
 		setNotifications(sortedListOfNotifications);
+		setRefreshing(false);
 	};
 
 	return (
@@ -70,6 +79,7 @@ const Notifications = ({ navigation }) => {
 			<StatusBar style="auto" />
 
 			<View style={theme.pageContainer}>
+				{refreshing ? <ActivityIndicator /> : null}
 				{notifications.length > 0 && (
 					<FlatList
 						ListHeaderComponent={
@@ -89,6 +99,14 @@ const Notifications = ({ navigation }) => {
 								windowWidth={windowWidth}
 							/>
 						)}
+						refreshControl={
+							<RefreshControl
+								onRefresh={getNotifications}
+								refreshing={refreshing}
+								style={{ backgroundColor: styleVariables.colors.primary }}
+								tintColor={'white'}
+							/>
+						}
 						keyExtractor={(item) => item.id}
 						ListFooterComponent={
 							<ListFooter styleVariables={styleVariables} theme={theme} />
@@ -119,7 +137,7 @@ function NotificationItem({
 
 	useEffect(() => {
 		setTime();
-	}, []);
+	}, [notifications]);
 
 	const setWasSeenToTrue = async (notifications) => {
 		const colRef = doc(
@@ -187,53 +205,97 @@ function NotificationItem({
 		}
 	};
 
-	return (
-		<TouchableOpacity
-			// navigate to post page on press
-			id="post"
-			onPress={() => {
-				navigation.navigate('IndividualPosts');
-				viewNotificationPost(notifications);
-				setWasSeenToTrue(notifications);
-			}}
-			style={[theme.cardButton, { marginTop: 0, marginBottom: 17 }]}
-		>
-			<View id="notificationContent">
-				<View
-					id="timeStamp-readState"
-					style={{
-						flexDirection: 'row',
-						alignItems: 'center',
-						marginBottom: 8,
-					}}
-				>
-					<Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
-						{timeSincePost}
-					</Text>
-					{notifications.wasSeen == false && (
-						<View
-							id="notificationIndice"
-							style={{
-								height: 8,
-								width: 8,
-								backgroundColor: styleVariables.colors.primary,
-								borderRadius: 99,
-								marginLeft: 8,
-							}}
-						></View>
-					)}
+	if (notifications.postID == '') {
+		return (
+			<View
+				id="post"
+				style={[theme.cardButton, { marginTop: 0, marginBottom: 17 }]}
+			>
+				<View id="notificationContent">
+					<View
+						id="timeStamp-readState"
+						style={{
+							flexDirection: 'row',
+							alignItems: 'center',
+							marginBottom: 8,
+						}}
+					>
+						<Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
+							{timeSincePost}
+						</Text>
+						{notifications.wasSeen == false && (
+							<View
+								id="notificationIndice"
+								style={{
+									height: 8,
+									width: 8,
+									backgroundColor: styleVariables.colors.primary,
+									borderRadius: 99,
+									marginLeft: 8,
+								}}
+							></View>
+						)}
+					</View>
+					<Text>{notifications.content}</Text>
 				</View>
-				<Text>{notifications.content}</Text>
-			</View>
 
-			<MaterialCommunityIcons
-				name="chevron-right"
-				size={24}
-				color={styleVariables.colors.primary}
-				style={{ opacity: 0.33 }}
-			/>
-		</TouchableOpacity>
-	);
+				<MaterialCommunityIcons
+					name="chevron-right"
+					size={24}
+					color={styleVariables.colors.primary}
+					style={{ opacity: 0.33 }}
+				/>
+			</View>
+		);
+	} else {
+		return (
+			<TouchableOpacity
+				// navigate to post page on press
+				id="post"
+				onPress={() => {
+					navigation.navigate('IndividualPosts');
+					viewNotificationPost(notifications);
+					setWasSeenToTrue(notifications);
+				}}
+				style={[theme.cardButton, { marginTop: 0, marginBottom: 17 }]}
+			>
+				<View id="notificationContent">
+					<View
+						id="timeStamp-readState"
+						style={{
+							flexDirection: 'row',
+							alignItems: 'center',
+							marginBottom: 8,
+						}}
+					>
+						<Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
+							{timeSincePost}
+						</Text>
+						{notifications.wasSeen == false && (
+							<View
+								id="notificationIndice"
+								style={{
+									height: 8,
+									width: 8,
+									backgroundColor: styleVariables.colors.primary,
+									borderRadius: 99,
+									marginLeft: 8,
+								}}
+							></View>
+						)}
+					</View>
+					<Text>{notifications.content}</Text>
+				</View>
+
+				<MaterialCommunityIcons
+					name="chevron-right"
+					size={24}
+					color={styleVariables.colors.primary}
+					style={{ opacity: 0.33 }}
+				/>
+			</TouchableOpacity>
+		);
+	}
 }
 
 async function viewNotificationPost(notifications) {

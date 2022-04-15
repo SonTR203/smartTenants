@@ -110,7 +110,7 @@ const Login = ({ navigation }) => {
 				postID: '',
 				userID: loggedInUser.userDocId,
 				wasSeen: true,
-				timestamp: 0,
+				timestamp: Date.now(),
 			});
 		}
 	};
