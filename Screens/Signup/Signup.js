@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
   StyleSheet,
   View,
@@ -8,50 +8,51 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
-  Modal,
-} from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection } from '@firebase/firestore';
-import { db } from '../../firebase-config';
-import ModalPicker from '../../components/ModalBuildingPicker';
-import { useTheme } from '../../ThemeContext';
-import { StatusBar } from 'expo-status-bar';
-import { Dimensions } from 'react-native';
-const windowHeight = Dimensions.get('window').height;
+  Modal
+} from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { addDoc, collection } from '@firebase/firestore'
+import { db } from '../../firebase-config'
+import ModalPicker from '../../components/ModalBuildingPicker'
+import { useTheme } from '../../ThemeContext'
+import { StatusBar } from 'expo-status-bar'
+import { Dimensions } from 'react-native'
+const windowHeight = Dimensions.get('window').height
 
-const auth = getAuth();
+const auth = getAuth()
 
 /* New users sign up screen. Users get authorized by Firebase then
  * an admin approve their request before they are allowed to the
  * home screen (Newsfeed) */
 const Signup = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [buildingAddress, setBuildingAddress] = useState('Select building');
-  const [buildingID, setBuildingID] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [unitNumber, setUnitNumber] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [tenantAuthorized, setTenantAuthorized] = useState(false);
-  const [myMarketplacePosts, setMyMarketplacePosts] = useState([]);
-  const [myPosts, setMyPosts] = useState([]);
-  const [visibleNotices, setVisibileNotices] = useState([]);
-  const [visibleAnnouncements, setVisibleAnnouncements] = useState([]);
+  const [theme, styleVariables] = useTheme()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [buildingAddress, setBuildingAddress] = useState('Select building')
+  const [buildingID, setBuildingID] = useState('')
+  const [modalVisible, setModalVisible] = useState(false)
+  const [unitNumber, setUnitNumber] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [tenantAuthorized, setTenantAuthorized] = useState(false)
+  const [myMarketplacePosts, setMyMarketplacePosts] = useState([])
+  const [myPosts, setMyPosts] = useState([])
+  const [visibleNotices, setVisibileNotices] = useState([])
+  const [visibleAnnouncements, setVisibleAnnouncements] = useState([])
   const defaultProfileImage =
-    'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=38f0365b-cb36-4964-ab8c-7a600073c244';
+    'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=38f0365b-cb36-4964-ab8c-7a600073c244'
 
-  const changeModalVisibility = (bool) => {
-    setModalVisible(bool);
-  };
+  const changeModalVisibility = bool => {
+    setModalVisible(bool)
+  }
 
   /*This function extracts user's building address data and formats it for the user's object building address property
    *inputs:building object
    *outputs building ID property value
    */
+
   const setData = (building) => {
     building = building.buildingAddress.stringValue;
     setBuildingAddress(building);
@@ -88,6 +89,7 @@ const Signup = ({ navigation }) => {
   /* This function stores new user object on Firebase database *inputs: user object
    *outputs: a user object document stored on Firebase
    */
+
   async function createNewUser(user) {
     try {
       await addDoc(collection(db, 'Users'), {
@@ -115,6 +117,7 @@ const Signup = ({ navigation }) => {
    *inputs: user object
    *outputs: none
    */
+
   function signUpSuccess(user) {
     createNewUser(user);
     navigation.navigate('AccountApprovalPending');
@@ -123,6 +126,7 @@ const Signup = ({ navigation }) => {
   /* This function alerts the user to failure of the sign up process *inputs: none
    *outputs: alert message
    */
+
   function signUpFailure() {
     alert('You have not been signed up, please try again');
   }
@@ -135,15 +139,15 @@ const Signup = ({ navigation }) => {
     if (!checkTextInputs()) return;
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        signUpSuccess(user);
+      .then(userCredentials => {
+        const user = userCredentials.user
+        signUpSuccess(user)
       })
-      .catch((error) => {
-        alert(error.message);
-        signUpFailure();
-      });
-  };
+      .catch(error => {
+        alert(error.message)
+        signUpFailure()
+      })
+  }
 
   return (
     <SafeAreaView
@@ -159,12 +163,12 @@ const Signup = ({ navigation }) => {
                 <Text
                   style={[theme.textInputLabel, styleVariables.fontSizes.body]}
                 >
-                  Name
+                  First name
                 </Text>
                 <TextInput
                   placeholder='John'
                   value={firstName}
-                  onChangeText={(text) => setFirstName(text)}
+                  onChangeText={text => setFirstName(text)}
                   style={[theme.textInput, styleVariables.fontSizes.body]}
                 />
               </View>
@@ -177,7 +181,7 @@ const Signup = ({ navigation }) => {
                 <TextInput
                   placeholder='Doe'
                   value={lastName}
-                  onChangeText={(text) => setLastName(text)}
+                  onChangeText={text => setLastName(text)}
                   style={[theme.textInput, styleVariables.fontSizes.body]}
                 />
               </View>
@@ -191,7 +195,7 @@ const Signup = ({ navigation }) => {
                 <TextInput
                   placeholder='1234'
                   value={unitNumber}
-                  onChangeText={(text) => setUnitNumber(text)}
+                  onChangeText={text => setUnitNumber(text)}
                   style={[theme.textInput, styleVariables.fontSizes.body]}
                 />
               </View>
@@ -204,14 +208,14 @@ const Signup = ({ navigation }) => {
                 </Text>
                 <TouchableOpacity
                   onPress={() => {
-                    changeModalVisibility(true);
+                    changeModalVisibility(true)
                   }}
                 >
                   <Text
                     style={[
                       theme.textInput,
                       styleVariables.fontSizes.body,
-                      { color: '#00000080' },
+                      { color: '#00000080' }
                     ]}
                   >
                     {buildingAddress}
@@ -225,7 +229,7 @@ const Signup = ({ navigation }) => {
                 animationType='fade'
                 visible={modalVisible}
                 nRequestClose={() => {
-                  changeModalVisibility(false);
+                  changeModalVisibility(false)
                 }}
               >
                 <ModalPicker
@@ -243,8 +247,8 @@ const Signup = ({ navigation }) => {
                 <TextInput
                   placeholder='name@company.com'
                   value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
+                  onChangeText={text => {
+                    setEmail(text)
                   }}
                   style={[theme.textInput, styleVariables.fontSizes.body]}
                 />
@@ -258,7 +262,7 @@ const Signup = ({ navigation }) => {
                 <TextInput
                   placeholder='Minimum 8 characters'
                   value={password}
-                  onChangeText={(text) => setPassword(text)}
+                  onChangeText={text => setPassword(text)}
                   secureTextEntry
                   style={[theme.textInput, styleVariables.fontSizes.body]}
                 />
@@ -266,12 +270,13 @@ const Signup = ({ navigation }) => {
             </View>
 
             <View id='signupCTA'>
+
               <TouchableOpacity onPress={handleSignup}>
                 <View style={[theme.primaryButton, { marginTop: 17 }]}>
                   <Text
                     style={[
                       theme.primaryButtonText,
-                      styleVariables.fontSizes.bodyBold,
+                      styleVariables.fontSizes.bodyBold
                     ]}
                   >
                     Signup
@@ -287,7 +292,7 @@ const Signup = ({ navigation }) => {
                 <Text
                   style={[
                     styleVariables.fontSizes.calloutBold,
-                    { color: styleVariables.colors.primary },
+                    { color: styleVariables.colors.primary }
                   ]}
                 >
                   {' '}
@@ -299,15 +304,15 @@ const Signup = ({ navigation }) => {
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+    alignItems: 'center'
+  }
+})
 
-export default Signup;
+export default Signup
