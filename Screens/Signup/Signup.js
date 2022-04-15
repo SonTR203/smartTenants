@@ -52,43 +52,45 @@ const Signup = ({ navigation }) => {
    *inputs:building object
    *outputs building ID property value
    */
-  const setData = building => {
-    building = building.buildingAddress.stringValue
-    setBuildingAddress(building)
-    setBuildingID(building.replace(/\s/g, ''))
-  }
+
+  const setData = (building) => {
+    building = building.buildingAddress.stringValue;
+    setBuildingAddress(building);
+    setBuildingID(building.replace(/\s/g, ''));
+  };
 
   /* This function validates inputs of the sign up screen not to be  *empty and prompts the user to enter data into empty fields *inputs: none
    *outputs: alert messages for empty fields
    */
   const checkTextInputs = () => {
     if (!firstName.trim()) {
-      alert('Please Enter Your First Name')
-      return false
+      alert('Please Enter Your First Name');
+      return false;
     } else if (!lastName.trim()) {
-      alert('Please Enter Your last Name')
-      return false
+      alert('Please Enter Your last Name');
+      return false;
     } else if (!unitNumber.trim() || isNaN(unitNumber.trim())) {
-      console.log(+unitNumber)
-      alert('Please Enter a Unit Number')
-      return false
+      console.log(+unitNumber);
+      alert('Please Enter a Unit Number');
+      return false;
     } else if (!buildingID.trim()) {
-      alert('Please Enter Your Building Id')
-      return false
+      alert('Please Enter Your Building Id');
+      return false;
     } else if (!email) {
-      alert('Please Enter Your Email Address')
-      return false
+      alert('Please Enter Your Email Address');
+      return false;
     } else if (!password) {
-      alert('Please Enter Your Password, at least 6 characters')
-      return false
+      alert('Please Enter Your Password, at least 6 characters');
+      return false;
     }
-    return true
-  }
+    return true;
+  };
 
   /* This function stores new user object on Firebase database *inputs: user object
    *outputs: a user object document stored on Firebase
    */
-  async function createNewUser (user) {
+
+  async function createNewUser(user) {
     try {
       await addDoc(collection(db, 'Users'), {
         userID: user.uid,
@@ -104,10 +106,10 @@ const Signup = ({ navigation }) => {
         myPosts,
         visibleNotices,
         visibleAnnouncements,
-        userProfileImage: defaultProfileImage
-      })
+        userProfileImage: defaultProfileImage,
+      });
     } catch (error) {
-      alert(error)
+      alert(error);
     }
   }
 
@@ -115,16 +117,18 @@ const Signup = ({ navigation }) => {
    *inputs: user object
    *outputs: none
    */
-  function signUpSuccess (user) {
-    createNewUser(user)
-    navigation.navigate('AccountApprovalPending')
+
+  function signUpSuccess(user) {
+    createNewUser(user);
+    navigation.navigate('AccountApprovalPending');
   }
 
   /* This function alerts the user to failure of the sign up process *inputs: none
    *outputs: alert message
    */
-  function signUpFailure () {
-    alert('You have not been signed up, please try again')
+
+  function signUpFailure() {
+    alert('You have not been signed up, please try again');
   }
 
   /* This function handles the entire sign up process in conjunction *with the nested functions ensuring the user is registered on *Firebase
@@ -132,7 +136,7 @@ const Signup = ({ navigation }) => {
    *outputs: either undefined or an alert message depending on the *error
    */
   const handleSignup = () => {
-    if (!checkTextInputs()) return
+    if (!checkTextInputs()) return;
 
     createUserWithEmailAndPassword(auth, email, password)
       .then(userCredentials => {
@@ -266,8 +270,9 @@ const Signup = ({ navigation }) => {
             </View>
 
             <View id='signupCTA'>
-              <View style={[theme.primaryButton, { marginTop: 17 }]}>
-                <TouchableOpacity onPress={handleSignup}>
+
+              <TouchableOpacity onPress={handleSignup}>
+                <View style={[theme.primaryButton, { marginTop: 17 }]}>
                   <Text
                     style={[
                       theme.primaryButtonText,
@@ -276,8 +281,8 @@ const Signup = ({ navigation }) => {
                   >
                     Signup
                   </Text>
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
 
               <Text style={{ textAlign: 'center' }}>
                 <Text style={styleVariables.fontSizes.callout}>
