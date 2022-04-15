@@ -21,7 +21,7 @@ const IndividualPosts = ({ navigation }) => {
 	const [comments, setComments] = useState([]);
 
 
-console.log(post);
+	console.log(post);
 
 	// Get all Comments
 	const getComments = () => {
@@ -40,7 +40,7 @@ console.log(post);
 		});
 	};
 
-	
+
 	// execute function
 	useEffect(() => {
 		getComments();
@@ -61,7 +61,10 @@ console.log(post);
 				id="userComment"
 				style={[
 					theme.cardContainer,
-					{ shadowColor: styleVariables.colors.primary },
+					{
+						shadowColor: styleVariables.colors.primary,
+						marginTop: 12
+					},
 				]}
 			>
 				<View
@@ -248,12 +251,12 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 		}
 	};
 
- useEffect(() => {
-	 		setTime();
- }, []);
+	useEffect(() => {
+		setTime();
+	}, []);
 
 	return (
-		<View id="userPost" style={[theme.cardContainer, { marginTop: 27 }]}>
+		<View id="userPost" style={[theme.cardContainer, { marginTop: 27, flex: 2 }]}>
 			{/* postOwnerInfo */}
 			<View
 				className="postOwnerInfo"
@@ -262,7 +265,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 					flexDirection: 'row',
 					alignItems: 'center',
 					justifyContent: 'space-between',
-					width: '100%',
+					width: width - 68,
 					marginBottom: 12,
 				}}
 			>
@@ -281,7 +284,10 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 					<Text
 						style={[
 							styleVariables.fontSizes.bodyBold,
-							{ color: styleVariables.colors.black, marginLeft: 8 },
+							{
+								color: styleVariables.colors.black, marginLeft: 8,
+								marginRight: 8
+							},
 						]}
 					>
 						{post.userFirstName} {post.userLastName}
@@ -294,7 +300,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 						{ color: styleVariables.colors.black, opacity: 0.66 },
 					]}
 				>
-				{timeSincePost}
+					{timeSincePost}
 				</Text>
 			</View>
 
@@ -304,90 +310,81 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 				<Text
 					style={[
 						styleVariables.fontSizes.body,
-						{ color: styleVariables.colors.black, marginBottom: 17 },
+						{
+							color: styleVariables.colors.black, marginBottom: 17
+						},
 					]}
 				>
 					{post.postContent}
 				</Text>
 				{/* postImageContent */}
 				{post.image != 'no image posted' && (
-					<View
+					<Image
+						source={{
+							uri: `${post.image}`,
+						}}
 						style={{
 							width: width - 68,
-							height: (width - 68) * 0.66,
+							height: (width - 68),
 							borderRadius: 16,
 							marginBottom: 17,
-							shadowColor: styleVariables.colors.black,
-							shadowOffset: {
-								width: 0,
-								height: 8,
-							},
-							shadowOpacity: 0.28,
-							shadowRadius: 34,
-							elevation: 20,
 						}}
-					>
-						<Image
-							source={{
-								uri: `${post.image}`,
-							}}
-							style={{
-								width: width - 68,
-								height: (width - 68),
-								borderRadius: 16,
-								marginBottom: 17,
-							}}
-						/>
-					</View>
-				)}
-			</View>
+					/>
+					// 	1
 
-			{/* likeCount */}
-			<View
-				id="likeCount"
-				style={{
-					display: 'flex',
-					alignItems: 'center',
-					flexDirection: 'row',
-					marginBottom: 5,
-				}}
-			>
-				<TouchableOpacity
-					id="like"
-					onPress={() => {
-						alert('like post function');
-					}}
+				)}
+
+				{/* likeCount */}
+				<View
+					id="likeCount"
 					style={{
 						display: 'flex',
 						alignItems: 'center',
 						flexDirection: 'row',
+						marginBottom: 5,
 					}}
 				>
-					<MaterialCommunityIcons
-						name="heart-outline"
-						size={24}
-						color={styleVariables.colors.black}
-						style={{ marginRight: 8 }}
-					/>
-					<Text
-						style={[
-							styleVariables.fontSizes.callout,
-							{ color: styleVariables.colors.black },
-						]}
+					<TouchableOpacity
+						id="like"
+						onPress={() => {
+							alert('like post function');
+						}}
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							flexDirection: 'row',
+							flex: 1,
+						}}
 					>
-						Liked by
-					</Text>
-					<Text
-						style={[
-							styleVariables.fontSizes.calloutBold,
-							{ color: styleVariables.colors.black },
-						]}
-					>
-						{` ${post.numberOfLikes} ${peoplePerson}`}
-					</Text>
-				</TouchableOpacity>
+						<MaterialCommunityIcons
+							name="heart-outline"
+							size={24}
+							color={styleVariables.colors.black}
+							style={{ marginRight: 8 }}
+						/>
+						<Text
+							style={[
+								styleVariables.fontSizes.callout,
+								{ color: styleVariables.colors.black },
+							]}
+						>
+							Liked by
+						</Text>
+						<Text
+							style={[
+								styleVariables.fontSizes.calloutBold,
+								{
+									color: styleVariables.colors.black
+								},
+							]}
+						>
+							{` ${post.numberOfLikes} ${peoplePerson}`}
+						</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
-		</View>
+
+		</View >
 	);
 }
 
