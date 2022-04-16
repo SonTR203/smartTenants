@@ -1,57 +1,204 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	StyleSheet,
 	View,
 	Text,
-	SafeAreaView,
 	ScrollView,
 	Image,
+	Linking,
 } from 'react-native';
+import { useTheme } from '../../ThemeContext';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useAppContext } from '../../Context/AppContext';
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	scrollView: {
-		backgroundColor: 'pink',
-		marginHorizontal: 20,
-	},
-	title: {
-		fontSize: 20,
-		alignSelf: 'center',
-	},
-});
+// Import DB from Firestore config file
+import { db } from '../../firebase-config';
+
+// Import required functions
+import { collection, getDocs } from '@firebase/firestore';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+// Create collection Reference
+const colRef = collection(db, 'Buildings');
 
 const BuildingInfo = () => {
+	const { currentUser, setCurrentUser } = useAppContext();
+
+	const [theme, styleVariables] = useTheme();
+
+	const [building, setBuilding] = useState({});
+	let userBuilding = currentUser.buildingID;
+	useEffect(() => {
+		// Get collections data
+		getDocs(colRef).then((snapshot) => {
+			snapshot.docs.forEach((doc) => {
+				let currentBuildingInLoop =
+					doc._document.data.value.mapValue.fields.buildingAddress.stringValue;
+				currentBuildingInLoop = currentBuildingInLoop.replace(/\s/g, '');
+				if (currentBuildingInLoop == userBuilding) {
+					setBuilding({ ...doc.data(), id: doc.id });
+				}
+			});
+		});
+	}, []);
+
+	let address = building.buildingAddress;
+	let location = building.buildingLocation;
+	let name = building.fullName;
+	let email = building.email;
+	let phone = building.phone;
+
+	const makePhoneCall = () => {
+		if (Platform.OS !== 'android') {
+			phoneNumber = `telprompt:${phone}`;
+		} else {
+			phoneNumber = `tel:${phone}`;
+		}
+		Linking.canOpenURL(phoneNumber)
+			.then((supported) => {
+				if (!supported) {
+					Alert.alert('Phone number is not available');
+				} else {
+					return Linking.openURL(phoneNumber);
+				}
+			})
+			.catch((err) => console.log(err));
+	};
+
 	return (
-		<SafeAreaView style={styles.container}>
-			<ScrollView>
-				<View>
+		<ScrollView style={theme.pageContainer}>
+			<View style={theme.globalMargins}>
+				<View id="buildingInfoCard" style={theme.card}>
 					<Image
-						style={{ width: 300, height: 300, alignSelf: 'center' }}
-						source={{
-							uri: 'https://dummyimage.com/800',
-						}}
+						style={theme.buildingImagePreview}
+						source={require('../../assets/icon.png')}
 					/>
-					<Text style={styles.title}>123 Robinson Road</Text>
-					<Text style={styles.title}>Ottawa, Ontario, CA KIK 5T9</Text>
-				</View>
-				<View>
-					<Text style={styles.title}>CONTACTS</Text>
-					{/* Flatlist will go here */}
-					<View>
-						<Text style={styles.title}>Santino Santino</Text>
-						<Text style={styles.title}>santino@gmail.com</Text>
-						<Text style={styles.title}>6136136136</Text>
+
+					<View
+						id="buildingInfoAddress"
+						style={{
+							display: 'flex',
+							alignContent: 'center',
+							justifyContent: 'space-between',
+							flexDirection: 'row',
+							width: '100%',
+							marginTop: 17,
+						}}
+					>
+						<Text style={styleVariables.fontSizes.header}>{address}</Text>
+						<MaterialCommunityIcons
+							name="arrow-top-right"
+							size={24}
+							color={styleVariables.colors.primary}
+						/>
 					</View>
-					<View>
-						<Text style={styles.title}>Santino Santino</Text>
-						<Text style={styles.title}>santino@gmail.com</Text>
-						<Text style={styles.title}>6136136136</Text>
+
+					<View
+						id="buildingInfoLocation"
+						style={{
+							display: 'flex',
+							alignContent: 'center',
+							flexDirection: 'row',
+							width: '100%',
+							marginTop: 6,
+							marginBottom: 4,
+						}}
+					>
+						<MaterialCommunityIcons
+							name="map-marker-outline"
+							size={18}
+							color={styleVariables.colors.primary}
+							style={{ marginRight: 8 }}
+						/>
+						<Text
+							style={[
+								styleVariables.fontSizes.body,
+								{ color: styleVariables.colors.primary },
+							]}
+						>
+							{location}
+						</Text>
 					</View>
 				</View>
-			</ScrollView>
-		</SafeAreaView>
+
+				<View id="contacts" style={{ marginTop: 17, padding: 17 }}>
+					<Text
+						style={[
+							styleVariables.fontSizes.secondaryHeader,
+							{ marginBottom: 14 },
+						]}
+					>
+						Contacts
+					</Text>
+
+					<View>
+						<Text
+							style={[styleVariables.fontSizes.title, { marginBottom: 10 }]}
+						>
+							{name}
+						</Text>
+						<View
+							style={{
+								display: 'flex',
+								alignContent: 'center',
+								flexDirection: 'row',
+								width: '100%',
+								marginTop: 6,
+								marginBottom: 4,
+								opacity: 0.66,
+							}}
+						>
+							<MaterialCommunityIcons
+								name="email-outline"
+								size={18}
+								color={styleVariables.colors.primary}
+								style={{ marginRight: 8 }}
+							/>
+							<TouchableOpacity
+								onPress={() => Linking.openURL(`mailto:${email}`)}
+							>
+								<Text
+									style={[
+										styleVariables.fontSizes.body,
+										{ color: styleVariables.colors.primary },
+									]}
+								>
+									{email}
+								</Text>
+							</TouchableOpacity>
+						</View>
+						<View
+							style={{
+								display: 'flex',
+								alignContent: 'center',
+								flexDirection: 'row',
+								width: '100%',
+								marginTop: 6,
+								marginBottom: 4,
+								opacity: 0.66,
+							}}
+						>
+							<MaterialCommunityIcons
+								name="phone-outline"
+								size={18}
+								color={styleVariables.colors.primary}
+								style={{ marginRight: 8 }}
+							/>
+							<TouchableOpacity onPress={makePhoneCall}>
+								<Text
+									style={[
+										styleVariables.fontSizes.body,
+										{ color: styleVariables.colors.primary },
+									]}
+								>
+									{phone}
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				</View>
+			</View>
+		</ScrollView>
 	);
 };
 
