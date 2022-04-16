@@ -14,7 +14,7 @@
     <a href="https://drive.google.com/drive/folders/1jT5QRN7ePdPOhqojMYwYHIY1I8dzb37L?usp=sharing"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="">View Demo</a>
+    <a href="https://youtu.be/C53szQaV7Dg">View Demo</a>
     ·
     <a href="https://github.com/Team-4-InteliDev-Solutions/smartTenants/issues">Report Bug</a>
     ·
