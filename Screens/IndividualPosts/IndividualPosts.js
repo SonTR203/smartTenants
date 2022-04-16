@@ -17,6 +17,7 @@ const IndividualPosts = ({ navigation }) => {
 	const { currentUser } = useAppContext();
 	const [peoplePerson, setPeoplePerson] = useState('people');
 	const [comments, setComments] = useState([]);
+	const [timeSincePost, setTimeSincePost] = useState('');
 
 	// Get all Comments
 	const getComments = () => {
@@ -46,8 +47,41 @@ const IndividualPosts = ({ navigation }) => {
 		}
 	}, [post.id]);
 
-
 	const Comment = ({ item, theme, styleVariables, width }) => {
+		let timeSincePost;
+		let time = item.timestamp;
+		if (time != undefined) {
+			let timePosted = time;
+			let currentTime = Date.now();
+			let timeDifferenceMinutes = ((currentTime - timePosted) / 60000).toFixed(
+				0
+			);
+			let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0);
+			let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0);
+			let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
+
+			if (timeDifferenceMinutes <= 59) {
+				timeSincePost = `${timeDifferenceMinutes} minutes ago`;
+			} else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
+				timeSincePost = `${timeDifferenceHours} hours ago`;
+			} else if (
+				timeDifferenceDays <= 6 &&
+				timeDifferenceMinutes > 59 &&
+				timeDifferenceHours > 23
+			) {
+				timeSincePost = `${timeDifferenceDays} days ago`;
+			} else if (
+				timeDifferenceWeeks <= 10 &&
+				timeDifferenceDays > 6 &&
+				timeDifferenceMinutes > 59 &&
+				timeDifferenceHours > 23
+			) {
+				(timeSincePost = timeDifferenceWeeks), ' weeks ago';
+			} else {
+				timeSincePost = '10+ weeks ago';
+			}
+		}
+
 		return (
 			<View
 				id="userComment"
@@ -55,7 +89,7 @@ const IndividualPosts = ({ navigation }) => {
 					theme.cardContainer,
 					{
 						shadowColor: styleVariables.colors.primary,
-						marginTop: 12
+						marginTop: 12,
 					},
 				]}
 			>
@@ -96,7 +130,7 @@ const IndividualPosts = ({ navigation }) => {
 							{ color: styleVariables.colors.black, opacity: 0.66 },
 						]}
 					>
-						{'26m'}
+						{timeSincePost}
 					</Text>
 				</View>
 
@@ -216,7 +250,10 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 	}, []);
 
 	return (
-		<View id="userPost" style={[theme.cardContainer, { marginTop: 27, flex: 2 }]}>
+		<View
+			id="userPost"
+			style={[theme.cardContainer, { marginTop: 27, flex: 2 }]}
+		>
 			{/* postOwnerInfo */}
 			<View
 				className="postOwnerInfo"
@@ -245,8 +282,9 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 						style={[
 							styleVariables.fontSizes.bodyBold,
 							{
-								color: styleVariables.colors.black, marginLeft: 8,
-								marginRight: 8
+								color: styleVariables.colors.black,
+								marginLeft: 8,
+								marginRight: 8,
 							},
 						]}
 					>
@@ -271,7 +309,8 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 					style={[
 						styleVariables.fontSizes.body,
 						{
-							color: styleVariables.colors.black, marginBottom: 17
+							color: styleVariables.colors.black,
+							marginBottom: 17,
 						},
 					]}
 				>
@@ -285,13 +324,12 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 						}}
 						style={{
 							width: width - 68,
-							height: (width - 68),
+							height: width - 68,
 							borderRadius: 16,
 							marginBottom: 17,
 						}}
 					/>
 					// 	1
-
 				)}
 
 				{/* likeCount */}
@@ -334,7 +372,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 							style={[
 								styleVariables.fontSizes.calloutBold,
 								{
-									color: styleVariables.colors.black
+									color: styleVariables.colors.black,
 								},
 							]}
 						>
@@ -343,8 +381,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
 					</TouchableOpacity>
 				</View>
 			</View>
-
-		</View >
+		</View>
 	);
 }
 
