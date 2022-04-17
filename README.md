@@ -87,6 +87,7 @@ A mobile app for a property management company in Ottawa to engage in better and
 
 - [x] News Feed
 - [x] Create and Comment on Posts
+- [x] View and interact with notifications
 - [x] Access Resident Portal
 - [x] Self Sign-up
 - [x] Administrative Control
