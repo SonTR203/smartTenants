@@ -183,6 +183,8 @@ The high-level architecture ☝️, is a diagram that indicates which components
 
 Admins have access to everything the tenants do with the addition of the Admin Panel and being able to delete any post.
 
+External resources will link to 3rd party URLs and APIs.
+
 <!-- Technical Research -->
 
 ## Technical Research
