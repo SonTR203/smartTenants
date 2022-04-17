@@ -274,13 +274,14 @@ Download the [Expo Go](https://expo.dev/client) app for [iOS](https://apps.apple
 
 - Phase 1 completed
 - Phase 2
-  - NSFW filter
-  - Notifications
+  - Marketplace
+  - Push Notifications
   - Announcements
+  - Notices
 - Phase 3
   - Admin desktop panel
-  - Marketplace
   - Rewards
+  - NSFW filter
 - Additional requested features
 
 <!-- Contact -->
