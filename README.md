@@ -179,7 +179,7 @@ A mobile app for a property management company in Ottawa to engage in better and
 
 ![High-Level Architecture](./images/HIGH%20LEVEL%20AECHITECTURE.png)
 
-The high-level architecture ☝️, is a diagram that indicates which components we used to build the application and the format of the data being passed between them. On the front end, we have 2 different user facing UI components: Admin and Tenant. These communicate with the Firebase backend depending on the role of the user. an
+The high-level architecture ☝️, is a diagram that indicates which components we used to build the application and the format of the data being passed between them. On the front end, we have 2 different user facing UI components: Admin and Tenant. These communicate with the Firebase backend depending on the role of the user.
 
 Admins have access to everything the tenants do with the addition of the Admin Panel and being able to delete any post.
 
@@ -192,6 +192,13 @@ External resources will link to 3rd party URLs and APIs.
 [Technical Research Document](https://docs.google.com/document/d/10oSp3rgkv1LKX3CilwgDttDU9E_3aN66/edit?usp=sharing&ouid=107570230041613540173&rtpof=true&sd=true)
 
 Summary of your technical research and the technical research document.
+
+This document includes information and how-to guides about the technologies that are used to build the application. You may refer to the following repos for proof of concept samples.
+
+- [Proof of concept for Newsfeed](https://github.com/Team-4-InteliDev-Solutions/proofOfConceptNewsfeed)
+- [Proof of concept for image uploads](https://github.com/Team-4-InteliDev-Solutions/image-upload-proof-of-concept)
+- [Proof of concept for authentication](https://github.com/Team-4-InteliDev-Solutions/proofOfConceptAuthentication)
+- [Proof of concept for theming](https://github.com/Team-4-InteliDev-Solutions/ThemeProofOfConcept)
 
 <!-- Getting Started -->
 
