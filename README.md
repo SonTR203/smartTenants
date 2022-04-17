@@ -90,7 +90,6 @@ A mobile app for a property management company in Ottawa to engage in better and
 - [x] Access Resident Portal
 - [x] Self Sign-up
 - [x] Administrative Control
-- [x] Marketplace (phase 3)
 
 <!-- User Research -->
 
