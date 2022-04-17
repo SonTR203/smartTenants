@@ -191,7 +191,7 @@ External resources will link to 3rd party URLs and APIs.
 
 [Technical Research Document](https://docs.google.com/document/d/10oSp3rgkv1LKX3CilwgDttDU9E_3aN66/edit?usp=sharing&ouid=107570230041613540173&rtpof=true&sd=true)
 
-Summary of your technical research and the technical research document.
+Summary of our technical research and the technical research document.
 
 This document includes information and how-to guides about the technologies that are used to build the application. You may refer to the following repos for proof of concept samples.
 
