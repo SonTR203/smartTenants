@@ -278,6 +278,7 @@ Download the [Expo Go](https://expo.dev/client) app for [iOS](https://apps.apple
   - Push Notifications
   - Announcements
   - Notices
+  - Style Admin screens
 - Phase 3
   - Admin desktop panel
   - Rewards
