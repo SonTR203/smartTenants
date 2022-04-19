@@ -251,19 +251,19 @@ Download the [Expo Go](https://expo.dev/client) app for [iOS](https://apps.apple
 
 ![Expo QR Code](./images/expoQR.png)
 
-#### Current Screens from Phase 1:
+#### Some Completed Screens from Phase 1:
 
 <p float="center">
 <img src="./images/screenshot-1.png" width="220">
 ·    ·
-<img src="./images/screenshot-2.png" width="220">
+<img src="./images/login.png" width="220">
 ·    ·
 <img src="./images/screenshot-3.png" width="220">
 </p>
 <p>
 <img src="./images/screenshot-4.png" width="220">
 ·    ·
-<img src="./images/screenshot-5.png" width="220">
+<img src="./images/adminMain.png" width="220">
 ·    ·
 <img src="./images/screenshot-6.png" width="220">
 </p>
