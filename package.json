@@ -10,7 +10,8 @@
     "eject": "expo eject",
     "test": "jest",
     "test:watch": "jest --watch",
-    "lint": "eslint . --ext [.js,.ts,.tsx]"
+    "lint": "eslint . --ext [.js,.ts,.tsx]",
+    "prettier": "prettier --write . --ext [.js,.ts,.tsx]"
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.2.2",

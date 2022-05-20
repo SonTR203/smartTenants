@@ -1,6 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from '@firebase/firestore';
-import firebaseConfig from './config/env';
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "@firebase/firestore";
+import firebaseConfig from "./config/env";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 // Initialize Firebase
