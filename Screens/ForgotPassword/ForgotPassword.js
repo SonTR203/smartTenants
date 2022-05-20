@@ -1,49 +1,49 @@
-import React, { useState } from 'react'
-import { Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import { useTheme } from '../../ThemeContext'
+import React, { useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { useTheme } from "../../ThemeContext";
 
 // Import Required functions from FireStore
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth'
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState('')
-  const auth = getAuth()
+  const [email, setEmail] = useState("");
+  const auth = getAuth();
 
   const handleReset = async () => {
     try {
-      await sendPasswordResetEmail(auth, email.trim())
-      alert('Password reset link sent!')
+      await sendPasswordResetEmail(auth, email.trim());
+      alert("Password reset link sent!");
     } catch (err) {
-      console.error(err)
-      alert(err.message)
+      console.error(err);
+      alert(err.message);
     }
-  }
+  };
 
-  const [theme, styleVariables] = useTheme()
+  const [theme, styleVariables] = useTheme();
 
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
-      <StatusBar style='auto' />
+      <StatusBar style="auto" />
 
       <View
         style={[
           theme.globalMargins,
           {
-            display: 'flex',
-            justifyContent: 'space-between',
+            display: "flex",
+            justifyContent: "space-between",
             paddingTop: 27,
             paddingBottom: 34,
-            flex: 1
-          }
+            flex: 1,
+          },
         ]}
       >
         {/* pageContent */}
-        <View id='pageContent'>
+        <View id="pageContent">
           <Text
             style={[
               styleVariables.fontSizes.header,
-              { color: styleVariables.colors.primary, marginBottom: 17 }
+              { color: styleVariables.colors.primary, marginBottom: 17 },
             ]}
           >
             Reset password
@@ -52,23 +52,23 @@ const ForgotPassword = () => {
           <Text
             style={[
               styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black, marginBottom: 34 }
+              { color: styleVariables.colors.black, marginBottom: 34 },
             ]}
           >
-            Enter your email address and we'll send you a link to reset your
-            password.
+            Enter your email address and we&apos;ll send you a link to reset
+            your password.
           </Text>
 
           {/* textInput */}
-          <View id='emailInput'>
+          <View id="emailInput">
             <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
               Email
             </Text>
 
             <TextInput
-              placeholder='name@company.com'
+              placeholder="name@company.com"
               value={email}
-              onChangeText={text => setEmail(text)}
+              onChangeText={(text) => setEmail(text)}
               style={[theme.textInput, styleVariables.fontSizes.body]}
             />
           </View>
@@ -76,7 +76,7 @@ const ForgotPassword = () => {
 
         {/* submitEmailButton */}
         <TouchableOpacity
-          id='sendResetEmail'
+          id="sendResetEmail"
           onPress={handleReset}
           style={theme.primaryButton}
         >
@@ -88,7 +88,7 @@ const ForgotPassword = () => {
         </TouchableOpacity>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default ForgotPassword
+export default ForgotPassword;
