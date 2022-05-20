@@ -1,52 +1,52 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
-  // StyleSheet,
+  StyleSheet,
   View,
   Text,
   SafeAreaView,
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
-  Modal,
-} from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { addDoc, collection } from "@firebase/firestore";
-import { db } from "../../firebase-config";
-import ModalPicker from "../../components/ModalBuildingPicker";
-import { useTheme } from "../../ThemeContext";
-import { StatusBar } from "expo-status-bar";
-import { Dimensions } from "react-native";
-const windowHeight = Dimensions.get("window").height;
+  Modal
+} from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { addDoc, collection } from '@firebase/firestore'
+import { db } from '../../firebase-config'
+import ModalPicker from '../../components/ModalBuildingPicker'
+import { useTheme } from '../../ThemeContext'
+import { StatusBar } from 'expo-status-bar'
+import { Dimensions } from 'react-native'
+const windowHeight = Dimensions.get('window').height
 
-const auth = getAuth();
+const auth = getAuth()
 
 /* New users sign up screen. Users get authorized by Firebase then
  * an admin approve their request before they are allowed to the
  * home screen (Newsfeed) */
 const Signup = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [buildingAddress, setBuildingAddress] = useState("Select building");
-  const [buildingID, setBuildingID] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [unitNumber, setUnitNumber] = useState("");
-  const [isAdmin] = useState(false);
-  const [tenantAuthorized] = useState(false);
-  const [myMarketplacePosts] = useState([]);
-  const [myPosts] = useState([]);
-  const [visibleNotices] = useState([]);
-  const [visibleAnnouncements] = useState([]);
+  const [theme, styleVariables] = useTheme()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [buildingAddress, setBuildingAddress] = useState('Select building')
+  const [buildingID, setBuildingID] = useState('')
+  const [modalVisible, setModalVisible] = useState(false)
+  const [unitNumber, setUnitNumber] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [tenantAuthorized, setTenantAuthorized] = useState(false)
+  const [myMarketplacePosts, setMyMarketplacePosts] = useState([])
+  const [myPosts, setMyPosts] = useState([])
+  const [visibleNotices, setVisibileNotices] = useState([])
+  const [visibleAnnouncements, setVisibleAnnouncements] = useState([])
   const defaultProfileImage =
-    "https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=38f0365b-cb36-4964-ab8c-7a600073c244";
+    'https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=38f0365b-cb36-4964-ab8c-7a600073c244'
 
-  const changeModalVisibility = (bool) => {
-    setModalVisible(bool);
-  };
+  const changeModalVisibility = bool => {
+    setModalVisible(bool)
+  }
 
   /*This function extracts user's building address data and formats it for the user's object building address property
    *inputs:building object
@@ -56,7 +56,7 @@ const Signup = ({ navigation }) => {
   const setData = (building) => {
     building = building.buildingAddress.stringValue;
     setBuildingAddress(building);
-    setBuildingID(building.replace(/\s/g, ""));
+    setBuildingID(building.replace(/\s/g, ''));
   };
 
   /* This function validates inputs of the sign up screen not to be  *empty and prompts the user to enter data into empty fields *inputs: none
@@ -64,23 +64,23 @@ const Signup = ({ navigation }) => {
    */
   const checkTextInputs = () => {
     if (!firstName.trim()) {
-      alert("Please Enter Your First Name");
+      alert('Please Enter Your First Name');
       return false;
     } else if (!lastName.trim()) {
-      alert("Please Enter Your last Name");
+      alert('Please Enter Your last Name');
       return false;
     } else if (!unitNumber.trim() || isNaN(unitNumber.trim())) {
       console.log(+unitNumber);
-      alert("Please Enter a Unit Number");
+      alert('Please Enter a Unit Number');
       return false;
     } else if (!buildingID.trim()) {
-      alert("Please Enter Your Building Id");
+      alert('Please Enter Your Building Id');
       return false;
     } else if (!email) {
-      alert("Please Enter Your Email Address");
+      alert('Please Enter Your Email Address');
       return false;
     } else if (!password) {
-      alert("Please Enter Your Password, at least 6 characters");
+      alert('Please Enter Your Password, at least 6 characters');
       return false;
     }
     return true;
@@ -92,7 +92,7 @@ const Signup = ({ navigation }) => {
 
   async function createNewUser(user) {
     try {
-      await addDoc(collection(db, "Users"), {
+      await addDoc(collection(db, 'Users'), {
         userID: user.uid,
         firstName,
         lastName,
@@ -120,7 +120,7 @@ const Signup = ({ navigation }) => {
 
   function signUpSuccess(user) {
     createNewUser(user);
-    navigation.navigate("AccountApprovalPending");
+    navigation.navigate('AccountApprovalPending');
   }
 
   /* This function alerts the user to failure of the sign up process *inputs: none
@@ -128,7 +128,7 @@ const Signup = ({ navigation }) => {
    */
 
   function signUpFailure() {
-    alert("You have not been signed up, please try again");
+    alert('You have not been signed up, please try again');
   }
 
   /* This function handles the entire sign up process in conjunction *with the nested functions ensuring the user is registered on *Firebase
@@ -139,68 +139,68 @@ const Signup = ({ navigation }) => {
     if (!checkTextInputs()) return;
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        signUpSuccess(user);
+      .then(userCredentials => {
+        const user = userCredentials.user
+        signUpSuccess(user)
       })
-      .catch((error) => {
-        alert(error.message);
-        signUpFailure();
-      });
-  };
+      .catch(error => {
+        alert(error.message)
+        signUpFailure()
+      })
+  }
 
   return (
     <SafeAreaView
-      edges={["bottom"]}
-      style={{ backgroundColor: "white", minHeight: windowHeight }}
+      edges={['bottom']}
+      style={{ backgroundColor: 'white', minHeight: windowHeight }}
     >
       <ScrollView style={theme.pageContainer}>
         <View style={theme.globalMargins}>
-          <StatusBar style="auto" />
-          <KeyboardAvoidingView behavior="padding">
-            <View id="signupInputs">
-              <View id="firstNameInput">
+          <StatusBar style='auto' />
+          <KeyboardAvoidingView behavior='padding'>
+            <View id='signupInputs'>
+              <View id='firstNameInput'>
                 <Text
                   style={[theme.textInputLabel, styleVariables.fontSizes.body]}
                 >
                   First name
                 </Text>
                 <TextInput
-                  placeholder="John"
+                  placeholder='John'
                   value={firstName}
-                  onChangeText={(text) => setFirstName(text)}
+                  onChangeText={text => setFirstName(text)}
                   style={[theme.textInput, styleVariables.fontSizes.body]}
                 />
               </View>
-              <View id="lastNameInput">
+              <View id='lastNameInput'>
                 <Text
                   style={[theme.textInputLabel, styleVariables.fontSizes.body]}
                 >
                   Last Name
                 </Text>
                 <TextInput
-                  placeholder="Doe"
+                  placeholder='Doe'
                   value={lastName}
-                  onChangeText={(text) => setLastName(text)}
+                  onChangeText={text => setLastName(text)}
                   style={[theme.textInput, styleVariables.fontSizes.body]}
                 />
               </View>
 
-              <View id="unitNumberInput">
+              <View id='unitNumberInput'>
                 <Text
                   style={[theme.textInputLabel, styleVariables.fontSizes.body]}
                 >
                   Unit number
                 </Text>
                 <TextInput
-                  placeholder="1234"
+                  placeholder='1234'
                   value={unitNumber}
-                  onChangeText={(text) => setUnitNumber(text)}
+                  onChangeText={text => setUnitNumber(text)}
                   style={[theme.textInput, styleVariables.fontSizes.body]}
                 />
               </View>
 
-              <View id="buildingSelect">
+              <View id='buildingSelect'>
                 <Text
                   style={[theme.textInputLabel, styleVariables.fontSizes.body]}
                 >
@@ -208,14 +208,14 @@ const Signup = ({ navigation }) => {
                 </Text>
                 <TouchableOpacity
                   onPress={() => {
-                    changeModalVisibility(true);
+                    changeModalVisibility(true)
                   }}
                 >
                   <Text
                     style={[
                       theme.textInput,
                       styleVariables.fontSizes.body,
-                      { color: "#00000080" },
+                      { color: '#00000080' }
                     ]}
                   >
                     {buildingAddress}
@@ -224,12 +224,12 @@ const Signup = ({ navigation }) => {
               </View>
 
               <Modal
-                id="buildingSelectModal"
+                id='buildingSelectModal'
                 transparent={true}
-                animationType="fade"
+                animationType='fade'
                 visible={modalVisible}
                 nRequestClose={() => {
-                  changeModalVisibility(false);
+                  changeModalVisibility(false)
                 }}
               >
                 <ModalPicker
@@ -238,44 +238,45 @@ const Signup = ({ navigation }) => {
                 />
               </Modal>
 
-              <View id="emailInput">
+              <View id='emailInput'>
                 <Text
                   style={[theme.textInputLabel, styleVariables.fontSizes.body]}
                 >
                   Email
                 </Text>
                 <TextInput
-                  placeholder="name@company.com"
+                  placeholder='name@company.com'
                   value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
+                  onChangeText={text => {
+                    setEmail(text)
                   }}
                   style={[theme.textInput, styleVariables.fontSizes.body]}
                 />
               </View>
-              <View id="passwordInput">
+              <View id='passwordInput'>
                 <Text
                   style={[theme.textInputLabel, styleVariables.fontSizes.body]}
                 >
                   Password
                 </Text>
                 <TextInput
-                  placeholder="Minimum 8 characters"
+                  placeholder='Minimum 8 characters'
                   value={password}
-                  onChangeText={(text) => setPassword(text)}
+                  onChangeText={text => setPassword(text)}
                   secureTextEntry
                   style={[theme.textInput, styleVariables.fontSizes.body]}
                 />
               </View>
             </View>
 
-            <View id="signupCTA">
+            <View id='signupCTA'>
+
               <TouchableOpacity onPress={handleSignup}>
                 <View style={[theme.primaryButton, { marginTop: 17 }]}>
                   <Text
                     style={[
                       theme.primaryButtonText,
-                      styleVariables.fontSizes.bodyBold,
+                      styleVariables.fontSizes.bodyBold
                     ]}
                   >
                     Signup
@@ -283,7 +284,7 @@ const Signup = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
 
-              <Text style={{ textAlign: "center" }}>
+              <Text style={{ textAlign: 'center' }}>
                 <Text style={styleVariables.fontSizes.callout}>
                   Upon sign up, you accept our terms & conditions outlined in
                   our
@@ -291,10 +292,10 @@ const Signup = ({ navigation }) => {
                 <Text
                   style={[
                     styleVariables.fontSizes.calloutBold,
-                    { color: styleVariables.colors.primary },
+                    { color: styleVariables.colors.primary }
                   ]}
                 >
-                  {" "}
+                  {' '}
                   terms of use and privacy policy
                 </Text>
               </Text>
@@ -303,15 +304,15 @@ const Signup = ({ navigation }) => {
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-// });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
 
-export default Signup;
+export default Signup
