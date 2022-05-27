@@ -208,12 +208,12 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-1. Install npm on your computer -- we recommend at least version 8.5.4 https://radixweb.com/blog/installing-npm-and-nodejs-on-windows-and-mac
+1. Install yarn on your computer through the [npm package manager](https://www.npmjs.com/)
 
-- Or update npm
+- Or update yarn
 
 ```sh
-npm install npm@latest -g
+npm install --global yarn
 ```
 
 2. Install expo-cli on your computer -- we recommend at least version 5.2.0 https://docs.expo.dev/get-started/installation/
@@ -221,7 +221,7 @@ npm install npm@latest -g
 - Or from terminal
 
 ```sh
-npm install --global expo-cli
+yarn add expo-cli
 ```
 
 #### Running the App on iOS Simulator
@@ -234,11 +234,11 @@ npm install --global expo-cli
 5) Change your directory to ‘smartTenants’ by using the command `cd s*`
    ![Screen Shot 2022-04-11 at 12 55 26 PM](https://user-images.githubusercontent.com/72204229/162791657-81c6b171-1640-4fdc-8b23-db0c672f58ec.png)
 
-6) Install the node modules by using the command `npm i`
+6) Install the node modules by using the command `yarn`
 
    ![Screen Shot 2022-04-11 at 12 55 33 PM](https://user-images.githubusercontent.com/72204229/162791668-169e680c-7a1f-46ad-8e8a-ea8f559eafce.png)
 
-7) After the node modules have finished installing, run the command `expo start --ios` to start an iPhone simulator -- note: You will need to have expo installed, and have a simulated device configured
+7) After the node modules have finished installing, run the command `yarn ios` to start an iPhone simulator -- note: You will need to have expo installed, and have a simulated device configured
    ![Screen Shot 2022-04-11 at 12 55 41 PM](https://user-images.githubusercontent.com/72204229/162791678-5cf9bd15-f195-4e86-a15c-634ad3f72711.png)
 
 You should now be able to interact with our app on your simulated device! Enjoy
