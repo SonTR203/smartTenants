@@ -22,6 +22,10 @@ import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../../Context/AppContext";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
+import {
+  compressFileSize,
+  getFileInfo,
+} from "../../../utils/Profile/profile.services";
 
 const EditProfile = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
@@ -123,66 +127,58 @@ const EditProfile = ({ navigation }) => {
   }, []);
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
     if (!result.cancelled) {
-      let newImage = result.uri;
-      handleSelectedImage(newImage);
+      const size = await getFileInfo(result.uri);
+      console.log("file size: ", size);
+      if (size > 5) {
+        Alert.alert(
+          "ERROR",
+          "File size is too large. Please select a file smaller than 5MB"
+        );
+        return;
+      }
+      const path = await compressFileSize(result.uri);
+      uploadImage(path.uri);
     }
   };
-
-  async function handleSelectedImage(newImage) {
-    if (newImage == null) {
-      Alert.alert("no image found");
-    } else {
-      try {
-        if (!newImage.cancelled) {
-          await uploadImage(newImage);
-        }
-      } catch (e) {
-        console.log(e);
-        Alert.alert("ERROR", "Upload failed, sorry :(");
-      }
-    }
-  }
 
   async function uploadImage(newImage) {
     try {
       const blob = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
+          // return the blob
           resolve(xhr.response);
         };
-        xhr.onerror = function (e) {
-          console.log(e);
-          reject(new TypeError("Network request failed"));
+
+        xhr.onerror = function () {
+          // something went wrong
+          reject(new Error("uriToBlob failed"));
         };
+        // this helps us get a blob
         xhr.responseType = "blob";
         xhr.open("GET", newImage, true);
+
         xhr.send(null);
       });
 
-      const imageName = `userProfileImages/${currentUser.userDocId}/${
-        Date.now() + Math.floor(Math.random() * 20)
-      }.jpg`;
+      const imageName = `userProfileImages/${currentUser.userDocId}/avatar.jpg`;
       const fileRef = ref(getStorage(), imageName);
-      console.log("fileRef: ", fileRef);
       await uploadBytes(fileRef, blob);
 
       const imgUrl = await getDownloadURL(fileRef);
-      console.log("imgUrl: ", imgUrl);
-
       setUserProfileImage(imgUrl);
       changeProfileImageInDatabase(imgUrl);
-      //set postContent to ImageURl hook in future, for some reason ImageUrl keeps coming back empty
-      return imgUrl;
+      Alert.alert("Success", "Profile image updated");
     } catch (err) {
-      console.log(err);
+      console.log("error uploading image: ", err);
     }
   }
 
@@ -195,20 +191,7 @@ const EditProfile = ({ navigation }) => {
       });
 
       setCurrentUser({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        buildingID: currentUser.buildingID,
-        buildingAddress: currentUser.buildingAddress,
-        email: currentUser.email,
-        unitNumber: currentUser.unitNumber,
-        isAdmin: currentUser.isAdmin,
-        myMarketplacePosts: currentUser.myMarketplacePosts,
-        myPosts: currentUser.myPosts,
-        tenantAuthorized: currentUser.tenantAuthorized,
-        userID: currentUser.userID,
-        userDocId: currentUser.userDocId,
-        visibleNotices: currentUser.visibleNotices,
-        visibleAnnouncements: currentUser.visibleAnnouncements,
+        ...currentUser,
         userProfileImage: imgUrl,
       });
     } catch (error) {
@@ -216,14 +199,10 @@ const EditProfile = ({ navigation }) => {
     }
   }
 
-  function changeProfilePic() {
-    pickImage();
-  }
-
   return (
     <SafeAreaView edges={["top"]}>
       <ScrollView style={theme.pageContainer}>
-        <StatusBar style="auto" />
+        <StatusBar style="dark" />
 
         <KeyboardAvoidingView behavior="padding" style={theme.globalMargins}>
           {/* userHeader */}
@@ -247,7 +226,7 @@ const EditProfile = ({ navigation }) => {
                 {currentUser.firstName} {currentUser.lastName}
               </Text>
               <TouchableOpacity
-                onPress={changeProfilePic}
+                onPress={() => pickImage()}
                 style={{ flexDirection: "row" }}
               >
                 <Text
@@ -304,8 +283,11 @@ const EditProfile = ({ navigation }) => {
                 Unit number
               </Text>
               <TextInput
+                keyboardType="numeric"
                 placeholder="1234"
-                defaultValue={`${currentUser.unitNumber}`}
+                defaultValue={`${
+                  currentUser.unitNumber ? currentUser.unitNumber : ""
+                }`}
                 onChangeText={(text) => setUnitNumber(parseInt(text))}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
