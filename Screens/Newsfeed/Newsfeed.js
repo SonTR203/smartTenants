@@ -136,8 +136,8 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
   const [numberOfComments, setNumberOfComments] = useState(0);
   const [timeSincePost, setTimeSincePost] = useState('');
   const [userLiked, setUserLiked] = useState(false);
-  let peopleWhoLiked = [];
-  let peopleWhoLikedDocIds = [];
+  // let peopleWhoLiked = [];
+  // let peopleWhoLikedDocIds = [];
 
   posts = {
     commentCount: posts.commentCount.integerValue,
@@ -167,31 +167,33 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
       setNumberOfLikes(likeCount);
     }
 
-    const likesColReference = collection(
-      db,
-      'Newsfeed',
-      `${posts.id}`,
-      'peopleWhoLiked'
-    );
+    // const likesColReference = collection(
+    //   db,
+    //   'Newsfeed',
+    //   `${posts.id}`,
+    //   'peopleWhoLiked'
+    // );
 
-    const data = await getDocs(likesColReference);
+    // const data = await getDocs(likesColReference);
     // setNumberOfLikes(data.docs.length);
-    data.docs.map((item) => {
-      peopleWhoLiked.push(item._document.data.value.mapValue.fields.userID);
-    });
+    // data.docs.map((item) => {
+    //   peopleWhoLiked.push(item._document.data.value.mapValue.fields.userID);
+    // });
 
     //set new array of the docoument ids for all likes
-    data.docs.map((item) => {
-      peopleWhoLikedDocIds.push(item._document.key.path.segments[8]);
-    });
+    // data.docs.map((item) => {
+    //   peopleWhoLikedDocIds.push(item._document.key.path.segments[8]);
+    // });
   };
 
   const setHeartsToGreen = () => {
-    peopleWhoLiked.map((item) => {
-      if (item.stringValue == globalCurrentUser.userDocId) {
-        setUserLiked(true);
-      }
-    });
+    if (posts.peopleWhoLiked.values) {
+      posts.peopleWhoLiked.values.map((user) => {
+        if (user.stringValue == globalCurrentUser.userDocId) {
+          setUserLiked(true);
+        }
+      });
+    }
   };
 
   const getComments = async () => {
