@@ -150,11 +150,23 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
     userProfileImage: posts.userProfileImage.stringValue,
     userFirstName: posts.userFirstName.stringValue,
     userLastName: posts.userLastName.stringValue,
-    numberOfLikes: numberOfLikes,
+    likeCount: posts.likeCount.integerValue,
     timestamp: posts.timestamp,
   };
 
+  useEffect(() => {
+    getLikes();
+    setTime();
+    getComments();
+    setHeartsToGreen();
+  }, []);
+
   const getLikes = async () => {
+    let likeCount = posts.likeCount;
+    if (likeCount) {
+      setNumberOfLikes(likeCount);
+    }
+
     const likesColReference = collection(
       db,
       'Newsfeed',
@@ -163,7 +175,7 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
     );
 
     const data = await getDocs(likesColReference);
-    setNumberOfLikes(data.docs.length);
+    // setNumberOfLikes(data.docs.length);
     data.docs.map((item) => {
       peopleWhoLiked.push(item._document.data.value.mapValue.fields.userID);
     });
@@ -172,12 +184,7 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
     data.docs.map((item) => {
       peopleWhoLikedDocIds.push(item._document.key.path.segments[8]);
     });
-
-    setTime();
-    getComments();
-    setHeartsToGreen();
   };
-  getLikes();
 
   const setHeartsToGreen = () => {
     peopleWhoLiked.map((item) => {
