@@ -29,7 +29,7 @@ const ProfileGeneral = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles(styleVariables).container} edges={["top"]}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <ProfileHeader navigation={navigation} currentUser={currentUser} />
 
       {/* scroll view body */}
