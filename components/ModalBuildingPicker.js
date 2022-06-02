@@ -5,7 +5,7 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
-  ScrollView,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { collection, getDocs } from "@firebase/firestore";
@@ -22,14 +22,6 @@ const ModalPicker = (props) => {
     props.setData(building);
   };
 
-  const building = buildings.map((item, index) => {
-    return (
-      <TouchableOpacity key={index} onPress={() => onPressItem(item)}>
-        <Text>{item.buildingAddress.stringValue}</Text>
-      </TouchableOpacity>
-    );
-  });
-
   useEffect(() => {
     getBuildings();
   }, []);
@@ -45,50 +37,55 @@ const ModalPicker = (props) => {
   };
 
   return (
-    <TouchableOpacity
-      onPress={() => props.changeModalVisibility(false)}
+    <View
       style={{
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#00000066",
-        width: width,
-        height: height,
-        paddingBottom: 45,
+        backgroundColor: "transparent",
+        justifyContent: "flex-end",
       }}
     >
+      <TouchableOpacity
+        style={{
+          flex: 1,
+          backgroundColor: "rgba(0,0,0,0.5)",
+          marginBottom: -10,
+        }}
+        onPress={() => props.changeModalVisibility(false)}
+        activeOpacity={1}
+      />
       <View
         style={{
           backgroundColor: "white",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
+          height: height * 0.85,
           alignItems: "center",
-          width: width - 34,
-          borderRadius: 4,
+          borderRadius: 5,
+
+          paddingTop: 20,
+          paddingBottom: 20,
         }}
       >
-        <ScrollView>
-          {building &&
-            building.map(function (item, index) {
-              return (
-                <View
-                  key={index}
-                  style={{
-                    backgroundColor: "white",
-                    width: width - 34 - 34,
-                    margin: 17,
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text style={{ fontSize: 1 }}>{item}</Text>
-                </View>
-              );
-            })}
-        </ScrollView>
+        <FlatList
+          data={buildings}
+          renderItem={({ item, index }) => {
+            return (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "white",
+                  width: width - 34 - 34,
+                  margin: 17,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+                key={index}
+                onPress={() => onPressItem(item)}
+              >
+                <Text>{item.buildingAddress.stringValue}</Text>
+              </TouchableOpacity>
+            );
+          }}
+        />
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
