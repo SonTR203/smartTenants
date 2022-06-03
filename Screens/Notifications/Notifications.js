@@ -20,7 +20,7 @@ import {
 } from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from '../../ThemeContext';
-import { setTime } from '../../helper/helper';
+import { setTime } from '../../utils/setTime';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
@@ -137,8 +137,12 @@ function NotificationItem({
   };
 
   useEffect(() => {
-    let time = setTime(notifications);
-    setTimeSincePost(time);
+    if (notifications) {
+      (function calculateTime() {
+        const time = setTime(notifications);
+        setTimeSincePost(time);
+      })();
+    }
   }, [notifications]);
 
   const setWasSeenToTrue = async (notifications) => {

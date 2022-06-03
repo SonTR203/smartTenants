@@ -21,7 +21,7 @@ import {
 import { db } from '../../firebase-config';
 import { useAppContext } from '../../Context/AppContext';
 import { useTheme } from '../../ThemeContext';
-import { setTime } from '../../helper/helper';
+import { setTime } from '../../utils/setTime';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 import _ from 'lodash';

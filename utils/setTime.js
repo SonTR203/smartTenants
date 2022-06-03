@@ -1,5 +1,5 @@
-const setTime = (document) => {
-  let time = document.timestamp;
+export const setTime = (item) => {
+  let time = item.timestamp;
   if (time != undefined) {
     let timePosted = time.integerValue;
     let currentTime = Date.now();
@@ -9,33 +9,40 @@ const setTime = (document) => {
     let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
 
     if (timeDifferenceMinutes <= 59) {
-      return timeDifferenceMinutes > 1
-        ? `${timeDifferenceMinutes} minutes ago`
-        : `${timeDifferenceMinutes} minute ago`;
+      if (timeDifferenceMinutes > 1) {
+        return timeDifferenceMinutes + ' minutes ago';
+      } else {
+        return timeDifferenceMinutes + ' minute ago';
+      }
     } else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
-      return timeDifferenceHours > 1
-        ? `${timeDifferenceHours} hours ago`
-        : `${timeDifferenceHours} hour ago`;
+      if (timeDifferenceHours > 1) {
+        return timeDifferenceHours + ' hours ago';
+      } else {
+        return timeDifferenceHours + ' hour ago';
+      }
     } else if (
       timeDifferenceDays <= 6 &&
       timeDifferenceMinutes > 59 &&
       timeDifferenceHours > 23
     ) {
-      return timeDifferenceDays > 1
-        ? `${timeDifferenceDays} days ago`
-        : `${timeDifferenceDays} day ago`;
+      if (timeDifferenceDays > 1) {
+        return timeDifferenceDays + ' days ago';
+      } else {
+        return timeDifferenceDays + ' day ago';
+      }
     } else if (
       timeDifferenceWeeks <= 10 &&
       timeDifferenceDays > 6 &&
       timeDifferenceMinutes > 59 &&
       timeDifferenceHours > 23
     ) {
-      return timeDifferenceWeeks > 1
-        ? `${timeDifferenceWeeks} weeks ago`
-        : `${timeDifferenceWeeks} week ago`;
+      if (timeDifferenceWeeks > 1) {
+        return timeDifferenceWeeks + ' weeks ago';
+      } else {
+        return timeDifferenceWeeks + ' week ago';
+      }
     } else {
       return '10+ weeks ago';
     }
   }
 };
-export { setTime };

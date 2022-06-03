@@ -8,7 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { setTime } from '../../../helper/helper';
+import { setTime } from '../../../utils/setTime';
 const windowWidth = Dimensions.get('window').width;
 
 let setUserPost;

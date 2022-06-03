@@ -15,7 +15,7 @@ import _, { update } from 'lodash';
 import { useTheme } from '../../ThemeContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
-import { setTime } from '../../helper/helper';
+import { setTime } from '../../utils/setTime';
 import firebaseConfig from '../../config/env';
 const width = Dimensions.get('window').width;
 
@@ -55,39 +55,12 @@ const IndividualPosts = ({ navigation }) => {
   }, [post.id]);
 
   const Comment = ({ item, theme, styleVariables, width }) => {
-    let timeSincePost;
-    let time = item.timestamp;
-    if (time != undefined) {
-      let timePosted = time;
-      let currentTime = Date.now();
-      let timeDifferenceMinutes = ((currentTime - timePosted) / 60000).toFixed(
-        0
-      );
-      let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0);
-      let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0);
-      let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
-
-      if (timeDifferenceMinutes <= 59) {
-        timeSincePost = `${timeDifferenceMinutes} minutes ago`;
-      } else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
-        timeSincePost = `${timeDifferenceHours} hours ago`;
-      } else if (
-        timeDifferenceDays <= 6 &&
-        timeDifferenceMinutes > 59 &&
-        timeDifferenceHours > 23
-      ) {
-        timeSincePost = `${timeDifferenceDays} days ago`;
-      } else if (
-        timeDifferenceWeeks <= 10 &&
-        timeDifferenceDays > 6 &&
-        timeDifferenceMinutes > 59 &&
-        timeDifferenceHours > 23
-      ) {
-        (timeSincePost = timeDifferenceWeeks), ' weeks ago';
-      } else {
-        timeSincePost = '10+ weeks ago';
-      }
-    }
+    const [timeSincePost, setTimeSincePost] = useState('');
+    useEffect(() => {
+      const time = setTime(item);
+      console.log(item.timestamp);
+      setTimeSincePost(time);
+    }, []);
 
     return (
       <View
