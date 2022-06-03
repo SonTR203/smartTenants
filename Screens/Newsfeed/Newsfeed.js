@@ -21,6 +21,7 @@ import {
 import { db } from '../../firebase-config';
 import { useAppContext } from '../../Context/AppContext';
 import { useTheme } from '../../ThemeContext';
+import { setTime } from '../../helper/helper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 import _ from 'lodash';
@@ -173,7 +174,8 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
       peopleWhoLikedDocIds.push(item._document.key.path.segments[8]);
     });
 
-    setTime();
+    let time = setTime(posts);
+    setTimeSincePost(time);
     getComments();
     setHeartsToGreen();
   };
@@ -268,42 +270,6 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
     // const notificationSingleDoc = doc(db, `Users/${posts.userID}/Notifications/${}`)
     // await deleteDoc(notificationSingleDoc);
   };
-
-  const setTime = () => {
-    let time = posts.timestamp;
-    if (time != undefined) {
-      let timePosted = time.integerValue;
-      let currentTime = Date.now();
-      let timeDifferenceMinutes = ((currentTime - timePosted) / 60000).toFixed(
-        0
-      );
-      let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0);
-      let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0);
-      let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
-
-      if (timeDifferenceMinutes <= 59) {
-        setTimeSincePost(`${timeDifferenceMinutes} minutes ago`);
-      } else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
-        setTimeSincePost(`${timeDifferenceHours} hours ago`);
-      } else if (
-        timeDifferenceDays <= 6 &&
-        timeDifferenceMinutes > 59 &&
-        timeDifferenceHours > 23
-      ) {
-        setTimeSincePost(`${timeDifferenceDays} days ago`);
-      } else if (
-        timeDifferenceWeeks <= 10 &&
-        timeDifferenceDays > 6 &&
-        timeDifferenceMinutes > 59 &&
-        timeDifferenceHours > 23
-      ) {
-        setTimeSincePost(timeDifferenceWeeks, ' weeks ago');
-      } else {
-        setTimeSincePost('10+ weeks ago');
-      }
-    }
-  };
-
   return (
     <View id='post' style={theme.cardContainer}>
       {/* ownerInfo */}

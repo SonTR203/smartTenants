@@ -8,6 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { setTime } from '../../../helper/helper';
 const windowWidth = Dimensions.get('window').width;
 
 let setUserPost;
@@ -90,7 +91,8 @@ function MyPostItem({
 
     const data = await getDocs(likesColReference);
     setNumberOfLikes(data.docs.length);
-    setTime();
+    let time = setTime(userPosts);
+    setTimeSincePost(time);
     getComments();
   };
   getLikes();
@@ -99,41 +101,6 @@ function MyPostItem({
     let commentCount = userPosts.commentCount;
     if (commentCount) {
       setNumberOfComments(commentCount);
-    }
-  };
-
-  const setTime = () => {
-    let time = userPosts.timestamp;
-    if (time != undefined) {
-      let timePosted = time;
-      let currentTime = Date.now();
-      let timeDifferenceMinutes = ((currentTime - timePosted) / 60000).toFixed(
-        0
-      );
-      let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0);
-      let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0);
-      let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
-
-      if (timeDifferenceMinutes <= 59) {
-        setTimeSincePost(`${timeDifferenceMinutes} minutes ago`);
-      } else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
-        setTimeSincePost(`${timeDifferenceHours} hours ago`);
-      } else if (
-        timeDifferenceDays <= 6 &&
-        timeDifferenceMinutes > 59 &&
-        timeDifferenceHours > 23
-      ) {
-        setTimeSincePost(`${timeDifferenceDays} days ago`);
-      } else if (
-        timeDifferenceWeeks <= 10 &&
-        timeDifferenceDays > 6 &&
-        timeDifferenceMinutes > 59 &&
-        timeDifferenceHours > 23
-      ) {
-        setTimeSincePost(timeDifferenceWeeks, ' weeks ago');
-      } else {
-        setTimeSincePost('10+ weeks ago');
-      }
     }
   };
 

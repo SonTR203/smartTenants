@@ -15,6 +15,7 @@ import _, { update } from 'lodash';
 import { useTheme } from '../../ThemeContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
+import { setTime } from '../../helper/helper';
 import firebaseConfig from '../../config/env';
 const width = Dimensions.get('window').width;
 
@@ -24,7 +25,6 @@ const IndividualPosts = ({ navigation }) => {
   const { currentUser } = useAppContext();
   const [peoplePerson, setPeoplePerson] = useState('people');
   const [comments, setComments] = useState([]);
-  const [timeSincePost, setTimeSincePost] = useState('');
 
   // Get all Comments
   const getComments = () => {
@@ -217,43 +217,9 @@ const IndividualPosts = ({ navigation }) => {
 function ListHeader({ post, peoplePerson, theme, styleVariables }) {
   const [timeSincePost, setTimeSincePost] = useState('');
 
-  const setTime = () => {
-    let time = post.timestamp;
-    if (time != undefined) {
-      let timePosted = time.integerValue;
-      let currentTime = Date.now();
-      let timeDifferenceMinutes = ((currentTime - timePosted) / 60000).toFixed(
-        0
-      );
-      let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0);
-      let timeDifferenceDays = (timeDifferenceHours / 24).toFixed(0);
-      let timeDifferenceWeeks = (timeDifferenceDays / 7).toFixed(0);
-
-      if (timeDifferenceMinutes <= 59) {
-        setTimeSincePost(`${timeDifferenceMinutes} minutes ago`);
-      } else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
-        setTimeSincePost(`${timeDifferenceHours} hours ago`);
-      } else if (
-        timeDifferenceDays <= 6 &&
-        timeDifferenceMinutes > 59 &&
-        timeDifferenceHours > 23
-      ) {
-        setTimeSincePost(`${timeDifferenceDays} days ago`);
-      } else if (
-        timeDifferenceWeeks <= 10 &&
-        timeDifferenceDays > 6 &&
-        timeDifferenceMinutes > 59 &&
-        timeDifferenceHours > 23
-      ) {
-        setTimeSincePost(timeDifferenceWeeks, ' weeks ago');
-      } else {
-        setTimeSincePost('10+ weeks ago');
-      }
-    }
-  };
-
   useEffect(() => {
-    setTime();
+    let time = setTime(post);
+    setTimeSincePost(time);
   }, []);
 
   return (
