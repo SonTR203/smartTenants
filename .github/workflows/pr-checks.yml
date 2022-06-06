@@ -49,6 +49,17 @@ jobs:
           # See also: https://api.slack.com/methods/chat.postMessage#channels
           channel-id: "C03JH7NEKRR"
           # For posting a simple plain text message
-          slack-message: ":white_check_mark: PR App is ready for review, you can see it at https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}"
+          payload: |
+          {
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": ":white_check_mark: <https://github.com/SmartTenantApplication/smartTenants/pull/${{ github.event.number }}|Pull request *#${{ github.event.number }}*> is ready for review, you can see it at https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }} :rocket:"
+                }
+              }
+            ]
+          }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
