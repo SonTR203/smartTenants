@@ -17,7 +17,7 @@ jobs:
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
       - run: yarn install
-      - run: yarn lint
+      # - run: yarn lint
       - run: yarn test
       # Restore react-native metro cache for speed-up publish time
       # See: https://github.com/facebook/metro/blob/7dca99af2e2af17921aa4a1e16b1972adc0d11e4/packages/metro-config/src/defaults/index.js#L121-L125
