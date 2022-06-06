@@ -41,26 +41,15 @@ jobs:
       # - run: expo publish --release-channel=pr-${{ github.event.number }}
       #   env:
       #     NODE_OPTIONS: --max_old_space_size=8192
-      - name: Send mail
-        uses: dawidd6/action-send-mail@v3
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.19.0
         with:
-          # Required mail server address:
-          server_address: smtp.gmail.com
-          # Required mail server port:
-          server_port: 465
-          # Optional (recommended): mail server username:
-          username: ${{secrets.MAIL_USERNAME}}
-          # Optional (recommended) mail server password:
-          password: ${{secrets.MAIL_PASSWORD}}
-          # Required mail subject:
-          subject: SmartTenants app is ready for testing
-          # Required recipients' addresses:
-          to: vuon0029@algonquinlive.com
-          # Required sender full name (address can be skipped):
-          from: Admin SmartTenants # <user@example.com>
-          # Optional whether this connection use TLS (default is true if server_port is 465)
-          secure: true
-          # Optional plain body:
-          body: App is ready for review, you can [see it here](https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}).
-          priority: high
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          channel-id: "C03JH7NEKRR"
+          # For posting a simple plain text message
+          slack-message: "GitHub build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - run: echo 'PR App is ready for review, you can see it at https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}'
