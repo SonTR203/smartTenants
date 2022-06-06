@@ -41,4 +41,26 @@ jobs:
       # - run: expo publish --release-channel=pr-${{ github.event.number }}
       #   env:
       #     NODE_OPTIONS: --max_old_space_size=8192
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # Required mail server address:
+          server_address: smtp.gmail.com
+          # Required mail server port:
+          server_port: 465
+          # Optional (recommended): mail server username:
+          username: ${{secrets.MAIL_USERNAME}}
+          # Optional (recommended) mail server password:
+          password: ${{secrets.MAIL_PASSWORD}}
+          # Required mail subject:
+          subject: SmartTenants app is ready for testing
+          # Required recipients' addresses:
+          to: vuon0029@algonquinlive.com
+          # Required sender full name (address can be skipped):
+          from: Admin SmartTenants # <user@example.com>
+          # Optional whether this connection use TLS (default is true if server_port is 465)
+          secure: true
+          # Optional plain body:
+          body: App is ready for review, you can [see it here](https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}).
+          priority: high
       - run: echo 'PR App is ready for review, you can see it at https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}'
