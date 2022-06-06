@@ -49,7 +49,6 @@ jobs:
           # See also: https://api.slack.com/methods/chat.postMessage#channels
           channel-id: "C03JH7NEKRR"
           # For posting a simple plain text message
-          slack-message: "GitHub build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+          slack-message: ":white_check_mark: PR App is ready for review, you can see it at https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      - run: echo 'PR App is ready for review, you can see it at https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}'
