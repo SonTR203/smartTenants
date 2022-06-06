@@ -41,9 +41,4 @@ jobs:
       # - run: expo publish --release-channel=pr-${{ github.event.number }}
       #   env:
       #     NODE_OPTIONS: --max_old_space_size=8192
-      - name: Send GitHub Action trigger data to Slack workflow
-        id: slack
-        uses: slackapi/slack-github-action@v1.19.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - run: echo 'PR App is ready for review, you can see it at https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}'
