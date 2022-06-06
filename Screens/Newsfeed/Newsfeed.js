@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   Image,
+  StyleSheet,
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -44,6 +45,13 @@ const Newsfeed = ({ navigation }) => {
   setGlobalPost = setPost;
   globalCurrentUser = currentUser;
 
+  const styles = StyleSheet.create({
+    newsfeedContainer: {
+      flex: 1,
+      backgroundColor: styleVariables.colors.primary,
+    },
+  });
+
   useEffect(() => {
     getPosts();
   }, []);
@@ -64,10 +72,7 @@ const Newsfeed = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: styleVariables.colors.primary }}
-      edges={['top']}
-    >
+    <SafeAreaView style={styles.newsfeedContainer} edges={['top']}>
       <StatusBar style='auto' />
       <View style={theme.pageContainer}>
         {refreshing ? <ActivityIndicator /> : null}
@@ -154,6 +159,68 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
     numberOfLikes: numberOfLikes,
     timestamp: posts.timestamp,
   };
+
+  const styles = StyleSheet.create({
+    ownerInfo: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: '100%',
+      marginBottom: 12,
+    },
+    ownerImageAndName: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    profileImage: {
+      height: 43,
+      width: 43,
+      borderRadius: 12,
+    },
+    userName: {
+      color: styleVariables.colors.black,
+      marginLeft: 8,
+    },
+    timePosted: {
+      color: styleVariables.colors.black,
+      opacity: 0.66,
+    },
+    postTextContent: {
+      color: styleVariables.colors.black,
+      marginBottom: 17,
+    },
+    postImage: {
+      height: windowWidth - 68,
+      width: windowWidth - 68,
+      borderRadius: 16,
+      marginBottom: 17,
+    },
+    likeContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginBottom: 5,
+    },
+    likeButton: {
+      display: 'flex',
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+    icon: {
+      marginRight: 8,
+    },
+    likeAndCommentCount: {
+      color: styleVariables.colors.black,
+    },
+    commentContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginLeft: 17,
+    },
+  });
 
   const getLikes = async () => {
     const likesColReference = collection(
@@ -273,44 +340,19 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
   return (
     <View id='post' style={theme.cardContainer}>
       {/* ownerInfo */}
-      <View
-        id='ownerInfo'
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%',
-          marginBottom: 12,
-        }}
-      >
-        <View
-          className='ownerImageAndName'
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
+      <View id='ownerInfo' style={styles.ownerInfo}>
+        <View className='ownerImageAndName' style={styles.ownerImageAndName}>
           <Image
             source={{ uri: `${posts.userProfileImage}` }}
-            style={{ height: 43, width: 43, borderRadius: 12 }}
+            style={styles.profileImage}
           />
-          <Text
-            style={[
-              styleVariables.fontSizes.bodyBold,
-              { color: styleVariables.colors.black, marginLeft: 8 },
-            ]}
-          >
+          <Text style={[styleVariables.fontSizes.bodyBold, styles.userName]}>
             {posts.userFirstName} {posts.userLastName}
           </Text>
         </View>
         <Text
           id='timePosted'
-          style={[
-            styleVariables.fontSizes.callout,
-            { color: styleVariables.colors.black, opacity: 0.66 },
-          ]}
+          style={[styleVariables.fontSizes.callout, styles.timePosted]}
         >
           {timeSincePost}
         </Text>
@@ -325,12 +367,7 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
         }}
       >
         <View className='postTextContent'>
-          <Text
-            style={[
-              styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black, marginBottom: 17 },
-            ]}
-          >
+          <Text style={[styleVariables.fontSizes.body, styles.postTextContent]}>
             {posts.postContent}
           </Text>
         </View>
@@ -340,42 +377,25 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
             source={{
               uri: `${posts.image}`,
             }}
-            style={{
-              height: windowWidth - 68,
-              width: windowWidth - 68,
-              borderRadius: 16,
-              marginBottom: 17,
-            }}
+            style={styles.postImage}
           />
         )}
       </TouchableOpacity>
 
       {/* likeAndComment */}
-      <View
-        className='likeAndComment'
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'row',
-          marginBottom: 5,
-        }}
-      >
+      <View className='likeAndComment' style={styles.likeContainer}>
         {/* =========================== LIKE ============================= */}
         <TouchableOpacity
           id='like'
           onPress={likePost}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'row',
-          }}
+          style={styles.likeButton}
         >
           {userLiked && (
             <MaterialCommunityIcons
               name='heart'
               size={24}
               color='#0AA74C'
-              style={{ marginRight: 8 }}
+              style={styles.icon}
             />
           )}
           {!userLiked && (
@@ -383,14 +403,11 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
               name='heart-outline'
               size={24}
               color={styleVariables.colors.black}
-              style={{ marginRight: 8 }}
+              style={styles.icon}
             />
           )}
           <Text
-            style={[
-              styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black },
-            ]}
+            style={[styleVariables.fontSizes.body, styles.likeAndCommentCount]}
           >
             {numberOfLikes}
           </Text>
@@ -403,24 +420,16 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
             navigation.navigate('IndividualPosts');
             setGlobalPost(posts);
           }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'row',
-            marginLeft: 17,
-          }}
+          style={styles.commentContainer}
         >
           <MaterialCommunityIcons
             name='message-outline'
             size={24}
             color={styleVariables.colors.black}
-            style={{ marginRight: 8 }}
+            style={styles.icon}
           />
           <Text
-            style={[
-              styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black },
-            ]}
+            style={[styleVariables.fontSizes.body, styles.likeAndCommentCount]}
           >
             {numberOfComments}
           </Text>
@@ -431,19 +440,40 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
 }
 
 function ListHeader({ navigation, styleVariables, theme }) {
+  const styles = StyleSheet.create({
+    headerPageTitle: {
+      color: styleVariables.colors.white,
+      marginBottom: 4,
+    },
+    buildingInfo: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      opacity: 0.66,
+    },
+    buildingAddress: {
+      color: styleVariables.colors.white,
+    },
+    topCard: {
+      elevation: Platform.OS == 'android' ? 0 : 20,
+    },
+    announcementLink: {
+      marginTop: 17,
+      marginBottom: 22,
+    },
+    announcementText: { color: styleVariables.colors.primary },
+    notificationCounter: {
+      color: styleVariables.colors.white,
+    },
+  });
+
   return (
     <>
       <View id='header' style={theme.header}>
         {/* headerPageTitle */}
         <Text
           id='headerPageTitle'
-          style={[
-            styleVariables.fontSizes.header,
-            {
-              color: styleVariables.colors.white,
-              marginBottom: 4,
-            },
-          ]}
+          style={[styleVariables.fontSizes.header, styles.headerPageTitle]}
         >
           Newsfeed
         </Text>
@@ -453,19 +483,9 @@ function ListHeader({ navigation, styleVariables, theme }) {
           onPress={() => {
             navigation.navigate('BuildingInfo');
           }}
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            opacity: 0.66,
-          }}
+          style={styles.buildingInfo}
         >
-          <Text
-            style={[
-              styleVariables.fontSizes.body,
-              { color: styleVariables.colors.white },
-            ]}
-          >
+          <Text style={[styleVariables.fontSizes.body, styles.buildingAddress]}>
             {globalCurrentUser.buildingAddress}
           </Text>
           <MaterialCommunityIcons
@@ -478,25 +498,16 @@ function ListHeader({ navigation, styleVariables, theme }) {
 
       {/* announcements */}
       <View style={theme.firstListItem}>
-        <View
-          id='topCard'
-          style={[
-            theme.topCard,
-            { elevation: Platform.OS === 'android' ? 0 : 20 },
-          ]}
-        >
+        <View id='topCard' style={[theme.topCard, styles.topCard]}>
           <Pressable
             id='announcements'
             onPress={() => {
               alert('navigate to announcements (not yet implemented)');
             }}
-            style={[theme.cardButton, { marginTop: 17, marginBottom: 22 }]}
+            style={[theme.cardButton, styles.announcementLink]}
           >
             <Text
-              style={[
-                styleVariables.fontSizes.title,
-                { color: styleVariables.colors.primary },
-              ]}
+              style={[styleVariables.fontSizes.title, styles.announcementText]}
             >
               Announcements
             </Text>
@@ -506,7 +517,7 @@ function ListHeader({ navigation, styleVariables, theme }) {
                 style={[
                   theme.notificationCounter,
                   styleVariables.fontSizes.callout,
-                  { color: styleVariables.colors.white },
+                  styles.notificationCounter,
                 ]}
               >
                 99+
@@ -525,39 +536,28 @@ function ListHeader({ navigation, styleVariables, theme }) {
 }
 
 function ListFooter({ styleVariables }) {
+  const styles = StyleSheet.create({
+    footerContainer: {
+      height: 204,
+      paddingVertical: 17,
+      paddingHorizontal: 34,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    footerMessage: {
+      color: styleVariables.colors.black,
+      opacity: 0.66,
+      paddingBottom: 8,
+    },
+  });
+
   return (
-    <View
-      style={{
-        height: 204,
-        paddingVertical: 17,
-        paddingHorizontal: 34,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Text
-        style={[
-          styleVariables.fontSizes.callout,
-          {
-            color: styleVariables.colors.black,
-            opacity: 0.66,
-            paddingBottom: 8,
-          },
-        ]}
-      >
+    <View style={styles.footerContainer}>
+      <Text style={[styleVariables.fontSizes.callout, styles.footerMessage]}>
         Oh oh! Seems like you've reached the end.
       </Text>
-      <Text
-        style={[
-          styleVariables.fontSizes.callout,
-          {
-            color: styleVariables.colors.black,
-            opacity: 0.66,
-            paddingBottom: 102,
-          },
-        ]}
-      >
+      <Text style={[styleVariables.fontSizes.callout, styles.footerMessage]}>
         Refresh at the top for new posts!
       </Text>
     </View>
