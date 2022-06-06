@@ -53,28 +53,28 @@ jobs:
             ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.base_ref }}
             ${{ runner.os }}-metro-cache-${{ matrix.app }}-
       - name: Run Expo Publish
-        run: expo publish --release-channel=production --non-interactive
+        run: expo publish --release-channel=main --non-interactive
         env:
           NODE_OPTIONS: --max_old_space_size=8192
-      - name: Send mail
-        uses: dawidd6/action-send-mail@v3
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.19.0
         with:
-          # Required mail server address:
-          server_address: smtp.gmail.com
-          # Required mail server port:
-          server_port: 465
-          # Optional (recommended): mail server username:
-          username: ${{secrets.MAIL_USERNAME}}
-          # Optional (recommended) mail server password:
-          password: ${{secrets.MAIL_PASSWORD}}
-          # Required mail subject:
-          subject: SmartTenants app is ready for testing
-          # Required recipients' addresses:
-          to: vuon0029@algonquinlive.com
-          # Required sender full name (address can be skipped):
-          from: Admin SmartTenants # <user@example.com>
-          # Optional whether this connection use TLS (default is true if server_port is 465)
-          secure: true
-          # Optional plain body:
-          body: App is ready for review, you can [see it here](https://expo.dev/@smarttenants/smartTenant?release-channel=production).
-          priority: high
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          channel-id: "C03JH7NEKRR"
+          # For posting a rich message using Block Kit
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+             "text": ":white_check_mark: New Pull request merged to main branch, you can test the application at https://expo.dev/@smarttenants/smartTenant?release-channel=main :rocket:"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
