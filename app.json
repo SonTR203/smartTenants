@@ -1,5 +1,6 @@
 {
   "expo": {
+    "owner": "smarttenants",
     "name": "smartTenant",
     "slug": "smartTenant",
     "version": "1.0.0",

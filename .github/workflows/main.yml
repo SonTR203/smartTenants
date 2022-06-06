@@ -1,16 +1,9 @@
 name: Lint
 
 on:
-  # Trigger the workflow on push or pull request,
-  # but only for the main branch
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - Dev
-      - main
-
 jobs:
   run-linters:
     name: Run linters
@@ -24,13 +17,64 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 4.x
+          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
       # ESLint and Prettier must be in `package.json`
       - name: Install Node.js dependencies
         run: yarn
-
+      - name: Run tests
+        run: yarn test
       - name: Run linters
         uses: wearerequired/lint-action@v1
         with:
           eslint: false # needs to fix ESLint errors
           prettier: false # Prettier causes unknown issues with current files
+      # Replace with eas publish
+      # Restore react-native metro cache for speed-up publish time
+      # See: https://github.com/facebook/metro/blob/7dca99af2e2af17921aa4a1e16b1972adc0d11e4/packages/metro-config/src/defaults/index.js#L121-L125
+      - name: Find Metro cache
+        id: metro-cache-dir-path
+        uses: actions/github-script@v4
+        with:
+          result-encoding: string
+          script: |
+            const os = require('os');
+            const path = require('path');
+            return path.join(os.tmpdir(), 'metro-cache');
+      - name: Restore Metro cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.metro-cache-dir-path.outputs.result }}
+          key: ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.ref }}
+          restore-keys: |
+            ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.base_ref }}
+            ${{ runner.os }}-metro-cache-${{ matrix.app }}-
+      - name: Run Expo Publish
+        run: expo publish --release-channel=production --non-interactive
+        env:
+          NODE_OPTIONS: --max_old_space_size=8192
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # Required mail server address:
+          server_address: smtp.gmail.com
+          # Required mail server port:
+          server_port: 465
+          # Optional (recommended): mail server username:
+          username: ${{secrets.MAIL_USERNAME}}
+          # Optional (recommended) mail server password:
+          password: ${{secrets.MAIL_PASSWORD}}
+          # Required mail subject:
+          subject: SmartTenants app is ready for testing
+          # Required recipients' addresses:
+          to: vuon0029@algonquinlive.com
+          # Required sender full name (address can be skipped):
+          from: Admin SmartTenants # <user@example.com>
+          # Optional whether this connection use TLS (default is true if server_port is 465)
+          secure: true
+          # Optional plain body:
+          body: App is ready for review, you can [see it here](https://expo.dev/@smarttenants/smartTenant?release-channel=production).
+          priority: high
