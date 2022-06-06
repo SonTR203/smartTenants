@@ -20,6 +20,5 @@ export const getNotifications = async (currentUser) => {
     notificationsList,
     "timestamp.integerValue"
   ).reverse();
-
   return sortedListOfNotifications;
 };

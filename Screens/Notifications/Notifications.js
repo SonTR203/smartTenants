@@ -9,7 +9,7 @@ import { useTheme } from "../../ThemeContext";
 import NotificationItem from "./NotificationItem";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
-import { getNotifications } from "./notifications.services";
+import { getNotifications } from "../../utils/Notifications/notifications.services";
 
 const Notifications = ({ navigation }) => {
   const [theme, styleVariables] = useTheme();
@@ -59,7 +59,10 @@ const Notifications = ({ navigation }) => {
             }}
             refreshControl={
               <RefreshControl
-                onRefresh={getNotifications}
+                onRefresh={async () => {
+                  const list = await getNotifications(currentUser);
+                  setNotifications(list);
+                }}
                 refreshing={refreshing}
                 style={styles.refreshControl}
                 tintColor={styleVariables.colors.primary}

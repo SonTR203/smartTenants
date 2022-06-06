@@ -60,7 +60,7 @@ function NotificationItem({
   async function viewNotificationPost(notifications) {
     const docRef = doc(db, "Newsfeed", `${notifications.postID}`);
     const docSnap = await getDoc(docRef);
-    let postData = docSnap.data();
+    const postData = docSnap.data();
     const likesColReference = collection(
       db,
       "Newsfeed",
