@@ -10,15 +10,15 @@ export const setTime = (item) => {
 
     if (timeDifferenceMinutes <= 59) {
       if (timeDifferenceMinutes > 1) {
-        return timeDifferenceMinutes + ' minutes ago';
+        return timeDifferenceMinutes + " minutes ago";
       } else {
-        return timeDifferenceMinutes + ' minute ago';
+        return timeDifferenceMinutes + " minute ago";
       }
     } else if (timeDifferenceMinutes > 59 && timeDifferenceHours <= 23) {
       if (timeDifferenceHours > 1) {
-        return timeDifferenceHours + ' hours ago';
+        return timeDifferenceHours + " hours ago";
       } else {
-        return timeDifferenceHours + ' hour ago';
+        return timeDifferenceHours + " hour ago";
       }
     } else if (
       timeDifferenceDays <= 6 &&
@@ -26,9 +26,9 @@ export const setTime = (item) => {
       timeDifferenceHours > 23
     ) {
       if (timeDifferenceDays > 1) {
-        return timeDifferenceDays + ' days ago';
+        return timeDifferenceDays + " days ago";
       } else {
-        return timeDifferenceDays + ' day ago';
+        return timeDifferenceDays + " day ago";
       }
     } else if (
       timeDifferenceWeeks <= 10 &&
@@ -37,12 +37,12 @@ export const setTime = (item) => {
       timeDifferenceHours > 23
     ) {
       if (timeDifferenceWeeks > 1) {
-        return timeDifferenceWeeks + ' weeks ago';
+        return timeDifferenceWeeks + " weeks ago";
       } else {
-        return timeDifferenceWeeks + ' week ago';
+        return timeDifferenceWeeks + " week ago";
       }
     } else {
-      return '10+ weeks ago';
+      return "10+ weeks ago";
     }
   }
 };
