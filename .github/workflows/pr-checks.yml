@@ -45,3 +45,4 @@ jobs:
       - run: expo publish --release-channel=pr-${{ github.event.number }}
         env:
           NODE_OPTIONS: --max_old_space_size=8192
+      - run: echo 'App PR link is https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}'
