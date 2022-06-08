@@ -1,16 +1,9 @@
 name: Lint
 
 on:
-  # Trigger the workflow on push or pull request,
-  # but only for the main branch
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - Dev
-      - main
-
 jobs:
   run-linters:
     name: Run linters
@@ -24,13 +17,64 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 4.x
+          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
       # ESLint and Prettier must be in `package.json`
       - name: Install Node.js dependencies
         run: yarn
-
+      - name: Run tests
+        run: yarn test
       - name: Run linters
         uses: wearerequired/lint-action@v1
         with:
           eslint: false # needs to fix ESLint errors
           prettier: false # Prettier causes unknown issues with current files
+      # Replace with eas publish
+      # Restore react-native metro cache for speed-up publish time
+      # See: https://github.com/facebook/metro/blob/7dca99af2e2af17921aa4a1e16b1972adc0d11e4/packages/metro-config/src/defaults/index.js#L121-L125
+      - name: Find Metro cache
+        id: metro-cache-dir-path
+        uses: actions/github-script@v4
+        with:
+          result-encoding: string
+          script: |
+            const os = require('os');
+            const path = require('path');
+            return path.join(os.tmpdir(), 'metro-cache');
+      - name: Restore Metro cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.metro-cache-dir-path.outputs.result }}
+          key: ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.ref }}
+          restore-keys: |
+            ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.base_ref }}
+            ${{ runner.os }}-metro-cache-${{ matrix.app }}-
+      - name: Run Expo Publish
+        run: expo publish --release-channel=main --non-interactive
+        env:
+          NODE_OPTIONS: --max_old_space_size=8192
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.19.0
+        with:
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          channel-id: "C03JH7NEKRR"
+          # For posting a rich message using Block Kit
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+             "text": ":white_check_mark: New Pull request merged to main branch, you can test the application at https://expo.dev/@smarttenants/smartTenant?release-channel=main :rocket:"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

@@ -8,7 +8,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "lint": "eslint . --ext [.js,.ts,.tsx]",
     "prettier": "prettier --write . --ext [.js,.ts,.tsx]"
@@ -33,6 +33,7 @@
     "expo-updates": "^0.11.6",
     "expo-web-browser": "~10.1.0",
     "firebase": "^9.8.2",
+    "jest": "^28.1.0",
     "lodash": "^4.17.21",
     "prettier": "^2.5.1",
     "react": "17.0.1",
