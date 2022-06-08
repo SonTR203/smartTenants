@@ -1,9 +1,10 @@
-import React from "react";
+import React, { memo } from "react";
 import { View, Text, Pressable, Platform, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function ListHeader({ styleVariables, theme }) {
   const styles = StyleSheet.create({
+    container: { flex: 1, marginTop: 0 },
     topCard: {
       elevation: Platform.OS == "android" ? 0 : 20,
     },
@@ -18,7 +19,7 @@ function ListHeader({ styleVariables, theme }) {
   });
 
   return (
-    <View style={{ flex: 1, backgroundColor: "red" }}>
+    <View style={styles.container}>
       {/* announcements */}
       <View style={theme.firstListItem}>
         <View id="topCard" style={[theme.topCard, styles.topCard]}>
@@ -58,4 +59,4 @@ function ListHeader({ styleVariables, theme }) {
   );
 }
 
-export default ListHeader;
+export default memo(ListHeader);

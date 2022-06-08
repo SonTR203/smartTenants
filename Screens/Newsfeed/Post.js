@@ -8,13 +8,17 @@ import {
   deleteDoc,
   doc,
 } from "@firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "../../ThemeContext";
 import { db } from "../../firebase-config";
 import { useAppContext } from "../../Context/AppContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { setTime } from "../../utils/setTime";
 
 //============================== Individual Post Cards ==========================
-function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
+function Post({ posts, windowWidth }) {
+  const navigation = useNavigation();
+  const { theme, styleVariables } = useTheme();
   const [numberOfLikes, setNumberOfLikes] = useState(0);
   const [numberOfComments, setNumberOfComments] = useState(0);
   const [timeSincePost, setTimeSincePost] = useState("");
@@ -211,7 +215,7 @@ function Post({ posts, navigation, theme, styleVariables, windowWidth }) {
       <TouchableOpacity
         id="postContent"
         onPress={() => {
-          navigation.push("IndividualPosts");
+          navigation.navigate("IndividualPosts");
           setPost(posts);
         }}
       >

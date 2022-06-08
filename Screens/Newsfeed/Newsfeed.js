@@ -15,7 +15,7 @@ import Fab from "./Fab";
 import { wait } from "../../utils/wait";
 
 const Newsfeed = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme();
+  const { theme, styleVariables } = useTheme();
   const [posts, setPosts] = useState([]);
   const colRef = collection(db, "Newsfeed");
   const [refreshing, setRefreshing] = useState(true);
@@ -32,6 +32,21 @@ const Newsfeed = ({ navigation }) => {
   const styles = StyleSheet.create({
     newsfeedContainer: {
       flex: 1,
+      backgroundColor: styleVariables.colors.primary,
+      overflow: "hidden",
+    },
+    flatlist: {
+      flex: 1,
+
+      borderTopLeftRadius: 27,
+      borderTopRightRadius: 27,
+      backgroundColor: styleVariables.colors.white,
+    },
+    flatListContainer: {
+      flex: 1,
+      borderTopLeftRadius: 27,
+      borderTopRightRadius: 27,
+      overflow: "hidden",
       backgroundColor: styleVariables.colors.primary,
     },
   });
@@ -55,45 +70,36 @@ const Newsfeed = ({ navigation }) => {
     setRefreshing(false);
   };
 
+  const callBackRender = useCallback(
+    ({ item, index }) => renderPostItem({ item, index }),
+    [[posts]]
+  );
+
+  const renderPostItem = ({ item }) => (
+    <Post posts={item} windowWidth={windowWidth} />
+  );
+
   return (
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
 
-      <View
-        style={{
-          borderTopLeftRadius: 27,
-          borderTopRightRadius: 27,
-          overflow: "hidden",
-          backgroundColor: styleVariables.colors.white,
-        }}
-      >
+      <View style={styles.flatListContainer}>
         <FlatList
-          style={{
-            marginTop: 20,
-          }}
-          contentContainerStyle={{
-            backgroundColor: styleVariables.colors.white,
-          }}
+          removeClippedSubviews={true}
+          initialNumToRender={3}
+          style={styles.flatlist}
           ListHeaderComponent={
             <ListHeader styleVariables={styleVariables} theme={theme} />
           }
           data={posts}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <Post
-              posts={item}
-              navigation={navigation}
-              theme={theme}
-              styleVariables={styleVariables}
-              windowWidth={windowWidth}
-            />
-          )}
+          renderItem={callBackRender}
           refreshControl={
             <RefreshControl
               onRefresh={onRefresh}
               refreshing={refreshing}
               style={{
-                backgroundColor: "white",
+                backgroundColor: styleVariables.colors.white,
               }}
               tintColor={styleVariables.colors.primary}
             />

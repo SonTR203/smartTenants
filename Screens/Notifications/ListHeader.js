@@ -1,23 +1,10 @@
 import React from "react";
 import { StyleSheet, View, Text, Pressable, Platform } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAppContext } from "../../Context/AppContext";
 
-function ListHeader({ navigation, styleVariables, theme }) {
-  const { currentUser } = useAppContext();
-
+function ListHeader({ styleVariables, theme }) {
   const styles = StyleSheet.create({
-    pageTitle: {
-      color: styleVariables.colors.white,
-      marginBottom: 4,
-    },
-    buildingInfo: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      opacity: 0.66,
-    },
-    buildingInfoText: { color: styleVariables.colors.white },
+    container: { flex: 1 },
     topCard: { elevation: Platform.OS === "android" ? 0 : 20 },
     cardButton: { marginTop: 17, marginBottom: 17 },
     cardButtonBottom: { marginTop: 0, marginBottom: 17 },
@@ -33,36 +20,7 @@ function ListHeader({ navigation, styleVariables, theme }) {
   });
 
   return (
-    <View style={{ flex: 1 }}>
-      <View id="header" style={theme.header}>
-        {/* headerPageTitle */}
-        <Text
-          id="headerPageTitle"
-          style={[styleVariables.fontSizes.header, styles.pageTitle]}
-        >
-          Notifications
-        </Text>
-        {/* buildingInfo */}
-        <Pressable
-          id="buildingInfo"
-          onPress={() => {
-            navigation.navigate("BuildingInfo");
-          }}
-          style={styles.buildingInfo}
-        >
-          <Text
-            style={[styleVariables.fontSizes.body, styles.buildingInfoText]}
-          >
-            {currentUser.buildingAddress}
-          </Text>
-          <MaterialCommunityIcons
-            name="chevron-right"
-            size={24}
-            color={styleVariables.colors.white}
-          />
-        </Pressable>
-      </View>
-
+    <View style={styles.container}>
       {/* announcements */}
       <View style={theme.firstListItem}>
         <View id="topCard" style={[theme.topCard, styles.topCard]}>

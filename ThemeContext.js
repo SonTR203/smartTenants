@@ -7,7 +7,7 @@ const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 function ThemeProvider(props) {
-  return <ThemeContext.Provider value={[theme, styleVariables]} {...props} />;
+  return <ThemeContext.Provider value={{ theme, styleVariables }} {...props} />;
 }
 
 function useTheme() {

@@ -1,14 +1,14 @@
 import React from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
-import { useTheme } from "../../ThemeContext";
-import { useAppContext } from "../../Context/AppContext";
+import { useTheme } from "../ThemeContext";
+import { useAppContext } from "../Context/AppContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
-function NewsfeedScreenHeader() {
+function ScreenHeader({ title }) {
   const navigation = useNavigation();
-  const [theme, styleVariables] = useTheme();
+  const { theme, styleVariables } = useTheme();
   const { currentUser } = useAppContext();
   const styles = StyleSheet.create({
     headerPageTitle: {
@@ -32,7 +32,7 @@ function NewsfeedScreenHeader() {
         id="headerPageTitle"
         style={[styleVariables.fontSizes.header, styles.headerPageTitle]}
       >
-        Newsfeed
+        {title}
       </Text>
 
       <Pressable
@@ -55,4 +55,4 @@ function NewsfeedScreenHeader() {
   );
 }
 
-export default NewsfeedScreenHeader;
+export default ScreenHeader;

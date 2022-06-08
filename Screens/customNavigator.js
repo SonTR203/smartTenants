@@ -26,7 +26,7 @@ import ManageBuilding from "./Admin/ManageBuildings/ManageBuilding";
 import ConfirmUser from "./Admin/ApproveUsers/ConfirmUser";
 import ManageUser from "./Admin/ManageUsers/ManageUser";
 import CreateAnnouncement from "./Admin/CreateAnnouncement/CreateAnnouncement";
-import NewsfeedScreenHeader from "./Newsfeed/NewsfeedScreenHeader";
+import ScreenHeader from "../components/ScreenHeader";
 
 const Stack = createStackNavigator();
 
@@ -43,7 +43,7 @@ const NewsfeedNavigator = () => {
             title: "Newsfeed",
             headerLeft: null,
             headerShown: true,
-            header: () => <NewsfeedScreenHeader />,
+            header: () => <ScreenHeader title={"Newsfeed"} />,
           }}
         />
         <Stack.Screen
@@ -129,7 +129,11 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name="ProfileGeneral"
         component={ProfileGeneral}
-        options={{ title: "Profile", headerShown: false }}
+        options={{
+          title: "Profile",
+          headerShown: true,
+          header: () => <ScreenHeader title={"Profile"} />,
+        }}
       />
       <Stack.Screen
         name="EditProfile"
@@ -274,7 +278,10 @@ const NotificationNavigator = () => {
       <Stack.Screen
         name="Notifications"
         component={Notifications}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: true,
+          header: () => <ScreenHeader title={"Notifications"} />,
+        }}
       />
       <Stack.Screen
         name="IndividualPosts"

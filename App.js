@@ -1,92 +1,79 @@
-import { StyleSheet } from 'react-native'
 import {
   useFonts,
   Roboto_400Regular,
   Roboto_500Medium,
-  Roboto_700Bold
-} from '@expo-google-fonts/roboto'
-import { ThemeProvider } from './ThemeContext'
-import AppLoading from 'expo-app-loading'
-import { useState } from 'react'
-import { NavigationContainer } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import Marketplace from './Screens/Marketplace/Marketplace'
-import { AppProvider } from './Context/AppContext'
-import Splashscreen from './Screens/Splashscreen/Splashscreen'
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
+  Roboto_700Bold,
+} from "@expo-google-fonts/roboto";
+import { ThemeProvider } from "./ThemeContext";
+import AppLoading from "expo-app-loading";
+import React, { useState, useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Marketplace from "./Screens/Marketplace/Marketplace";
+import { AppProvider } from "./Context/AppContext";
+import Splashscreen from "./Screens/Splashscreen/Splashscreen";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import {
   NewsfeedNavigator,
   ProfileNavigator,
-  NotificationNavigator
-} from './Screens/customNavigator.js'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+  NotificationNavigator,
+} from "./Screens/customNavigator.js";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const Tab = createBottomTabNavigator()
-let globalShowSplashscreen
-let globalSetShowSplashscreen
+const Tab = createBottomTabNavigator();
 
-export default function App () {
-  const [resourcesLoaded, setResourcesLoaded] = useState(false)
-  const [showSplashscreen, setShowSplashscreen] = useState(true)
-  globalShowSplashscreen = showSplashscreen
-  globalSetShowSplashscreen = setShowSplashscreen
+export default function App() {
+  const [showSplashscreen, setShowSplashscreen] = useState(true);
 
   let [fontLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_500Medium,
-    Roboto_700Bold
-  })
+    Roboto_700Bold,
+  });
 
-  const getResources = () => {
-    if (fontLoaded) {
-      Promise.resolve()
-    }
+  if (!fontLoaded) {
+    return <AppLoading />;
   }
 
-  if (resourcesLoaded) {
-    return <AppContainer />
-  } else {
-    return (
-      <AppLoading
-        startAsync={getResources}
-        onFinish={() => {
-          setResourcesLoaded(true)
-        }}
-        onError={console.warn}
-      />
-    )
-  }
+  return (
+    <AppContainer
+      showSplashscreen={showSplashscreen}
+      setShowSplashscreen={setShowSplashscreen}
+    />
+  );
 }
 
-function AppContainer () {
-  setTimeout(() => {
-    globalSetShowSplashscreen(false)
-  }, 2000)
+function AppContainer({ showSplashscreen, setShowSplashscreen }) {
+  useEffect(() => {
+    const timeout = setTimeout(() => setShowSplashscreen(false), 2000);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <ThemeProvider>
       <AppProvider>
-        {globalShowSplashscreen ? (
+        {showSplashscreen ? (
           <Splashscreen />
         ) : (
           <NavigationContainer>
             <Tab.Navigator
-              initialRouteName='Newsfeed '
+              initialRouteName="Newsfeed "
               screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused }) => {
-                  let iconName
-                  let color
-                  if (route.name === 'Marketplace ') {
-                    iconName = 'store'
-                    color = focused ? '#395E66' : '#395E6654'
-                  } else if (route.name === 'Newsfeed ') {
-                    iconName = 'newspaper'
-                    color = focused ? '#395E66' : '#395E6654'
-                  } else if (route.name === 'Notifications ') {
-                    iconName = 'bell'
-                    color = focused ? '#395E66' : '#395E6654'
-                  } else if (route.name === 'Profile ') {
-                    iconName = 'account'
-                    color = focused ? '#395E66' : '#395E6654'
+                  let iconName;
+                  let color;
+                  if (route.name === "Marketplace ") {
+                    iconName = "store";
+                    color = focused ? "#395E66" : "#395E6654";
+                  } else if (route.name === "Newsfeed ") {
+                    iconName = "newspaper";
+                    color = focused ? "#395E66" : "#395E6654";
+                  } else if (route.name === "Notifications ") {
+                    iconName = "bell";
+                    color = focused ? "#395E66" : "#395E6654";
+                  } else if (route.name === "Profile ") {
+                    iconName = "account";
+                    color = focused ? "#395E66" : "#395E6654";
                   }
                   return (
                     <MaterialCommunityIcons
@@ -94,40 +81,40 @@ function AppContainer () {
                       size={28}
                       color={color}
                     />
-                  )
+                  );
                 },
                 headerShown: false,
-                tabBarActiveTintColor: '#395E66'
+                tabBarActiveTintColor: "#395E66",
               })}
             >
               {/* ======= Marketplace ======= */}
-              <Tab.Screen name='Marketplace ' component={Marketplace} />
+              <Tab.Screen name="Marketplace " component={Marketplace} />
 
               {/* ======= Newsfeed ======= */}
               <Tab.Screen
-                name='Newsfeed '
+                name="Newsfeed "
                 component={NewsfeedNavigator}
                 options={({ route }) => ({
-                  left: { display: 'none' },
+                  left: { display: "none" },
                   tabBarStyle: {
-                    display: getRouteName(route) ? getRouteName(route) : 'none'
-                  }
+                    display: getRouteName(route) ? getRouteName(route) : "none",
+                  },
                 })}
               />
 
               {/* ======= Notifications ======= */}
               <Tab.Screen
-                name='Notifications '
+                name="Notifications "
                 component={NotificationNavigator}
               />
 
               {/* ======= Profile ======= */}
               <Tab.Screen
-                name='Profile '
+                name="Profile "
                 component={ProfileNavigator}
                 options={{ headerShown: false }}
                 tabBarOptions={{
-                  display: 'none'
+                  display: "none",
                 }}
               />
             </Tab.Navigator>
@@ -135,20 +122,20 @@ function AppContainer () {
         )}
       </AppProvider>
     </ThemeProvider>
-  )
+  );
 }
 
-const getRouteName = route => {
-  const routeName = getFocusedRouteNameFromRoute(route)
+const getRouteName = (route) => {
+  const routeName = getFocusedRouteNameFromRoute(route);
   if (
-    routeName?.includes('Login') ||
-    routeName?.includes('Signup') ||
-    routeName?.includes('AccountApprovalPending') ||
-    routeName?.includes('ForgotPassword')
+    routeName?.includes("Login") ||
+    routeName?.includes("Signup") ||
+    routeName?.includes("AccountApprovalPending") ||
+    routeName?.includes("ForgotPassword")
   ) {
-    return 'none'
+    return "none";
   } else if (routeName == undefined) {
-    return 'none'
+    return "none";
   }
-  return 'flex'
-}
+  return "flex";
+};

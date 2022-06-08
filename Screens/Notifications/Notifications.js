@@ -11,7 +11,7 @@ import { getNotifications } from "../../utils/Notifications/notifications.servic
 import { wait } from "../../utils/wait";
 
 const Notifications = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme();
+  const { theme, styleVariables } = useTheme();
   const { currentUser } = useAppContext();
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
@@ -38,58 +38,70 @@ const Notifications = ({ navigation }) => {
     }
   }, [currentUser]);
 
+  const callBackRender = useCallback(
+    ({ item, index }) => renderNotificationItem({ item, index }),
+    [[notifications]]
+  );
+
+  const renderNotificationItem = ({ item }) => {
+    return (
+      <NotificationItem
+        notifications={item}
+        navigation={navigation}
+        theme={theme}
+        styleVariables={styleVariables}
+        wasSeenVar={wasSeenVar}
+        setWasSeenVar={setWasSeenVar}
+      />
+    );
+  };
+
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: styleVariables.colors.primary }}
       edges={["top"]}
     >
       <StatusBar style="light" />
-      <View style={[theme.pageContainer, styles.container]}>
-        <ListHeader
-          navigation={navigation}
-          styleVariables={styleVariables}
-          theme={theme}
+      <View
+        style={{
+          flex: 1,
+          borderTopLeftRadius: 27,
+          borderTopRightRadius: 27,
+          overflow: "hidden",
+          backgroundColor: styleVariables.colors.white,
+        }}
+      >
+        <FlatList
+          ListHeaderComponent={
+            <ListHeader styleVariables={styleVariables} theme={theme} />
+          }
+          style={styles.flatlist}
+          contentContainerStyle={styles.flatListContainer}
+          data={notifications}
+          renderItem={callBackRender}
+          refreshControl={
+            <RefreshControl
+              onRefresh={onRefresh}
+              refreshing={refreshing}
+              style={styles.refreshControl}
+              tintColor={styleVariables.colors.primary}
+            />
+          }
+          keyExtractor={(item) => item.id}
+          ListFooterComponent={
+            <ListFooter styleVariables={styleVariables} theme={theme} />
+          }
         />
-        {notifications.length === 0 ? null : (
-          <FlatList
-            style={styles.flatlist}
-            data={notifications}
-            renderItem={({ item }) => {
-              return (
-                <NotificationItem
-                  notifications={item}
-                  navigation={navigation}
-                  theme={theme}
-                  styleVariables={styleVariables}
-                  wasSeenVar={wasSeenVar}
-                  setWasSeenVar={setWasSeenVar}
-                />
-              );
-            }}
-            refreshControl={
-              <RefreshControl
-                onRefresh={onRefresh}
-                refreshing={refreshing}
-                style={styles.refreshControl}
-                tintColor={styleVariables.colors.primary}
-              />
-            }
-            keyExtractor={(item) => item.id}
-            ListFooterComponent={
-              <ListFooter styleVariables={styleVariables} theme={theme} />
-            }
-          />
-        )}
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   flatlist: { flex: 1 },
+  flatListContainer: {
+    backgroundColor: "white",
+  },
   refreshControl: { backgroundColor: "white" },
 });
 

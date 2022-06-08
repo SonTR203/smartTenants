@@ -6,7 +6,7 @@ import { useTheme } from "../../ThemeContext";
 const windowWidth = Dimensions.get("window").width;
 
 function AccountApprovalPending({ navigation }) {
-  const [theme, styleVariables] = useTheme();
+  const { theme, styleVariables } = useTheme();
 
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>

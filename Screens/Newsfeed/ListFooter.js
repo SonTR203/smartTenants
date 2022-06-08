@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 function ListFooter({ styleVariables }) {
@@ -30,4 +30,4 @@ function ListFooter({ styleVariables }) {
   );
 }
 
-export default ListFooter;
+export default memo(ListFooter);
