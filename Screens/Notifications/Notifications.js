@@ -1,15 +1,14 @@
-import { React, useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, FlatList, RefreshControl, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../Context/AppContext";
-
 import { useTheme } from "../../ThemeContext";
-
 import NotificationItem from "./NotificationItem";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
 import { getNotifications } from "../../utils/Notifications/notifications.services";
+import { wait } from "../../utils/wait";
 
 const Notifications = ({ navigation }) => {
   const [theme, styleVariables] = useTheme();
@@ -17,6 +16,16 @@ const Notifications = ({ navigation }) => {
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
   const [refreshing, setRefreshing] = useState(true);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    wait(1000).then(async () => {
+      const list = await getNotifications(currentUser);
+      setNotifications(list);
+      setRefreshing(false);
+    });
+  }, []);
 
   useEffect(() => {
     if (currentUser) {
@@ -59,10 +68,7 @@ const Notifications = ({ navigation }) => {
             }}
             refreshControl={
               <RefreshControl
-                onRefresh={async () => {
-                  const list = await getNotifications(currentUser);
-                  setNotifications(list);
-                }}
+                onRefresh={onRefresh}
                 refreshing={refreshing}
                 style={styles.refreshControl}
                 tintColor={styleVariables.colors.primary}
