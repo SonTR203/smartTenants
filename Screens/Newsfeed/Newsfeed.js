@@ -17,7 +17,6 @@ import { wait } from "../../utils/wait";
 const Newsfeed = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
   const [posts, setPosts] = useState([]);
-  const colRef = collection(db, "Newsfeed");
   const [refreshing, setRefreshing] = useState(true);
 
   const onRefresh = useCallback(() => {
@@ -56,6 +55,7 @@ const Newsfeed = ({ navigation }) => {
   }, []);
 
   const getPosts = async () => {
+    const colRef = collection(db, "Newsfeed");
     const data = await getDocs(colRef);
     let listOfPosts = data.docs.map((item) => ({
       ...item._document.data.value.mapValue.fields,
@@ -65,6 +65,7 @@ const Newsfeed = ({ navigation }) => {
       listOfPosts,
       "timestamp.integerValue"
     ).reverse();
+    console.log("sortedListOfPosts", sortedListOfPosts.length);
     setPosts(sortedListOfPosts);
 
     setRefreshing(false);
@@ -76,7 +77,7 @@ const Newsfeed = ({ navigation }) => {
   );
 
   const renderPostItem = ({ item }) => (
-    <Post posts={item} windowWidth={windowWidth} />
+    <Post post={item} windowWidth={windowWidth} />
   );
 
   return (

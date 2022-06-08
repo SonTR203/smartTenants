@@ -16,7 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { setTime } from "../../utils/setTime";
 
 //============================== Individual Post Cards ==========================
-function Post({ posts, windowWidth }) {
+function Post({ post, windowWidth }) {
   const navigation = useNavigation();
   const { theme, styleVariables } = useTheme();
   const [numberOfLikes, setNumberOfLikes] = useState(0);
@@ -27,106 +27,86 @@ function Post({ posts, windowWidth }) {
   let peopleWhoLiked = [];
   let peopleWhoLikedDocIds = [];
 
-  posts = {
-    comments: posts.comments.arrayValue,
-    id: posts.id,
-    image: posts.images.arrayValue.values[0].stringValue,
-    peopleWhoLiked: posts.peopleWhoLiked.arrayValue,
-    postContent: posts.postContent.stringValue,
-    userID: posts.userID.stringValue,
-    userProfileImage: posts.userProfileImage.stringValue,
-    userFirstName: posts.userFirstName.stringValue,
-    userLastName: posts.userLastName.stringValue,
-    numberOfLikes: numberOfLikes,
-    timestamp: posts.timestamp,
-  };
+  // posts = {
+  //   comments: posts.comments.arrayValue,
+  //   id: posts.id,
+  //   image: posts.images.arrayValue.values[0].stringValue,
+  //   peopleWhoLiked: posts.peopleWhoLiked.arrayValue,
+  //   postContent: posts.postContent.stringValue,
+  //   userID: posts.userID.stringValue,
+  //   userProfileImage: posts.userProfileImage.stringValue,
+  //   userFirstName: posts.userFirstName.stringValue,
+  //   userLastName: posts.userLastName.stringValue,
+  //   numberOfLikes: numberOfLikes,
+  //   timestamp: posts.timestamp,
+  // };
 
   useEffect(() => {
-    getLikes();
-  }, []);
+    if (post) {
+      console.log("post", post);
+      // if (post.peopleWhoLiked.arrayValue.values) {
+      //   setHeartsToGreen();
+      // }
 
-  const getLikes = async () => {
-    const likesColReference = collection(
-      db,
-      "Newsfeed",
-      `${posts.id}`,
-      "peopleWhoLiked"
-    );
+      // const time = setTime(post.timestamp.integerValue);
+      // setTimeSincePost(time);
 
-    const data = await getDocs(likesColReference);
-    setNumberOfLikes(data.docs.length);
-    data.docs.map((item) => {
-      peopleWhoLiked.push(item._document.data.value.mapValue.fields.userID);
-    });
+      // console.log("post", post);
 
-    //set new array of the docoument ids for all likes
-    data.docs.map((item) => {
-      peopleWhoLikedDocIds.push(item._document.key.path.segments[8]);
-    });
-
-    const time = setTime(posts.timestamp.integerValue);
-    setTimeSincePost(time);
-
-    getComments();
-    setHeartsToGreen();
-  };
+      setNumberOfComments(post.commentCount.integerValue);
+      if (!isNaN(post.likeCount.integerValue)) {
+        setNumberOfLikes(post.likeCount.integerValue);
+      }
+      // setNumberOfLikes(post.likeCount.integerValue);
+    }
+  }, [post]);
 
   const setHeartsToGreen = () => {
-    peopleWhoLiked.map((item) => {
+    post.peopleWhoLiked.arrayValue.values.map((item) => {
       if (item.stringValue == currentUser.userDocId) {
         setUserLiked(true);
       }
     });
   };
 
-  const getComments = async () => {
-    const likesColReference = collection(
-      db,
-      "Newsfeed",
-      `${posts.id}`,
-      "peopleWhoCommented"
-    );
-    const data = await getDocs(likesColReference);
-    setNumberOfComments(data.docs.length);
-  };
-
   const likePost = async () => {
     // ================ checking is current user liked post ====================
-    if (peopleWhoLiked != 0) {
-      peopleWhoLiked.map((item) => {
-        if (item.stringValue == currentUser.userDocId) {
-          setUserLiked(false);
-
-          removeLike();
-        } else {
-          createLikeInDB();
-        }
-      });
+    if (userLiked) {
+      const res = await removeLike();
+      if (res) {
+        setUserLiked(false);
+        setNumberOfLikes(numberOfLikes - 1);
+      }
     } else {
-      createLikeInDB();
+      const res = await addLike();
+      if (res) {
+        setUserLiked(true);
+        setNumberOfLikes(numberOfLikes + 1);
+      }
     }
   };
 
-  const createLikeInDB = async () => {
+  const addLike = async () => {
     const notificationColRef = collection(
       db,
-      `Users/${posts.userID}/Notifications`
+      `Users/${post.userID}/Notifications`
     );
     const peopleWhoLikedColRef = collection(
       db,
-      `Newsfeed/${posts.id}/peopleWhoLiked`
+      `Newsfeed/${post.id}/peopleWhoLiked`
     );
 
     //=========== adding like notification============
     try {
       await addDoc(notificationColRef, {
         content: `${currentUser.firstName} ${currentUser.lastName} liked your post.`,
-        postID: posts.id,
-        userID: posts.userID,
+        postID: post.id,
+        userID: post.userID,
         wasSeen: false,
         timestamp: Date.now(),
       }).then(() => {
-        getLikes();
+        alert("Created like notification!");
+        // getLikes();
       });
     } catch (error) {
       console.log(error);
@@ -137,10 +117,10 @@ function Post({ posts, windowWidth }) {
       await addDoc(peopleWhoLikedColRef, {
         firstName: currentUser.firstName,
         lastName: currentUser.lastName,
-        postID: posts.id,
+        postID: post.id,
         userID: currentUser.userDocId,
       }).then(() => {
-        setUserLiked(true);
+        alert("Updated like in DB!");
       });
     } catch (error) {
       console.log(error);
@@ -149,21 +129,30 @@ function Post({ posts, windowWidth }) {
 
   const removeLike = async () => {
     //remove user from list of peopleWhoLiked
-    peopleWhoLikedDocIds.map(async (item) => {
-      if ((item.userID = currentUser.userDocId)) {
-        const singleDoc = doc(
-          db,
-          `Newsfeed/${posts.id}/peopleWhoLiked/${item}`
-        );
-        await deleteDoc(singleDoc);
-      }
-    });
+    // peopleWhoLikedDocIds.map(async (item) => {
+    //   if ((item.userID = currentUser.userDocId)) {
+    try {
+      const singleDoc = doc(
+        db,
+        `Newsfeed/${post.id}/peopleWhoLiked/${currentUser.userDocId}`
+      );
+      await deleteDoc(singleDoc);
+      return true;
+    } catch (error) {
+      console.log("error remove like: ", error);
+      return false;
+    }
+
+    // }
+    // });
 
     //========= TODO:  delete notification from other user that there was a like =========
 
     // const notificationSingleDoc = doc(db, `Users/${posts.userID}/Notifications/${}`)
     // await deleteDoc(notificationSingleDoc);
   };
+
+  // return null;
 
   return (
     <View id="post" style={theme.cardContainer}>
@@ -188,7 +177,7 @@ function Post({ posts, windowWidth }) {
           }}
         >
           <Image
-            source={{ uri: `${posts.userProfileImage}` }}
+            source={{ uri: `${post.userProfileImage.stringValue}` }}
             style={{ height: 43, width: 43, borderRadius: 12 }}
           />
           <Text
@@ -197,7 +186,7 @@ function Post({ posts, windowWidth }) {
               { color: styleVariables.colors.black, marginLeft: 8 },
             ]}
           >
-            {posts.userFirstName} {posts.userLastName}
+            {post.userFirstName.stringValue} {post.userLastName.stringValue}
           </Text>
         </View>
         <Text
@@ -216,7 +205,7 @@ function Post({ posts, windowWidth }) {
         id="postContent"
         onPress={() => {
           navigation.navigate("IndividualPosts");
-          setPost(posts);
+          setPost(post);
         }}
       >
         <View className="postTextContent">
@@ -226,14 +215,14 @@ function Post({ posts, windowWidth }) {
               { color: styleVariables.colors.black, marginBottom: 17 },
             ]}
           >
-            {posts.postContent}
+            {post.postContent.stringValue}
           </Text>
         </View>
 
-        {posts.image != "no image posted" && (
+        {post.images.arrayValue.values[0].stringValue != "no image posted" && (
           <Image
             source={{
-              uri: `${posts.image}`,
+              uri: `${post.images.arrayValue.values[0].stringValue}`,
             }}
             style={{
               height: windowWidth - 68,
@@ -296,7 +285,7 @@ function Post({ posts, windowWidth }) {
           id="comment"
           onPress={() => {
             navigation.navigate("IndividualPosts");
-            setPost(posts);
+            setPost(post);
           }}
           style={{
             display: "flex",

@@ -1,6 +1,4 @@
 export const setTime = (integerValue) => {
-  // const time = item.timestamp;
-  // console.log("item: ", item, "time: ", time);
   if (integerValue != undefined && !isNaN(integerValue)) {
     let timePosted = integerValue;
     let currentTime = Date.now();
