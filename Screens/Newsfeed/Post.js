@@ -64,7 +64,7 @@ function Post({ posts, windowWidth }) {
       peopleWhoLikedDocIds.push(item._document.key.path.segments[8]);
     });
 
-    const time = setTime(posts);
+    const time = setTime(posts.timestamp.integerValue);
     setTimeSincePost(time);
 
     getComments();

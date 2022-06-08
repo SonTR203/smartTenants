@@ -63,6 +63,7 @@ const CreatePost = ({ navigation }) => {
         timestamp: Date.now(),
         peopleWhoLiked: [],
         comments: [],
+        commentCount: 0,
       });
       postSuccess();
       specificPostID = id;
