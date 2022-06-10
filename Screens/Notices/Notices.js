@@ -1,8 +1,14 @@
 import { React, useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase-config";
 import { collection, getDocs } from "firebase/firestore";
+
+const NoticeItem = ({ noticeContent }) => (
+  <View>
+    <Text>{noticeContent}</Text>
+  </View>
+);
 
 function Notices() {
   const [notices, setNotices] = useState([]);
@@ -26,7 +32,12 @@ function Notices() {
 
   return (
     <SafeAreaView>
-      <Text>Notices Screen</Text>
+      <FlatList
+        data={notices}
+        renderItem={({ item }) => {
+          return <NoticeItem noticeContent={item.noticeContent} />;
+        }}
+      />
     </SafeAreaView>
   );
 }
