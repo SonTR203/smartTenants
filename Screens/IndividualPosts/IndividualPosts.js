@@ -44,12 +44,12 @@ const IndividualPosts = ({ navigation }) => {
   useEffect(() => {
     getComments();
 
-    if (post.numberOfLikes == 1) {
+    if (post.peopleWhoLiked.length == 1) {
       setPeoplePerson("person");
     } else {
       setPeoplePerson("people");
     }
-  }, [post.id]);
+  }, [post]);
 
   const Comment = ({ item, theme, styleVariables }) => {
     const [timeSincePost, setTimeSincePost] = useState("");
@@ -198,7 +198,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
   const [timeSincePost, setTimeSincePost] = useState("");
 
   useEffect(() => {
-    let time = setTime(post.timestamp.integerValue);
+    let time = setTime(post.timestamp);
     setTimeSincePost(time);
   }, []);
 
@@ -270,10 +270,10 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
           {post.postContent}
         </Text>
         {/* postImageContent */}
-        {post.image != "no image posted" && (
+        {post.images[0] != "no image posted" && (
           <Image
             source={{
-              uri: `${post.image}`,
+              uri: `${post.images[0]}`,
             }}
             style={{
               width: width - 68,
@@ -329,7 +329,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
                 },
               ]}
             >
-              {` ${post.numberOfLikes} ${peoplePerson}`}
+              {` ${post.peopleWhoLiked.length} ${peoplePerson}`}
             </Text>
           </TouchableOpacity>
         </View>

@@ -56,16 +56,15 @@ const Newsfeed = ({ navigation }) => {
 
   const getPosts = async () => {
     const colRef = collection(db, "Newsfeed");
+
     const data = await getDocs(colRef);
-    let listOfPosts = data.docs.map((item) => ({
-      ...item._document.data.value.mapValue.fields,
-      id: item._key.path.segments[6],
-    }));
-    let sortedListOfPosts = _.sortBy(
-      listOfPosts,
-      "timestamp.integerValue"
-    ).reverse();
-    console.log("sortedListOfPosts", sortedListOfPosts.length);
+    const formattedData = data.docs.map((doc) => {
+      return {
+        ...doc.data(),
+        id: doc.id,
+      };
+    });
+    let sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
     setPosts(sortedListOfPosts);
 
     setRefreshing(false);

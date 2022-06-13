@@ -3,10 +3,10 @@ import { View, Text, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   collection,
-  getDocs,
   addDoc,
   deleteDoc,
   doc,
+  updateDoc,
 } from "@firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../ThemeContext";
@@ -24,46 +24,23 @@ function Post({ post, windowWidth }) {
   const [timeSincePost, setTimeSincePost] = useState("");
   const [userLiked, setUserLiked] = useState(false);
   const { currentUser, setPost } = useAppContext();
-  let peopleWhoLiked = [];
-  let peopleWhoLikedDocIds = [];
-
-  // posts = {
-  //   comments: posts.comments.arrayValue,
-  //   id: posts.id,
-  //   image: posts.images.arrayValue.values[0].stringValue,
-  //   peopleWhoLiked: posts.peopleWhoLiked.arrayValue,
-  //   postContent: posts.postContent.stringValue,
-  //   userID: posts.userID.stringValue,
-  //   userProfileImage: posts.userProfileImage.stringValue,
-  //   userFirstName: posts.userFirstName.stringValue,
-  //   userLastName: posts.userLastName.stringValue,
-  //   numberOfLikes: numberOfLikes,
-  //   timestamp: posts.timestamp,
-  // };
 
   useEffect(() => {
     if (post) {
-      console.log("post", post);
-      // if (post.peopleWhoLiked.arrayValue.values) {
-      //   setHeartsToGreen();
-      // }
-
-      // const time = setTime(post.timestamp.integerValue);
-      // setTimeSincePost(time);
-
-      // console.log("post", post);
-
-      setNumberOfComments(post.commentCount.integerValue);
-      if (!isNaN(post.likeCount.integerValue)) {
-        setNumberOfLikes(post.likeCount.integerValue);
+      if (post.peopleWhoLiked.length > 0) {
+        setHeartsToGreen();
+        setNumberOfLikes(post.peopleWhoLiked.length);
       }
-      // setNumberOfLikes(post.likeCount.integerValue);
+
+      const time = setTime(post.timestamp);
+      setTimeSincePost(time);
+      setNumberOfComments(post.commentCount);
     }
   }, [post]);
 
   const setHeartsToGreen = () => {
-    post.peopleWhoLiked.arrayValue.values.map((item) => {
-      if (item.stringValue == currentUser.userDocId) {
+    post.peopleWhoLiked.map((item) => {
+      if (item == currentUser.userDocId) {
         setUserLiked(true);
       }
     });
@@ -95,6 +72,7 @@ function Post({ post, windowWidth }) {
       db,
       `Newsfeed/${post.id}/peopleWhoLiked`
     );
+    const peopleWhoLikedDocRef = doc(db, "Newsfeed", post.id);
 
     //=========== adding like notification============
     try {
@@ -109,10 +87,11 @@ function Post({ post, windowWidth }) {
         // getLikes();
       });
     } catch (error) {
-      console.log(error);
+      console.log("error adding like to Notification", error);
+      return false;
     }
 
-    // =============== adding user to peopleWhoLiked subcollection =============
+    // =============== adding user to peopleWhoLiked subcollection & update peopleWhoLiked array =============
     try {
       await addDoc(peopleWhoLikedColRef, {
         firstName: currentUser.firstName,
@@ -122,9 +101,16 @@ function Post({ post, windowWidth }) {
       }).then(() => {
         alert("Updated like in DB!");
       });
+
+      await updateDoc(peopleWhoLikedDocRef, {
+        peopleWhoLiked: [...post.peopleWhoLiked, currentUser.userDocId],
+      });
     } catch (error) {
-      console.log(error);
+      console.log("error adding like to DB", error);
+      return false;
     }
+
+    return true;
   };
 
   const removeLike = async () => {
@@ -137,7 +123,13 @@ function Post({ post, windowWidth }) {
         `Newsfeed/${post.id}/peopleWhoLiked/${currentUser.userDocId}`
       );
       await deleteDoc(singleDoc);
-      return true;
+
+      const peopleWhoLikedDocRef = doc(db, "Newsfeed", post.id);
+      await updateDoc(peopleWhoLikedDocRef, {
+        peopleWhoLiked: post.peopleWhoLiked.filter(
+          (item) => item != currentUser.userDocId
+        ),
+      });
     } catch (error) {
       console.log("error remove like: ", error);
       return false;
@@ -150,9 +142,9 @@ function Post({ post, windowWidth }) {
 
     // const notificationSingleDoc = doc(db, `Users/${posts.userID}/Notifications/${}`)
     // await deleteDoc(notificationSingleDoc);
-  };
 
-  // return null;
+    return true;
+  };
 
   return (
     <View id="post" style={theme.cardContainer}>
@@ -177,7 +169,7 @@ function Post({ post, windowWidth }) {
           }}
         >
           <Image
-            source={{ uri: `${post.userProfileImage.stringValue}` }}
+            source={{ uri: `${post.userProfileImage}` }}
             style={{ height: 43, width: 43, borderRadius: 12 }}
           />
           <Text
@@ -186,7 +178,7 @@ function Post({ post, windowWidth }) {
               { color: styleVariables.colors.black, marginLeft: 8 },
             ]}
           >
-            {post.userFirstName.stringValue} {post.userLastName.stringValue}
+            {post.userFirstName} {post.userLastName}
           </Text>
         </View>
         <Text
@@ -215,14 +207,14 @@ function Post({ post, windowWidth }) {
               { color: styleVariables.colors.black, marginBottom: 17 },
             ]}
           >
-            {post.postContent.stringValue}
+            {post.postContent}
           </Text>
         </View>
 
-        {post.images.arrayValue.values[0].stringValue != "no image posted" && (
+        {post.images[0] != "no image posted" && (
           <Image
             source={{
-              uri: `${post.images.arrayValue.values[0].stringValue}`,
+              uri: `${post.images[0]}`,
             }}
             style={{
               height: windowWidth - 68,
