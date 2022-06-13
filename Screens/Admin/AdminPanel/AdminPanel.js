@@ -12,7 +12,7 @@ const AdminPanel = ({ navigation }) => {
   const colRef = collection(db, "Users");
   const { unauthorizedUsers, setUnauthorizedUsers } = useAppContext();
   const { allUsers, setAllUsers } = useAppContext();
-  const [theme, styleVariables] = useTheme();
+  const { theme, styleVariables } = useTheme();
 
   const getCount = async () => {
     const data = await getDocs(colRef);

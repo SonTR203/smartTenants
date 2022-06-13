@@ -7,7 +7,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 export default function CustomSubStackScreenHeader({ ...props }) {
-  const [theme, styleVariables] = useTheme();
+  const { theme, styleVariables } = useTheme();
   return (
     <SafeAreaView edges={["top"]} style={{ backgroundColor: "white" }}>
       <View style={[theme.stackHeader, { paddingHorizontal: 17 }]}>

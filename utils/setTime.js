@@ -1,7 +1,6 @@
-export const setTime = (item) => {
-  let time = item.timestamp;
-  if (time != undefined) {
-    let timePosted = time.integerValue;
+export const setTime = (integerValue) => {
+  if (integerValue != undefined && !isNaN(integerValue)) {
+    let timePosted = integerValue;
     let currentTime = Date.now();
     let timeDifferenceMinutes = ((currentTime - timePosted) / 60000).toFixed(0);
     let timeDifferenceHours = (timeDifferenceMinutes / 60).toFixed(0);
@@ -44,5 +43,7 @@ export const setTime = (item) => {
     } else {
       return "10+ weeks ago";
     }
+  } else {
+    throw new Error("integerValue is undefined or NaN");
   }
 };

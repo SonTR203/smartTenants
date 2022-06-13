@@ -7,7 +7,7 @@ import { useTheme } from "../../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function ProfileActions({ navigation }) {
-  const [theme, styleVariables] = useTheme();
+  const { theme, styleVariables } = useTheme();
   const auth = getAuth();
 
   /*This function logs out the user of both the Firebase database cloud service and the user application

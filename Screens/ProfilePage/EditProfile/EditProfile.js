@@ -29,7 +29,7 @@ import {
 
 const EditProfile = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
-  const [theme, styleVariables] = useTheme();
+  const { theme, styleVariables } = useTheme();
   const [email, setEmail] = useState(currentUser.email);
   const [firstName, setFirstName] = useState(currentUser.firstName);
   const [lastName, setLastName] = useState(currentUser.lastName);

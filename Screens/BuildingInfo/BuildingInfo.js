@@ -26,7 +26,7 @@ const colRef = collection(db, "Buildings");
 const BuildingInfo = () => {
   const { currentUser } = useAppContext();
 
-  const [theme, styleVariables] = useTheme();
+  const { theme, styleVariables } = useTheme();
 
   const [building, setBuilding] = useState({});
   let userBuilding = currentUser.buildingID;
