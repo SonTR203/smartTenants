@@ -27,7 +27,6 @@ const IndividualPosts = ({ navigation }) => {
   // Get all Comments
   const getComments = () => {
     const colRef = collection(db, `/Newsfeed/${post.id}/peopleWhoCommented`);
-    console.log("post", post);
 
     // Get collections data
     getDocs(colRef).then((snapshot) => {
@@ -37,7 +36,6 @@ const IndividualPosts = ({ navigation }) => {
       });
 
       let sortedComments = _.sortBy(commentsArray, "timestamp");
-      console.log("sortedComments", sortedComments);
       setComments(sortedComments);
     });
   };
