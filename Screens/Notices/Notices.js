@@ -3,6 +3,7 @@ import { View, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase-config";
 import { collection, getDocs } from "firebase/firestore";
+import { useTheme } from "../../ThemeContext";
 
 const NoticeItem = ({ noticeContent }) => (
   <View>
@@ -12,6 +13,7 @@ const NoticeItem = ({ noticeContent }) => (
 
 function Notices() {
   const [notices, setNotices] = useState([]);
+  const { theme, styleVariables } = useTheme();
 
   useEffect(() => {
     getNotices();
