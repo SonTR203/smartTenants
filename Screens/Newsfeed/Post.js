@@ -83,7 +83,8 @@ function Post({ post, windowWidth }) {
         wasSeen: false,
         timestamp: Date.now(),
       }).then(() => {
-        alert("Created like notification!");
+        // alert("Created like notification!");
+        console.log("Created like notification!");
         // getLikes();
       });
     } catch (error) {
@@ -99,7 +100,8 @@ function Post({ post, windowWidth }) {
         postID: post.id,
         userID: currentUser.userDocId,
       }).then(() => {
-        alert("Updated like in DB!");
+        // alert("Updated like in DB!");
+        console.log("Added like to peopleWhoLiked subcollection");
       });
 
       await updateDoc(peopleWhoLikedDocRef, {
@@ -114,9 +116,6 @@ function Post({ post, windowWidth }) {
   };
 
   const removeLike = async () => {
-    //remove user from list of peopleWhoLiked
-    // peopleWhoLikedDocIds.map(async (item) => {
-    //   if ((item.userID = currentUser.userDocId)) {
     try {
       const singleDoc = doc(
         db,
@@ -135,13 +134,18 @@ function Post({ post, windowWidth }) {
       return false;
     }
 
-    // }
-    // });
-
     //========= TODO:  delete notification from other user that there was a like =========
-
-    // const notificationSingleDoc = doc(db, `Users/${posts.userID}/Notifications/${}`)
-    // await deleteDoc(notificationSingleDoc);
+    // try {
+    //   const notificationSingleDoc = doc(
+    //     db,
+    //     `Users/${post.userID}/Notifications/${post.postID}`
+    //   );
+    //   const res = await deleteDoc(notificationSingleDoc);
+    //   console.log("delete notification", res);
+    // } catch (error) {
+    //   console.log("error deleting notification", error);
+    //   return false;
+    // }
 
     return true;
   };

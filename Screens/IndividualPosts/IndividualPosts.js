@@ -27,6 +27,7 @@ const IndividualPosts = ({ navigation }) => {
   // Get all Comments
   const getComments = () => {
     const colRef = collection(db, `/Newsfeed/${post.id}/peopleWhoCommented`);
+    console.log("post", post);
 
     // Get collections data
     getDocs(colRef).then((snapshot) => {
@@ -36,6 +37,7 @@ const IndividualPosts = ({ navigation }) => {
       });
 
       let sortedComments = _.sortBy(commentsArray, "timestamp");
+      console.log("sortedComments", sortedComments);
       setComments(sortedComments);
     });
   };
@@ -43,7 +45,6 @@ const IndividualPosts = ({ navigation }) => {
   // execute function
   useEffect(() => {
     getComments();
-
     if (post.peopleWhoLiked.length == 1) {
       setPeoplePerson("person");
     } else {
@@ -166,14 +167,7 @@ const IndividualPosts = ({ navigation }) => {
       <View style={theme.pageContainer}>
         <FlatList
           removeClippedSubviews={true}
-          ListHeaderComponent={
-            <ListHeader
-              post={post}
-              peoplePerson={peoplePerson}
-              theme={theme}
-              styleVariables={styleVariables}
-            />
-          }
+          ListHeaderComponent={<ListHeader peoplePerson={peoplePerson} />}
           data={comments}
           keyExtractor={(item) => item.id}
           renderItem={callBackRender}
@@ -194,11 +188,13 @@ const IndividualPosts = ({ navigation }) => {
 };
 
 //* userPost */
-function ListHeader({ post, peoplePerson, theme, styleVariables }) {
+function ListHeader({ peoplePerson }) {
+  const { post } = useAppContext();
+  const { theme, styleVariables } = useTheme();
   const [timeSincePost, setTimeSincePost] = useState("");
 
   useEffect(() => {
-    let time = setTime(post.timestamp);
+    const time = setTime(post.timestamp);
     setTimeSincePost(time);
   }, []);
 
@@ -270,7 +266,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
           {post.postContent}
         </Text>
         {/* postImageContent */}
-        {post.images[0] != "no image posted" && (
+        {post.images[0] != "no image posted" ? (
           <Image
             source={{
               uri: `${post.images[0]}`,
@@ -282,8 +278,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
               marginBottom: 17,
             }}
           />
-          // 	1
-        )}
+        ) : null}
 
         {/* likeCount */}
         <View

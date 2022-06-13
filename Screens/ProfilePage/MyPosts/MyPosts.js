@@ -3,44 +3,25 @@ import { React, useEffect, useState } from "react";
 import { useAppContext } from "../../../Context/AppContext";
 import { db } from "../../../firebase-config";
 import { useTheme } from "../../../ThemeContext";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { setTime } from "../../../utils/setTime";
+import { getMyPosts } from "../../../utils/Profile/profile.services";
 const windowWidth = Dimensions.get("window").width;
 
-let setUserPost;
-
 const MyPosts = ({ navigation }) => {
-  const { currentUser, setPost } = useAppContext();
+  const { currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
   const [userPosts, setUserPosts] = useState([]);
-  setUserPost = setPost;
-  const colReference = collection(
-    db,
-    "Users",
-    `${currentUser.userDocId}`,
-    "myPosts"
-  );
-
-  function getPosts() {
-    getDocs(colReference)
-      .then((snapshot) => {
-        let postList = [];
-        snapshot.docs.forEach((doc) => {
-          postList.push({ ...doc.data(), id: doc.id });
-        });
-        setUserPosts(postList);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }
 
   useEffect(() => {
-    getPosts();
+    (async function fetchMyPosts() {
+      const list = await getMyPosts(currentUser);
+      setUserPosts(list);
+    })();
   }, []);
 
   return (
@@ -54,7 +35,7 @@ const MyPosts = ({ navigation }) => {
           data={userPosts}
           renderItem={({ item }) => (
             <MyPostItem
-              userPosts={item}
+              userPost={item}
               navigation={navigation}
               theme={theme}
               styleVariables={styleVariables}
@@ -72,38 +53,88 @@ const MyPosts = ({ navigation }) => {
 };
 
 function MyPostItem({
-  userPosts,
+  userPost,
   navigation,
   theme,
   styleVariables,
   windowWidth,
 }) {
-  const [numberOfLikes, setNumberOfLikes] = useState(0);
-  const [numberOfComments, setNumberOfComments] = useState(0);
+  const { setPost } = useAppContext();
+  const [numberOfLikes] = useState(0);
+  const [numberOfComments] = useState(0);
   const [timeSincePost, setTimeSincePost] = useState("");
 
-  const getLikes = async () => {
-    const likesColReference = collection(
-      db,
-      "Newsfeed",
-      `${userPosts.postID}`,
-      "peopleWhoLiked"
-    );
-
-    const data = await getDocs(likesColReference);
-    setNumberOfLikes(data.docs.length);
-    let time = setTime(userPosts);
+  useEffect(() => {
+    // setNumberOfLikes(userPost.peopleWhoLiked.length);
+    // setNumberOfComments(userPost.commentCount);
+    // getLikes();
+    // getComments();
+    let time = setTime(userPost.timestamp);
     setTimeSincePost(time);
-    getComments();
-  };
-  getLikes();
+  }, [userPost]);
 
-  const getComments = async () => {
-    let commentCount = userPosts.commentCount;
-    if (commentCount) {
-      setNumberOfComments(commentCount);
+  // const getLikes = async () => {
+  //   const likesColReference = collection(
+  //     db,
+  //     "Newsfeed",
+  //     `${userPost.postID}`,
+  //     "peopleWhoLiked"
+  //   );
+
+  //   const data = await getDocs(likesColReference);
+  //   data.forEach((doc) => {
+  //     // doc.data() is never undefined for query doc snapshots
+  //     console.log(doc.id, " => ", doc.data());
+  //   });
+  //   // setNumberOfLikes(data.docs.length);
+  // };
+
+  // const getComments = async () => {
+  //   let commentCount = userPost.commentCount;
+  //   if (commentCount) {
+  //     setNumberOfComments(commentCount);
+  //   }
+  // };
+
+  async function viewUserPost(userPosts) {
+    const docRef = doc(db, "Newsfeed", `${userPosts.postID}`);
+    const docSnap = await getDoc(docRef);
+    const postData = docSnap.data();
+    const formattedPost = {
+      ...postData,
+      id: docSnap.id,
+    };
+    if (docSnap.exists()) {
+      // let postData = docSnap;
+      // let post = {
+      //   comments:
+      //     postData._document.data.value.mapValue.fields.comments.arrayValue,
+      //   id: docSnap.id,
+      //   image:
+      //     postData._document.data.value.mapValue.fields.images.arrayValue
+      //       .values[0].stringValue,
+      //   peopleWhoLiked:
+      //     postData._document.data.value.mapValue.fields.peopleWhoLiked.arrayValue,
+      //   postContent:
+      //     postData._document.data.value.mapValue.fields.postContent.stringValue,
+      //   userID: postData._document.data.value.mapValue.fields.userID.stringValue,
+      //   userProfileImage:
+      //     postData._document.data.value.mapValue.fields.userProfileImage
+      //       .stringValue,
+      //   userFirstName:
+      //     postData._document.data.value.mapValue.fields.userFirstName.stringValue,
+      //   userLastName:
+      //     postData._document.data.value.mapValue.fields.userLastName.stringValue,
+      //   numberOfLikes: numberOfLikes,
+      //   timestamp:
+      //     postData._document.data.value.mapValue.fields.timestamp.integerValue,
+      // };
+
+      setPost(formattedPost);
+    } else {
+      console.log("No such document.");
     }
-  };
+  }
 
   return (
     <View id="post" style={theme.cardContainer}>
@@ -129,7 +160,7 @@ function MyPostItem({
           }}
         >
           <Image
-            source={{ uri: `${userPosts.userProfileImage}` }}
+            source={{ uri: `${userPost.userProfileImage}` }}
             style={{ height: 43, width: 43, borderRadius: 12 }}
           />
           <Text
@@ -137,7 +168,7 @@ function MyPostItem({
               styleVariables.fontSizes.bodyBold,
               { color: styleVariables.colors.black, marginLeft: 8 },
             ]}
-          >{`${userPosts.userFirstName} ${userPosts.userLastName}`}</Text>
+          >{`${userPost.userFirstName} ${userPost.userLastName}`}</Text>
         </View>
 
         {/* timePosted */}
@@ -155,9 +186,9 @@ function MyPostItem({
       {/* postContent */}
       <TouchableOpacity
         id="postContent"
-        onPress={() => {
+        onPress={async () => {
+          await viewUserPost(userPost);
           navigation.navigate("IndividualPosts");
-          viewUserPost(userPosts, numberOfLikes);
         }}
       >
         <Text
@@ -166,12 +197,12 @@ function MyPostItem({
             { color: styleVariables.colors.black, marginBottom: 17 },
           ]}
         >
-          {userPosts.postContent}
+          {userPost.postContent}
         </Text>
 
-        {userPosts.images[0] != "no image posted" && (
+        {userPost.images[0] != "no image posted" && (
           <Image
-            source={{ uri: `${userPosts.images[0]}` }}
+            source={{ uri: `${userPost.images[0]}` }}
             style={{
               height: windowWidth - 68,
               width: windowWidth - 68,
@@ -220,9 +251,9 @@ function MyPostItem({
         {/* comment */}
         <TouchableOpacity
           id="comment"
-          onPress={() => {
+          onPress={async () => {
+            await viewUserPost(userPost);
             navigation.navigate("IndividualPosts");
-            viewUserPost(userPosts);
           }}
           style={{
             display: "flex",
@@ -249,41 +280,6 @@ function MyPostItem({
       </View>
     </View>
   );
-}
-
-async function viewUserPost(userPosts, numberOfLikes) {
-  const docRef = doc(db, "Newsfeed", `${userPosts.postID}`);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    let postData = docSnap;
-    let post = {
-      comments:
-        postData._document.data.value.mapValue.fields.comments.arrayValue,
-      id: docSnap.id,
-      image:
-        postData._document.data.value.mapValue.fields.images.arrayValue
-          .values[0].stringValue,
-      peopleWhoLiked:
-        postData._document.data.value.mapValue.fields.peopleWhoLiked.arrayValue,
-      postContent:
-        postData._document.data.value.mapValue.fields.postContent.stringValue,
-      userID: postData._document.data.value.mapValue.fields.userID.stringValue,
-      userProfileImage:
-        postData._document.data.value.mapValue.fields.userProfileImage
-          .stringValue,
-      userFirstName:
-        postData._document.data.value.mapValue.fields.userFirstName.stringValue,
-      userLastName:
-        postData._document.data.value.mapValue.fields.userLastName.stringValue,
-      numberOfLikes: numberOfLikes,
-      timestamp:
-        postData._document.data.value.mapValue.fields.timestamp.integerValue,
-    };
-
-    setUserPost(post);
-  } else {
-    console.log("No such document.");
-  }
 }
 
 function ListFooter({ styleVariables }) {

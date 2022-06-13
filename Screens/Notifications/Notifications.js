@@ -31,7 +31,6 @@ const Notifications = ({ navigation }) => {
     if (currentUser) {
       (async function fetchNotifications() {
         const list = await getNotifications(currentUser);
-
         setNotifications(list);
         setRefreshing(false);
       })();

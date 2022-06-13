@@ -2,17 +2,15 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, FlatList, RefreshControl, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { collection, getDocs } from "@firebase/firestore";
-import { db } from "../../firebase-config";
 import { useTheme } from "../../ThemeContext";
 import { Dimensions } from "react-native";
-import _ from "lodash";
 const windowWidth = Dimensions.get("window").width;
 import Post from "./Post";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
 import Fab from "./Fab";
 import { wait } from "../../utils/wait";
+import { getPosts } from "../../utils/Newsfeed/newsfeed.services";
 
 const Newsfeed = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
@@ -51,24 +49,13 @@ const Newsfeed = ({ navigation }) => {
   });
 
   useEffect(() => {
-    getPosts();
+    (async function fetchNotifications() {
+      const list = await getPosts();
+
+      setPosts(list);
+      setRefreshing(false);
+    })();
   }, []);
-
-  const getPosts = async () => {
-    const colRef = collection(db, "Newsfeed");
-
-    const data = await getDocs(colRef);
-    const formattedData = data.docs.map((doc) => {
-      return {
-        ...doc.data(),
-        id: doc.id,
-      };
-    });
-    let sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
-    setPosts(sortedListOfPosts);
-
-    setRefreshing(false);
-  };
 
   const callBackRender = useCallback(
     ({ item, index }) => renderPostItem({ item, index }),

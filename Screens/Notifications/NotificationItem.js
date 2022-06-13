@@ -3,13 +3,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppContext } from "../../Context/AppContext";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { db } from "../../firebase-config";
-import {
-  collection,
-  getDocs,
-  getDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { setTime } from "../../utils/setTime";
 
 function NotificationItem({
@@ -24,19 +18,10 @@ function NotificationItem({
 
   const { currentUser, setPost } = useAppContext();
 
-  notifications = {
-    content: notifications.content.stringValue,
-    id: notifications.id,
-    postID: notifications.postID.stringValue,
-    timestamp: notifications.timestamp,
-    userID: notifications.userID.stringValue,
-    wasSeen: notifications.wasSeen.booleanValue,
-  };
-
   useEffect(() => {
     if (notifications) {
       (function calculateTime() {
-        const time = setTime(notifications);
+        const time = setTime(notifications.timestamp);
         setTimeSincePost(time);
       })();
     }
@@ -61,31 +46,37 @@ function NotificationItem({
     const docRef = doc(db, "Newsfeed", `${notifications.postID}`);
     const docSnap = await getDoc(docRef);
     const postData = docSnap.data();
-    const likesColReference = collection(
-      db,
-      "Newsfeed",
-      `${docSnap.id}`,
-      "peopleWhoLiked"
-    );
-    const data = await getDocs(likesColReference);
-    let numberOfLikes = data.docs.length;
-
-    let post = {
-      comments: postData.comments.arrayValue,
+    const formattedPost = {
+      ...postData,
       id: docSnap.id,
-      image: postData.images,
-      peopleWhoLiked: postData.peopleWhoLiked,
-      postContent: postData.postContent,
-      userID: postData.userID,
-      userProfileImage: postData.userProfileImage,
-      userFirstName: postData.userFirstName,
-      userLastName: postData.userLastName,
-      numberOfLikes: numberOfLikes,
-      timestamp: postData.timestamp,
     };
 
+    // const likesColReference = collection(
+    //   db,
+    //   "Newsfeed",
+    //   `${docSnap.id}`,
+    //   "peopleWhoLiked"
+    // );
+    // const data = await getDocs(likesColReference);
+    // let numberOfLikes = data.docs.length;
+
+    // let post = {
+    //   comments: postData.comments.arrayValue,
+    //   id: docSnap.id,
+    //   image: postData.images,
+    //   peopleWhoLiked: postData.peopleWhoLiked,
+    //   postContent: postData.postContent,
+    //   userID: postData.userID,
+    //   userProfileImage: postData.userProfileImage,
+    //   userFirstName: postData.userFirstName,
+    //   userLastName: postData.userLastName,
+    //   numberOfLikes: numberOfLikes,
+    //   timestamp: postData.timestamp,
+    // };
+
     if (docSnap.exists()) {
-      setPost(post);
+      setPost(formattedPost);
+      navigation.navigate("IndividualPosts");
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
@@ -135,7 +126,6 @@ function NotificationItem({
         // navigate to post page on press
         id="post"
         onPress={() => {
-          navigation.navigate("IndividualPosts");
           viewNotificationPost(notifications);
           setWasSeenToTrue(notifications);
         }}
