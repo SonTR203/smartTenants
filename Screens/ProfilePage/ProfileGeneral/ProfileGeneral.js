@@ -17,112 +17,104 @@ import * as WebBrowser from "expo-web-browser";
 
 import { Platform } from "expo-modules-core";
 
-import ProfileHeader from "./ProfileHeader";
 import ProfileActions from "./ProfileActions";
 
 /* This is the profile/my info screen for the logged-in user. It *allows the user to navigate to various screens to edit his profile, *see his posts, visit Smart Living residential portal, navigate to *building info screen, admin panel screen if the user is an admin, *as well as logout of the application if the user wishes to
  */
 const ProfileGeneral = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme();
+  const { theme, styleVariables } = useTheme();
 
   const { currentUser } = useAppContext();
 
   return (
     <SafeAreaView style={styles(styleVariables).container} edges={["top"]}>
       <StatusBar style="light" />
-      <ProfileHeader navigation={navigation} currentUser={currentUser} />
 
       {/* scroll view body */}
       <ScrollView style={styles(styleVariables).scrollContainer}>
         {/* userHeader */}
-        <View
-          style={{
-            overflow: "hidden",
-          }}
-        >
-          <View style={[theme.topCard, styles(styleVariables).topCard]}>
-            <View style={styles(styleVariables).headerSection}>
-              {/* userImage */}
-              <View
-                id="userImage"
-                style={styles(styleVariables).userImageContainer}
-              >
-                <Image
-                  source={{ uri: `${currentUser.userProfileImage}` }}
-                  style={styles(styleVariables).userImage}
-                />
-              </View>
+        <View style={[theme.topCard, styles(styleVariables).topCard]}>
+          <View style={styles(styleVariables).headerSection}>
+            {/* userImage */}
+            <View
+              id="userImage"
+              style={styles(styleVariables).userImageContainer}
+            >
+              <Image
+                source={{ uri: `${currentUser.userProfileImage}` }}
+                style={styles(styleVariables).userImage}
+              />
+            </View>
 
-              {/* userFullName */}
-              <Text
-                id="userFullName"
-                style={[
-                  styleVariables.fontSizes.header,
-                  styles(styleVariables).fullNameText,
-                ]}
-              >
-                {`${currentUser.firstName} ${currentUser.lastName}`}
-              </Text>
+            {/* userFullName */}
+            <Text
+              id="userFullName"
+              style={[
+                styleVariables.fontSizes.header,
+                styles(styleVariables).fullNameText,
+              ]}
+            >
+              {`${currentUser.firstName} ${currentUser.lastName}`}
+            </Text>
 
-              {/* goToRewardsOrAdmin */}
-              <View id="goToRewardsOrAdmin">
-                {currentUser.isAdmin ? (
-                  <TouchableOpacity
-                    id="goToAdmin"
-                    /* Navigate to the admin *panel screen if the *user is an admin
-                     */
-                    onPress={() => {
-                      navigation.navigate("AdminPanel");
-                    }}
-                    style={styles(styleVariables).adminButton}
+            {/* goToRewardsOrAdmin */}
+            <View id="goToRewardsOrAdmin">
+              {currentUser.isAdmin ? (
+                <TouchableOpacity
+                  id="goToAdmin"
+                  /* Navigate to the admin *panel screen if the *user is an admin
+                   */
+                  onPress={() => {
+                    navigation.navigate("AdminPanel");
+                  }}
+                  style={styles(styleVariables).adminButton}
+                >
+                  <Text
+                    style={[
+                      styleVariables.fontSizes.bodyBold,
+                      styles(styleVariables).colorPrimary,
+                    ]}
                   >
-                    <Text
-                      style={[
-                        styleVariables.fontSizes.bodyBold,
-                        styles(styleVariables).colorPrimary,
-                      ]}
-                    >
-                      Admin Panel
-                    </Text>
-                    <MaterialCommunityIcons
-                      name="chevron-right"
-                      size={24}
-                      color={styleVariables.colors.primary}
-                      style={styles(styleVariables).materialIcon}
-                    />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    id="goToRewards"
-                    onPress={() => {
-                      // navigation.navigate('Rewards')
-                      alert("navigate to rewards (not yet implemented)");
-                    }}
-                    style={styles(styleVariables).rewardsButton}
+                    Admin Panel
+                  </Text>
+                  <MaterialCommunityIcons
+                    name="chevron-right"
+                    size={24}
+                    color={styleVariables.colors.primary}
+                    style={styles(styleVariables).materialIcon}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  id="goToRewards"
+                  onPress={() => {
+                    // navigation.navigate('Rewards')
+                    alert("navigate to rewards (not yet implemented)");
+                  }}
+                  style={styles(styleVariables).rewardsButton}
+                >
+                  <FontAwesome5
+                    name="coins"
+                    size={17}
+                    color={styleVariables.colors.primary}
+                    style={{ marginRight: 13 }}
+                  />
+                  <Text
+                    style={[
+                      styleVariables.fontSizes.bodyBold,
+                      styles(styleVariables).colorPrimary,
+                    ]}
                   >
-                    <FontAwesome5
-                      name="coins"
-                      size={17}
-                      color={styleVariables.colors.primary}
-                      style={{ marginRight: 13 }}
-                    />
-                    <Text
-                      style={[
-                        styleVariables.fontSizes.bodyBold,
-                        styles(styleVariables).colorPrimary,
-                      ]}
-                    >
-                      12,531
-                    </Text>
-                    <MaterialCommunityIcons
-                      name="chevron-right"
-                      size={24}
-                      color={styleVariables.colors.primary}
-                      style={styles(styleVariables).materialIcon}
-                    />
-                  </TouchableOpacity>
-                )}
-              </View>
+                    12,531
+                  </Text>
+                  <MaterialCommunityIcons
+                    name="chevron-right"
+                    size={24}
+                    color={styleVariables.colors.primary}
+                    style={styles(styleVariables).materialIcon}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </View>
@@ -170,7 +162,8 @@ const styles = (styleVariables) =>
       backgroundColor: styleVariables.colors.primary,
     },
     scrollContainer: {
-      backgroundColor: "white",
+      marginTop: 20,
+      backgroundColor: styleVariables.colors.white,
       borderTopLeftRadius: 27,
       borderTopRightRadius: 27,
     },
@@ -179,6 +172,8 @@ const styles = (styleVariables) =>
     },
     topCard: {
       elevation: Platform.OS === "android" ? 0 : 20,
+      borderTopLeftRadius: 27,
+      borderTopRightRadius: 27,
     },
     headerSection: {
       flex: 1,

@@ -1,29 +1,27 @@
-import { View, Text, Image, FlatList, TextInput } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import React, { useState, useEffect } from 'react';
-import { useAppContext } from '../../Context/AppContext';
-import { db } from '../../firebase-config';
+import { View, Text, Image, FlatList, TextInput } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import React, { useState, useEffect, useCallback } from "react";
+import { useAppContext } from "../../Context/AppContext";
+import { db } from "../../firebase-config";
 import {
   collection,
   getDocs,
   addDoc,
   updateDoc,
   doc,
-} from '@firebase/firestore';
-import _, { update } from 'lodash';
-import { useTheme } from '../../ThemeContext';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Dimensions } from 'react-native';
-import { setTime } from '../../utils/setTime';
-import firebaseConfig from '../../config/env';
-const width = Dimensions.get('window').width;
+} from "@firebase/firestore";
+import _ from "lodash";
+import { useTheme } from "../../ThemeContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Dimensions } from "react-native";
+import { setTime } from "../../utils/setTime";
+const width = Dimensions.get("window").width;
 
 const IndividualPosts = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme();
-  const { post } = useAppContext();
-  const { currentUser } = useAppContext();
-  const [peoplePerson, setPeoplePerson] = useState('people');
+  const { theme, styleVariables } = useTheme();
+  const { currentUser, post } = useAppContext();
+  const [peoplePerson, setPeoplePerson] = useState("people");
   const [comments, setComments] = useState([]);
 
   // Get all Comments
@@ -37,8 +35,7 @@ const IndividualPosts = ({ navigation }) => {
         commentsArray.push({ ...doc.data(), id: doc.id });
       });
 
-      let sortedComments = _.sortBy(commentsArray, 'timestamp');
-
+      let sortedComments = _.sortBy(commentsArray, "timestamp");
       setComments(sortedComments);
     });
   };
@@ -46,25 +43,24 @@ const IndividualPosts = ({ navigation }) => {
   // execute function
   useEffect(() => {
     getComments();
-
-    if (post.numberOfLikes == 1) {
-      setPeoplePerson('person');
+    if (post.peopleWhoLiked.length == 1) {
+      setPeoplePerson("person");
     } else {
-      setPeoplePerson('people');
+      setPeoplePerson("people");
     }
-  }, [post.id]);
+  }, [post]);
 
-  const Comment = ({ item, theme, styleVariables, width }) => {
-    const [timeSincePost, setTimeSincePost] = useState('');
+  const Comment = ({ item, theme, styleVariables }) => {
+    const [timeSincePost, setTimeSincePost] = useState("");
+
     useEffect(() => {
-      const time = setTime(item);
-      console.log(item.timestamp);
+      let time = setTime(item.timestamp);
       setTimeSincePost(time);
     }, []);
 
     return (
       <View
-        id='userComment'
+        id="userComment"
         style={[
           theme.cardContainer,
           {
@@ -74,22 +70,22 @@ const IndividualPosts = ({ navigation }) => {
         ]}
       >
         <View
-          className='commentOwnerInfo'
+          className="commentOwnerInfo"
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
             marginBottom: 12,
           }}
         >
           <View
-            className='commentOwnerImageAndName'
+            className="commentOwnerImageAndName"
             style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
             }}
           >
             <Image
@@ -101,10 +97,12 @@ const IndividualPosts = ({ navigation }) => {
                 styleVariables.fontSizes.bodyBold,
                 { color: styleVariables.colors.black, marginLeft: 8 },
               ]}
-            >{`${item.firstName} ${item.lastName}`}</Text>
+            >
+              {`${item.firstName} ${item.lastName}`}
+            </Text>
           </View>
           <Text
-            id='timeCommentPosted'
+            id="timeCommentPosted"
             style={[
               styleVariables.fontSizes.callout,
               { color: styleVariables.colors.black, opacity: 0.66 },
@@ -114,7 +112,7 @@ const IndividualPosts = ({ navigation }) => {
           </Text>
         </View>
 
-        <View className='commentContent'>
+        <View className="commentContent">
           <Text
             style={[
               styleVariables.fontSizes.body,
@@ -146,30 +144,31 @@ const IndividualPosts = ({ navigation }) => {
     }
   }
 
+  const callBackRender = useCallback(
+    ({ item, index }) => renderPostItem({ item, index }),
+    [[comments]]
+  );
+
+  const renderPostItem = ({ item }) => (
+    <Comment
+      item={item}
+      navigation={navigation}
+      theme={theme}
+      styleVariables={styleVariables}
+      width={width}
+    />
+  );
+
   return (
     <View>
-      <StatusBar style='auto' />
+      <StatusBar style="auto" />
       <View style={theme.pageContainer}>
         <FlatList
-          ListHeaderComponent={
-            <ListHeader
-              post={post}
-              peoplePerson={peoplePerson}
-              theme={theme}
-              styleVariables={styleVariables}
-            />
-          }
+          removeClippedSubviews={true}
+          ListHeaderComponent={<ListHeader peoplePerson={peoplePerson} />}
           data={comments}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <Comment
-              item={item}
-              navigation={navigation}
-              theme={theme}
-              styleVariables={styleVariables}
-              width={width}
-            />
-          )}
+          renderItem={callBackRender}
           ListFooterComponent={
             <ListFooter
               currentUser={currentUser}
@@ -187,37 +186,39 @@ const IndividualPosts = ({ navigation }) => {
 };
 
 //* userPost */
-function ListHeader({ post, peoplePerson, theme, styleVariables }) {
-  const [timeSincePost, setTimeSincePost] = useState('');
+function ListHeader({ peoplePerson }) {
+  const { post } = useAppContext();
+  const { theme, styleVariables } = useTheme();
+  const [timeSincePost, setTimeSincePost] = useState("");
 
   useEffect(() => {
-    let time = setTime(post);
+    const time = setTime(post.timestamp);
     setTimeSincePost(time);
   }, []);
 
   return (
     <View
-      id='userPost'
+      id="userPost"
       style={[theme.cardContainer, { marginTop: 27, flex: 2 }]}
     >
       {/* postOwnerInfo */}
       <View
-        className='postOwnerInfo'
+        className="postOwnerInfo"
         style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
           width: width - 68,
           marginBottom: 12,
         }}
       >
         <View
-          className='ownerImageAndName'
+          className="ownerImageAndName"
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
           <Image
@@ -238,7 +239,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
           </Text>
         </View>
         <Text
-          id='timePosted'
+          id="timePosted"
           style={[
             styleVariables.fontSizes.callout,
             { color: styleVariables.colors.black, opacity: 0.66 },
@@ -249,7 +250,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
       </View>
 
       {/* postContent */}
-      <View className='postContent'>
+      <View className="postContent">
         {/* postTextContent */}
         <Text
           style={[
@@ -263,10 +264,10 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
           {post.postContent}
         </Text>
         {/* postImageContent */}
-        {post.image != 'no image posted' && (
+        {post.images[0] != "no image posted" ? (
           <Image
             source={{
-              uri: `${post.image}`,
+              uri: `${post.images[0]}`,
             }}
             style={{
               width: width - 68,
@@ -275,33 +276,32 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
               marginBottom: 17,
             }}
           />
-          // 	1
-        )}
+        ) : null}
 
         {/* likeCount */}
         <View
-          id='likeCount'
+          id="likeCount"
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'row',
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "row",
             marginBottom: 5,
           }}
         >
           <TouchableOpacity
-            id='like'
+            id="like"
             onPress={() => {
-              alert('like post function');
+              alert("like post function");
             }}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'row',
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "row",
               flex: 1,
             }}
           >
             <MaterialCommunityIcons
-              name='heart-outline'
+              name="heart-outline"
               size={24}
               color={styleVariables.colors.black}
               style={{ marginRight: 8 }}
@@ -322,7 +322,7 @@ function ListHeader({ post, peoplePerson, theme, styleVariables }) {
                 },
               ]}
             >
-              {` ${post.numberOfLikes} ${peoplePerson}`}
+              {` ${post.peopleWhoLiked.length} ${peoplePerson}`}
             </Text>
           </TouchableOpacity>
         </View>
@@ -340,11 +340,11 @@ function ListFooter({
   getComments,
   addCommentNotifications,
 }) {
-  const [textInputValue, setTextInputValue] = useState('');
+  const [textInputValue, setTextInputValue] = useState("");
 
   // Post Comments
   const postComment = () => {
-    if (textInputValue != '') {
+    if (textInputValue != "") {
       const peopleWhoCommentedColRef = collection(
         db,
         `Newsfeed/${post.id}/peopleWhoCommented`
@@ -359,7 +359,7 @@ function ListFooter({
           postUserID: post.userID,
           timestamp: Date.now(),
         }).then(() => {
-          setTextInputValue('');
+          setTextInputValue("");
           getComments();
         });
 
@@ -369,15 +369,14 @@ function ListFooter({
         console.log(err);
       }
     } else {
-      alert('No Comment to Post');
+      alert("No Comment to Post");
     }
   };
 
   // This function will retrieve the post in the database and add 1 to the commentCount property
   const addCommentCount = () => {
     let newCommentCount = parseInt(post.commentCount) + 1;
-    console.log(newCommentCount);
-    const postRef = doc(db, 'Newsfeed', post.id);
+    const postRef = doc(db, "Newsfeed", post.id);
     updateDoc(postRef, {
       commentCount: newCommentCount,
     });
@@ -392,7 +391,7 @@ function ListFooter({
         <TextInput
           onChangeText={(text) => setTextInputValue(text)}
           value={textInputValue}
-          placeholder='280 characters maximum'
+          placeholder="280 characters maximum"
           multiline={true}
           maxLength={280}
           style={[

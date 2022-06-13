@@ -7,7 +7,7 @@ const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 function ThemeProvider(props) {
-  return <ThemeContext.Provider value={[theme, styleVariables]} {...props} />;
+  return <ThemeContext.Provider value={{ theme, styleVariables }} {...props} />;
 }
 
 function useTheme() {
@@ -67,16 +67,16 @@ const theme = StyleSheet.create({
   topCard: {
     backgroundColor: styleVariables.colors.white,
     width: "100%",
-    borderTopLeftRadius: 27,
-    borderTopRightRadius: 27,
-    shadowColor: styleVariables.colors.black,
-    shadowOffset: {
-      width: 0,
-      height: -34,
-    },
-    shadowOpacity: 0.14,
-    shadowRadius: 17,
-    elevation: 20,
+    // borderTopLeftRadius: 27,
+    // borderTopRightRadius: 27,
+    // shadowColor: styleVariables.colors.black,
+    // shadowOffset: {
+    //   width: 0,
+    //   height: -34,
+    // },
+    // shadowOpacity: 0.14,
+    // shadowRadius: 17,
+    // elevation: 20,
   },
   card: {
     display: "flex",

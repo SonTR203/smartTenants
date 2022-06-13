@@ -21,8 +21,8 @@ jobs:
       - name: Run linters
         uses: wearerequired/lint-action@v1
         with:
-          eslint: false # needs to fix ESLint errors
-          prettier: false # Prettier causes unknown issues with current files
+          eslint: true # needs to fix ESLint errors
+          prettier: true # Prettier causes unknown issues with current files
       # Restore react-native metro cache for speed-up publish time
       # See: https://github.com/facebook/metro/blob/7dca99af2e2af17921aa4a1e16b1972adc0d11e4/packages/metro-config/src/defaults/index.js#L121-L125
       - name: Find Metro cache

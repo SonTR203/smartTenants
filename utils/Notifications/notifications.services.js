@@ -11,14 +11,16 @@ export const getNotifications = async (currentUser) => {
   );
   const data = await getDocs(colReference);
 
-  let notificationsList = data.docs.map((item) => ({
-    ...item._document.data.value.mapValue.fields,
-    id: item._key.path.segments[8],
-  }));
+  const formattedData = data.docs.map((doc) => {
+    return {
+      ...doc.data(),
+      id: doc.id,
+    };
+  });
 
   const sortedListOfNotifications = _.sortBy(
-    notificationsList,
-    "timestamp.integerValue"
+    formattedData,
+    "timestamp"
   ).reverse();
   return sortedListOfNotifications;
 };

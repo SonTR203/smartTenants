@@ -7,7 +7,6 @@ function ListFooter({ styleVariables }) {
       height: 102,
       paddingVertical: 17,
       paddingHorizontal: 34,
-      backgroundColor: "white",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
