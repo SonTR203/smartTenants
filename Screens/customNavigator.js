@@ -27,12 +27,12 @@ import ManageBuilding from "./Admin/ManageBuildings/ManageBuilding";
 import ConfirmUser from "./Admin/ApproveUsers/ConfirmUser";
 import ManageUser from "./Admin/ManageUsers/ManageUser";
 import CreateAnnouncement from "./Admin/CreateAnnouncement/CreateAnnouncement";
+import ScreenHeader from "../components/ScreenHeader";
 
 const Stack = createStackNavigator();
 
 const NewsfeedNavigator = () => {
-  const { post, setPost } = useAppContext();
-  const { currentUser, setCurrentUser } = useAppContext();
+  const { post, currentUser } = useAppContext();
 
   if (currentUser && currentUser.tenantAuthorized) {
     return (
@@ -40,7 +40,12 @@ const NewsfeedNavigator = () => {
         <Stack.Screen
           name="Newsfeed"
           component={Newsfeed}
-          options={{ title: "Newsfeed", headerLeft: null, headerShown: false }}
+          options={{
+            title: "Newsfeed",
+            headerLeft: null,
+            headerShown: true,
+            header: () => <ScreenHeader title={"Newsfeed"} />,
+          }}
         />
         <Stack.Screen
           name="BuildingInfo"
@@ -118,14 +123,18 @@ const NewsfeedNavigator = () => {
 };
 
 const ProfileNavigator = () => {
-  const { post, setPost } = useAppContext();
+  const { post } = useAppContext();
 
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="ProfileGeneral"
         component={ProfileGeneral}
-        options={{ title: "Profile", headerShown: false }}
+        options={{
+          title: "Profile",
+          headerShown: true,
+          header: () => <ScreenHeader title={"Profile"} />,
+        }}
       />
       <Stack.Screen
         name="EditProfile"
@@ -263,14 +272,17 @@ const ProfileNavigator = () => {
 };
 
 const NotificationNavigator = () => {
-  const { post, setPost } = useAppContext();
+  const { post } = useAppContext();
 
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Notifications"
         component={Notifications}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: true,
+          header: () => <ScreenHeader title={"Notifications"} />,
+        }}
       />
       <Stack.Screen
         name="IndividualPosts"

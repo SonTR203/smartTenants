@@ -10,25 +10,25 @@ import {
   Platform,
   ActivityIndicator,
   ScrollView,
-} from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
-import { db } from '../../firebase-config';
-import { addDoc, collection, getDocs } from '@firebase/firestore';
-import * as ImagePicker from 'expo-image-picker';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { useTheme } from '../../ThemeContext';
-import { useAppContext } from '../../Context/AppContext';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+} from "react-native";
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
+import { db } from "../../firebase-config";
+import { addDoc, collection } from "@firebase/firestore";
+import * as ImagePicker from "expo-image-picker";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useTheme } from "../../ThemeContext";
+import { useAppContext } from "../../Context/AppContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const CreatePost = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme();
-  const [postContent, setPostContent] = useState('');
+  const { theme, styleVariables } = useTheme();
+  const [postContent, setPostContent] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalText, setModalText] = useState('');
+  const [modalText, setModalText] = useState("");
   const [image, setImage] = useState(null);
   const [isLoading, setIsloading] = useState(false);
-  const { currentUser, setCurrentUser } = useAppContext();
+  const { currentUser } = useAppContext();
 
   let imageName = `newsfeedImages/${currentUser.userDocId}/${
     Date.now() + Math.floor(Math.random() * 20)
@@ -36,11 +36,11 @@ const CreatePost = ({ navigation }) => {
 
   useEffect(() => {
     (async () => {
-      if (Platform.OS !== 'web') {
+      if (Platform.OS !== "web") {
         const { status } =
           await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
         }
       }
     })();
@@ -50,10 +50,10 @@ const CreatePost = ({ navigation }) => {
     let specificPostID;
 
     if (!imgUrl) {
-      imgUrl = 'no image posted';
+      imgUrl = "no image posted";
     }
     try {
-      const { id } = await addDoc(collection(db, 'Newsfeed'), {
+      const { id } = await addDoc(collection(db, "Newsfeed"), {
         postContent: postContent,
         userID: currentUser.userDocId,
         userFirstName: currentUser.firstName,
@@ -91,12 +91,12 @@ const CreatePost = ({ navigation }) => {
 
   function postSuccess() {
     setIsloading(false);
-    setModalText('Post Successful!');
+    setModalText("Post Successful!");
     setModalVisible(true);
   }
 
   function postFailure() {
-    setModalText('Post Failed');
+    setModalText("Post Failed");
     setModalVisible(true);
   }
 
@@ -127,7 +127,7 @@ const CreatePost = ({ navigation }) => {
         }
       } catch (e) {
         console.log(e);
-        alert('Upload failed, sorry :(');
+        alert("Upload failed, sorry :(");
       }
     }
   }
@@ -140,10 +140,10 @@ const CreatePost = ({ navigation }) => {
       };
       xhr.onerror = function (e) {
         console.log(e);
-        reject(new TypeError('Network request failed'));
+        reject(new TypeError("Network request failed"));
       };
-      xhr.responseType = 'blob';
-      xhr.open('GET', image, true);
+      xhr.responseType = "blob";
+      xhr.open("GET", image, true);
       xhr.send(null);
     });
 
@@ -160,11 +160,11 @@ const CreatePost = ({ navigation }) => {
   return (
     <ScrollView style={theme.pageContainer}>
       <View style={theme.globalMargins}>
-        <StatusBar style='auto' />
-        {isLoading && <ActivityIndicator size='large' />}
+        <StatusBar style="auto" />
+        {isLoading && <ActivityIndicator size="large" />}
 
         <Modal
-          animationType='slide'
+          animationType="slide"
           transparent={false}
           statusBarTranslucent={true}
           visible={modalVisible}
@@ -174,7 +174,7 @@ const CreatePost = ({ navigation }) => {
           onShow={() => {
             setTimeout(() => {
               setModalVisible(!modalVisible);
-              navigation.push('Newsfeed');
+              navigation.push("Newsfeed");
             }, 2000);
           }}
         >
@@ -183,8 +183,8 @@ const CreatePost = ({ navigation }) => {
               <Text
                 style={{
                   fontSize: 17,
-                  fontFamily: 'Roboto_400Regular',
-                  color: '#191919',
+                  fontFamily: "Roboto_400Regular",
+                  color: "#191919",
                 }}
               >
                 {modalText}
@@ -193,7 +193,7 @@ const CreatePost = ({ navigation }) => {
           </View>
         </Modal>
 
-        <View id='statusInput'>
+        <View id="statusInput">
           <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
             What's on your mind?
           </Text>
@@ -201,7 +201,7 @@ const CreatePost = ({ navigation }) => {
             onChangeText={(text) => {
               setPostContent(text);
             }}
-            placeholder='280 characters maximum'
+            placeholder="280 characters maximum"
             multiline={true}
             maxLength={280}
             style={[
@@ -210,29 +210,29 @@ const CreatePost = ({ navigation }) => {
               {
                 minHeight: 68 + 44,
                 paddingTop: 22,
-                paddingBottom: Platform.OS === 'android' ? 70 : 0,
+                paddingBottom: Platform.OS === "android" ? 70 : 0,
               },
             ]}
           ></TextInput>
         </View>
 
-        <View id='imageUploadPreview' style={theme.container}>
+        <View id="imageUploadPreview" style={theme.container}>
           {image && (
             <Image source={{ uri: image }} style={theme.imageUploadPreview} />
           )}
         </View>
 
         <TouchableOpacity
-          id='uploadImageButton'
+          id="uploadImageButton"
           onPress={pickImage}
           style={theme.secondaryButton}
         >
           <Text
             style={[theme.secondaryButtonText, styleVariables.fontSizes.body]}
           >
-            Upload image{' '}
+            Upload image{" "}
             <MaterialCommunityIcons
-              name='image-plus'
+              name="image-plus"
               size={18}
               color={styleVariables.colors.primary}
             />
@@ -240,7 +240,7 @@ const CreatePost = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          id='submitPostButton'
+          id="submitPostButton"
           onPress={handleSelectedImage}
           style={[theme.primaryButton, { marginBottom: 130 }]}
         >

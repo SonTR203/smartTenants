@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   SafeAreaView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -16,21 +15,15 @@ import { collection, getDocs, addDoc } from "@firebase/firestore";
 import { useTheme } from "../../ThemeContext";
 import { db } from "../../firebase-config";
 import { useAppContext } from "../../Context/AppContext";
-import { Dimensions } from "react-native";
 
 const auth = getAuth();
-let globalSetCurrentUser;
-let globalCurrentUser;
 
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation }) => {
-  const [theme, styleVariables] = useTheme();
+  const { theme, styleVariables } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { currentUser, setCurrentUser } = useAppContext();
-
-  globalSetCurrentUser = setCurrentUser;
-  globalCurrentUser = currentUser;
+  const { setCurrentUser } = useAppContext();
 
   /* This function logs the user to the application only if he/she * is registered on Firebase as an authenticated registered user.
    * inputs: none
@@ -80,7 +73,7 @@ const Login = ({ navigation }) => {
             visibleAnnouncements: object.visibleAnnouncements.arrayValue,
             userProfileImage: object.userProfileImage.stringValue,
           };
-          globalSetCurrentUser(loggedInUser);
+          setCurrentUser(loggedInUser);
           createNotificationCollection(loggedInUser);
         }
       }
