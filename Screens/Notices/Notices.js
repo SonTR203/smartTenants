@@ -12,7 +12,13 @@ import { db } from "../../firebase-config";
 import { collection, getDocs } from "firebase/firestore";
 import { useTheme } from "../../ThemeContext";
 
-const NoticeItem = ({ noticeContent, theme, styleVariables, styles }) => (
+const NoticeItem = ({
+  noticeContent,
+  theme,
+  styleVariables,
+  styles,
+  navigation,
+}) => (
   <View id="post" style={theme.cardContainer}>
     {/* Notice Info */}
     <View id="noticeInfo" style={styles.noticeInfo}>
@@ -28,7 +34,12 @@ const NoticeItem = ({ noticeContent, theme, styleVariables, styles }) => (
     </View>
 
     {/* Notice content */}
-    <TouchableOpacity id="noticeContent" onPress={() => {}}>
+    <TouchableOpacity
+      id="noticeContent"
+      onPress={() => {
+        navigation.navigate("IndividualNotice");
+      }}
+    >
       <View className="noticeTextContent">
         <Text style={[styleVariables.fontSizes.body, styles.noticeContent]}>
           {noticeContent}
@@ -38,7 +49,7 @@ const NoticeItem = ({ noticeContent, theme, styleVariables, styles }) => (
   </View>
 );
 
-function Notices() {
+function Notices({ navigation }) {
   const [notices, setNotices] = useState([]);
   const { theme, styleVariables } = useTheme();
 
@@ -101,6 +112,7 @@ function Notices() {
               theme={theme}
               styleVariables={styleVariables}
               styles={styles}
+              navigation={navigation}
             />
           );
         }}
