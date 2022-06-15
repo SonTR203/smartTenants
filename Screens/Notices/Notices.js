@@ -37,6 +37,14 @@ function Notices({ navigation }) {
       color: styleVariables.colors.black,
       marginBottom: 17,
     },
+    timestampText: { opacity: 0.66 },
+    noticeIndice: {
+      height: 8,
+      width: 8,
+      backgroundColor: styleVariables.colors.primary,
+      borderRadius: 99,
+      marginLeft: 8,
+    },
   });
 
   useEffect(() => {
@@ -66,6 +74,9 @@ function Notices({ navigation }) {
           return (
             <NoticeItem
               noticeContent={item.noticeContent}
+              timestamp={item.timestamp}
+              wasSeen={item.wasSeen}
+              id={item.id}
               theme={theme}
               styleVariables={styleVariables}
               styles={styles}
