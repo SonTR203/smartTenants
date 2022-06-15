@@ -59,6 +59,7 @@ function NoticeItem({
           setWasSeenToTrue();
           navigation.navigate("IndividualNotice", {
             noticeContent: noticeContent,
+            timestamp: timeSinceNotice,
             theme: theme,
             styleVariables: styleVariables,
             styles: styles,

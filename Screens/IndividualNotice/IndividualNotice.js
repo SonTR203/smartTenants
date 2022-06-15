@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 function IndividualNotice({ route }) {
-  const { noticeContent, theme, styleVariables, styles } = route.params;
+  const { noticeContent, theme, timestamp, styleVariables, styles } =
+    route.params;
 
   return (
     <SafeAreaView
@@ -22,6 +23,11 @@ function IndividualNotice({ route }) {
               {"Smart Living Properties"}
             </Text>
           </View>
+          <Text
+            style={[styleVariables.fontSizes.callout, styles.timestampText]}
+          >
+            {timestamp}
+          </Text>
         </View>
         <View className="noticeTextContent">
           <Text style={[styleVariables.fontSizes.body, styles.noticeContent]}>
