@@ -6,6 +6,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { useTheme } from "../../ThemeContext";
 import NoticeItem from "./NoticeItem";
 import { wait } from "../../utils/wait";
+import ListFooter from "./ListFooter";
 
 function Notices({ navigation }) {
   const [notices, setNotices] = useState([]);
@@ -102,6 +103,9 @@ function Notices({ navigation }) {
             style={styles.refreshControl}
             tintColor={styleVariables.colors.primary}
           />
+        }
+        ListFooterComponent={
+          <ListFooter styleVariables={styleVariables} theme={theme} />
         }
       />
     </SafeAreaView>
