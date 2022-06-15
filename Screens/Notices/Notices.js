@@ -1,14 +1,16 @@
-import { React, useEffect, useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { React, useEffect, useState, useCallback } from "react";
+import { FlatList, StyleSheet, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase-config";
 import { collection, getDocs } from "firebase/firestore";
 import { useTheme } from "../../ThemeContext";
 import NoticeItem from "./NoticeItem";
+import { wait } from "../../utils/wait";
 
 function Notices({ navigation }) {
   const [notices, setNotices] = useState([]);
   const { theme, styleVariables } = useTheme();
+  const [refreshing, setRefreshing] = useState(false);
 
   const styles = StyleSheet.create({
     noticeInfo: {
@@ -64,6 +66,15 @@ function Notices({ navigation }) {
     });
   }
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    wait(1000).then(async () => {
+      getNotices();
+      setRefreshing(false);
+    });
+  }, []);
+
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: styleVariables.colors.white }}
@@ -84,6 +95,14 @@ function Notices({ navigation }) {
             />
           );
         }}
+        refreshControl={
+          <RefreshControl
+            onRefresh={onRefresh}
+            refreshing={refreshing}
+            style={styles.refreshControl}
+            tintColor={styleVariables.colors.primary}
+          />
+        }
       />
     </SafeAreaView>
   );
