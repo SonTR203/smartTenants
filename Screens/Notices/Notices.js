@@ -37,7 +37,12 @@ const NoticeItem = ({
     <TouchableOpacity
       id="noticeContent"
       onPress={() => {
-        navigation.navigate("IndividualNotice");
+        navigation.navigate("IndividualNotice", {
+          noticeContent: noticeContent,
+          theme: theme,
+          styleVariables: styleVariables,
+          styles: styles,
+        });
       }}
     >
       <View className="noticeTextContent">
