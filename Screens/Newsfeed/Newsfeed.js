@@ -8,9 +8,9 @@ const windowWidth = Dimensions.get("window").width;
 import Post from "./Post";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
-import Fab from "./Fab";
 import { wait } from "../../utils/wait";
 import { getPosts } from "../../utils/Newsfeed/newsfeed.services";
+import Fab from "../../components/Fab";
 
 const Newsfeed = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();

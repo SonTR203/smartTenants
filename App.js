@@ -19,6 +19,7 @@ import {
   NotificationNavigator,
 } from "./Screens/customNavigator.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ScreenHeader from "./components/ScreenHeader";
 
 const Tab = createBottomTabNavigator();
 
@@ -88,7 +89,14 @@ function AppContainer({ showSplashscreen, setShowSplashscreen }) {
               })}
             >
               {/* ======= Marketplace ======= */}
-              <Tab.Screen name="Marketplace " component={Marketplace} />
+              <Tab.Screen
+                name="Marketplace "
+                component={Marketplace}
+                options={{
+                  headerShown: true,
+                  header: () => <ScreenHeader title={"Marketplace"} />,
+                }}
+              />
 
               {/* ======= Newsfeed ======= */}
               <Tab.Screen
