@@ -10,7 +10,6 @@ import {
 import { useTheme } from "../../ThemeContext";
 
 function MarketplaceFirstItem({ item, index }) {
-  console.log("first item: ", item);
   const { theme, styleVariables } = useTheme();
   return (
     <View style={[theme.marketplaceItemContainer, { marginTop: 17 }]}>

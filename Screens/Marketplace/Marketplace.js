@@ -15,6 +15,8 @@ import { getMarketplaceItems } from "../../utils/Marketplace/marketplace.service
 import Fab from "../../components/Fab";
 import MarketplaceItem from "./MarketplaceItem";
 import MarketplaceFirstItem from "./MarketplaceFirstItem";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase-config";
 
 const Marketplace = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
@@ -31,12 +33,26 @@ const Marketplace = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    const unsub = onSnapshot(
+      doc(db, "Marketplace", "VYZXWFoPRdluq5fcz67I"),
+      (doc) => {
+        console.log("Current data: ", doc.data());
+        // doc.data() is new item, replace old item with new one in itemList
+        const updatedItemList = itemList.map((item) => {
+          if (item.id === doc.id) {
+            return doc.data();
+          }
+          return item;
+        });
+        setItemList(updatedItemList);
+      }
+    );
     (async function fetchNotifications() {
       const list = await getMarketplaceItems();
-      // console.log("marketplace items: ", list);
       setItemList(list);
       setRefreshing(false);
     })();
+    return () => unsub();
   }, []);
 
   const styles = StyleSheet.create({
