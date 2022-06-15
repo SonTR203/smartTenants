@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase-config";
 import { collection, getDocs } from "firebase/firestore";
 import { useTheme } from "../../ThemeContext";
+import { useAppContext } from "../../Context/AppContext";
 import NoticeItem from "./NoticeItem";
 import { wait } from "../../utils/wait";
 import ListFooter from "./ListFooter";
@@ -12,6 +13,7 @@ function Notices({ navigation }) {
   const [notices, setNotices] = useState([]);
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
+  const { currentUser } = useAppContext();
 
   const styles = StyleSheet.create({
     noticeInfo: {
@@ -62,8 +64,10 @@ function Notices({ navigation }) {
       snapshot.docs.forEach((doc) => {
         noticeList.push({ ...doc.data(), id: doc.id });
       });
-      console.log(noticeList);
-      setNotices(noticeList);
+      const filteredNoticeList = noticeList.filter((notice) =>
+        notice.recipients.includes(currentUser.userDocId)
+      );
+      setNotices(filteredNoticeList);
     });
   }
 
