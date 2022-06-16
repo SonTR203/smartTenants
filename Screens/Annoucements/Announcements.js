@@ -1,8 +1,9 @@
 import { React, useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase-config";
 import { collection, getDocs } from "firebase/firestore";
+import AnnouncementItem from "./AnnouncementItem";
 
 function Announcements() {
   const [announcements, setAnnouncements] = useState([]);
@@ -26,7 +27,14 @@ function Announcements() {
 
   return (
     <View>
-      <Text>Annonucements</Text>
+      <FlatList
+        data={announcements}
+        renderItem={({ item }) => {
+          return (
+            <AnnouncementItem announcementContent={item.announcementContent} />
+          );
+        }}
+      />
     </View>
   );
 }
