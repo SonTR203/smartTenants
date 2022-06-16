@@ -30,6 +30,7 @@ import ConfirmUser from "./Admin/ApproveUsers/ConfirmUser";
 import ManageUser from "./Admin/ManageUsers/ManageUser";
 import CreateAnnouncement from "./Admin/CreateAnnouncement/CreateAnnouncement";
 import ScreenHeader from "../components/ScreenHeader";
+import IndividualAnnouncement from "./IndividualAnnouncement/IndividualAnnouncement";
 
 const Stack = createStackNavigator();
 
@@ -331,6 +332,15 @@ const NotificationNavigator = () => {
         options={{
           header: (props) => (
             <CustomSubStackScreenHeader {...props} title={"Notice"} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="IndividualAnnouncement"
+        component={IndividualAnnouncement}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Announcement"} />
           ),
         }}
       />

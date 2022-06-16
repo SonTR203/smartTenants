@@ -13,6 +13,7 @@ function AnnouncementItem({
   wasSeen,
   theme,
   id,
+  navigation,
   styleVariables,
 }) {
   const [timeSinceAnnouncement, setTimeSinceAnnouncement] = useState("");
@@ -103,6 +104,7 @@ function AnnouncementItem({
       <TouchableOpacity
         id="announcementContent"
         onPress={() => {
+          navigation.navigate("IndividualAnnouncement");
           setWasSeenToTrue();
         }}
       >

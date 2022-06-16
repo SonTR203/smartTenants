@@ -6,7 +6,7 @@ import { collection, getDocs } from "firebase/firestore";
 import AnnouncementItem from "./AnnouncementItem";
 import { useTheme } from "../../ThemeContext";
 
-function Announcements() {
+function Announcements({ navigation }) {
   const [announcements, setAnnouncements] = useState([]);
   const { theme, styleVariables } = useTheme();
 
@@ -41,6 +41,7 @@ function Announcements() {
               timestamp={item.timestamp}
               wasSeen={item.wasSeen}
               id={item.id}
+              navigation={navigation}
               theme={theme}
               styleVariables={styleVariables}
             />
