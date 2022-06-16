@@ -7,7 +7,7 @@ import _ from "lodash";
 export const getMyPosts = async (currentUser) => {
   const colReference = collection(
     db,
-    "Users",
+    "Tenants",
     `${currentUser.userDocId}`,
     "myPosts"
   );

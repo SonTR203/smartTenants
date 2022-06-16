@@ -4,7 +4,6 @@ import {
   FlatList,
   RefreshControl,
   StyleSheet,
-  Text,
   ActivityIndicator,
 } from "react-native";
 import { wait } from "../../utils/wait";
@@ -18,7 +17,7 @@ import MarketplaceFirstItem from "./MarketplaceFirstItem";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase-config";
 
-const Marketplace = ({ navigation }) => {
+const MarketplaceScreen = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
@@ -26,33 +25,37 @@ const Marketplace = ({ navigation }) => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
 
-    wait(1000).then(() => {
-      // getPosts();
+    wait(1000).then(async () => {
+      const list = await getMarketplaceItems();
+      setItemList(list);
       setRefreshing(false);
     });
   }, []);
 
   useEffect(() => {
-    const unsub = onSnapshot(
-      doc(db, "Marketplace", "VYZXWFoPRdluq5fcz67I"),
-      (doc) => {
-        console.log("Current data: ", doc.data());
-        // doc.data() is new item, replace old item with new one in itemList
-        const updatedItemList = itemList.map((item) => {
-          if (item.id === doc.id) {
-            return doc.data();
-          }
-          return item;
-        });
-        setItemList(updatedItemList);
-      }
-    );
     (async function fetchNotifications() {
       const list = await getMarketplaceItems();
       setItemList(list);
       setRefreshing(false);
     })();
-    return () => unsub();
+
+    // const unsub = onSnapshot(
+    //   doc(db, "Marketplace", "86PAfyO5BQPQWCN7OTqx"),
+    //   (doc) => {
+    //     console.log("Current data: ", doc.data());
+    //     if (itemList !== null) {
+    //       // doc.data() is new item, replace old item with new one in itemList
+    //       const updatedItemList = itemList.map((item) => {
+    //         if (item.id === doc.id) {
+    //           return doc.data();
+    //         }
+    //         return item;
+    //       });
+    //       setItemList(updatedItemList);
+    //     }
+    //   }
+    // );
+    // return () => unsub();
   }, []);
 
   const styles = StyleSheet.create({
@@ -92,14 +95,19 @@ const Marketplace = ({ navigation }) => {
             numColumns={2}
             keyExtractor={(item, index) => item + index}
             ListHeaderComponent={() => {
-              return <MarketplaceFirstItem item={itemList[0]} />;
+              return (
+                <MarketplaceFirstItem
+                  item={itemList[0]}
+                  navigation={navigation}
+                />
+              );
             }}
             renderItem={({ item, index }) => {
               return (
                 <MarketplaceItem
                   item={item}
                   index={index}
-                  length={itemList.slice(1).length}
+                  navigation={navigation}
                 />
               );
             }}
@@ -133,4 +141,4 @@ const Marketplace = ({ navigation }) => {
   );
 };
 
-export default Marketplace;
+export default MarketplaceScreen;

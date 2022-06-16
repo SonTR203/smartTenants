@@ -46,7 +46,7 @@ const ManageUser = ({ route, navigation }) => {
 
   async function confirmUser() {
     setTenantAuthorized(true);
-    const userDocRef = doc(db, "Users", user.userDocId);
+    const userDocRef = doc(db, "Tenants", user.userDocId);
 
     try {
       await updateDoc(userDocRef, {
@@ -66,7 +66,7 @@ const ManageUser = ({ route, navigation }) => {
   }
 
   async function fetchUpdatedListOfUsers() {
-    const colRef = collection(db, "Users");
+    const colRef = collection(db, "Tenants");
 
     const data = await getDocs(colRef);
     const users = data.docs.map((user) => {

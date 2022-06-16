@@ -1,11 +1,20 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { useTheme } from "../../ThemeContext";
+import { navigateToMarketplaceItemScreen } from "../../utils/Marketplace/marketplace.services";
 
-function MarketplaceItem({ item, index, length }) {
+function MarketplaceItem({ item, index, navigation }) {
   const { theme } = useTheme();
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => navigateToMarketplaceItemScreen(navigation, item)}
       style={[
         theme.marketplaceItemContainer,
         {
@@ -16,9 +25,9 @@ function MarketplaceItem({ item, index, length }) {
     >
       <Image
         style={{
-          resizeMode: "center",
+          resizeMode: "cover",
           marginBottom: 17,
-          height: 162,
+          height: Dimensions.get("window").height * 0.35,
           backgroundColor: "black",
           borderTopRightRadius: 24,
           borderTopLeftRadius: 24,
@@ -82,7 +91,7 @@ function MarketplaceItem({ item, index, length }) {
           {item.postContent}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

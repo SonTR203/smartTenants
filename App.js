@@ -9,7 +9,6 @@ import AppLoading from "expo-app-loading";
 import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Marketplace from "./Screens/Marketplace/Marketplace";
 import { AppProvider } from "./Context/AppContext";
 import Splashscreen from "./Screens/Splashscreen/Splashscreen";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
@@ -17,9 +16,9 @@ import {
   NewsfeedNavigator,
   ProfileNavigator,
   NotificationNavigator,
+  MarketplaceNavigator,
 } from "./Screens/customNavigator.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import ScreenHeader from "./components/ScreenHeader";
 
 const Tab = createBottomTabNavigator();
 
@@ -91,10 +90,9 @@ function AppContainer({ showSplashscreen, setShowSplashscreen }) {
               {/* ======= Marketplace ======= */}
               <Tab.Screen
                 name="Marketplace "
-                component={Marketplace}
+                component={MarketplaceNavigator}
                 options={{
-                  headerShown: true,
-                  header: () => <ScreenHeader title={"Marketplace"} />,
+                  headerShown: false,
                 }}
               />
 

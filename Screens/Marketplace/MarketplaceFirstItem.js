@@ -8,14 +8,18 @@ import {
   Dimensions,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
+import { navigateToMarketplaceItemScreen } from "../../utils/Marketplace/marketplace.services";
 
-function MarketplaceFirstItem({ item, index }) {
+function MarketplaceFirstItem({ item, navigation }) {
   const { theme, styleVariables } = useTheme();
   return (
-    <View style={[theme.marketplaceItemContainer, { marginTop: 17 }]}>
+    <TouchableOpacity
+      onPress={() => navigateToMarketplaceItemScreen(navigation, item)}
+      style={[theme.marketplaceItemContainer, { marginTop: 17 }]}
+    >
       <Image
         style={{
-          resizeMode: "center",
+          resizeMode: "cover",
           marginBottom: 17,
           height: Dimensions.get("window").height * 0.35,
           backgroundColor: "black",
@@ -80,7 +84,7 @@ function MarketplaceFirstItem({ item, index }) {
           {item.postContent}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

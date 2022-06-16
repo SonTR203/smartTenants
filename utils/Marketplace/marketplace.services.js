@@ -13,13 +13,12 @@ export const getMarketplaceItems = async () => {
     };
   });
 
-  // return formattedData with first item duplicated 10 times
-  const duplicatedData = [
-    ...formattedData,
-    ...formattedData,
-    ...formattedData,
-    ...formattedData,
-    ...formattedData,
-  ];
-  return duplicatedData; // mock data with 3 items
+  return formattedData; // mock data with 3 items
+};
+
+export const navigateToMarketplaceItemScreen = (navigation, item) => {
+  navigation.navigate("MarketplaceItemInfo", {
+    title: item.userFirstName,
+    item: item,
+  });
 };

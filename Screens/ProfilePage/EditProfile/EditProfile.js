@@ -73,7 +73,7 @@ const EditProfile = ({ navigation }) => {
   };
 
   async function saveProfileInfo() {
-    const userDocRef = doc(db, "Users", currentUser.userDocId);
+    const userDocRef = doc(db, "Tenants", currentUser.userDocId);
     if (checkTextInputs()) {
       try {
         await updateDoc(userDocRef, {
@@ -183,7 +183,7 @@ const EditProfile = ({ navigation }) => {
   }
 
   async function changeProfileImageInDatabase(imgUrl) {
-    const userDocRef = doc(db, "Users", currentUser.userDocId);
+    const userDocRef = doc(db, "Tenants", currentUser.userDocId);
 
     try {
       await updateDoc(userDocRef, {

@@ -5,7 +5,7 @@ import _ from "lodash";
 export const getNotifications = async (currentUser) => {
   const colReference = collection(
     db,
-    "Users",
+    "Tenants",
     `${currentUser.userDocId}`,
     "Notifications"
   );

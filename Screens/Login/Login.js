@@ -21,7 +21,7 @@ const auth = getAuth();
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
-  const [email, setEmail] = useState("vuontuankiet@gmail.com");
+  const [email, setEmail] = useState("vuon@gmail.com");
   const [password, setPassword] = useState("123123123");
   const { setCurrentUser } = useAppContext();
 
@@ -39,7 +39,7 @@ const Login = ({ navigation }) => {
       })
       .catch((error) => alert(error.message));
   };
-  handleLogin();
+  // handleLogin();
 
   /* This function gets the logged in user data from Firebase and  * navigates him/her to to the Newsfeed screen (Home screen) if * * authorized or to the Account Approval Pending screen if not
    * yet approved by an Admin.
@@ -47,7 +47,7 @@ const Login = ({ navigation }) => {
    * outputs: sets the current user object as the Logged in user as stored as per stored data on Firebase
    */
   const findUser = async (user) => {
-    const colRef = collection(db, "Users");
+    const colRef = collection(db, "Tenants");
     const data = await getDocs(colRef);
     let loggedInUser;
 

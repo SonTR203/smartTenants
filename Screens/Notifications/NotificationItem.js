@@ -30,7 +30,7 @@ function NotificationItem({
   const setWasSeenToTrue = async (notifications) => {
     const colRef = doc(
       db,
-      "Users",
+      "Tenants",
       `${currentUser.userDocId}`,
       "Notifications",
       notifications.id
