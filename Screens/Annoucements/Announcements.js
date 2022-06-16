@@ -4,9 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase-config";
 import { collection, getDocs } from "firebase/firestore";
 import AnnouncementItem from "./AnnouncementItem";
+import { useTheme } from "../../ThemeContext";
 
 function Announcements() {
   const [announcements, setAnnouncements] = useState([]);
+  const { theme, styleVariables } = useTheme();
 
   useEffect(() => {
     getAnnouncements();
