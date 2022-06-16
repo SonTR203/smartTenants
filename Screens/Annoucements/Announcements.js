@@ -12,7 +12,7 @@ function Announcements() {
 
   useEffect(() => {
     getAnnouncements();
-  });
+  }, []);
 
   async function getAnnouncements() {
     const colReference = collection(db, "Announcements");
@@ -40,6 +40,7 @@ function Announcements() {
               image={item.image[0]}
               timestamp={item.timestamp}
               wasSeen={item.wasSeen}
+              id={item.id}
               theme={theme}
               styleVariables={styleVariables}
             />

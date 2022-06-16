@@ -2,6 +2,8 @@ import { React, useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { setTime } from "../../utils/setTime";
 import { Dimensions } from "react-native";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../firebase-config";
 const windowWidth = Dimensions.get("window").width;
 
 function AnnouncementItem({
@@ -10,6 +12,7 @@ function AnnouncementItem({
   timestamp,
   wasSeen,
   theme,
+  id,
   styleVariables,
 }) {
   const [timeSinceAnnouncement, setTimeSinceAnnouncement] = useState("");
@@ -63,6 +66,15 @@ function AnnouncementItem({
     setTimeSinceAnnouncement(time);
   }, []);
 
+  const setWasSeenToTrue = async () => {
+    const colRef = doc(db, "Announcements", `${id}`);
+    await updateDoc(colRef, {
+      wasSeen: true,
+    }).then(() => {
+      setViewed(true);
+    });
+  };
+
   return (
     <View id="announcement" style={theme.cardContainer}>
       {/* ownerInfo */}
@@ -88,7 +100,12 @@ function AnnouncementItem({
       </View>
 
       {/* announcement content */}
-      <TouchableOpacity id="announcementContent" onPress={() => {}}>
+      <TouchableOpacity
+        id="announcementContent"
+        onPress={() => {
+          setWasSeenToTrue();
+        }}
+      >
         <View className="announcementTextContent">
           <Text
             style={[styleVariables.fontSizes.body, styles.announcementContent]}
