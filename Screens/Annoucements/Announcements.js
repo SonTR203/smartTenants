@@ -28,16 +28,25 @@ function Announcements() {
   }
 
   return (
-    <View>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: styleVariables.colors.white }}
+    >
       <FlatList
         data={announcements}
         renderItem={({ item }) => {
           return (
-            <AnnouncementItem announcementContent={item.announcementContent} />
+            <AnnouncementItem
+              announcementContent={item.announcementContent}
+              image={item.image[0]}
+              timestamp={item.timestamp}
+              wasSeen={item.wasSeen}
+              theme={theme}
+              styleVariables={styleVariables}
+            />
           );
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

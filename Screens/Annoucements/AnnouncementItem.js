@@ -1,10 +1,110 @@
-import React from "react";
-import { View, Text } from "react-native";
+import { React, useEffect, useState } from "react";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { setTime } from "../../utils/setTime";
+import { Dimensions } from "react-native";
+const windowWidth = Dimensions.get("window").width;
 
-function AnnouncementItem({ announcementContent }) {
+function AnnouncementItem({
+  announcementContent,
+  image,
+  timestamp,
+  wasSeen,
+  theme,
+  styleVariables,
+}) {
+  const [timeSinceAnnouncement, setTimeSinceAnnouncement] = useState("");
+  const [viewed, setViewed] = useState(wasSeen);
+
+  const styles = StyleSheet.create({
+    announcementInfo: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "100%",
+      marginBottom: 12,
+    },
+    imageAndName: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    profileIcon: {
+      height: 43,
+      width: 43,
+      borderRadius: 12,
+    },
+    profileName: {
+      color: styleVariables.colors.black,
+      marginLeft: 8,
+    },
+    announcementContent: {
+      color: styleVariables.colors.black,
+      marginBottom: 17,
+    },
+    timestampText: { color: styleVariables.colors.black, opacity: 0.66 },
+    announcementIndice: {
+      height: 8,
+      width: 8,
+      backgroundColor: styleVariables.colors.primary,
+      borderRadius: 99,
+      marginLeft: 8,
+    },
+    announcementImage: {
+      height: windowWidth - 68,
+      width: windowWidth - 68,
+      borderRadius: 16,
+      marginBottom: 17,
+    },
+  });
+
+  useEffect(() => {
+    const time = setTime(timestamp);
+    setTimeSinceAnnouncement(time);
+  }, []);
+
   return (
-    <View>
-      <Text>{announcementContent}</Text>
+    <View id="announcement" style={theme.cardContainer}>
+      {/* ownerInfo */}
+      <View id="announcementInfo" style={styles.announcementInfo}>
+        <View className="imageAndName" style={styles.imageAndName}>
+          <Image
+            source={require("../../assets/icon.png")}
+            style={styles.profileIcon}
+          />
+          <Text style={[styleVariables.fontSizes.bodyBold, styles.profileName]}>
+            Smart Living Properties
+          </Text>
+        </View>
+        <Text
+          id="timePosted"
+          style={[styleVariables.fontSizes.callout, styles.timestampText]}
+        >
+          {timeSinceAnnouncement}
+        </Text>
+        {viewed == false && (
+          <View id="notificationIndice" style={styles.announcementIndice} />
+        )}
+      </View>
+
+      {/* announcement content */}
+      <TouchableOpacity id="announcementContent" onPress={() => {}}>
+        <View className="announcementTextContent">
+          <Text
+            style={[styleVariables.fontSizes.body, styles.announcementContent]}
+          >
+            {announcementContent}
+          </Text>
+        </View>
+        {image != "" && (
+          <Image
+            source={{
+              uri: `${image}`,
+            }}
+            style={styles.announcementImage}
+          />
+        )}
+      </TouchableOpacity>
     </View>
   );
 }
