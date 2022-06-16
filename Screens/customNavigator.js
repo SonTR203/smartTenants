@@ -21,6 +21,8 @@ import SendNotice from "./Admin/SendNotice/SendNotice";
 import DeletePost from "../components/DeletePost";
 import Notifications from "./Notifications/Notifications";
 import Announcements from "./Annoucements/Announcements";
+import Notices from "./Notices/Notices";
+import IndividualNotice from "./IndividualNotice/IndividualNotice";
 import CustomSubStackScreenHeader from "./CustomSubStackScreenHeader.js";
 import ForgotPassword from "./ForgotPassword/ForgotPassword";
 import ManageBuilding from "./Admin/ManageBuildings/ManageBuilding";
@@ -311,6 +313,24 @@ const NotificationNavigator = () => {
         options={{
           header: (props) => (
             <CustomSubStackScreenHeader {...props} title={"Announcements"} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Notices"
+        component={Notices}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Notices"} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="IndividualNotice"
+        component={IndividualNotice}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Notice"} />
           ),
         }}
       />
