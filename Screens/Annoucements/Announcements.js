@@ -7,6 +7,7 @@ import AnnouncementItem from "./AnnouncementItem";
 import { useTheme } from "../../ThemeContext";
 import { wait } from "../../utils/wait";
 import ListFooter from "./ListFooter";
+import { StatusBar } from "expo-status-bar";
 
 function Announcements({ navigation }) {
   const [announcements, setAnnouncements] = useState([]);
@@ -46,6 +47,8 @@ function Announcements({ navigation }) {
     <SafeAreaView
       style={{ flex: 1, backgroundColor: styleVariables.colors.white }}
     >
+      <StatusBar style="dark" />
+
       <FlatList
         data={announcements}
         renderItem={({ item }) => {

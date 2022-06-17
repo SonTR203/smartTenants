@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 function IndividualAnnouncement({ route }) {
   const {
@@ -14,6 +15,8 @@ function IndividualAnnouncement({ route }) {
 
   return (
     <SafeAreaView>
+      <StatusBar style="dark" />
+
       <View id="announcement" style={theme.cardContainer}>
         {/* ownerInfo */}
         <View id="announcementInfo" style={styles.announcementInfo}>
