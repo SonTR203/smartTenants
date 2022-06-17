@@ -104,7 +104,14 @@ function AnnouncementItem({
       <TouchableOpacity
         id="announcementContent"
         onPress={() => {
-          navigation.navigate("IndividualAnnouncement");
+          navigation.navigate("IndividualAnnouncement", {
+            announcementContent: announcementContent,
+            timestamp: timeSinceAnnouncement,
+            image: image,
+            theme: theme,
+            styleVariables: styleVariables,
+            styles: styles,
+          });
           setWasSeenToTrue();
         }}
       >
