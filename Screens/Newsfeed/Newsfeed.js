@@ -99,6 +99,7 @@ const Newsfeed = ({ navigation }) => {
 
       {/* FAB */}
       <Fab
+        route={"CreatePost"}
         navigation={navigation}
         theme={theme}
         styleVariables={styleVariables}

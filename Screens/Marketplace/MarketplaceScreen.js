@@ -16,8 +16,9 @@ import MarketplaceItem from "./MarketplaceItem";
 import MarketplaceFirstItem from "./MarketplaceFirstItem";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase-config";
+import ListFooter from "../Newsfeed/ListFooter";
 
-const MarketplaceScreen = ({ navigation }) => {
+const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
@@ -32,31 +33,22 @@ const MarketplaceScreen = ({ navigation }) => {
     });
   }, []);
 
-  useEffect(() => {
-    (async function fetchNotifications() {
-      const list = await getMarketplaceItems();
-      setItemList(list);
-      setRefreshing(false);
-    })();
+  async function fetchMarketplaceList() {
+    const list = await getMarketplaceItems();
+    setItemList(list);
+    setRefreshing(false);
+  }
 
-    // const unsub = onSnapshot(
-    //   doc(db, "Marketplace", "86PAfyO5BQPQWCN7OTqx"),
-    //   (doc) => {
-    //     console.log("Current data: ", doc.data());
-    //     if (itemList !== null) {
-    //       // doc.data() is new item, replace old item with new one in itemList
-    //       const updatedItemList = itemList.map((item) => {
-    //         if (item.id === doc.id) {
-    //           return doc.data();
-    //         }
-    //         return item;
-    //       });
-    //       setItemList(updatedItemList);
-    //     }
-    //   }
-    // );
-    // return () => unsub();
+  useEffect(() => {
+    fetchMarketplaceList();
   }, []);
+
+  useEffect(() => {
+    if (route.params && route.params.reload) {
+      setRefreshing(true);
+      fetchMarketplaceList();
+    }
+  }, [route.params]);
 
   const styles = StyleSheet.create({
     newsfeedContainer: {
@@ -69,8 +61,6 @@ const MarketplaceScreen = ({ navigation }) => {
     },
     flatlist: {
       flex: 1,
-      paddingLeft: 17,
-      paddingRight: 17,
       backgroundColor: "transparent",
     },
     flatListContainer: {
@@ -121,6 +111,9 @@ const MarketplaceScreen = ({ navigation }) => {
                 tintColor={styleVariables.colors.primary}
               />
             }
+            ListFooterComponent={
+              <ListFooter styleVariables={styleVariables} theme={theme} />
+            }
           />
         ) : (
           <ActivityIndicator
@@ -133,6 +126,7 @@ const MarketplaceScreen = ({ navigation }) => {
 
       {/* FAB */}
       <Fab
+        route={"CreateMarketplaceItem"}
         navigation={navigation}
         theme={theme}
         styleVariables={styleVariables}

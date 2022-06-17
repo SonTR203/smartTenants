@@ -18,7 +18,8 @@ function MarketplaceItem({ item, index, navigation }) {
       style={[
         theme.marketplaceItemContainer,
         {
-          marginRight: index % 2 === 0 ? 17 : 0,
+          marginRight: 17,
+          marginLeft: index % 2 === 0 ? 17 : 0,
           flex: 0.5,
         },
       ]}
@@ -27,7 +28,7 @@ function MarketplaceItem({ item, index, navigation }) {
         style={{
           resizeMode: "cover",
           marginBottom: 17,
-          height: Dimensions.get("window").height * 0.35,
+          height: Dimensions.get("window").height * 0.2,
           backgroundColor: "black",
           borderTopRightRadius: 24,
           borderTopLeftRadius: 24,
@@ -67,7 +68,7 @@ function MarketplaceItem({ item, index, navigation }) {
             lineHeight: 20,
           }}
         >
-          ${item.price}
+          {item.price === 0 ? "Free" : "$" + item.price}
         </Text>
       </View>
       <View

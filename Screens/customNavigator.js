@@ -29,6 +29,7 @@ import CreateAnnouncement from "./Admin/CreateAnnouncement/CreateAnnouncement";
 import ScreenHeader from "../components/ScreenHeader";
 import MarketplaceScreen from "./Marketplace/MarketplaceScreen";
 import MarketplaceItemInfoScreen from "./Marketplace/MarketplaceItemInfoScreen";
+import MarketplaceNewPostScreen from "./Marketplace/MarketplaceNewPostScreen";
 
 const Stack = createStackNavigator();
 
@@ -69,7 +70,7 @@ const MarketplaceNavigator = () => {
         />
         <Stack.Screen
           name="CreateMarketplaceItem"
-          component={CreatePost}
+          component={MarketplaceNewPostScreen}
           options={{
             header: (props) => (
               <CustomSubStackScreenHeader {...props} title={"Create post"} />

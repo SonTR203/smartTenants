@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
+  FlatList,
 } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
 import { setTime } from "../../utils/setTime";
 
 function MarketplaceItemInfoScreen({ navigation, route }) {
@@ -57,6 +57,7 @@ function MarketplaceItemInfoScreen({ navigation, route }) {
             marginBottom: 17,
           }}
           data={imageList}
+          scrollEnabled={imageList.length > 1 ? true : false}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           keyExtractor={(item, index) => item + index}
@@ -68,7 +69,10 @@ function MarketplaceItemInfoScreen({ navigation, route }) {
                   marginLeft: index === 0 ? 0 : 17,
                   height: Dimensions.get("window").height * 0.3,
                   borderRadius: 24,
-                  width: Dimensions.get("window").width * 0.7,
+                  width:
+                    imageList.length < 2
+                      ? Dimensions.get("window").width * 0.9
+                      : Dimensions.get("window").width * 0.7,
                 }}
                 source={{ uri: item }}
               />
@@ -85,7 +89,7 @@ function MarketplaceItemInfoScreen({ navigation, route }) {
         >
           <Text
             style={{
-              maxWidth: Dimensions.get("window").width * 0.76,
+              maxWidth: Dimensions.get("window").width * 0.74,
               fontSize: 28,
               fontWeight: "600",
               lineHeight: 33,
@@ -161,8 +165,7 @@ function MarketplaceItemInfoScreen({ navigation, route }) {
                 color: "#191919",
               }}
             >
-              {item.userFirstName}
-              {item.userLastName}
+              {`${item.userFirstName} ${item.userLastName}`}
             </Text>
             {hoursAgo ? (
               <Text
@@ -180,28 +183,31 @@ function MarketplaceItemInfoScreen({ navigation, route }) {
           </View>
         </View>
         {/* SEND A MESSAGE BOX  */}
-        <TouchableOpacity
+      </ScrollView>
+      <TouchableOpacity
+        onPress={() => alert("Send a message")}
+        style={{
+          marginLeft: 17,
+          marginRight: 17,
+          backgroundColor: "#395E66",
+          borderRadius: 18,
+          marginBottom: 25,
+          height: 60,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text
           style={{
-            backgroundColor: "#395E66",
-            borderRadius: 18,
-            marginBottom: 45,
-            height: 60,
-            alignItems: "center",
-            justifyContent: "center",
+            fontWeight: "600",
+            fontSize: 17,
+            lineHeight: 20,
+            color: "white",
           }}
         >
-          <Text
-            style={{
-              fontWeight: "600",
-              fontSize: 17,
-              lineHeight: 20,
-              color: "white",
-            }}
-          >
-            Send a message
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
+          Send a message
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

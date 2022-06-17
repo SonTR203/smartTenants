@@ -15,13 +15,16 @@ function MarketplaceFirstItem({ item, navigation }) {
   return (
     <TouchableOpacity
       onPress={() => navigateToMarketplaceItemScreen(navigation, item)}
-      style={[theme.marketplaceItemContainer, { marginTop: 17 }]}
+      style={[
+        theme.marketplaceItemContainer,
+        { marginTop: 17, marginLeft: 17, marginRight: 17 },
+      ]}
     >
       <Image
         style={{
           resizeMode: "cover",
           marginBottom: 17,
-          height: Dimensions.get("window").height * 0.35,
+          height: Dimensions.get("window").height * 0.25,
           backgroundColor: "black",
           borderTopRightRadius: 17,
           borderTopLeftRadius: 17,
@@ -60,7 +63,7 @@ function MarketplaceFirstItem({ item, navigation }) {
             lineHeight: 26,
           }}
         >
-          ${item.price}
+          {item.price === 0 ? "Free" : "$" + item.price}
         </Text>
       </View>
       <View
