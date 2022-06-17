@@ -1,5 +1,5 @@
 import { React, useState, useEffect, useCallback } from "react";
-import { View, Text, FlatList, RefreshControl, StyleSheet } from "react-native";
+import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase-config";
 import { collection, getDocs } from "firebase/firestore";
@@ -28,7 +28,6 @@ function Announcements({ navigation }) {
       snapshot.docs.forEach((doc) => {
         announcementList.push({ ...doc.data(), id: doc.id });
       });
-      console.log(announcementList);
       setAnnouncements(announcementList);
     });
   }
