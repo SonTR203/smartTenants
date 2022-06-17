@@ -27,7 +27,7 @@ function ListHeader({ styleVariables, theme, navigation }) {
           <Pressable
             id="announcements"
             onPress={() => {
-              alert("navigate to announcements (not yet implemented)");
+              navigation.navigate("Announcements");
             }}
             style={[theme.cardButton, styles.cardButton]}
           >

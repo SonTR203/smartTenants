@@ -20,6 +20,7 @@ import ManageUsers from "./Admin/ManageUsers/ManageUsers";
 import SendNotice from "./Admin/SendNotice/SendNotice";
 import DeletePost from "../components/DeletePost";
 import Notifications from "./Notifications/Notifications";
+import Announcements from "./Annoucements/Announcements";
 import Notices from "./Notices/Notices";
 import IndividualNotice from "./IndividualNotice/IndividualNotice";
 import CustomSubStackScreenHeader from "./CustomSubStackScreenHeader.js";
@@ -29,6 +30,7 @@ import ConfirmUser from "./Admin/ApproveUsers/ConfirmUser";
 import ManageUser from "./Admin/ManageUsers/ManageUser";
 import CreateAnnouncement from "./Admin/CreateAnnouncement/CreateAnnouncement";
 import ScreenHeader from "../components/ScreenHeader";
+import IndividualAnnouncement from "./IndividualAnnouncement/IndividualAnnouncement";
 
 const Stack = createStackNavigator();
 
@@ -307,6 +309,15 @@ const NotificationNavigator = () => {
         }}
       />
       <Stack.Screen
+        name="Announcements"
+        component={Announcements}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Announcements"} />
+          ),
+        }}
+      />
+      <Stack.Screen
         name="Notices"
         component={Notices}
         options={{
@@ -321,6 +332,15 @@ const NotificationNavigator = () => {
         options={{
           header: (props) => (
             <CustomSubStackScreenHeader {...props} title={"Notice"} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="IndividualAnnouncement"
+        component={IndividualAnnouncement}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Announcement"} />
           ),
         }}
       />
