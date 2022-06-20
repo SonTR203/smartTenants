@@ -5,7 +5,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
 
 function NoticeItem({
-  noticeContent,
+  content,
   theme,
   styleVariables,
   styles,
@@ -58,7 +58,7 @@ function NoticeItem({
         onPress={() => {
           setWasSeenToTrue();
           navigation.navigate("IndividualNotice", {
-            noticeContent: noticeContent,
+            content: content,
             timestamp: timeSinceNotice,
             theme: theme,
             styleVariables: styleVariables,
@@ -68,7 +68,7 @@ function NoticeItem({
       >
         <View className="noticeTextContent">
           <Text style={[styleVariables.fontSizes.body, styles.noticeContent]}>
-            {noticeContent}
+            {content}
           </Text>
         </View>
       </TouchableOpacity>
