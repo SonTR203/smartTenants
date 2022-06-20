@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text, Pressable, Platform } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-function ListHeader({ styleVariables, theme }) {
+function ListHeader({ styleVariables, theme, navigation }) {
   const styles = StyleSheet.create({
     container: { flex: 1 },
     topCard: { elevation: Platform.OS === "android" ? 0 : 20 },
@@ -27,7 +27,7 @@ function ListHeader({ styleVariables, theme }) {
           <Pressable
             id="announcements"
             onPress={() => {
-              alert("navigate to announcements (not yet implemented)");
+              navigation.navigate("Announcements");
             }}
             style={[theme.cardButton, styles.cardButton]}
           >
@@ -65,7 +65,7 @@ function ListHeader({ styleVariables, theme }) {
         <Pressable
           id="notices"
           onPress={() => {
-            alert("navigate to notices (not yet implemented)");
+            navigation.navigate("Notices");
           }}
           style={[theme.cardButton, styles.cardButtonBottom]}
         >

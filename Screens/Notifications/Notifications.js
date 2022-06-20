@@ -72,7 +72,11 @@ const Notifications = ({ navigation }) => {
       >
         <FlatList
           ListHeaderComponent={
-            <ListHeader styleVariables={styleVariables} theme={theme} />
+            <ListHeader
+              styleVariables={styleVariables}
+              theme={theme}
+              navigation={navigation}
+            />
           }
           style={styles.flatlist}
           contentContainerStyle={styles.flatListContainer}
