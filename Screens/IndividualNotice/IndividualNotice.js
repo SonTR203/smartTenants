@@ -3,8 +3,7 @@ import { View, Text, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 function IndividualNotice({ route }) {
-  const { noticeContent, theme, timestamp, styleVariables, styles } =
-    route.params;
+  const { content, theme, timestamp, styleVariables, styles } = route.params;
 
   return (
     <SafeAreaView
@@ -31,7 +30,7 @@ function IndividualNotice({ route }) {
         </View>
         <View className="noticeTextContent">
           <Text style={[styleVariables.fontSizes.body, styles.noticeContent]}>
-            {noticeContent}
+            {content}
           </Text>
         </View>
       </View>

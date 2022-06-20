@@ -64,6 +64,7 @@ function Notices({ navigation }) {
       snapshot.docs.forEach((doc) => {
         noticeList.push({ ...doc.data(), id: doc.id });
       });
+      console.log(noticeList[0].recipients.includes(currentUser.userDocId));
       const filteredNoticeList = noticeList.filter((notice) =>
         notice.recipients.includes(currentUser.userDocId)
       );
@@ -89,7 +90,7 @@ function Notices({ navigation }) {
         renderItem={({ item }) => {
           return (
             <NoticeItem
-              noticeContent={item.noticeContent}
+              content={item.content}
               timestamp={item.timestamp}
               wasSeen={item.wasSeen}
               id={item.id}
