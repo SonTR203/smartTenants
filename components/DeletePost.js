@@ -18,7 +18,7 @@ const DeletePost = () => {
       {
         title: `Post settings.
 
-Select an option to edit Marketplace post`,
+Select an option to edit post`,
         options: ["Cancel", "Turn off notifications", "Delete post"],
         destructiveButtonIndex: 2,
         cancelButtonIndex: 0,
