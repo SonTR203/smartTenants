@@ -16,8 +16,11 @@ function MarketplaceItemInfoScreen({ route }) {
   const [item, setItem] = useState(null);
   const [imageList, setImageList] = useState([]);
   const [hoursAgo, setHoursAgo] = useState(null);
+
+  // check for item passed from previous screen & display info
   useEffect(() => {
     if (route.params && route.params.item) {
+      // use timestamp format from Firebase instead of just storing the timestamp in the database
       const time = setTime(route.params.item.timestamp.seconds * 1000);
       setHoursAgo(time);
       if (route.params.item.images.length > 0) {

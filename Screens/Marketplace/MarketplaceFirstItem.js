@@ -54,11 +54,14 @@ function MarketplaceFirstItem({ item, navigation }) {
   });
 
   return (
+    // CONTAINER
     <TouchableOpacity
       onPress={() => navigateToMarketplaceItemScreen(navigation, item)}
       style={[theme.marketplaceItemContainer, styles.container]}
     >
+      {/* ITEM IMAGE  */}
       <Image style={styles.image} source={{ uri: item.images[0] }} />
+      {/* IMAGE TITLE & PRICE  */}
       <View style={styles.titleContainer}>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
           {item.postTitle}
@@ -67,6 +70,7 @@ function MarketplaceFirstItem({ item, navigation }) {
           {item.price === 0 ? "Free" : "$" + item.price}
         </Text>
       </View>
+      {/* ITEM CONTENT  */}
       <View style={styles.contentContainer}>
         <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
           {item.postContent}

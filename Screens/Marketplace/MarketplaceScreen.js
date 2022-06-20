@@ -71,15 +71,17 @@ const MarketplaceScreen = ({ navigation, route }) => {
   });
 
   return (
+    // CONTAINER
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
+      {/* ITEM LIST  */}
       <View style={styles.flatListContainer}>
         {itemList ? (
           <FlatList
             removeClippedSubviews={true}
             initialNumToRender={3}
             style={styles.flatlist}
-            data={itemList.slice(1)}
+            data={itemList.slice(1)} // remove first item from list, put first item in Header
             numColumns={2}
             keyExtractor={(item, index) => item + index}
             ListHeaderComponent={() => {

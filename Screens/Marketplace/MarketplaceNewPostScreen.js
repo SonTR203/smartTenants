@@ -13,22 +13,18 @@ import { useTheme } from "../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import CurrencyInput from "react-native-currency-input";
-
-import { db } from "../../firebase-config";
-import { setDoc, Timestamp, doc } from "@firebase/firestore";
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
+import { Timestamp } from "@firebase/firestore";
 import { useAppContext } from "../../Context/AppContext";
 import uuid from "react-native-uuid";
 import {
   compressFileSize,
   getFileInfo,
 } from "../../utils/Profile/profile.services";
+import {
+  createItemInFirestore,
+  deleteImageFromStorage,
+  uploadImageToStorage,
+} from "../../utils/firebase.services";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -38,6 +34,7 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [image, setImage] = useState("");
   const { currentUser } = useAppContext();
 
+  // function to handle image picking
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -60,20 +57,28 @@ function MarketplaceNewPostScreen({ navigation }) {
     }
   };
 
-  const handleSelectedImage = async () => {
+  const handleSubmit = async () => {
+    // if all info is filled out: create random id -> upload image -> create post
     if (title.length > 0 && content.length > 0 && price && image.length > 0) {
       const id = uuid.v4();
-      const imageUrl = await uploadImage(image, id);
-      createMarketplacePostFirestore(imageUrl, id);
+      const imageUrl = await uploadImageToStorage(
+        image,
+        id,
+        currentUser.userDocId
+      );
+      if (imageUrl) {
+        createMarketplacePostFirestore(imageUrl, id);
+      } else {
+        return;
+      }
     } else {
-      console.log(title, image, content, price);
       alert("Please fill out all fields");
     }
   };
 
   const createMarketplacePostFirestore = async (imageUrl, id) => {
     try {
-      await setDoc(doc(db, "Marketplace", id), {
+      const propObj = {
         buildingLocation: "",
         images: [imageUrl],
         isNSFW: false,
@@ -86,61 +91,19 @@ function MarketplaceNewPostScreen({ navigation }) {
         userLastName: currentUser.lastName,
         userProfileImage: currentUser.userProfileImage,
         timestamp: Timestamp.fromDate(new Date()),
-      })
-        .then(() => {
-          console.log("Marketplace new item Document successfully written!");
-          alert("Marketplace item successfully created!");
-          navigation.navigate("MarketplaceScreen", { reload: true });
-        })
-        .catch((error) => {
-          throw new Error(error);
-        });
+      };
+
+      const res = await createItemInFirestore("Marketplace", id, propObj);
+      if (res) {
+        alert("Marketplace item successfully created!");
+        navigation.navigate("MarketplaceScreen", { reload: true });
+      } else {
+        throw new Error("Error creating marketplace item", res.error);
+      }
     } catch (err) {
-      console.log("ERROR Posting to DB: ", err);
-      alert("Failed to post new item. Please try again later");
-      deleteFailedPostImage(imageUrl);
+      await deleteImageFromStorage(imageUrl);
     }
   };
-
-  const deleteFailedPostImage = async (imageName) => {
-    try {
-      const imageRef = ref(getStorage(), imageName);
-      await deleteObject(imageRef)
-        .then(() => {
-          // File deleted successfully
-          console.log("image from failed post deleted!");
-        })
-        .catch((error) => {
-          // Uh-oh, an error occurred!
-          throw new Error(error);
-        });
-    } catch (error) {
-      console.log("ERROR deleting failed post Storage image: ", error);
-    }
-  };
-
-  async function uploadImage(newImage, postId) {
-    const imageName = `Images/Posts/Marketplace/${currentUser.userDocId}-${postId}.jpg`;
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", newImage, true);
-      xhr.send(null);
-    });
-
-    const fileRef = ref(getStorage(), imageName);
-    await uploadBytes(fileRef, blob);
-
-    const imgUrl = await getDownloadURL(fileRef);
-    return imgUrl;
-  }
 
   const styles = StyleSheet.create({
     container: {
@@ -181,7 +144,9 @@ function MarketplaceNewPostScreen({ navigation }) {
       <StatusBar style="dark" />
       {/* BODY CONTAINER  */}
       <View style={styles.bodyContainer}>
+        {/* TEXT INPUT SECTIONS  */}
         <View>
+          {/* TITLE  */}
           <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
             Title
           </Text>
@@ -199,6 +164,7 @@ function MarketplaceNewPostScreen({ navigation }) {
             ]}
           />
 
+          {/* DESCRIPTION */}
           <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
             Description
           </Text>
@@ -216,6 +182,7 @@ function MarketplaceNewPostScreen({ navigation }) {
             ]}
           />
 
+          {/* PRICE */}
           <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
             Price
           </Text>
@@ -237,6 +204,7 @@ function MarketplaceNewPostScreen({ navigation }) {
             prefix="$"
           />
 
+          {/* UPLOAD IMAGE */}
           <TouchableOpacity
             id="uploadImageButton"
             onPress={pickImage}
@@ -261,9 +229,10 @@ function MarketplaceNewPostScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
+        {/* SUBMIT BUTTON  */}
         <TouchableOpacity
           id="submitPostButton"
-          onPress={handleSelectedImage}
+          onPress={handleSubmit}
           style={[theme.primaryButton, {}]}
         >
           <Text
