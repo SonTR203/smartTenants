@@ -39,7 +39,6 @@ const Login = ({ navigation }) => {
       })
       .catch((error) => alert(error.message));
   };
-  // handleLogin();
 
   /* This function gets the logged in user data from Firebase and  * navigates him/her to to the Newsfeed screen (Home screen) if * * authorized or to the Account Approval Pending screen if not
    * yet approved by an Admin.
