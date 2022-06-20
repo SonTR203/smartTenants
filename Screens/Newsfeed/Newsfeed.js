@@ -6,7 +6,6 @@ import { useTheme } from "../../ThemeContext";
 import { Dimensions } from "react-native";
 const windowWidth = Dimensions.get("window").width;
 import Post from "./Post";
-import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
 import { wait } from "../../utils/wait";
 import { getPosts } from "../../utils/Newsfeed/newsfeed.services";
@@ -83,9 +82,6 @@ const Newsfeed = ({ navigation, route }) => {
           removeClippedSubviews={true}
           initialNumToRender={3}
           style={styles.flatlist}
-          ListHeaderComponent={
-            <ListHeader styleVariables={styleVariables} theme={theme} />
-          }
           data={posts}
           keyExtractor={(item) => item.id}
           renderItem={callBackRender}
