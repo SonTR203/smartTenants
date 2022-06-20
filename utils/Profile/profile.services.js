@@ -7,7 +7,7 @@ import _ from "lodash";
 export const getMyPosts = async (currentUser) => {
   const colReference = collection(
     db,
-    "Users",
+    "Tenants",
     `${currentUser.userDocId}`,
     "myPosts"
   );
@@ -29,7 +29,7 @@ export const compressFileSize = async (uri) => {
     compress: 0.6,
     format: SaveFormat.PNG,
   });
-  console.log("compressedUri", compressedUri);
+  // console.log("compressedUri", compressedUri);
   return compressedUri;
 };
 

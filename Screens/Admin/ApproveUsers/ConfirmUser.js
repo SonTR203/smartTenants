@@ -49,7 +49,7 @@ const ConfirmUser = ({ route, navigation }) => {
   };
 
   async function confirmUserBtn() {
-    const userDocRef = doc(db, "Users", user.userDocId);
+    const userDocRef = doc(db, "Tenants", user.userDocId);
 
     try {
       await updateDoc(userDocRef, {
@@ -71,7 +71,7 @@ const ConfirmUser = ({ route, navigation }) => {
   }
 
   async function fetchUpdatedListOfUnauthorizedUsers() {
-    const colRef = collection(db, "Users");
+    const colRef = collection(db, "Tenants");
 
     const data = await getDocs(colRef);
     const users = data.docs.map((user) => {

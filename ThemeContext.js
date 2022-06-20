@@ -112,6 +112,19 @@ const theme = StyleSheet.create({
     shadowRadius: 34,
     elevation: 20,
   },
+  marketplaceItemContainer: {
+    backgroundColor: styleVariables.colors.white,
+    marginBottom: 17,
+    borderRadius: 24,
+    shadowColor: styleVariables.colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.14,
+    shadowRadius: 34,
+    elevation: 20,
+  },
   modalView: {
     width: windowWidth - 34,
     marginVertical: 17,

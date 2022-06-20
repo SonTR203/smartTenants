@@ -46,7 +46,7 @@ const Login = ({ navigation }) => {
    * outputs: sets the current user object as the Logged in user as stored as per stored data on Firebase
    */
   const findUser = async (user) => {
-    const colRef = collection(db, "Users");
+    const colRef = collection(db, "Tenants");
     const data = await getDocs(colRef);
     let loggedInUser;
 

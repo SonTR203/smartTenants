@@ -2,12 +2,12 @@ import React from "react";
 import { Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-function Fab({ navigation, theme, styleVariables }) {
+function Fab({ navigation, theme, styleVariables, route }) {
   return (
     <Pressable
       id="FAB"
       onPress={() => {
-        navigation.navigate("CreatePost");
+        navigation.navigate(route);
       }}
       style={theme.fab}
     >

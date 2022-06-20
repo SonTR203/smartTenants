@@ -91,7 +91,7 @@ const Signup = ({ navigation }) => {
 
   async function createNewUser(user) {
     try {
-      await addDoc(collection(db, "Users"), {
+      await addDoc(collection(db, "Tenants"), {
         userID: user.uid,
         firstName,
         lastName,

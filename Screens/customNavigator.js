@@ -30,9 +30,101 @@ import ConfirmUser from "./Admin/ApproveUsers/ConfirmUser";
 import ManageUser from "./Admin/ManageUsers/ManageUser";
 import CreateAnnouncement from "./Admin/CreateAnnouncement/CreateAnnouncement";
 import ScreenHeader from "../components/ScreenHeader";
+import MarketplaceScreen from "./Marketplace/MarketplaceScreen";
+import MarketplaceItemInfoScreen from "./Marketplace/MarketplaceItemInfoScreen";
+import MarketplaceNewPostScreen from "./Marketplace/MarketplaceNewPostScreen";
 import IndividualAnnouncement from "./IndividualAnnouncement/IndividualAnnouncement";
 
 const Stack = createStackNavigator();
+
+const MarketplaceNavigator = () => {
+  const { currentUser } = useAppContext();
+
+  if (currentUser && currentUser.tenantAuthorized) {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="MarketplaceScreen"
+          component={MarketplaceScreen}
+          options={{
+            headerShown: true,
+            header: () => <ScreenHeader title={"Marketplace"} />,
+          }}
+        />
+        <Stack.Screen
+          name="BuildingInfo"
+          component={BuildingInfo}
+          options={{
+            header: (props) => (
+              <CustomSubStackScreenHeader {...props} title={"Building Info"} />
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="MarketplaceItemInfo"
+          component={MarketplaceItemInfoScreen}
+          options={({ route }) => ({
+            header: (props) => (
+              <CustomSubStackScreenHeader
+                {...props}
+                title={route.params.title + "'s Post"}
+                currentUserId={currentUser.userDocId}
+                itemUserId={route.params.item.userID}
+                item={route.params.item}
+              />
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="CreateMarketplaceItem"
+          component={MarketplaceNewPostScreen}
+          options={{
+            header: (props) => (
+              <CustomSubStackScreenHeader {...props} title={"Create post"} />
+            ),
+          }}
+        />
+      </Stack.Navigator>
+    );
+  } else {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ title: "Login", headerShown: false }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={Signup}
+          options={{
+            header: (props) => (
+              <CustomSubStackScreenHeader {...props} title={"Sign up"} />
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="AccountApprovalPending"
+          component={AccountApprovalPending}
+          options={{
+            header: (props) => (
+              <CustomSubStackScreenHeader {...props} title={" "} />
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="ForgotPassword"
+          component={ForgotPassword}
+          options={{
+            header: (props) => (
+              <CustomSubStackScreenHeader {...props} title={" "} />
+            ),
+          }}
+        />
+      </Stack.Navigator>
+    );
+  }
+};
 
 const NewsfeedNavigator = () => {
   const { post, currentUser } = useAppContext();
@@ -348,4 +440,9 @@ const NotificationNavigator = () => {
   );
 };
 
-export { NewsfeedNavigator, ProfileNavigator, NotificationNavigator };
+export {
+  MarketplaceNavigator,
+  NewsfeedNavigator,
+  ProfileNavigator,
+  NotificationNavigator,
+};

@@ -1,0 +1,201 @@
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
+} from "react-native";
+import { constants } from "../../utils/constants";
+import { setTime } from "../../utils/setTime";
+
+function MarketplaceItemInfoScreen({ route }) {
+  const [item, setItem] = useState(null);
+  const [imageList, setImageList] = useState([]);
+  const [hoursAgo, setHoursAgo] = useState(null);
+
+  // check for item passed from previous screen & display info
+  useEffect(() => {
+    if (route.params && route.params.item) {
+      // use timestamp format from Firebase instead of just storing the timestamp in the database
+      const time = setTime(route.params.item.timestamp.seconds * 1000);
+      setHoursAgo(time);
+      if (route.params.item.images.length > 0) {
+        setImageList(route.params.item.images);
+      }
+      setItem(route.params.item);
+    }
+  }, [route]);
+
+  if (item === null) {
+    return null;
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "white",
+    },
+    scrollView: {
+      backgroundColor: "white",
+      marginTop: 20,
+      marginLeft: 17,
+      marginRight: 17,
+    },
+    flatList: {
+      backgroundColor: "white",
+      marginBottom: 17,
+    },
+    imagesContainer: (index) => ({
+      backgroundColor: "black",
+      marginLeft: index === 0 ? 0 : 17,
+      height: constants.height * 0.3,
+      borderRadius: 24,
+      width:
+        imageList.length < 2 ? constants.width * 0.9 : constants.width * 0.7,
+    }),
+    headerContainer: {
+      backgroundColor: "white",
+      flexDirection: "row",
+      alignItems: "flex-start",
+    },
+    title: {
+      maxWidth: constants.width * 0.74,
+      fontSize: 28,
+      fontWeight: "600",
+      lineHeight: 33,
+      color: "#191919",
+    },
+    price: {
+      marginTop: 5,
+      marginLeft: 11,
+      color: "#395E66",
+      fontSize: 22,
+      fontWeight: "400",
+      lineHeight: 26,
+    },
+    contentContainer: {
+      marginTop: 11,
+    },
+    content: {
+      color: "#191919",
+      opacity: 0.66,
+      fontSize: 17,
+      fontWeight: "400",
+      lineHeight: 20,
+    },
+    profileContainer: {
+      marginTop: 24,
+      marginBottom: 50,
+      flexDirection: "row",
+    },
+    profileImage: {
+      backgroundColor: "black",
+      width: 43,
+      height: 43,
+      borderRadius: 12,
+    },
+    userNameContainer: {
+      flex: 1,
+      marginLeft: 8,
+      flexDirection: "column",
+    },
+    userName: {
+      fontWeight: "500",
+      fontSize: 17,
+      lineHeight: 24,
+      color: "#191919",
+    },
+    hoursAgo: {
+      fontWeight: "400",
+      fontSize: 15,
+      lineHeight: 18,
+      color: "#191919",
+      opacity: 0.66,
+    },
+    messageButton: {
+      marginLeft: 17,
+      marginRight: 17,
+      backgroundColor: "#395E66",
+      borderRadius: 18,
+      marginBottom: 25,
+      height: 60,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    messageText: {
+      fontWeight: "600",
+      fontSize: 17,
+      lineHeight: 20,
+      color: "white",
+    },
+  });
+
+  return (
+    // CONTAINER
+    <View style={styles.container}>
+      <StatusBar style="dark" />
+      {/* BODY SECTION  */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.scrollView}
+      >
+        {/* IMAGE LIST  */}
+        <FlatList
+          contentContainerStyle={styles.flatList}
+          data={imageList}
+          scrollEnabled={imageList.length > 1 ? true : false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          keyExtractor={(item, index) => item + index}
+          renderItem={({ item, index }) => {
+            return (
+              <Image
+                style={styles.imagesContainer(index)}
+                source={{ uri: item }}
+              />
+            );
+          }}
+        />
+        {/* ITEM HEADER INFO  */}
+        <View style={styles.headerContainer}>
+          <Text style={styles.title} numberOfLines={2} ellipsizeMode={"tail"}>
+            {item.postTitle}
+          </Text>
+          <Text style={styles.price}>${item.price}</Text>
+        </View>
+        {/* ITEM CONTENT  */}
+        <View style={styles.contentContainer}>
+          <Text style={styles.content}>{item.postContent}</Text>
+        </View>
+        {/* PROFILE SECTION */}
+        <View style={styles.profileContainer}>
+          <Image
+            style={styles.profileImage}
+            source={{ uri: item.userProfileImage }}
+          />
+          <View style={styles.userNameContainer}>
+            <Text style={styles.userName}>
+              {`${item.userFirstName} ${item.userLastName}`}
+            </Text>
+            {hoursAgo ? (
+              <Text style={styles.hoursAgo}>Posted {hoursAgo}</Text>
+            ) : null}
+          </View>
+        </View>
+        {/* SEND A MESSAGE BOX  */}
+      </ScrollView>
+      <TouchableOpacity
+        onPress={() => alert("Send a message")}
+        style={styles.messageButton}
+      >
+        <Text style={styles.messageText}>Send a message</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+export default MarketplaceItemInfoScreen;

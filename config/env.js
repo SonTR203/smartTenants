@@ -1,19 +1,20 @@
-import {
-  API_KEY,
-  AUTH_DOMAIN,
-  PROJECT_ID,
-  STORAGE_BUCKET,
-  MESSAGING_SENDER_ID,
-  APP_ID,
-} from "@env";
+// import {
+//   API_KEY,
+//   AUTH_DOMAIN,
+//   PROJECT_ID,
+//   STORAGE_BUCKET,
+//   MESSAGING_SENDER_ID,
+//   APP_ID,
+// } from "@env";
 
 const firebaseConfig = {
-  apiKey: `${API_KEY}`,
-  authDomain: `${AUTH_DOMAIN}`,
-  projectId: `${PROJECT_ID}`,
-  storageBucket: `${STORAGE_BUCKET}`,
-  messagingSenderId: `${MESSAGING_SENDER_ID}`,
-  appId: `${APP_ID}`,
+  apiKey: "AIzaSyA-MHmZ-qa3IEA4I9JaxExqfPdkUh9lgig",
+  authDomain: "son-demo-project.firebaseapp.com",
+  projectId: "son-demo-project",
+  storageBucket: "son-demo-project.appspot.com",
+  messagingSenderId: "318344122239",
+  appId: "1:318344122239:web:91f152baed6ba7e46c144a",
+  measurementId: "G-JE5YZF6K9V",
 };
 
 export default firebaseConfig;
