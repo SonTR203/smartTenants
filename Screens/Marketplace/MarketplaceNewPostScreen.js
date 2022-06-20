@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   TextInput,
+  StyleSheet,
   Keyboard,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
@@ -141,25 +142,45 @@ function MarketplaceNewPostScreen({ navigation }) {
     return imgUrl;
   }
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "white",
+      paddingLeft: 17,
+      paddingRight: 17,
+    },
+    bodyContainer: {
+      flex: 1,
+      flexDirection: "column",
+      justifyContent: "space-between",
+    },
+    textInputTitleAndPrice: {
+      height: 64,
+      paddingTop: 22,
+    },
+    textInputDescription: {
+      minHeight: 68 + 44,
+      paddingTop: 22,
+      paddingBottom: Platform.OS === "android" ? 70 : 0,
+    },
+    uploadButtonContainer: {
+      flexDirection: "row",
+    },
+    uploadText: {
+      maxWidth: "85%",
+    },
+  });
+
   return (
+    // CONTAINER
     <TouchableOpacity
       activeOpacity={1}
       onPress={() => Keyboard.dismiss()}
-      style={{
-        flex: 1,
-        backgroundColor: "white",
-        paddingLeft: 17,
-        paddingRight: 17,
-      }}
+      style={styles.container}
     >
       <StatusBar style="dark" />
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
+      {/* BODY CONTAINER  */}
+      <View style={styles.bodyContainer}>
         <View>
           <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
             Title
@@ -174,10 +195,7 @@ function MarketplaceNewPostScreen({ navigation }) {
             style={[
               theme.textInput,
               styleVariables.fontSizes.body,
-              {
-                height: 64,
-                paddingTop: 22,
-              },
+              styles.textInputTitleAndPrice,
             ]}
           />
 
@@ -194,11 +212,7 @@ function MarketplaceNewPostScreen({ navigation }) {
             style={[
               theme.textInput,
               styleVariables.fontSizes.body,
-              {
-                minHeight: 68 + 44,
-                paddingTop: 22,
-                paddingBottom: Platform.OS === "android" ? 70 : 0,
-              },
+              styles.textInputDescription,
             ]}
           />
 
@@ -209,10 +223,7 @@ function MarketplaceNewPostScreen({ navigation }) {
             style={[
               theme.textInput,
               styleVariables.fontSizes.body,
-              {
-                height: 64,
-                paddingTop: 22,
-              },
+              styles.textInputTitleAndPrice,
             ]}
             multiline={false}
             maxLength={12}
@@ -229,12 +240,7 @@ function MarketplaceNewPostScreen({ navigation }) {
           <TouchableOpacity
             id="uploadImageButton"
             onPress={pickImage}
-            style={[
-              theme.secondaryButton,
-              {
-                flexDirection: "row",
-              },
-            ]}
+            style={[theme.secondaryButton, styles.uploadButtonContainer]}
           >
             <Text
               numberOfLines={1}
@@ -242,9 +248,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.secondaryButtonText,
                 styleVariables.fontSizes.body,
-                {
-                  maxWidth: "85%",
-                },
+                styles.uploadText,
               ]}
             >
               {image.length > 0 ? image.split("/").pop() : "Upload Image "}

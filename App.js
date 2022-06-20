@@ -19,10 +19,14 @@ import {
   MarketplaceNavigator,
 } from "./Screens/customNavigator.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  ActionSheetProvider,
+  connectActionSheet,
+} from "@expo/react-native-action-sheet";
 
 const Tab = createBottomTabNavigator();
 
-export default function App() {
+function App() {
   const [showSplashscreen, setShowSplashscreen] = useState(true);
 
   let [fontLoaded] = useFonts({
@@ -50,84 +54,88 @@ function AppContainer({ showSplashscreen, setShowSplashscreen }) {
   }, []);
 
   return (
-    <ThemeProvider>
-      <AppProvider>
-        {showSplashscreen ? (
-          <Splashscreen />
-        ) : (
-          <NavigationContainer>
-            <Tab.Navigator
-              initialRouteName="Newsfeed "
-              screenOptions={({ route }) => ({
-                tabBarIcon: ({ focused }) => {
-                  let iconName;
-                  let color;
-                  if (route.name === "Marketplace ") {
-                    iconName = "store";
-                    color = focused ? "#395E66" : "#395E6654";
-                  } else if (route.name === "Newsfeed ") {
-                    iconName = "newspaper";
-                    color = focused ? "#395E66" : "#395E6654";
-                  } else if (route.name === "Notifications ") {
-                    iconName = "bell";
-                    color = focused ? "#395E66" : "#395E6654";
-                  } else if (route.name === "Profile ") {
-                    iconName = "account";
-                    color = focused ? "#395E66" : "#395E6654";
-                  }
-                  return (
-                    <MaterialCommunityIcons
-                      name={iconName}
-                      size={28}
-                      color={color}
-                    />
-                  );
-                },
-                headerShown: false,
-                tabBarActiveTintColor: "#395E66",
-              })}
-            >
-              {/* ======= Marketplace ======= */}
-              <Tab.Screen
-                name="Marketplace "
-                component={MarketplaceNavigator}
-                options={{
-                  headerShown: false,
-                }}
-              />
-
-              {/* ======= Newsfeed ======= */}
-              <Tab.Screen
-                name="Newsfeed "
-                component={NewsfeedNavigator}
-                options={({ route }) => ({
-                  left: { display: "none" },
-                  tabBarStyle: {
-                    display: getRouteName(route) ? getRouteName(route) : "none",
+    <ActionSheetProvider>
+      <ThemeProvider>
+        <AppProvider>
+          {showSplashscreen ? (
+            <Splashscreen />
+          ) : (
+            <NavigationContainer>
+              <Tab.Navigator
+                initialRouteName="Newsfeed "
+                screenOptions={({ route }) => ({
+                  tabBarIcon: ({ focused }) => {
+                    let iconName;
+                    let color;
+                    if (route.name === "Marketplace ") {
+                      iconName = "store";
+                      color = focused ? "#395E66" : "#395E6654";
+                    } else if (route.name === "Newsfeed ") {
+                      iconName = "newspaper";
+                      color = focused ? "#395E66" : "#395E6654";
+                    } else if (route.name === "Notifications ") {
+                      iconName = "bell";
+                      color = focused ? "#395E66" : "#395E6654";
+                    } else if (route.name === "Profile ") {
+                      iconName = "account";
+                      color = focused ? "#395E66" : "#395E6654";
+                    }
+                    return (
+                      <MaterialCommunityIcons
+                        name={iconName}
+                        size={28}
+                        color={color}
+                      />
+                    );
                   },
+                  headerShown: false,
+                  tabBarActiveTintColor: "#395E66",
                 })}
-              />
+              >
+                {/* ======= Marketplace ======= */}
+                <Tab.Screen
+                  name="Marketplace "
+                  component={MarketplaceNavigator}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
 
-              {/* ======= Notifications ======= */}
-              <Tab.Screen
-                name="Notifications "
-                component={NotificationNavigator}
-              />
+                {/* ======= Newsfeed ======= */}
+                <Tab.Screen
+                  name="Newsfeed "
+                  component={NewsfeedNavigator}
+                  options={({ route }) => ({
+                    left: { display: "none" },
+                    tabBarStyle: {
+                      display: getRouteName(route)
+                        ? getRouteName(route)
+                        : "none",
+                    },
+                  })}
+                />
 
-              {/* ======= Profile ======= */}
-              <Tab.Screen
-                name="Profile "
-                component={ProfileNavigator}
-                options={{ headerShown: false }}
-                tabBarOptions={{
-                  display: "none",
-                }}
-              />
-            </Tab.Navigator>
-          </NavigationContainer>
-        )}
-      </AppProvider>
-    </ThemeProvider>
+                {/* ======= Notifications ======= */}
+                <Tab.Screen
+                  name="Notifications "
+                  component={NotificationNavigator}
+                />
+
+                {/* ======= Profile ======= */}
+                <Tab.Screen
+                  name="Profile "
+                  component={ProfileNavigator}
+                  options={{ headerShown: false }}
+                  tabBarOptions={{
+                    display: "none",
+                  }}
+                />
+              </Tab.Navigator>
+            </NavigationContainer>
+          )}
+        </AppProvider>
+      </ThemeProvider>
+    </ActionSheetProvider>
   );
 }
 
@@ -145,3 +153,7 @@ const getRouteName = (route) => {
   }
   return "flex";
 };
+
+const ConnectedApp = connectActionSheet(App);
+
+export default ConnectedApp;

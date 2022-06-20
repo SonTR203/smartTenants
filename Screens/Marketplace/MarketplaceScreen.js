@@ -14,8 +14,6 @@ import { getMarketplaceItems } from "../../utils/Marketplace/marketplace.service
 import Fab from "../../components/Fab";
 import MarketplaceItem from "./MarketplaceItem";
 import MarketplaceFirstItem from "./MarketplaceFirstItem";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "../../firebase-config";
 import ListFooter from "../Newsfeed/ListFooter";
 
 const MarketplaceScreen = ({ navigation, route }) => {

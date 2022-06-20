@@ -6,13 +6,13 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  Dimensions,
   ScrollView,
   FlatList,
 } from "react-native";
+import { constants } from "../../utils/constants";
 import { setTime } from "../../utils/setTime";
 
-function MarketplaceItemInfoScreen({ navigation, route }) {
+function MarketplaceItemInfoScreen({ route }) {
   const [item, setItem] = useState(null);
   const [imageList, setImageList] = useState([]);
   const [hoursAgo, setHoursAgo] = useState(null);
@@ -31,31 +31,118 @@ function MarketplaceItemInfoScreen({ navigation, route }) {
     return null;
   }
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "white",
+    },
+    scrollView: {
+      backgroundColor: "white",
+      marginTop: 20,
+      marginLeft: 17,
+      marginRight: 17,
+    },
+    flatList: {
+      backgroundColor: "white",
+      marginBottom: 17,
+    },
+    imagesContainer: (index) => ({
+      backgroundColor: "black",
+      marginLeft: index === 0 ? 0 : 17,
+      height: constants.height * 0.3,
+      borderRadius: 24,
+      width:
+        imageList.length < 2 ? constants.width * 0.9 : constants.width * 0.7,
+    }),
+    headerContainer: {
+      backgroundColor: "white",
+      flexDirection: "row",
+      alignItems: "flex-start",
+    },
+    title: {
+      maxWidth: constants.width * 0.74,
+      fontSize: 28,
+      fontWeight: "600",
+      lineHeight: 33,
+      color: "#191919",
+    },
+    price: {
+      marginTop: 5,
+      marginLeft: 11,
+      color: "#395E66",
+      fontSize: 22,
+      fontWeight: "400",
+      lineHeight: 26,
+    },
+    contentContainer: {
+      marginTop: 11,
+    },
+    content: {
+      color: "#191919",
+      opacity: 0.66,
+      fontSize: 17,
+      fontWeight: "400",
+      lineHeight: 20,
+    },
+    profileContainer: {
+      marginTop: 24,
+      marginBottom: 50,
+      flexDirection: "row",
+    },
+    profileImage: {
+      backgroundColor: "black",
+      width: 43,
+      height: 43,
+      borderRadius: 12,
+    },
+    userNameContainer: {
+      flex: 1,
+      marginLeft: 8,
+      flexDirection: "column",
+    },
+    userName: {
+      fontWeight: "500",
+      fontSize: 17,
+      lineHeight: 24,
+      color: "#191919",
+    },
+    hoursAgo: {
+      fontWeight: "400",
+      fontSize: 15,
+      lineHeight: 18,
+      color: "#191919",
+      opacity: 0.66,
+    },
+    messageButton: {
+      marginLeft: 17,
+      marginRight: 17,
+      backgroundColor: "#395E66",
+      borderRadius: 18,
+      marginBottom: 25,
+      height: 60,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    messageText: {
+      fontWeight: "600",
+      fontSize: 17,
+      lineHeight: 20,
+      color: "white",
+    },
+  });
+
   return (
     // CONTAINER
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "white",
-      }}
-    >
+    <View style={styles.container}>
       <StatusBar style="dark" />
       {/* BODY SECTION  */}
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{
-          backgroundColor: "white",
-          marginTop: 20,
-          marginLeft: 17,
-          marginRight: 17,
-        }}
+        style={styles.scrollView}
       >
         {/* IMAGE LIST  */}
         <FlatList
-          contentContainerStyle={{
-            backgroundColor: "white",
-            marginBottom: 17,
-          }}
+          contentContainerStyle={styles.flatList}
           data={imageList}
           scrollEnabled={imageList.length > 1 ? true : false}
           showsHorizontalScrollIndicator={false}
@@ -64,121 +151,35 @@ function MarketplaceItemInfoScreen({ navigation, route }) {
           renderItem={({ item, index }) => {
             return (
               <Image
-                style={{
-                  backgroundColor: "black",
-                  marginLeft: index === 0 ? 0 : 17,
-                  height: Dimensions.get("window").height * 0.3,
-                  borderRadius: 24,
-                  width:
-                    imageList.length < 2
-                      ? Dimensions.get("window").width * 0.9
-                      : Dimensions.get("window").width * 0.7,
-                }}
+                style={styles.imagesContainer(index)}
                 source={{ uri: item }}
               />
             );
           }}
         />
         {/* ITEM HEADER INFO  */}
-        <View
-          style={{
-            backgroundColor: "white",
-            flexDirection: "row",
-            alignItems: "flex-start",
-          }}
-        >
-          <Text
-            style={{
-              maxWidth: Dimensions.get("window").width * 0.74,
-              fontSize: 28,
-              fontWeight: "600",
-              lineHeight: 33,
-              color: "#191919",
-            }}
-            numberOfLines={2}
-            ellipsizeMode={"tail"}
-          >
+        <View style={styles.headerContainer}>
+          <Text style={styles.title} numberOfLines={2} ellipsizeMode={"tail"}>
             {item.postTitle}
           </Text>
-          <Text
-            style={{
-              marginTop: 5,
-              marginLeft: 11,
-              color: "#395E66",
-              fontSize: 22,
-              fontWeight: "400",
-              lineHeight: 26,
-            }}
-          >
-            ${item.price}
-          </Text>
+          <Text style={styles.price}>${item.price}</Text>
         </View>
         {/* ITEM CONTENT  */}
-        <View
-          style={{
-            marginTop: 11,
-          }}
-        >
-          <Text
-            style={{
-              color: "#191919",
-              opacity: 0.66,
-              fontSize: 17,
-              fontWeight: "400",
-              lineHeight: 20,
-            }}
-            // numberOfLines={6}
-            // ellipsizeMode={"tail"}
-          >
-            {item.postContent}
-          </Text>
+        <View style={styles.contentContainer}>
+          <Text style={styles.content}>{item.postContent}</Text>
         </View>
         {/* PROFILE SECTION */}
-        <View
-          style={{
-            marginTop: 24,
-            marginBottom: 50,
-            flexDirection: "row",
-          }}
-        >
+        <View style={styles.profileContainer}>
           <Image
-            style={{
-              backgroundColor: "black",
-              width: 43,
-              height: 43,
-              borderRadius: 12,
-            }}
+            style={styles.profileImage}
             source={{ uri: item.userProfileImage }}
           />
-          <View
-            style={{
-              flex: 1,
-              marginLeft: 8,
-              flexDirection: "column",
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: "500",
-                fontSize: 17,
-                lineHeight: 24,
-                color: "#191919",
-              }}
-            >
+          <View style={styles.userNameContainer}>
+            <Text style={styles.userName}>
               {`${item.userFirstName} ${item.userLastName}`}
             </Text>
             {hoursAgo ? (
-              <Text
-                style={{
-                  fontWeight: "400",
-                  fontSize: 15,
-                  lineHeight: 18,
-                  color: "#191919",
-                  opacity: 0.66,
-                }}
-              >
-                Posted {hoursAgo}
-              </Text>
+              <Text style={styles.hoursAgo}>Posted {hoursAgo}</Text>
             ) : null}
           </View>
         </View>
@@ -186,27 +187,9 @@ function MarketplaceItemInfoScreen({ navigation, route }) {
       </ScrollView>
       <TouchableOpacity
         onPress={() => alert("Send a message")}
-        style={{
-          marginLeft: 17,
-          marginRight: 17,
-          backgroundColor: "#395E66",
-          borderRadius: 18,
-          marginBottom: 25,
-          height: 60,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        style={styles.messageButton}
       >
-        <Text
-          style={{
-            fontWeight: "600",
-            fontSize: 17,
-            lineHeight: 20,
-            color: "white",
-          }}
-        >
-          Send a message
-        </Text>
+        <Text style={styles.messageText}>Send a message</Text>
       </TouchableOpacity>
     </View>
   );

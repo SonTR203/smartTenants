@@ -64,6 +64,9 @@ const MarketplaceNavigator = () => {
               <CustomSubStackScreenHeader
                 {...props}
                 title={route.params.title + "'s Post"}
+                currentUserId={currentUser.userDocId}
+                itemUserId={route.params.item.userID}
+                item={route.params.item}
               />
             ),
           })}

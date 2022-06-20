@@ -69,6 +69,7 @@ const IndividualPosts = ({ navigation }) => {
           },
         ]}
       >
+        <StatusBar style="dark" />
         <View
           className="commentOwnerInfo"
           style={{
@@ -160,7 +161,7 @@ const IndividualPosts = ({ navigation }) => {
   );
 
   return (
-    <View>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       <StatusBar style="auto" />
       <View style={theme.pageContainer}>
         <FlatList

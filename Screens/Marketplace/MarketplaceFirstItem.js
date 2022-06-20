@@ -1,89 +1,74 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../../ThemeContext";
+import { constants } from "../../utils/constants";
 import { navigateToMarketplaceItemScreen } from "../../utils/Marketplace/marketplace.services";
 
 function MarketplaceFirstItem({ item, navigation }) {
-  const { theme, styleVariables } = useTheme();
+  const { theme } = useTheme();
+
+  const styles = StyleSheet.create({
+    container: { marginTop: 17, marginLeft: 17, marginRight: 17 },
+    image: {
+      resizeMode: "cover",
+      marginBottom: 17,
+      height: constants.height * 0.25,
+      backgroundColor: "black",
+      borderTopRightRadius: 17,
+      borderTopLeftRadius: 17,
+    },
+    titleContainer: {
+      flex: 1,
+      marginLeft: 17,
+      marginRight: 17,
+      marginBottom: 11,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    title: {
+      flex: 1,
+      fontSize: 28,
+      fontWeight: "600",
+      lineHeight: 33,
+      color: "#191919",
+    },
+    price: {
+      color: "#395E66",
+      fontSize: 22,
+      fontWeight: "400",
+      lineHeight: 26,
+    },
+    contentContainer: {
+      marginLeft: 17,
+      marginRight: 17,
+      marginBottom: 22,
+    },
+    content: {
+      color: "#191919",
+      opacity: 0.66,
+      fontSize: 17,
+      fontWeight: "400",
+      lineHeight: 20,
+    },
+  });
+
   return (
     <TouchableOpacity
       onPress={() => navigateToMarketplaceItemScreen(navigation, item)}
-      style={[
-        theme.marketplaceItemContainer,
-        { marginTop: 17, marginLeft: 17, marginRight: 17 },
-      ]}
+      style={[theme.marketplaceItemContainer, styles.container]}
     >
-      <Image
-        style={{
-          resizeMode: "cover",
-          marginBottom: 17,
-          height: Dimensions.get("window").height * 0.25,
-          backgroundColor: "black",
-          borderTopRightRadius: 17,
-          borderTopLeftRadius: 17,
-        }}
-        source={{ uri: item.images[0] }}
-      />
-      <View
-        style={{
-          flex: 1,
-          marginLeft: 17,
-          marginRight: 17,
-          marginBottom: 11,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 28,
-            fontWeight: "600",
-            lineHeight: 33,
-            color: "#191919",
-          }}
-          numberOfLines={1}
-          ellipsizeMode={"tail"}
-        >
+      <Image style={styles.image} source={{ uri: item.images[0] }} />
+      <View style={styles.titleContainer}>
+        <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
           {item.postTitle}
         </Text>
-        <Text
-          style={{
-            color: "#395E66",
-            fontSize: 22,
-            fontWeight: "400",
-            lineHeight: 26,
-          }}
-        >
+        <Text style={styles.price}>
           {item.price === 0 ? "Free" : "$" + item.price}
         </Text>
       </View>
-      <View
-        style={{
-          marginLeft: 17,
-          marginRight: 17,
-          marginBottom: 22,
-        }}
-      >
-        <Text
-          style={{
-            color: "#191919",
-            opacity: 0.66,
-            fontSize: 17,
-            fontWeight: "400",
-            lineHeight: 20,
-          }}
-          numberOfLines={2}
-          ellipsizeMode={"tail"}
-        >
+      <View style={styles.contentContainer}>
+        <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
           {item.postContent}
         </Text>
       </View>

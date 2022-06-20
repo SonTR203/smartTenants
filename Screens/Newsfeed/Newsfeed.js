@@ -12,7 +12,7 @@ import { wait } from "../../utils/wait";
 import { getPosts } from "../../utils/Newsfeed/newsfeed.services";
 import Fab from "../../components/Fab";
 
-const Newsfeed = ({ navigation }) => {
+const Newsfeed = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(true);
@@ -21,8 +21,7 @@ const Newsfeed = ({ navigation }) => {
     setRefreshing(true);
 
     wait(1000).then(() => {
-      getPosts();
-      setRefreshing(false);
+      fetchNotifications();
     });
   }, []);
 
@@ -48,14 +47,23 @@ const Newsfeed = ({ navigation }) => {
     },
   });
 
-  useEffect(() => {
-    (async function fetchNotifications() {
-      const list = await getPosts();
+  async function fetchNotifications() {
+    const list = await getPosts();
 
-      setPosts(list);
-      setRefreshing(false);
-    })();
+    setPosts(list);
+    setRefreshing(false);
+  }
+
+  useEffect(() => {
+    fetchNotifications();
   }, []);
+
+  useEffect(() => {
+    if (route.params && route.params.reload) {
+      setRefreshing(true);
+      fetchNotifications();
+    }
+  }, [route.params]);
 
   const callBackRender = useCallback(
     ({ item, index }) => renderPostItem({ item, index }),

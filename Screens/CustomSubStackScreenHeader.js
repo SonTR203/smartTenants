@@ -1,15 +1,58 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useTheme } from "../ThemeContext.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import { deleteItemFromFirestore } from "../utils/firebase.services.js";
+import { useNavigation } from "@react-navigation/native";
 
 export default function CustomSubStackScreenHeader({ ...props }) {
+  const { showActionSheetWithOptions } = useActionSheet();
   const { theme, styleVariables } = useTheme();
+  const navigation = useNavigation();
+
+  const handleOptions = async () => {
+    showActionSheetWithOptions(
+      {
+        title: `Post settings.
+
+Select an option to edit Marketplace post`,
+        options: ["Cancel", "Turn off notifications", "Delete post"],
+        destructiveButtonIndex: 2,
+        cancelButtonIndex: 0,
+      },
+      async (buttonIndex) => {
+        if (buttonIndex === 1) {
+          alert("Turn off notifications. To be implemented.");
+        } else if (buttonIndex === 2) {
+          const res = await deleteItemFromFirestore(
+            "Marketplace",
+            props.item.marketPlacePostID
+          );
+          if (res) {
+            alert("Post deleted.");
+          } else {
+            alert("Error deleting post. Please try again later.");
+          }
+          navigation.navigate("MarketplaceScreen", {
+            reload: true,
+          });
+
+          console.log(res);
+        }
+      }
+    );
+  };
+
+  const styles = StyleSheet.create({
+    container: { backgroundColor: "white" },
+    headerRight: { minWidth: 36 },
+  });
+
   return (
-    <SafeAreaView edges={["top"]} style={{ backgroundColor: "white" }}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
       <View style={[theme.stackHeader, { paddingHorizontal: 17 }]}>
         <Pressable
           onPress={() => {
@@ -25,8 +68,16 @@ export default function CustomSubStackScreenHeader({ ...props }) {
         <Text style={styleVariables.fontSizes.title}>
           {props.title && props.title}
         </Text>
-        <View style={{ minWidth: 36 }}>
-          {props.headerFunc && props.headerFunc}
+        <View style={styles.headerRight}>
+          {props.currentUserId && props.currentUserId === props.itemUserId ? (
+            <Pressable onPress={handleOptions}>
+              <MaterialCommunityIcons
+                name="dots-horizontal"
+                size={36}
+                color={styleVariables.colors.black}
+              />
+            </Pressable>
+          ) : null}
         </View>
       </View>
     </SafeAreaView>
