@@ -21,8 +21,8 @@ const auth = getAuth();
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
-  const [email, setEmail] = useState("vuon@gmail.com");
-  const [password, setPassword] = useState("123123123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { setCurrentUser } = useAppContext();
 
   /* This function logs the user to the application only if he/she * is registered on Firebase as an authenticated registered user.
