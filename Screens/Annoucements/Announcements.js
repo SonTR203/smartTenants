@@ -54,8 +54,8 @@ function Announcements({ navigation }) {
         renderItem={({ item }) => {
           return (
             <AnnouncementItem
-              announcementContent={item.announcementContent}
-              image={item.image[0]}
+              content={item.content}
+              attatchment={item.attatchment[0]}
               timestamp={item.timestamp}
               wasSeen={item.wasSeen}
               id={item.id}

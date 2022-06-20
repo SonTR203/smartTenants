@@ -7,8 +7,8 @@ import { db } from "../../firebase-config";
 const windowWidth = Dimensions.get("window").width;
 
 function AnnouncementItem({
-  announcementContent,
-  image,
+  content,
+  attatchment,
   timestamp,
   wasSeen,
   theme,
@@ -105,9 +105,9 @@ function AnnouncementItem({
         id="announcementContent"
         onPress={() => {
           navigation.navigate("IndividualAnnouncement", {
-            announcementContent: announcementContent,
+            content: content,
             timestamp: timeSinceAnnouncement,
-            image: image,
+            attatchment: attatchment,
             theme: theme,
             styleVariables: styleVariables,
             styles: styles,
@@ -119,13 +119,13 @@ function AnnouncementItem({
           <Text
             style={[styleVariables.fontSizes.body, styles.announcementContent]}
           >
-            {announcementContent}
+            {content}
           </Text>
         </View>
-        {image != "" && (
+        {attatchment != "" && (
           <Image
             source={{
-              uri: `${image}`,
+              uri: `${attatchment}`,
             }}
             style={styles.announcementImage}
           />

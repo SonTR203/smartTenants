@@ -4,14 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 
 function IndividualAnnouncement({ route }) {
-  const {
-    announcementContent,
-    timestamp,
-    image,
-    theme,
-    styleVariables,
-    styles,
-  } = route.params;
+  const { content, timestamp, attatchment, theme, styleVariables, styles } =
+    route.params;
 
   return (
     <SafeAreaView>
@@ -44,13 +38,13 @@ function IndividualAnnouncement({ route }) {
           <Text
             style={[styleVariables.fontSizes.body, styles.announcementContent]}
           >
-            {announcementContent}
+            {content}
           </Text>
         </View>
-        {image != "" && (
+        {attatchment != "" && (
           <Image
             source={{
-              uri: `${image}`,
+              uri: `${attatchment}`,
             }}
             style={styles.announcementImage}
           />
