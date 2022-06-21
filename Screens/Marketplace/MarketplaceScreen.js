@@ -10,11 +10,11 @@ import { wait } from "../../utils/wait";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
-import { getMarketplaceItems } from "../../utils/Marketplace/marketplace.services";
 import Fab from "../../components/Fab";
 import MarketplaceItem from "./MarketplaceItem";
 import MarketplaceFirstItem from "./MarketplaceFirstItem";
 import ListFooter from "../Newsfeed/ListFooter";
+import { getMarketplaceItems } from "../../utils/firebase.services";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();

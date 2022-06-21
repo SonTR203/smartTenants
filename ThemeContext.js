@@ -101,7 +101,7 @@ const theme = StyleSheet.create({
     backgroundColor: styleVariables.colors.white,
     padding: 17,
     marginHorizontal: 17,
-    marginBottom: 17,
+    marginTop: 17,
     borderRadius: 24,
     shadowColor: styleVariables.colors.black,
     shadowOffset: {

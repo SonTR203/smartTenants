@@ -13,13 +13,16 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { db } from "../../firebase-config";
-import { addDoc, collection } from "@firebase/firestore";
 import * as ImagePicker from "expo-image-picker";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useTheme } from "../../ThemeContext";
 import { useAppContext } from "../../Context/AppContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Timestamp } from "@firebase/firestore";
+import uuid from "react-native-uuid";
+import {
+  createItemInFirestore,
+  uploadImageToStorage,
+} from "../../utils/firebase.services";
 
 const CreatePost = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
@@ -29,10 +32,6 @@ const CreatePost = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
-
-  let imageName = `newsfeedImages/${currentUser.userDocId}/${
-    Date.now() + Math.floor(Math.random() * 20)
-  }.jpg`;
 
   useEffect(() => {
     (async () => {
@@ -46,47 +45,35 @@ const CreatePost = ({ navigation }) => {
     })();
   }, []);
 
-  async function PostContent(imgUrl) {
-    let specificPostID;
-
-    if (!imgUrl) {
-      imgUrl = "no image posted";
-    }
+  async function PostContent(imgUrl, id) {
     try {
-      const { id } = await addDoc(collection(db, "Newsfeed"), {
+      if (!imgUrl) {
+        imgUrl = "no image posted";
+      }
+
+      const propObj = {
+        id: id,
         postContent: postContent,
         userID: currentUser.userDocId,
         userFirstName: currentUser.firstName,
         userLastName: currentUser.lastName,
         userProfileImage: currentUser.userProfileImage,
         images: [imgUrl],
-        timestamp: Date.now(),
+        timestamp: Timestamp.fromDate(new Date()),
         peopleWhoLiked: [],
-        comments: [],
         commentCount: 0,
-      });
-      postSuccess();
-      specificPostID = id;
-      createMyPostsCollection(specificPostID, imgUrl);
+      };
+
+      const res = await createItemInFirestore("Newsfeed", id, propObj);
+      if (res) {
+        postSuccess();
+      } else {
+        throw new Error("Error creating newsfeed item", res);
+      }
     } catch (error) {
       console.log(error);
       postFailure();
     }
-  }
-
-  async function createMyPostsCollection(specificPostID, imgUrl) {
-    const colRef = collection(db, `Users/${currentUser.userDocId}/myPosts`);
-
-    await addDoc(colRef, {
-      postContent: postContent,
-      postID: specificPostID,
-      userID: currentUser.userDocId,
-      userFirstName: currentUser.firstName,
-      userLastName: currentUser.lastName,
-      userProfileImage: currentUser.userProfileImage,
-      images: [imgUrl],
-      timestamp: Date.now(),
-    });
   }
 
   function postSuccess() {
@@ -116,45 +103,23 @@ const CreatePost = ({ navigation }) => {
   };
 
   async function handleSelectedImage() {
+    const id = uuid.v4();
     setIsloading(true);
 
     if (image == null) {
-      PostContent();
+      PostContent(null, id);
     } else {
       try {
         if (!image.cancelled) {
-          await uploadImage(image);
+          const imagePath = `Images/Posts/Newsfeed/${id}-${currentUser.userDocId}.jpg`;
+          const imageUrl = await uploadImageToStorage(imagePath, image);
+          PostContent(imageUrl, id);
         }
       } catch (e) {
         console.log(e);
         alert("Upload failed, sorry :(");
       }
     }
-  }
-
-  async function uploadImage() {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", image, true);
-      xhr.send(null);
-    });
-
-    const fileRef = ref(getStorage(), imageName);
-    await uploadBytes(fileRef, blob);
-
-    let imgUrl = await getDownloadURL(fileRef);
-
-    //set postContent to ImageURl hook in future, for some reason ImageUrl keeps coming back empty
-    PostContent(imgUrl);
-    return imgUrl;
   }
 
   return (
@@ -174,7 +139,7 @@ const CreatePost = ({ navigation }) => {
           onShow={() => {
             setTimeout(() => {
               setModalVisible(!modalVisible);
-              navigation.push("Newsfeed");
+              navigation.navigate("Newsfeed", { reload: true });
             }, 2000);
           }}
         >

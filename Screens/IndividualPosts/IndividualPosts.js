@@ -54,7 +54,7 @@ const IndividualPosts = ({ navigation }) => {
     const [timeSincePost, setTimeSincePost] = useState("");
 
     useEffect(() => {
-      let time = setTime(item.timestamp);
+      let time = setTime(item.timestamp.seconds * 1000);
       setTimeSincePost(time);
     }, []);
 
@@ -130,7 +130,7 @@ const IndividualPosts = ({ navigation }) => {
   function addCommentNotifications(post) {
     const peopleWhoCommentedColRef = collection(
       db,
-      `Users/${post.userID}/Notifications`
+      `Tenants/${post.userID}/Notifications`
     );
     try {
       addDoc(peopleWhoCommentedColRef, {
@@ -193,7 +193,7 @@ function ListHeader({ peoplePerson }) {
   const [timeSincePost, setTimeSincePost] = useState("");
 
   useEffect(() => {
-    const time = setTime(post.timestamp);
+    const time = setTime(post.timestamp.seconds * 1000);
     setTimeSincePost(time);
   }, []);
 

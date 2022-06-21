@@ -8,6 +8,7 @@ import {
   TextInput,
   StyleSheet,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -32,6 +33,7 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [content, setContent] = useState("");
   const [price, setPrice] = useState(null);
   const [image, setImage] = useState("");
+  const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
 
   // function to handle image picking
@@ -60,12 +62,10 @@ function MarketplaceNewPostScreen({ navigation }) {
   const handleSubmit = async () => {
     // if all info is filled out: create random id -> upload image -> create post
     if (title.length > 0 && content.length > 0 && price && image.length > 0) {
+      setIsloading(true);
       const id = uuid.v4();
-      const imageUrl = await uploadImageToStorage(
-        image,
-        id,
-        currentUser.userDocId
-      );
+      const imagePath = `Images/Posts/Marketplace/${id}-${currentUser.userDocId}.jpg`;
+      const imageUrl = await uploadImageToStorage(imagePath, image);
       if (imageUrl) {
         createMarketplacePostFirestore(imageUrl, id);
       } else {
@@ -82,7 +82,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         buildingLocation: "",
         images: [imageUrl],
         isNSFW: false,
-        marketPlacePostID: id,
+        id: id,
         postContent: content,
         postTitle: title,
         price: price,
@@ -94,6 +94,7 @@ function MarketplaceNewPostScreen({ navigation }) {
       };
 
       const res = await createItemInFirestore("Marketplace", id, propObj);
+      setIsloading(false);
       if (res) {
         alert("Marketplace item successfully created!");
         navigation.navigate("MarketplaceScreen", { reload: true });
@@ -131,6 +132,9 @@ function MarketplaceNewPostScreen({ navigation }) {
     },
     uploadText: {
       maxWidth: "85%",
+    },
+    loader: {
+      marginBottom: 20,
     },
   });
 
@@ -230,17 +234,28 @@ function MarketplaceNewPostScreen({ navigation }) {
         </View>
 
         {/* SUBMIT BUTTON  */}
-        <TouchableOpacity
-          id="submitPostButton"
-          onPress={handleSubmit}
-          style={[theme.primaryButton, {}]}
-        >
-          <Text
-            style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}
+        {isLoading ? (
+          <ActivityIndicator
+            style={styles.loader}
+            size="large"
+            color={styleVariables.colors.primary}
+          />
+        ) : (
+          <TouchableOpacity
+            id="submitPostButton"
+            onPress={handleSubmit}
+            style={[theme.primaryButton, {}]}
           >
-            Submit post
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                theme.primaryButtonText,
+                styleVariables.fontSizes.bodyBold,
+              ]}
+            >
+              Submit post
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </TouchableOpacity>
   );

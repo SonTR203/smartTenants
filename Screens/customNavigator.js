@@ -18,7 +18,6 @@ import ManageBuildings from "./Admin/ManageBuildings/ManageBuildings";
 import ApproveUsers from "./Admin/ApproveUsers/ApproveUsers";
 import ManageUsers from "./Admin/ManageUsers/ManageUsers";
 import SendNotice from "./Admin/SendNotice/SendNotice";
-import DeletePost from "../components/DeletePost";
 import Notifications from "./Notifications/Notifications";
 import Announcements from "./Annoucements/Announcements";
 import Notices from "./Notices/Notices";
@@ -71,6 +70,8 @@ const MarketplaceNavigator = () => {
                 currentUserId={currentUser.userDocId}
                 itemUserId={route.params.item.userID}
                 item={route.params.item}
+                previousScreen={"MarketplaceScreen"}
+                collection={"Marketplace"}
               />
             ),
           })}
@@ -163,17 +164,19 @@ const NewsfeedNavigator = () => {
         <Stack.Screen
           name="IndividualPosts"
           component={IndividualPosts}
-          options={{
-            title: `${post.userFirstName}'s Post`,
-            headerRight: () => {
-              if (
-                currentUser.userDocId === post.userID ||
-                currentUser.isAdmin
-              ) {
-                return <DeletePost />;
-              }
-            },
-          }}
+          options={({ route }) => ({
+            header: (props) => (
+              <CustomSubStackScreenHeader
+                {...props}
+                title={`${post.userFirstName}'s Post`}
+                currentUserId={currentUser.userDocId}
+                itemUserId={route.params.item.userID}
+                item={route.params.item}
+                previousScreen={"Newsfeed"}
+                collection={"Newsfeed"}
+              />
+            ),
+          })}
         />
       </Stack.Navigator>
     );
@@ -218,7 +221,7 @@ const NewsfeedNavigator = () => {
 };
 
 const ProfileNavigator = () => {
-  const { post } = useAppContext();
+  const { post, currentUser } = useAppContext();
 
   return (
     <Stack.Navigator>
@@ -252,14 +255,19 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name="IndividualPosts"
         component={IndividualPosts}
-        options={{
+        options={({ route }) => ({
           header: (props) => (
             <CustomSubStackScreenHeader
               {...props}
               title={`${post.userFirstName}'s Post`}
+              currentUserId={currentUser.userDocId}
+              itemUserId={route.params.item.userID}
+              item={route.params.item}
+              collection={"Newsfeed"}
+              previousScreen={"MyPosts"}
             />
           ),
-        }}
+        })}
       />
       <Stack.Screen
         name="Login"

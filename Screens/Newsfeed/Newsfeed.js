@@ -3,8 +3,7 @@ import { View, FlatList, RefreshControl, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
-import { Dimensions } from "react-native";
-const windowWidth = Dimensions.get("window").width;
+import { constants } from "../../utils/constants";
 import Post from "./Post";
 import ListFooter from "./ListFooter";
 import { wait } from "../../utils/wait";
@@ -70,7 +69,7 @@ const Newsfeed = ({ navigation, route }) => {
   );
 
   const renderPostItem = ({ item }) => (
-    <Post post={item} windowWidth={windowWidth} />
+    <Post post={item} windowWidth={constants.width} />
   );
 
   return (
