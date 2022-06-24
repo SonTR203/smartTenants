@@ -1,4 +1,10 @@
-import { deleteDoc, doc, setDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  setDoc,
+  collection,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "../firebase-config";
 import {
   getStorage,
@@ -57,9 +63,8 @@ export const deleteImageFromStorage = async (imageName) => {
   }
 };
 
-export const uploadImageToStorage = async (newImage, postId, userId) => {
+export const uploadImageToStorage = async (imagePath, newImage) => {
   try {
-    const imageName = `Images/Posts/Marketplace/${userId}-${postId}.jpg`;
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
@@ -74,7 +79,7 @@ export const uploadImageToStorage = async (newImage, postId, userId) => {
       xhr.send(null);
     });
 
-    const fileRef = ref(getStorage(), imageName);
+    const fileRef = ref(getStorage(), imagePath);
     await uploadBytes(fileRef, blob);
 
     const imgUrl = await getDownloadURL(fileRef);
@@ -84,4 +89,17 @@ export const uploadImageToStorage = async (newImage, postId, userId) => {
     alert("Failed to upload image. Please try again later");
     return false;
   }
+};
+
+export const getMarketplaceItems = async () => {
+  const colRef = collection(db, "Marketplace");
+
+  const data = await getDocs(colRef);
+  const formattedData = data.docs.map((doc) => {
+    return {
+      ...doc.data(),
+    };
+  });
+
+  return formattedData;
 };

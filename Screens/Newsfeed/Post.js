@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
-  collection,
-  addDoc,
   deleteDoc,
   doc,
   updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
 } from "@firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../ThemeContext";
@@ -14,6 +16,8 @@ import { db } from "../../firebase-config";
 import { useAppContext } from "../../Context/AppContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { setTime } from "../../utils/setTime";
+import { createItemInFirestore } from "../../utils/firebase.services";
+import uuid from "react-native-uuid";
 
 //============================== Individual Post Cards ==========================
 function Post({ post, windowWidth }) {
@@ -32,7 +36,7 @@ function Post({ post, windowWidth }) {
         setNumberOfLikes(post.peopleWhoLiked.length);
       }
 
-      const time = setTime(post.timestamp);
+      const time = setTime(post.timestamp.seconds * 1000);
       setTimeSincePost(time);
       setNumberOfComments(post.commentCount);
     }
@@ -46,8 +50,15 @@ function Post({ post, windowWidth }) {
     });
   };
 
+  const navigateToIndividualPostScreen = () => {
+    navigation.navigate("IndividualPosts", {
+      item: post,
+    });
+    setPost(post);
+  };
+
   const likePost = async () => {
-    // ================ checking is current user liked post ====================
+    // ================ checking if current user liked post ====================
     if (userLiked) {
       const res = await removeLike();
       if (res) {
@@ -64,29 +75,27 @@ function Post({ post, windowWidth }) {
   };
 
   const addLike = async () => {
-    const notificationColRef = collection(
-      db,
-      `Users/${post.userID}/Notifications`
-    );
-    const peopleWhoLikedColRef = collection(
-      db,
-      `Newsfeed/${post.id}/peopleWhoLiked`
-    );
+    const notificationId = uuid.v4();
+    const peopleWhoLikedId = uuid.v4();
     const peopleWhoLikedDocRef = doc(db, "Newsfeed", post.id);
 
-    //=========== adding like notification============
+    //=========== creating like notification subcollection in Tenants collection ============
     try {
-      await addDoc(notificationColRef, {
-        content: `${currentUser.firstName} ${currentUser.lastName} liked your post.`,
-        postID: post.id,
-        userID: post.userID,
-        wasSeen: false,
-        timestamp: Date.now(),
-      }).then(() => {
-        // alert("Created like notification!");
-        console.log("Created like notification!");
-        // getLikes();
-      });
+      // dont make notifications if self-liking a post
+      if (currentUser.userDocId !== post.userID) {
+        await createItemInFirestore(
+          `Tenants/${post.userID}/Notifications`,
+          notificationId,
+          {
+            id: notificationId,
+            content: `${currentUser.firstName} ${currentUser.lastName} liked your post.`,
+            postID: post.id,
+            userID: post.userID,
+            wasSeen: false,
+            timestamp: Date.now(),
+          }
+        );
+      }
     } catch (error) {
       console.log("error adding like to Notification", error);
       return false;
@@ -94,21 +103,24 @@ function Post({ post, windowWidth }) {
 
     // =============== adding user to peopleWhoLiked subcollection & update peopleWhoLiked array =============
     try {
-      await addDoc(peopleWhoLikedColRef, {
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        postID: post.id,
-        userID: currentUser.userDocId,
-      }).then(() => {
-        // alert("Updated like in DB!");
-        console.log("Added like to peopleWhoLiked subcollection");
-      });
+      await createItemInFirestore(
+        `Newsfeed/${post.id}/peopleWhoLiked`,
+        peopleWhoLikedId,
+        {
+          id: peopleWhoLikedId,
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          postID: post.id,
+          userID: currentUser.userDocId,
+        }
+      );
 
       await updateDoc(peopleWhoLikedDocRef, {
         peopleWhoLiked: [...post.peopleWhoLiked, currentUser.userDocId],
       });
     } catch (error) {
       console.log("error adding like to DB", error);
+      alert("Error liking post. Please try again later.");
       return false;
     }
 
@@ -116,14 +128,25 @@ function Post({ post, windowWidth }) {
   };
 
   const removeLike = async () => {
+    // remove document in the peopleWhoLiked subcollection and update the likeCount
     try {
-      const singleDoc = doc(
+      const peopleWhoLikedColRef = collection(
         db,
-        `Newsfeed/${post.id}/peopleWhoLiked/${currentUser.userDocId}`
+        `Newsfeed/${post.id}/peopleWhoLiked`
       );
-      await deleteDoc(singleDoc);
-
       const peopleWhoLikedDocRef = doc(db, "Newsfeed", post.id);
+      const q = query(
+        peopleWhoLikedColRef,
+        where("userID", "==", currentUser.userDocId)
+      );
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log("doc to be deleted with unlike => ", doc.data());
+        await deleteDoc(doc.ref);
+      });
+
       await updateDoc(peopleWhoLikedDocRef, {
         peopleWhoLiked: post.peopleWhoLiked.filter(
           (item) => item != currentUser.userDocId
@@ -131,17 +154,18 @@ function Post({ post, windowWidth }) {
       });
     } catch (error) {
       console.log("error remove like: ", error);
+      alert("Error removing like. Please try again later.");
       return false;
     }
 
-    //========= TODO:  delete notification from other user that there was a like =========
+    // ========= TODO:  delete notification from other user that there was a like =========
     // try {
-    //   const notificationSingleDoc = doc(
-    //     db,
-    //     `Users/${post.userID}/Notifications/${post.postID}`
-    //   );
-    //   const res = await deleteDoc(notificationSingleDoc);
-    //   console.log("delete notification", res);
+    //   // const notificationSingleDoc = doc(
+    //   //   db,
+    //   //   `Users/${post.userID}/Notifications/${post.postID}`
+    //   // );
+    //   // const res = await deleteDoc(notificationSingleDoc);
+    //   // console.log("delete notification", res);
     // } catch (error) {
     //   console.log("error deleting notification", error);
     //   return false;
@@ -199,10 +223,7 @@ function Post({ post, windowWidth }) {
       {/* postContent */}
       <TouchableOpacity
         id="postContent"
-        onPress={() => {
-          navigation.navigate("IndividualPosts");
-          setPost(post);
-        }}
+        onPress={navigateToIndividualPostScreen}
       >
         <View className="postTextContent">
           <Text
@@ -279,10 +300,7 @@ function Post({ post, windowWidth }) {
         {/* =========================== COMMENT ============================= */}
         <TouchableOpacity
           id="comment"
-          onPress={() => {
-            navigation.navigate("IndividualPosts");
-            setPost(post);
-          }}
+          onPress={navigateToIndividualPostScreen}
           style={{
             display: "flex",
             alignItems: "center",

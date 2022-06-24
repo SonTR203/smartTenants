@@ -1,26 +1,23 @@
 import * as FileSystem from "expo-file-system";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { db } from "../../firebase-config";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import _ from "lodash";
 
 export const getMyPosts = async (currentUser) => {
-  const colReference = collection(
-    db,
-    "Tenants",
-    `${currentUser.userDocId}`,
-    "myPosts"
+  let myPosts = [];
+  const peopleWhoLikedColRef = collection(db, `Newsfeed`);
+  const q = query(
+    peopleWhoLikedColRef,
+    where("userID", "==", currentUser.userDocId)
   );
-  const data = await getDocs(colReference);
 
-  const formattedData = data.docs.map((doc) => {
-    return {
-      ...doc.data(),
-      id: doc.id,
-    };
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach(async (doc) => {
+    myPosts.push(doc.data());
   });
 
-  const sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
+  const sortedListOfPosts = _.sortBy(myPosts, "timestamp").reverse();
   return sortedListOfPosts;
 };
 
@@ -29,7 +26,6 @@ export const compressFileSize = async (uri) => {
     compress: 0.6,
     format: SaveFormat.PNG,
   });
-  // console.log("compressedUri", compressedUri);
   return compressedUri;
 };
 

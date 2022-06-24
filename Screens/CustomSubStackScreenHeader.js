@@ -5,7 +5,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../ThemeContext.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { deleteItemFromFirestore } from "../utils/firebase.services.js";
+import {
+  deleteImageFromStorage,
+  deleteItemFromFirestore,
+} from "../utils/firebase.services.js";
 import { useNavigation } from "@react-navigation/native";
 
 export default function CustomSubStackScreenHeader({ ...props }) {
@@ -27,20 +30,22 @@ Select an option to edit Marketplace post`,
         if (buttonIndex === 1) {
           alert("Turn off notifications. To be implemented.");
         } else if (buttonIndex === 2) {
-          const res = await deleteItemFromFirestore(
-            "Marketplace",
-            props.item.marketPlacePostID
+          const resDB = await deleteItemFromFirestore(
+            props.collection,
+            props.item.id
           );
-          if (res) {
+          props.item.images.length > 0
+            ? await deleteImageFromStorage(props.item.images[0])
+            : null;
+          if (resDB) {
             alert("Post deleted.");
           } else {
             alert("Error deleting post. Please try again later.");
+            return;
           }
-          navigation.navigate("MarketplaceScreen", {
+          navigation.navigate(props.previousScreen, {
             reload: true,
           });
-
-          console.log(res);
         }
       }
     );

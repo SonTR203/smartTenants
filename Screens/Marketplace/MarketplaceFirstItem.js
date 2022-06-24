@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../../ThemeContext";
 import { constants } from "../../utils/constants";
-import { navigateToMarketplaceItemScreen } from "../../utils/Marketplace/marketplace.services";
 
 function MarketplaceFirstItem({ item, navigation }) {
   const { theme } = useTheme();
@@ -53,10 +52,19 @@ function MarketplaceFirstItem({ item, navigation }) {
     },
   });
 
+  if (!item) {
+    return null;
+  }
+
   return (
     // CONTAINER
     <TouchableOpacity
-      onPress={() => navigateToMarketplaceItemScreen(navigation, item)}
+      onPress={() =>
+        navigation.navigate("MarketplaceItemInfo", {
+          title: item.userFirstName,
+          item: item,
+        })
+      }
       style={[theme.marketplaceItemContainer, styles.container]}
     >
       {/* ITEM IMAGE  */}

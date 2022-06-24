@@ -93,7 +93,7 @@ const Login = ({ navigation }) => {
   const createNotificationCollection = async (loggedInUser) => {
     const colRef = collection(
       db,
-      `Users/${loggedInUser.userDocId}/Notifications`
+      `Tenants/${loggedInUser.userDocId}/Notifications`
     );
     let data = await getDocs(colRef);
     if (data.docs.length == 0) {
