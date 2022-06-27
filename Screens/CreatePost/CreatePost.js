@@ -30,6 +30,7 @@ const CreatePost = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState("");
   const [image, setImage] = useState(null);
+  const [isNsfw, setIsNsfw] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
 
