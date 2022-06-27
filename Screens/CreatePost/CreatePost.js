@@ -125,6 +125,26 @@ const CreatePost = ({ navigation }) => {
     }
   }
 
+  // Moderation //
+  async function moderateImage(imgUrl) {
+    axios
+      .get("https://api.sightengine.com/1.0/check.json", {
+        params: {
+          url: imgUrl,
+          models: "nudity,wad,offensive,gore",
+          api_user: API_USER,
+          api_secret: API_KEY,
+        },
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        if (error.response) console.log(error.response.data);
+        else console.log(error.message);
+      });
+  }
+
   return (
     <ScrollView style={theme.pageContainer}>
       <View style={theme.globalMargins}>
