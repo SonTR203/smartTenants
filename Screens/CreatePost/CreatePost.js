@@ -33,6 +33,8 @@ const CreatePost = ({ navigation }) => {
   const [isNsfw, setIsNsfw] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
+  const API_USER = "278265377";
+  const API_KEY = "38GEu5SU32yy5SYjvzhe";
 
   useEffect(() => {
     (async () => {
