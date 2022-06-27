@@ -144,6 +144,16 @@ const CreatePost = ({ navigation }) => {
         else console.log(error.message);
       });
   }
+  function checkResults(data) {
+    let drugs = data.drugs > 0.5;
+    let nudity = data.nudity.safe < 0.5;
+    let offensive = data.offensive.prob > 0.5;
+    let weapons = data.weapon > 0.5;
+    let gore = data.gore.prob > 0.5;
+    if (drugs || nudity || offensive || weapons || gore) {
+      setIsNsfw(true);
+    }
+  }
 
   return (
     <ScrollView style={theme.pageContainer}>
