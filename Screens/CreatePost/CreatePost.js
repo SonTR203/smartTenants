@@ -23,6 +23,7 @@ import {
   createItemInFirestore,
   uploadImageToStorage,
 } from "../../utils/firebase.services";
+import axios from "axios";
 
 const CreatePost = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
@@ -30,7 +31,6 @@ const CreatePost = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalText, setModalText] = useState("");
   const [image, setImage] = useState(null);
-  const [isNsfw, setIsNsfw] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
   const API_USER = "278265377";
@@ -48,7 +48,7 @@ const CreatePost = ({ navigation }) => {
     })();
   }, []);
 
-  async function PostContent(imgUrl, id) {
+  async function PostContent(imgUrl, id, isNsfw) {
     try {
       if (!imgUrl) {
         imgUrl = "no image posted";
@@ -62,6 +62,7 @@ const CreatePost = ({ navigation }) => {
         userLastName: currentUser.lastName,
         userProfileImage: currentUser.userProfileImage,
         images: [imgUrl],
+        isNSFW: isNsfw,
         timestamp: Timestamp.fromDate(new Date()),
         peopleWhoLiked: [],
         commentCount: 0,
@@ -116,7 +117,8 @@ const CreatePost = ({ navigation }) => {
         if (!image.cancelled) {
           const imagePath = `Images/Posts/Newsfeed/${id}-${currentUser.userDocId}.jpg`;
           const imageUrl = await uploadImageToStorage(imagePath, image);
-          PostContent(imageUrl, id);
+          let isNsfw = await moderateImage(imageUrl);
+          PostContent(imageUrl, id, isNsfw);
         }
       } catch (e) {
         console.log(e);
@@ -127,7 +129,7 @@ const CreatePost = ({ navigation }) => {
 
   // Moderation //
   async function moderateImage(imgUrl) {
-    axios
+    const result = axios
       .get("https://api.sightengine.com/1.0/check.json", {
         params: {
           url: imgUrl,
@@ -137,12 +139,13 @@ const CreatePost = ({ navigation }) => {
         },
       })
       .then(function (response) {
-        console.log(response.data);
+        return checkResults(response.data);
       })
       .catch(function (error) {
         if (error.response) console.log(error.response.data);
         else console.log(error.message);
       });
+    return result;
   }
   function checkResults(data) {
     let drugs = data.drugs > 0.5;
@@ -151,7 +154,9 @@ const CreatePost = ({ navigation }) => {
     let weapons = data.weapon > 0.5;
     let gore = data.gore.prob > 0.5;
     if (drugs || nudity || offensive || weapons || gore) {
-      setIsNsfw(true);
+      return true;
+    } else {
+      return false;
     }
   }
 
