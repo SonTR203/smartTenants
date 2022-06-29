@@ -1,6 +1,12 @@
-import { View, Text, Image, FlatList, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import React, { useState, useEffect, useCallback } from "react";
 import { useAppContext } from "../../Context/AppContext";
 import { db } from "../../firebase-config";
@@ -16,6 +22,9 @@ import { useTheme } from "../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Dimensions } from "react-native";
 import { setTime } from "../../utils/setTime";
+import { likePost } from "../../utils/Newsfeed/newsfeed.services";
+import { Timestamp } from "@firebase/firestore";
+
 const width = Dimensions.get("window").width;
 
 const IndividualPosts = ({ navigation }) => {
@@ -23,6 +32,9 @@ const IndividualPosts = ({ navigation }) => {
   const { currentUser, post } = useAppContext();
   const [peoplePerson, setPeoplePerson] = useState("people");
   const [comments, setComments] = useState([]);
+  const [commentCount, setCommentCount] = useState(0);
+  const [userLiked, setUserLiked] = useState(false);
+  const [numberOfLikes, setNumberOfLikes] = useState(0);
 
   // Get all Comments
   const getComments = () => {
@@ -37,18 +49,29 @@ const IndividualPosts = ({ navigation }) => {
 
       let sortedComments = _.sortBy(commentsArray, "timestamp");
       setComments(sortedComments);
+      setCommentCount(sortedComments.length);
     });
   };
 
   // execute function
   useEffect(() => {
-    getComments();
-    if (post.peopleWhoLiked.length == 1) {
-      setPeoplePerson("person");
-    } else {
-      setPeoplePerson("people");
+    if (post) {
+      getComments();
+      if (post.peopleWhoLiked.length > 0) {
+        setPeoplePerson(post.peopleWhoLiked.length == 1 ? "person" : "people");
+        setHeartsToGreen();
+        setNumberOfLikes(post.peopleWhoLiked.length);
+      }
     }
   }, [post]);
+
+  const setHeartsToGreen = () => {
+    post.peopleWhoLiked.map((item) => {
+      if (item == currentUser.userDocId) {
+        setUserLiked(true);
+      }
+    });
+  };
 
   const Comment = ({ item, theme, styleVariables }) => {
     const [timeSincePost, setTimeSincePost] = useState("");
@@ -138,7 +161,7 @@ const IndividualPosts = ({ navigation }) => {
         postID: post.id,
         userID: post.userID,
         wasSeen: false,
-        timestamp: Date.now(),
+        timestamp: Timestamp.fromDate(new Date()),
       });
     } catch (error) {
       console.log(error);
@@ -166,7 +189,16 @@ const IndividualPosts = ({ navigation }) => {
       <View style={theme.pageContainer}>
         <FlatList
           removeClippedSubviews={true}
-          ListHeaderComponent={<ListHeader peoplePerson={peoplePerson} />}
+          ListHeaderComponent={
+            <ListHeader
+              userLiked={userLiked}
+              setUserLiked={setUserLiked}
+              numberOfLikes={numberOfLikes}
+              setNumberOfLikes={setNumberOfLikes}
+              currentUser={currentUser}
+              peoplePerson={peoplePerson}
+            />
+          }
           data={comments}
           keyExtractor={(item) => item.id}
           renderItem={callBackRender}
@@ -178,6 +210,8 @@ const IndividualPosts = ({ navigation }) => {
               styleVariables={styleVariables}
               getComments={getComments}
               addCommentNotifications={addCommentNotifications}
+              commentCount={commentCount}
+              setCommentCount={setCommentCount}
             />
           }
         />
@@ -187,8 +221,15 @@ const IndividualPosts = ({ navigation }) => {
 };
 
 //* userPost */
-function ListHeader({ peoplePerson }) {
-  const { post } = useAppContext();
+function ListHeader({
+  peoplePerson,
+  currentUser,
+  numberOfLikes,
+  userLiked,
+  setUserLiked,
+  setNumberOfLikes,
+}) {
+  const { post, setPost } = useAppContext();
   const { theme, styleVariables } = useTheme();
   const [timeSincePost, setTimeSincePost] = useState("");
 
@@ -196,6 +237,22 @@ function ListHeader({ peoplePerson }) {
     const time = setTime(post.timestamp.seconds * 1000);
     setTimeSincePost(time);
   }, []);
+
+  const handleLikePost = async () => {
+    const updatedPost = await likePost(
+      userLiked,
+      setUserLiked,
+      setNumberOfLikes,
+      numberOfLikes,
+      currentUser,
+      post
+    );
+    if (updatedPost) {
+      setPost({
+        ...updatedPost,
+      });
+    }
+  };
 
   return (
     <View
@@ -291,9 +348,7 @@ function ListHeader({ peoplePerson }) {
         >
           <TouchableOpacity
             id="like"
-            onPress={() => {
-              alert("like post function");
-            }}
+            onPress={handleLikePost}
             style={{
               display: "flex",
               alignItems: "center",
@@ -301,12 +356,22 @@ function ListHeader({ peoplePerson }) {
               flex: 1,
             }}
           >
-            <MaterialCommunityIcons
-              name="heart-outline"
-              size={24}
-              color={styleVariables.colors.black}
-              style={{ marginRight: 8 }}
-            />
+            {userLiked && (
+              <MaterialCommunityIcons
+                name="heart"
+                size={24}
+                color="#0AA74C"
+                style={{ marginRight: 8 }}
+              />
+            )}
+            {!userLiked && (
+              <MaterialCommunityIcons
+                name="heart-outline"
+                size={24}
+                color={styleVariables.colors.black}
+                style={{ marginRight: 8 }}
+              />
+            )}
             <Text
               style={[
                 styleVariables.fontSizes.callout,
@@ -323,7 +388,7 @@ function ListHeader({ peoplePerson }) {
                 },
               ]}
             >
-              {` ${post.peopleWhoLiked.length} ${peoplePerson}`}
+              {` ${numberOfLikes} ${peoplePerson}`}
             </Text>
           </TouchableOpacity>
         </View>
@@ -340,8 +405,11 @@ function ListFooter({
   currentUser,
   getComments,
   addCommentNotifications,
+  commentCount,
+  setCommentCount,
 }) {
   const [textInputValue, setTextInputValue] = useState("");
+  const { setPost, post: postContext } = useAppContext();
 
   // Post Comments
   const postComment = () => {
@@ -358,14 +426,13 @@ function ListFooter({
           userProfileImage: currentUser.userProfileImage,
           commentContent: textInputValue,
           postUserID: post.userID,
-          timestamp: Date.now(),
+          timestamp: Timestamp.fromDate(new Date()),
         }).then(() => {
           setTextInputValue("");
           getComments();
+          addCommentCount();
+          addCommentNotifications(post);
         });
-
-        addCommentCount();
-        addCommentNotifications(post);
       } catch (err) {
         console.log(err);
       }
@@ -376,7 +443,12 @@ function ListFooter({
 
   // This function will retrieve the post in the database and add 1 to the commentCount property
   const addCommentCount = () => {
-    let newCommentCount = parseInt(post.commentCount) + 1;
+    let newCommentCount = parseInt(commentCount) + 1;
+    setCommentCount(newCommentCount);
+    setPost({
+      ...postContext,
+      commentCount: newCommentCount,
+    });
     const postRef = doc(db, "Newsfeed", post.id);
     updateDoc(postRef, {
       commentCount: newCommentCount,

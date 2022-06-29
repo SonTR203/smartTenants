@@ -1,6 +1,16 @@
 import { db } from "../../firebase-config";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
+  query,
+  where,
+} from "firebase/firestore";
 import _ from "lodash";
+import uuid from "react-native-uuid";
+import { createItemInFirestore } from "../firebase.services";
 
 export const getPosts = async () => {
   const colRef = collection(db, "Newsfeed");
@@ -16,4 +26,142 @@ export const getPosts = async () => {
   });
   const sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
   return sortedListOfPosts;
+};
+
+export const likePost = async (
+  userLiked,
+  setUserLiked,
+  setNumberOfLikes,
+  numberOfLikes,
+  currentUser,
+  post
+) => {
+  let updatedPost = post;
+  // ================ checking if current user liked post ====================
+  if (userLiked) {
+    const res = await removeLike(currentUser, post);
+    if (res) {
+      setUserLiked(false);
+      setNumberOfLikes(numberOfLikes - 1);
+
+      updatedPost = {
+        ...post,
+        peopleWhoLiked: post.peopleWhoLiked.filter(
+          (item) => item !== currentUser.userDocId
+        ),
+      };
+    }
+  } else {
+    const res = await addLike(currentUser, post);
+    if (res) {
+      setUserLiked(true);
+      setNumberOfLikes(numberOfLikes + 1);
+
+      updatedPost = {
+        ...post,
+        peopleWhoLiked: [...post.peopleWhoLiked, currentUser.userDocId],
+      };
+    }
+  }
+  return updatedPost;
+};
+
+export const addLike = async (currentUser, post) => {
+  const notificationId = uuid.v4();
+  const peopleWhoLikedId = uuid.v4();
+  const peopleWhoLikedDocRef = doc(db, "Newsfeed", post.id);
+
+  //=========== creating like notification subcollection in Tenants collection ============
+  try {
+    // dont make notifications if self-liking a post
+    if (currentUser.userDocId !== post.userID) {
+      await createItemInFirestore(
+        `Tenants/${post.userID}/Notifications`,
+        notificationId,
+        {
+          id: notificationId,
+          content: `${currentUser.firstName} ${currentUser.lastName} liked your post.`,
+          postID: post.id,
+          userID: post.userID,
+          wasSeen: false,
+          timestamp: Date.now(),
+        }
+      );
+    }
+  } catch (error) {
+    console.log("error adding like to Notification", error);
+    return false;
+  }
+
+  // =============== adding user to peopleWhoLiked subcollection & update peopleWhoLiked array =============
+  try {
+    await createItemInFirestore(
+      `Newsfeed/${post.id}/peopleWhoLiked`,
+      peopleWhoLikedId,
+      {
+        id: peopleWhoLikedId,
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        postID: post.id,
+        userID: currentUser.userDocId,
+      }
+    );
+
+    await updateDoc(peopleWhoLikedDocRef, {
+      peopleWhoLiked: [...post.peopleWhoLiked, currentUser.userDocId],
+    });
+  } catch (error) {
+    console.log("error adding like to DB", error);
+    alert("Error liking post. Please try again later.");
+    return false;
+  }
+
+  return true;
+};
+
+export const removeLike = async (currentUser, post) => {
+  // remove document in the peopleWhoLiked subcollection and update the likeCount
+  try {
+    const peopleWhoLikedColRef = collection(
+      db,
+      `Newsfeed/${post.id}/peopleWhoLiked`
+    );
+    const peopleWhoLikedDocRef = doc(db, "Newsfeed", post.id);
+    const q = query(
+      peopleWhoLikedColRef,
+      where("userID", "==", currentUser.userDocId)
+    );
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log("doc to be deleted with unlike => ", doc.data());
+      await deleteDoc(doc.ref);
+    });
+
+    await updateDoc(peopleWhoLikedDocRef, {
+      peopleWhoLiked: post.peopleWhoLiked.filter(
+        (item) => item != currentUser.userDocId
+      ),
+    });
+  } catch (error) {
+    console.log("error remove like: ", error);
+    alert("Error removing like. Please try again later.");
+    return false;
+  }
+
+  // ========= TODO:  delete notification from other user that there was a like =========
+  // try {
+  //   // const notificationSingleDoc = doc(
+  //   //   db,
+  //   //   `Users/${post.userID}/Notifications/${post.postID}`
+  //   // );
+  //   // const res = await deleteDoc(notificationSingleDoc);
+  //   // console.log("delete notification", res);
+  // } catch (error) {
+  //   console.log("error deleting notification", error);
+  //   return false;
+  // }
+
+  return true;
 };
