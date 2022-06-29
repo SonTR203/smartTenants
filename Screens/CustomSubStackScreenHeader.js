@@ -61,7 +61,9 @@ Select an option to edit Marketplace post`,
       <View style={[theme.stackHeader, { paddingHorizontal: 17 }]}>
         <Pressable
           onPress={() => {
-            props.navigation && props.navigation.goBack();
+            if (props.navigation) {
+              props.navigation.goBack();
+            }
           }}
         >
           <MaterialCommunityIcons
