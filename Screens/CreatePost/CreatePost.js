@@ -74,6 +74,11 @@ const CreatePost = ({ navigation }) => {
       } else {
         throw new Error("Error creating newsfeed item", res);
       }
+      if (isNsfw) {
+        alert(
+          "We've detected potential suggestive or profane content. Your post will be reviewed."
+        );
+      }
     } catch (error) {
       console.log(error);
       postFailure();
@@ -120,11 +125,6 @@ const CreatePost = ({ navigation }) => {
           const imageUrl = await uploadImageToStorage(imagePath, image);
           const isNsfw = await moderatePost(imageUrl);
           PostContent(imageUrl, id, isNsfw);
-        }
-        if (isNsfw) {
-          alert(
-            "We've detected potential suggestive or profane content. Your post will be reviewed."
-          );
         }
       } catch (e) {
         console.log(e);
@@ -177,7 +177,7 @@ const CreatePost = ({ navigation }) => {
   }
 
   async function moderateText() {
-    data = new FormData();
+    let data = new FormData();
     data.append("text", `${postContent}`);
     data.append("lang", "en");
     data.append("opt_countries", "us,gb,fr");
