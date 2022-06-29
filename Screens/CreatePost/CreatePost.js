@@ -111,13 +111,14 @@ const CreatePost = ({ navigation }) => {
     setIsloading(true);
 
     if (image == null) {
-      PostContent(null, id);
+      const isNsfw = await moderateText();
+      PostContent(null, id, isNsfw);
     } else {
       try {
         if (!image.cancelled) {
           const imagePath = `Images/Posts/Newsfeed/${id}-${currentUser.userDocId}.jpg`;
           const imageUrl = await uploadImageToStorage(imagePath, image);
-          let isNsfw = await moderateImage(imageUrl);
+          const isNsfw = await moderatePost(imageUrl);
           PostContent(imageUrl, id, isNsfw);
         }
       } catch (e) {
@@ -128,6 +129,16 @@ const CreatePost = ({ navigation }) => {
   }
 
   // Moderation //
+  async function moderatePost(imageUrl) {
+    const imgNsfw = await moderateImage(imageUrl);
+    const textNsfw = await moderateText();
+    if (imgNsfw || textNsfw) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   async function moderateImage(imgUrl) {
     const result = axios
       .get("https://api.sightengine.com/1.0/check.json", {
@@ -155,6 +166,43 @@ const CreatePost = ({ navigation }) => {
     let gore = data.gore.prob > 0.5;
     if (drugs || nudity || offensive || weapons || gore) {
       return true;
+    } else {
+      return false;
+    }
+  }
+
+  async function moderateText() {
+    data = new FormData();
+    data.append("text", `${postContent}`);
+    data.append("lang", "en");
+    data.append("opt_countries", "us,gb,fr");
+    data.append("mode", "standard");
+    data.append("api_user", `${API_USER}`);
+    data.append("api_secret", `${API_KEY}`);
+
+    const result = axios({
+      url: "https://api.sightengine.com/1.0/text/check.json",
+      method: "post",
+      data: data,
+    })
+      .then(function (response) {
+        return textResults(response.data.profanity.matches);
+      })
+      .catch(function (error) {
+        if (error.response) console.log(error.response.data);
+        else console.log(error.message);
+      });
+    return result;
+  }
+
+  function textResults(response) {
+    if (response.length > 0) {
+      if (
+        response[0].intensity == "high" ||
+        response[0].intensity == "medium"
+      ) {
+        return true;
+      }
     } else {
       return false;
     }
