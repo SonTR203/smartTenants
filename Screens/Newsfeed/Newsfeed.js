@@ -69,7 +69,7 @@ const Newsfeed = ({ navigation, route }) => {
   );
 
   const renderPostItem = ({ item }) => (
-    <Post post={item} windowWidth={constants.width} />
+    <Post passedPost={item} windowWidth={constants.width} />
   );
 
   return (
