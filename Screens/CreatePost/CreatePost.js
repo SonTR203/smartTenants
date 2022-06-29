@@ -121,6 +121,11 @@ const CreatePost = ({ navigation }) => {
           const isNsfw = await moderatePost(imageUrl);
           PostContent(imageUrl, id, isNsfw);
         }
+        if (isNsfw) {
+          alert(
+            "We've detected potential suggestive or profane content. Your post will be reviewed."
+          );
+        }
       } catch (e) {
         console.log(e);
         alert("Upload failed, sorry :(");
