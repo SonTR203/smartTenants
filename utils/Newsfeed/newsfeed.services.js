@@ -15,7 +15,9 @@ import { createItemInFirestore } from "../firebase.services";
 export const getPosts = async () => {
   const colRef = collection(db, "Newsfeed");
 
-  const data = await getDocs(colRef);
+  const sortedColRef = query(colRef, where("isNSFW", "==", false));
+
+  const data = await getDocs(sortedColRef);
   const formattedData = data.docs.map((doc) => {
     return {
       ...doc.data(),
