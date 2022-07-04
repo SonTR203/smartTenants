@@ -114,8 +114,8 @@ function MarketplaceNewPostScreen({ navigation }) {
   // Moderation //
   async function moderatePost(imageUrl) {
     const imgNsfw = await moderateImage(imageUrl);
-    // const textNsfw = await moderateText();
-    if (imgNsfw) {
+    const textNsfw = await moderateText();
+    if (imgNsfw || textNsfw) {
       return true;
     } else {
       return false;
@@ -141,7 +141,6 @@ function MarketplaceNewPostScreen({ navigation }) {
       });
     return result;
   }
-
   function checkResults(data) {
     let drugs = data.drugs > 0.5;
     let nudity = data.nudity.safe < 0.5;
@@ -150,6 +149,43 @@ function MarketplaceNewPostScreen({ navigation }) {
     let gore = data.gore.prob > 0.5;
     if (drugs || nudity || offensive || weapons || gore) {
       return true;
+    } else {
+      return false;
+    }
+  }
+
+  async function moderateText() {
+    let data = new FormData();
+    data.append("text", `${title} ${content}`);
+    data.append("lang", "en");
+    data.append("opt_countries", "us,gb,fr");
+    data.append("mode", "standard");
+    data.append("api_user", `${API_USER}`);
+    data.append("api_secret", `${API_KEY}`);
+
+    const result = axios({
+      url: "https://api.sightengine.com/1.0/text/check.json",
+      method: "post",
+      data: data,
+    })
+      .then(function (response) {
+        console.log(response.data);
+        return textResults(response.data.profanity.matches);
+      })
+      .catch(function (error) {
+        if (error.response) console.log(error.response.data);
+        else console.log(error.message);
+      });
+    return result;
+  }
+  function textResults(response) {
+    if (response.length > 0) {
+      if (
+        response[0].intensity == "high" ||
+        response[0].intensity == "medium"
+      ) {
+        return true;
+      }
     } else {
       return false;
     }
