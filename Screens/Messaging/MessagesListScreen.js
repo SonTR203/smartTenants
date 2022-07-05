@@ -1,5 +1,4 @@
 import { collection, getDocs, query, where } from "@firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import {
@@ -19,8 +18,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function MessagesListScreen({ route, navigation }) {
   const [messagesList, setMessagesList] = useState([]);
-  const { currentUser, newPrivateMessages, setNewPrivateMessages } =
-    useAppContext();
+  const { currentUser, newPrivateMessages } = useAppContext();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -28,9 +26,7 @@ function MessagesListScreen({ route, navigation }) {
         (route.params && route.params.userId) ||
         newPrivateMessages.length > 0
       ) {
-        console.log("getting messages for user: ", route.params.userId);
         fetchMessages(route.params.userId);
-        // setNewPrivateMessages(false);
       }
     });
 
@@ -40,7 +36,6 @@ function MessagesListScreen({ route, navigation }) {
   useEffect(() => {
     if (newPrivateMessages.length > 0 && route.params && route.params.userId) {
       fetchMessages(route.params.userId);
-      // setNewPrivateMessages(false);
     }
   }, [newPrivateMessages]);
 
@@ -76,19 +71,17 @@ function MessagesListScreen({ route, navigation }) {
   const renderItem = ({ item }) => {
     let updateSeen = false;
     const otherPersonName =
-      item.sellerId === currentUser.userDocId
-        ? item.buyerName
-        : item.sellerName;
+      item.sellerId === currentUser.userID ? item.buyerName : item.sellerName;
     const otherPersonId =
-      item.sellerId === currentUser.userDocId ? item.buyerId : item.sellerId;
+      item.sellerId === currentUser.userID ? item.buyerId : item.sellerId;
 
     const isNew = item.isNew;
     let lastMessage = "";
     if (!isNew) {
       // if you sent the last message
-      if (item.lastMessage.senderId === currentUser.userDocId) {
+      if (item.lastMessage.senderId === currentUser.userID) {
         lastMessage = `${
-          item.lastMessage.senderId === currentUser.userDocId
+          item.lastMessage.senderId === currentUser.userID
             ? "You"
             : item.lastMessage.senderFirstName
         }: ${item.lastMessage.content}`;
@@ -170,7 +163,7 @@ function MessagesListScreen({ route, navigation }) {
                 width: "90%",
               }}
             >
-              {isNew ? "New" : lastMessage}
+              {isNew ? "New Inquiry" : lastMessage}
             </Text>
             {item.lastMessage ? (
               <View

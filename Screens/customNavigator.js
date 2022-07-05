@@ -27,7 +27,7 @@ import IndividualAnnouncement from "./IndividualAnnouncement/IndividualAnnouncem
 import PrivateMessagingScreen from "./Messaging/PrivateMessagingScreen";
 import MessagesListScreen from "./Messaging/MessagesListScreen";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getItemById } from "../utils/firebase.services";
+import { getItemById, uploadExpoPushToken } from "../utils/firebase.services";
 
 const Stack = createStackNavigator();
 
@@ -117,6 +117,7 @@ const NewsfeedNavigator = () => {
         console.log("user is logged in: ", user.uid);
         const userData = await getItemById("Tenants", uid);
         if (userData) {
+          uploadExpoPushToken(user);
           setCurrentUser(userData);
           setIsLoggedIn(true);
         }

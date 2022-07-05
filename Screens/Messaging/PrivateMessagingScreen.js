@@ -15,7 +15,6 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  Keyboard,
 } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
 import { db } from "../../firebase-config";
@@ -41,13 +40,13 @@ function PrivateMessagingScreen({ route }) {
   useEffect(() => {
     if (route.params && route.params.channelId) {
       setChannelId(route.params.channelId);
-      console.log("channel id: ", route.params.channelId);
+      // console.log("channel id: ", route.params.channelId);
       if (newPrivateMessages.length > 0) {
-        console.log("new private messages: ", newPrivateMessages);
+        // console.log("new private messages: ", newPrivateMessages);
         const updatedMessages = newPrivateMessages.filter(
-          (message) => message.id !== route.params.channelId
+          (message) => message.id === route.params.channelId
         );
-        console.log("updatedMessages: ", updatedMessages);
+        // console.log("updatedMessages: ", updatedMessages);
         setNewPrivateMessages(updatedMessages);
       }
     }
