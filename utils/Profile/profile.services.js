@@ -5,19 +5,23 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import _ from "lodash";
 
 export const getMyPosts = async (currentUser) => {
-  let myPosts = [];
   const peopleWhoLikedColRef = collection(db, `Newsfeed`);
   const q = query(
     peopleWhoLikedColRef,
     where("userID", "==", currentUser.userID)
   );
 
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach(async (doc) => {
-    myPosts.push(doc.data());
+  const data = await getDocs(q);
+
+  const formattedData = data.docs.map((doc) => {
+    return {
+      ...doc.data(),
+      id: doc.id,
+    };
   });
 
-  const sortedListOfPosts = _.sortBy(myPosts, "timestamp").reverse();
+  const sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
+
   return sortedListOfPosts;
 };
 

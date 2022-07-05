@@ -1,5 +1,5 @@
 import { View, Text, FlatList } from "react-native";
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useCallback } from "react";
 import { useAppContext } from "../../../Context/AppContext";
 import { useTheme } from "../../../ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,6 +20,15 @@ const MyPosts = () => {
     })();
   }, []);
 
+  const callBackRender = useCallback(
+    ({ item, index }) => renderPostItem({ item, index }),
+    [[userPosts]]
+  );
+
+  const renderPostItem = ({ item }) => (
+    <Post passedPost={item} windowWidth={constants.width} />
+  );
+
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: styleVariables.colors.white }}
@@ -29,10 +38,7 @@ const MyPosts = () => {
       {userPosts.length > 0 && (
         <FlatList
           data={userPosts}
-          renderItem={({ item }) => (
-            // use the exact same Post component as in Newsfeed
-            <Post post={item} windowWidth={constants.width} />
-          )}
+          renderItem={callBackRender}
           keyExtractor={(item) => item.id}
           ListFooterComponent={
             <ListFooter styleVariables={styleVariables} theme={theme} />
