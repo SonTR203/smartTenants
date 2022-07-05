@@ -15,6 +15,10 @@ import { collection, getDocs, addDoc } from "@firebase/firestore";
 import { useTheme } from "../../ThemeContext";
 import { db } from "../../firebase-config";
 import { useAppContext } from "../../Context/AppContext";
+import {
+  getItemById,
+  uploadExpoPushToken,
+} from "../../utils/firebase.services";
 
 const auth = getAuth();
 
@@ -35,6 +39,7 @@ const Login = ({ navigation }) => {
         console.log("Logged in with:", userCredentials.user.email);
         if (userCredentials.user.email) {
           findUser(userCredentials.user);
+          uploadExpoPushToken(userCredentials.user);
         }
       })
       .catch((error) => alert(error.message));
@@ -46,43 +51,15 @@ const Login = ({ navigation }) => {
    * outputs: sets the current user object as the Logged in user as stored as per stored data on Firebase
    */
   const findUser = async (user) => {
-    const colRef = collection(db, "Tenants");
-    const data = await getDocs(colRef);
-    let loggedInUser;
-
-    data.docs.map((item) => {
-      let userID = item._document.data.value.mapValue.fields.userID.stringValue;
-
-      if (userID) {
-        if (userID == user.uid) {
-          let object = item._document.data.value.mapValue.fields;
-          loggedInUser = {
-            buildingID: object.buildingID.stringValue,
-            buildingAddress: object.buildingAddress.stringValue,
-            email: object.email.stringValue,
-            firstName: object.firstName.stringValue,
-            lastName: object.lastName.stringValue,
-            isAdmin: object.isAdmin.booleanValue,
-            myMarketplacePosts: object.myMarketplacePosts.arrayValue,
-            myPosts: object.myPosts.arrayValue,
-            tenantAuthorized: object.tenantAuthorized.booleanValue,
-            unitNumber: object.unitNumber.integerValue,
-            userID: object.userID.stringValue,
-            userDocId: item._key.path.segments[6],
-            visibleNotices: object.visibleNotices.arrayValue,
-            visibleAnnouncements: object.visibleAnnouncements.arrayValue,
-            userProfileImage: object.userProfileImage.stringValue,
-          };
-          setCurrentUser(loggedInUser);
-          createNotificationCollection(loggedInUser);
-        }
-      }
-    });
-
-    if (loggedInUser.tenantAuthorized) {
-      navigation.navigate("Newsfeed");
+    const userData = await getItemById("Tenants", user.uid);
+    if (userData) {
+      setCurrentUser(userData);
+      createNotificationCollection(userData);
+      navigation.navigate(
+        userData.tenantAuthorized ? "Newsfeed" : "AccountApprovalPending"
+      );
     } else {
-      navigation.navigate("AccountApprovalPending");
+      alert("User not found");
     }
   };
 
@@ -93,7 +70,7 @@ const Login = ({ navigation }) => {
   const createNotificationCollection = async (loggedInUser) => {
     const colRef = collection(
       db,
-      `Tenants/${loggedInUser.userDocId}/Notifications`
+      `Tenants/${loggedInUser.userID}/Notifications`
     );
     let data = await getDocs(colRef);
     if (data.docs.length == 0) {
@@ -101,7 +78,7 @@ const Login = ({ navigation }) => {
         content:
           "Thanks for signing up! On behalf of the Smart Living Properties Team: Welcome.",
         postID: "",
-        userID: loggedInUser.userDocId,
+        userID: loggedInUser.userID,
         wasSeen: true,
         timestamp: Date.now(),
       });

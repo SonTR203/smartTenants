@@ -1,6 +1,6 @@
 //mix tab and stack navigators: https://www.youtube.com/watch?v=dkriklWelm0&t=139s
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Newsfeed from "./Newsfeed/Newsfeed";
 import BuildingInfo from "./BuildingInfo/BuildingInfo";
@@ -13,124 +13,130 @@ import IndividualPosts from "./IndividualPosts/IndividualPosts";
 import EditProfile from "./ProfilePage/EditProfile/EditProfile";
 import MyPosts from "./ProfilePage/MyPosts/MyPosts";
 import ProfileGeneral from "./ProfilePage/ProfileGeneral/ProfileGeneral";
-import AdminPanel from "./Admin/AdminPanel/AdminPanel";
-import ManageBuildings from "./Admin/ManageBuildings/ManageBuildings";
-import ApproveUsers from "./Admin/ApproveUsers/ApproveUsers";
-import ManageUsers from "./Admin/ManageUsers/ManageUsers";
-import SendNotice from "./Admin/SendNotice/SendNotice";
 import Notifications from "./Notifications/Notifications";
 import Announcements from "./Annoucements/Announcements";
 import Notices from "./Notices/Notices";
 import IndividualNotice from "./IndividualNotice/IndividualNotice";
 import CustomSubStackScreenHeader from "./CustomSubStackScreenHeader.js";
 import ForgotPassword from "./ForgotPassword/ForgotPassword";
-import ManageBuilding from "./Admin/ManageBuildings/ManageBuilding";
-import ConfirmUser from "./Admin/ApproveUsers/ConfirmUser";
-import ManageUser from "./Admin/ManageUsers/ManageUser";
-import CreateAnnouncement from "./Admin/CreateAnnouncement/CreateAnnouncement";
 import ScreenHeader from "../components/ScreenHeader";
 import MarketplaceScreen from "./Marketplace/MarketplaceScreen";
 import MarketplaceItemInfoScreen from "./Marketplace/MarketplaceItemInfoScreen";
 import MarketplaceNewPostScreen from "./Marketplace/MarketplaceNewPostScreen";
 import IndividualAnnouncement from "./IndividualAnnouncement/IndividualAnnouncement";
+import PrivateMessagingScreen from "./Messaging/PrivateMessagingScreen";
+import MessagesListScreen from "./Messaging/MessagesListScreen";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getItemById, uploadExpoPushToken } from "../utils/firebase.services";
 
 const Stack = createStackNavigator();
 
 const MarketplaceNavigator = () => {
   const { currentUser } = useAppContext();
-
-  if (currentUser && currentUser.tenantAuthorized) {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name="MarketplaceScreen"
-          component={MarketplaceScreen}
-          options={{
-            headerShown: true,
-            header: () => <ScreenHeader title={"Marketplace"} />,
-          }}
-        />
-        <Stack.Screen
-          name="BuildingInfo"
-          component={BuildingInfo}
-          options={{
-            header: (props) => (
-              <CustomSubStackScreenHeader {...props} title={"Building Info"} />
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="MarketplaceItemInfo"
-          component={MarketplaceItemInfoScreen}
-          options={({ route }) => ({
-            header: (props) => (
-              <CustomSubStackScreenHeader
-                {...props}
-                title={route.params.title + "'s Post"}
-                currentUserId={currentUser.userDocId}
-                itemUserId={route.params.item.userID}
-                item={route.params.item}
-                previousScreen={"MarketplaceScreen"}
-                collection={"Marketplace"}
-              />
-            ),
-          })}
-        />
-        <Stack.Screen
-          name="CreateMarketplaceItem"
-          component={MarketplaceNewPostScreen}
-          options={{
-            header: (props) => (
-              <CustomSubStackScreenHeader {...props} title={"Create post"} />
-            ),
-          }}
-        />
-      </Stack.Navigator>
-    );
-  } else {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ title: "Login", headerShown: false }}
-        />
-        <Stack.Screen
-          name="Signup"
-          component={Signup}
-          options={{
-            header: (props) => (
-              <CustomSubStackScreenHeader {...props} title={"Sign up"} />
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="AccountApprovalPending"
-          component={AccountApprovalPending}
-          options={{
-            header: (props) => (
-              <CustomSubStackScreenHeader {...props} title={" "} />
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="ForgotPassword"
-          component={ForgotPassword}
-          options={{
-            header: (props) => (
-              <CustomSubStackScreenHeader {...props} title={" "} />
-            ),
-          }}
-        />
-      </Stack.Navigator>
-    );
-  }
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="MarketplaceScreen"
+        component={MarketplaceScreen}
+        options={{
+          headerShown: true,
+          header: () => <ScreenHeader title={"Marketplace"} />,
+        }}
+      />
+      <Stack.Screen
+        name="BuildingInfo"
+        component={BuildingInfo}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Building Info"} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="MarketplaceItemInfo"
+        component={MarketplaceItemInfoScreen}
+        options={({ route }) => ({
+          header: (props) => (
+            <CustomSubStackScreenHeader
+              {...props}
+              title={route.params.title + "'s Post"}
+              currentUserId={currentUser.userID}
+              itemUserId={route.params.item.userID}
+              item={route.params.item}
+              previousScreen={"MarketplaceScreen"}
+              collection={"Marketplace"}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="CreateMarketplaceItem"
+        component={MarketplaceNewPostScreen}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Create post"} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="PrivateMessagingScreen"
+        component={PrivateMessagingScreen}
+        options={({ route }) => ({
+          header: (props) => (
+            <CustomSubStackScreenHeader
+              {...props}
+              title={route.params.otherPersonName}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="MessagesListScreen"
+        component={MessagesListScreen}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Your Messages"} />
+          ),
+        }}
+      />
+    </Stack.Navigator>
+  );
 };
 
 const NewsfeedNavigator = () => {
-  const { post, currentUser } = useAppContext();
+  const { post, currentUser, setCurrentUser } = useAppContext();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  if (currentUser && currentUser.tenantAuthorized) {
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        console.log("user is logged in: ", user.uid);
+        const userData = await getItemById("Tenants", uid);
+        if (userData) {
+          uploadExpoPushToken(user);
+          setCurrentUser(userData);
+          setIsLoggedIn(true);
+        }
+        // ...
+      } else {
+        // User is signed out
+        // ...
+        setIsLoggedIn(false);
+        setCurrentUser({});
+        console.log("user is logged out");
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  if (isLoggedIn) {
     return (
       <Stack.Navigator>
         <Stack.Screen
@@ -169,7 +175,7 @@ const NewsfeedNavigator = () => {
               <CustomSubStackScreenHeader
                 {...props}
                 title={`${post.userFirstName}'s Post`}
-                currentUserId={currentUser.userDocId}
+                currentUserId={currentUser.userID}
                 itemUserId={route.params.item.userID}
                 item={route.params.item}
                 previousScreen={"Newsfeed"}
@@ -260,7 +266,7 @@ const ProfileNavigator = () => {
             <CustomSubStackScreenHeader
               {...props}
               title={`${post.userFirstName}'s Post`}
-              currentUserId={currentUser.userDocId}
+              currentUserId={currentUser.userID}
               itemUserId={route.params.item.userID}
               item={route.params.item}
               collection={"Newsfeed"}
@@ -280,93 +286,6 @@ const ProfileNavigator = () => {
         options={{
           header: (props) => (
             <CustomSubStackScreenHeader {...props} title={"Building Info"} />
-          ),
-        }}
-      />
-
-      {/* Admin Pages */}
-
-      <Stack.Screen
-        name="AdminPanel"
-        component={AdminPanel}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Admin panel"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="ApproveUsers"
-        component={ApproveUsers}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Approve users"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="ConfirmUser"
-        component={ConfirmUser}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Confirm user"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="ManageUsers"
-        component={ManageUsers}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Manage users"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="ManageUser"
-        component={ManageUser}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Manage user"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="CreateAnnouncement"
-        component={CreateAnnouncement}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader
-              {...props}
-              title={"Create announcement"}
-            />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="SendNotice"
-        component={SendNotice}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Send notice"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="ManageBuildings"
-        component={ManageBuildings}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Manage buildings"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="ManageBuilding"
-        component={ManageBuilding}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Manage building"} />
           ),
         }}
       />

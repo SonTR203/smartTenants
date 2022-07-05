@@ -44,7 +44,7 @@ function Post({ passedPost, windowWidth }) {
         // set states to update UI of the Post
         setNumberOfLikes(post.peopleWhoLiked.length);
         setNumberOfComments(post.commentCount);
-        setUserLiked(post.peopleWhoLiked.includes(currentUser.userDocId));
+        setUserLiked(post.peopleWhoLiked.includes(currentUser.userID));
       }
     });
 
@@ -59,7 +59,7 @@ function Post({ passedPost, windowWidth }) {
 
   const setHeartsToGreen = (array) => {
     array.map((item) => {
-      if (item == currentUser.userDocId) {
+      if (item == currentUser.userID) {
         setUserLiked(true);
       } else {
         setUserLiked(false);

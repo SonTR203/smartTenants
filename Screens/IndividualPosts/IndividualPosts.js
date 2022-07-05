@@ -67,7 +67,7 @@ const IndividualPosts = ({ navigation }) => {
 
   const setHeartsToGreen = () => {
     post.peopleWhoLiked.map((item) => {
-      if (item == currentUser.userDocId) {
+      if (item == currentUser.userID) {
         setUserLiked(true);
       }
     });

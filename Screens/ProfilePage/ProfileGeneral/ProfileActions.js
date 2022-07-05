@@ -5,6 +5,7 @@ import * as Updates from "expo-updates";
 import * as WebBrowser from "expo-web-browser";
 import { useTheme } from "../../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { removeExpoPushToken } from "../../../utils/firebase.services";
 
 function ProfileActions({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -15,6 +16,8 @@ function ProfileActions({ navigation }) {
    *output: none
    */
   const logUserOut = async () => {
+    console.log(auth.currentUser.uid);
+    await removeExpoPushToken(auth.currentUser.uid);
     auth.signOut().then(console.log("Tenant signed out"));
     await Updates.reloadAsync();
   };
