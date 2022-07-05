@@ -100,7 +100,12 @@ function MarketplaceNewPostScreen({ navigation }) {
 
       const res = await createItemInFirestore("Marketplace", id, propObj);
       setIsloading(false);
-      if (res) {
+      if (isNsfw) {
+        alert(
+          "We've detected potential suggestive or profane content. Your post will be reviewed."
+        );
+        navigation.navigate("MarketplaceScreen", { reload: true });
+      } else if (res) {
         alert("Marketplace item successfully created!");
         navigation.navigate("MarketplaceScreen", { reload: true });
       } else {
