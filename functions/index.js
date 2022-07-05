@@ -17,7 +17,7 @@ exports.notificationsNewMessage = functions.firestore
 
     // Get the correct Expo push token of the other person
     // to send the notification
-    const query = await admin
+    await admin
       .firestore()
       .collection(`ExpoPushTokens`)
       .where("id", "==", otherPersonId)
@@ -69,7 +69,7 @@ exports.notificationsNewMessage = functions.firestore
 // Delete all messages after an amount of time
 exports.scheduledFunctionDeleteAllMessages = functions.pubsub
   .schedule("1,15 of month 09:00")
-  .onRun(async (context) => {
+  .onRun(async () => {
     console.log("This will be run every 15 days! Delete all messages");
     // delete all messages
     // await admin

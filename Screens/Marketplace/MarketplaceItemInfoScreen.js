@@ -10,10 +10,7 @@ import {
   FlatList,
 } from "react-native";
 import { constants } from "../../utils/constants";
-import {
-  createItemInFirestore,
-  updateItemInFirestore,
-} from "../../utils/firebase.services";
+import { createItemInFirestore } from "../../utils/firebase.services";
 import { setTime } from "../../utils/setTime";
 import { useAppContext } from "../../Context/AppContext";
 import { doc, getDoc, Timestamp } from "@firebase/firestore";

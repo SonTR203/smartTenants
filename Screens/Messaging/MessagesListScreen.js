@@ -92,15 +92,7 @@ function MessagesListScreen({ route, navigation }) {
       }
     }
     return (
-      <View
-        style={{
-          flex: 1,
-          padding: 10,
-          borderBottomWidth: 1,
-          borderColor: "black",
-          flexDirection: "row-reverse",
-        }}
-      >
+      <View style={styles.itemContainer}>
         {newPrivateMessages.includes(item.id) ? (
           <MaterialCommunityIcons name="new-box" size={30} color={"red"} />
         ) : null}
@@ -113,68 +105,22 @@ function MessagesListScreen({ route, navigation }) {
               updateSeen
             );
           }}
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            alignItems: "center",
-          }}
+          style={styles.itemTouchable}
         >
-          <Image
-            style={{
-              width: 50,
-              height: 50,
-              borderRadius: 50,
-              borderWidth: 1,
-              borderColor: "black",
-            }}
-            source={{ uri: item.messageImage }}
-          />
+          <Image style={styles.itemImage} source={{ uri: item.messageImage }} />
 
-          <View
-            style={{
-              flex: 1,
-              marginLeft: 20,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                marginBottom: 5,
-              }}
-            >
-              {item.title}
-            </Text>
-            <Text
-              style={{
-                fontSize: 17,
-                marginBottom: 5,
-                opacity: 0.8,
-              }}
-            >
-              {otherPersonName}
-            </Text>
+          <View style={styles.itemTextContainer}>
+            <Text style={styles.itemTitle}>{item.title}</Text>
+            <Text style={styles.itemPersonName}>{otherPersonName}</Text>
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
-              style={{
-                fontSize: 15,
-                opacity: 0.5,
-                width: "90%",
-              }}
+              style={styles.itemContent}
             >
               {isNew ? "New Inquiry" : lastMessage}
             </Text>
             {item.lastMessage ? (
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  opacity: 0.5,
-                }}
-              >
+              <View style={styles.itemTimestamp}>
                 <Text>
                   {setTime(item.lastMessage.timestamp.seconds * 1000)}
                 </Text>
@@ -199,19 +145,9 @@ function MessagesListScreen({ route, navigation }) {
       <View>
         <FlatList
           ListEmptyComponent={() => {
-            return (
-              <Text
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                You have no messages.
-              </Text>
-            );
+            return <Text style={styles.noItemText}>You have no messages.</Text>;
           }}
-          style={{
-            height: "100%",
-          }}
+          style={styles.flatlist}
           keyExtractor={(item) => item.id}
           data={messagesList}
           renderItem={renderItem}
@@ -220,5 +156,59 @@ function MessagesListScreen({ route, navigation }) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  flatlist: {
+    height: "100%",
+  },
+  noItemText: {
+    textAlign: "center",
+  },
+  itemContainer: {
+    flex: 1,
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: "black",
+    flexDirection: "row-reverse",
+  },
+  itemTouchable: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  itemImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "black",
+  },
+  itemTextContainer: {
+    flex: 1,
+    marginLeft: 20,
+  },
+  itemTitle: {
+    fontSize: 20,
+    marginBottom: 5,
+  },
+  itemPersonName: {
+    fontSize: 17,
+    marginBottom: 5,
+    opacity: 0.8,
+  },
+  itemContent: {
+    fontSize: 15,
+    opacity: 0.5,
+    width: "95%",
+  },
+  itemTimestamp: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    opacity: 0.5,
+  },
+});
 
 export default MessagesListScreen;
