@@ -73,7 +73,7 @@ const EditProfile = ({ navigation }) => {
   };
 
   async function saveProfileInfo() {
-    const userDocRef = doc(db, "Tenants", currentUser.userDocId);
+    const userDocRef = doc(db, "Tenants", currentUser.userID);
     if (checkTextInputs()) {
       try {
         await updateDoc(userDocRef, {
@@ -97,7 +97,6 @@ const EditProfile = ({ navigation }) => {
           myPosts: currentUser.myPosts,
           tenantAuthorized: currentUser.tenantAuthorized,
           userID: currentUser.userID,
-          userDocId: currentUser.userDocId,
           visibleNotices: currentUser.visibleNotices,
           visibleAnnouncements: currentUser.visibleAnnouncements,
           userProfileImage: currentUser.userProfileImage,
@@ -169,7 +168,7 @@ const EditProfile = ({ navigation }) => {
         xhr.send(null);
       });
 
-      const imageName = `userProfileImages/${currentUser.userDocId}/avatar.jpg`;
+      const imageName = `userProfileImages/${currentUser.userID}/avatar.jpg`;
       const fileRef = ref(getStorage(), imageName);
       await uploadBytes(fileRef, blob);
 
@@ -183,7 +182,7 @@ const EditProfile = ({ navigation }) => {
   }
 
   async function changeProfileImageInDatabase(imgUrl) {
-    const userDocRef = doc(db, "Tenants", currentUser.userDocId);
+    const userDocRef = doc(db, "Tenants", currentUser.userID);
 
     try {
       await updateDoc(userDocRef, {

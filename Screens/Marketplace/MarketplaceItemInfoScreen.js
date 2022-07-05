@@ -10,12 +10,17 @@ import {
   FlatList,
 } from "react-native";
 import { constants } from "../../utils/constants";
+import { createItemInFirestore } from "../../utils/firebase.services";
 import { setTime } from "../../utils/setTime";
+import { useAppContext } from "../../Context/AppContext";
+import { doc, getDoc, Timestamp } from "@firebase/firestore";
+import { db } from "../../firebase-config";
 
-function MarketplaceItemInfoScreen({ route }) {
+function MarketplaceItemInfoScreen({ route, navigation }) {
   const [item, setItem] = useState(null);
   const [imageList, setImageList] = useState([]);
   const [hoursAgo, setHoursAgo] = useState(null);
+  const { currentUser } = useAppContext();
 
   // check for item passed from previous screen & display info
   useEffect(() => {
@@ -29,6 +34,42 @@ function MarketplaceItemInfoScreen({ route }) {
       setItem(route.params.item);
     }
   }, [route]);
+
+  const handleSendMessage = async () => {
+    const id = `${currentUser.userID}-${item.userID}`;
+    const docRef = doc(db, `MessagingList`, id);
+    const docSnap = await getDoc(docRef);
+    let res = null;
+
+    if (docSnap.exists()) {
+      // console.log("Document data:", docSnap.data());
+      // navigate to private messaging screen and update newMessages to "false", because we're already in the messaging screen
+      res = true;
+    } else {
+      // doc.data() will be undefined in this case
+      // console.log("No such document!");
+      res = await createItemInFirestore(`MessagingList`, id, {
+        id: id,
+        title: item.postTitle,
+        sellerId: item.userID,
+        sellerName: item.userFirstName + " " + item.userLastName,
+        buyerId: currentUser.userID,
+        buyerName: currentUser.firstName + " " + currentUser.lastName,
+        messageImage: item.images[0],
+        timestamp: Timestamp.fromDate(new Date()),
+        hasPeople: [currentUser.userID, item.userID],
+        isNew: true,
+      });
+    }
+
+    if (res) {
+      navigation.navigate("PrivateMessagingScreen", {
+        otherPersonName: item.userFirstName + " " + item.userLastName,
+        otherPersonId: item.userID,
+        channelId: id,
+      });
+    }
+  };
 
   if (item === null) {
     return null;
@@ -188,12 +229,14 @@ function MarketplaceItemInfoScreen({ route }) {
         </View>
         {/* SEND A MESSAGE BOX  */}
       </ScrollView>
-      <TouchableOpacity
-        onPress={() => alert("Send a message")}
-        style={styles.messageButton}
-      >
-        <Text style={styles.messageText}>Send a message</Text>
-      </TouchableOpacity>
+      {item.userID === currentUser.userID ? null : (
+        <TouchableOpacity
+          onPress={handleSendMessage}
+          style={styles.messageButton}
+        >
+          <Text style={styles.messageText}>Send a message</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

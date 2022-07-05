@@ -9,7 +9,7 @@ export const getMyPosts = async (currentUser) => {
   const peopleWhoLikedColRef = collection(db, `Newsfeed`);
   const q = query(
     peopleWhoLikedColRef,
-    where("userID", "==", currentUser.userDocId)
+    where("userID", "==", currentUser.userID)
   );
 
   const querySnapshot = await getDocs(q);
