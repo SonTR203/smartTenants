@@ -6,7 +6,7 @@ export const getNotifications = async (currentUser) => {
   const colReference = collection(
     db,
     "Tenants",
-    `${currentUser.userDocId}`,
+    `${currentUser.userID}`,
     "Notifications"
   );
   const data = await getDocs(colReference);

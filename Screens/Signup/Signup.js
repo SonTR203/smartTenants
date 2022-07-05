@@ -11,12 +11,13 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { addDoc, collection } from "@firebase/firestore";
+import { setDoc, doc } from "@firebase/firestore";
 import { db } from "../../firebase-config";
 import ModalPicker from "../../components/ModalBuildingPicker";
 import { useTheme } from "../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { Dimensions } from "react-native";
+import { uploadExpoPushToken } from "../../utils/firebase.services";
 const windowHeight = Dimensions.get("window").height;
 
 const auth = getAuth();
@@ -91,7 +92,7 @@ const Signup = ({ navigation }) => {
 
   async function createNewUser(user) {
     try {
-      await addDoc(collection(db, "Tenants"), {
+      await setDoc(doc(db, "Tenants", user.uid), {
         userID: user.uid,
         firstName,
         lastName,
@@ -119,6 +120,7 @@ const Signup = ({ navigation }) => {
 
   function signUpSuccess(user) {
     createNewUser(user);
+    uploadExpoPushToken(user);
     navigation.navigate("AccountApprovalPending");
   }
 
@@ -192,6 +194,7 @@ const Signup = ({ navigation }) => {
                   Unit number
                 </Text>
                 <TextInput
+                  keyboardType="numeric"
                   placeholder="1234"
                   value={unitNumber}
                   onChangeText={(text) => setUnitNumber(text)}

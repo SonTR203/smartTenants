@@ -64,9 +64,9 @@ function Notices({ navigation }) {
       snapshot.docs.forEach((doc) => {
         noticeList.push({ ...doc.data(), id: doc.id });
       });
-      console.log(noticeList[0].recipients.includes(currentUser.userDocId));
+      console.log(noticeList[0].recipients.includes(currentUser.userID));
       const filteredNoticeList = noticeList.filter((notice) =>
-        notice.recipients.includes(currentUser.userDocId)
+        notice.recipients.includes(currentUser.userID)
       );
       setNotices(filteredNoticeList);
     });

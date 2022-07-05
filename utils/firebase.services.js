@@ -4,6 +4,8 @@ import {
   setDoc,
   collection,
   getDocs,
+  updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 import {
@@ -14,6 +16,9 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+
 export const deleteItemFromFirestore = async (collection, id) => {
   try {
     const singleDoc = doc(db, collection, id);
@@ -21,6 +26,24 @@ export const deleteItemFromFirestore = async (collection, id) => {
     return true;
   } catch (error) {
     console.log("error deleting item in Firestore", error);
+    return false;
+  }
+};
+
+export const updateItemInFirestore = async (collection, id, propertyObject) => {
+  try {
+    await updateDoc(doc(db, collection, id), propertyObject)
+      .then(() => {
+        console.log("Document updated successfully!");
+        // console.log(collection, ":  Document updated successfully!");
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+
+    return true;
+  } catch (error) {
+    console.log("error updating item in Firestore", error);
     return false;
   }
 };
@@ -59,6 +82,18 @@ export const deleteImageFromStorage = async (imageName) => {
     return true;
   } catch (error) {
     console.log("ERROR deleting failed post Storage image: ", error);
+    return false;
+  }
+};
+
+export const getItemById = async (collection, id) => {
+  try {
+    const docRef = doc(db, collection, id);
+    const docSnap = await getDoc(docRef);
+
+    return docSnap.data();
+  } catch (error) {
+    console.log("error getting item from Firestore", error);
     return false;
   }
 };
@@ -103,3 +138,57 @@ export const getMarketplaceItems = async () => {
 
   return formattedData;
 };
+
+export const uploadExpoPushToken = async (user) => {
+  const expoPushToken = await registerForPushNotificationsAsync();
+  try {
+    await setDoc(doc(db, "ExpoPushTokens", user.uid), {
+      id: user.uid,
+      expoPushToken: expoPushToken ? expoPushToken : "",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const removeExpoPushToken = async (uid) => {
+  try {
+    await updateDoc(doc(db, "ExpoPushTokens", uid), {
+      expoPushToken: "",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export async function registerForPushNotificationsAsync() {
+  let token;
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  // if (Platform.OS === "android") {
+  //   Notifications.setNotificationChannelAsync("default", {
+  //     name: "default",
+  //     importance: Notifications.AndroidImportance.MAX,
+  //     vibrationPattern: [0, 250, 250, 250],
+  //     lightColor: "#FF231F7C",
+  //   });
+  // }
+
+  return token;
+}

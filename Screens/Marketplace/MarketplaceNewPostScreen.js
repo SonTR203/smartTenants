@@ -64,7 +64,7 @@ function MarketplaceNewPostScreen({ navigation }) {
     if (title.length > 0 && content.length > 0 && price && image.length > 0) {
       setIsloading(true);
       const id = uuid.v4();
-      const imagePath = `Images/Posts/Marketplace/${id}-${currentUser.userDocId}.jpg`;
+      const imagePath = `Images/Posts/Marketplace/${id}-${currentUser.userID}.jpg`;
       const imageUrl = await uploadImageToStorage(imagePath, image);
       if (imageUrl) {
         createMarketplacePostFirestore(imageUrl, id);
@@ -86,7 +86,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         postContent: content,
         postTitle: title,
         price: price,
-        userID: currentUser.userDocId,
+        userID: currentUser.userID,
         userFirstName: currentUser.firstName,
         userLastName: currentUser.lastName,
         userProfileImage: currentUser.userProfileImage,

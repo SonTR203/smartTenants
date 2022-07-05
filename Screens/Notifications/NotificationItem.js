@@ -31,7 +31,7 @@ function NotificationItem({
     const colRef = doc(
       db,
       "Tenants",
-      `${currentUser.userDocId}`,
+      `${currentUser.userID}`,
       "Notifications",
       notifications.id
     );

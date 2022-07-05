@@ -45,7 +45,7 @@ export const likePost = async (
       updatedPost = {
         ...post,
         peopleWhoLiked: post.peopleWhoLiked.filter(
-          (item) => item !== currentUser.userDocId
+          (item) => item !== currentUser.userID
         ),
       };
     }
@@ -57,7 +57,7 @@ export const likePost = async (
 
       updatedPost = {
         ...post,
-        peopleWhoLiked: [...post.peopleWhoLiked, currentUser.userDocId],
+        peopleWhoLiked: [...post.peopleWhoLiked, currentUser.userID],
       };
     }
   }
@@ -72,7 +72,7 @@ export const addLike = async (currentUser, post) => {
   //=========== creating like notification subcollection in Tenants collection ============
   try {
     // dont make notifications if self-liking a post
-    if (currentUser.userDocId !== post.userID) {
+    if (currentUser.userID !== post.userID) {
       await createItemInFirestore(
         `Tenants/${post.userID}/Notifications`,
         notificationId,
@@ -101,12 +101,12 @@ export const addLike = async (currentUser, post) => {
         firstName: currentUser.firstName,
         lastName: currentUser.lastName,
         postID: post.id,
-        userID: currentUser.userDocId,
+        userID: currentUser.userID,
       }
     );
 
     await updateDoc(peopleWhoLikedDocRef, {
-      peopleWhoLiked: [...post.peopleWhoLiked, currentUser.userDocId],
+      peopleWhoLiked: [...post.peopleWhoLiked, currentUser.userID],
     });
   } catch (error) {
     console.log("error adding like to DB", error);
@@ -127,7 +127,7 @@ export const removeLike = async (currentUser, post) => {
     const peopleWhoLikedDocRef = doc(db, "Newsfeed", post.id);
     const q = query(
       peopleWhoLikedColRef,
-      where("userID", "==", currentUser.userDocId)
+      where("userID", "==", currentUser.userID)
     );
 
     const querySnapshot = await getDocs(q);
@@ -139,7 +139,7 @@ export const removeLike = async (currentUser, post) => {
 
     await updateDoc(peopleWhoLikedDocRef, {
       peopleWhoLiked: post.peopleWhoLiked.filter(
-        (item) => item != currentUser.userDocId
+        (item) => item != currentUser.userID
       ),
     });
   } catch (error) {

@@ -54,7 +54,7 @@ const CreatePost = ({ navigation }) => {
       const propObj = {
         id: id,
         postContent: postContent,
-        userID: currentUser.userDocId,
+        userID: currentUser.userID,
         userFirstName: currentUser.firstName,
         userLastName: currentUser.lastName,
         userProfileImage: currentUser.userProfileImage,
@@ -111,7 +111,7 @@ const CreatePost = ({ navigation }) => {
     } else {
       try {
         if (!image.cancelled) {
-          const imagePath = `Images/Posts/Newsfeed/${id}-${currentUser.userDocId}.jpg`;
+          const imagePath = `Images/Posts/Newsfeed/${id}-${currentUser.userID}.jpg`;
           const imageUrl = await uploadImageToStorage(imagePath, image);
           PostContent(imageUrl, id);
         }
