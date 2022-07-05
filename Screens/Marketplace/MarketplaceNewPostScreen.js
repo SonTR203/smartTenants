@@ -34,6 +34,7 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [content, setContent] = useState("");
   const [price, setPrice] = useState(null);
   const [image, setImage] = useState("");
+  const [imageLoading, setImageLoading] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
   // API Keys for SightEngine
@@ -43,6 +44,7 @@ function MarketplaceNewPostScreen({ navigation }) {
   // function to handle image picking
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
+      presentationStyle: 0,
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
@@ -50,6 +52,7 @@ function MarketplaceNewPostScreen({ navigation }) {
     });
 
     if (!result.cancelled) {
+      setImageLoading(true);
       const size = await getFileInfo(result.uri);
       if (size > 5) {
         alert(
@@ -60,6 +63,7 @@ function MarketplaceNewPostScreen({ navigation }) {
       }
       const path = await compressFileSize(result.uri);
       setImage(path.uri);
+      setImageLoading(false);
     }
   };
 
@@ -109,6 +113,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         alert("Marketplace item successfully created!");
         navigation.navigate("MarketplaceScreen", { reload: true });
       } else {
+        await deleteImageFromStorage(imageUrl);
         throw new Error("Error creating marketplace item", res.error);
       }
     } catch (err) {
@@ -120,10 +125,15 @@ function MarketplaceNewPostScreen({ navigation }) {
   async function moderatePost(imageUrl) {
     const imgNsfw = await moderateImage(imageUrl);
     const textNsfw = await moderateText();
-    if (imgNsfw || textNsfw) {
+    // if either image or text is nsfw, return true
+    if (imgNsfw === true || textNsfw === true) {
       return true;
-    } else {
+      // if both are safe, return false
+    } else if (imgNsfw === false && textNsfw === false) {
       return false;
+      // if something other happened, return undefined to show error
+    } else {
+      return undefined;
     }
   }
   async function moderateImage(imgUrl) {
@@ -137,8 +147,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         },
       })
       .then(function (response) {
-        console.log(response.data);
-        return checkResults(response.data);
+        return checkImageResults(response.data);
       })
       .catch(function (error) {
         if (error.response) console.log(error.response.data);
@@ -146,7 +155,7 @@ function MarketplaceNewPostScreen({ navigation }) {
       });
     return result;
   }
-  function checkResults(data) {
+  function checkImageResults(data) {
     let drugs = data.drugs > 0.5;
     let nudity = data.nudity.safe < 0.5;
     let offensive = data.offensive.prob > 0.5;
@@ -160,26 +169,24 @@ function MarketplaceNewPostScreen({ navigation }) {
   }
 
   async function moderateText() {
-    let data = new FormData();
-    data.append("text", `${title} ${content}`);
-    data.append("lang", "en");
-    data.append("opt_countries", "us,gb,fr");
-    data.append("mode", "standard");
-    data.append("api_user", `${API_USER}`);
-    data.append("api_secret", `${API_KEY}`);
-
-    const result = await axios({
-      url: "https://api.sightengine.com/1.0/text/check.json",
-      method: "post",
-      data: data,
-    })
+    const result = await axios
+      .get("https://api.sightengine.com/1.0/text/check.json", {
+        params: {
+          text: `${title} ${content}`,
+          lang: "en",
+          opt_countries: "us,gb,fr",
+          mode: "standard",
+          api_user: `${API_USER}`,
+          api_secret: `${API_KEY}`,
+        },
+      })
       .then(function (response) {
-        console.log(response.data);
         return textResults(response.data.profanity.matches);
       })
       .catch(function (error) {
-        if (error.response) console.log(error.response.data);
-        else console.log(error.message);
+        if (error.response)
+          console.log("error text moderation axios call: ", error.response);
+        else console.log("error: ", error.message);
       });
     return result;
   }
@@ -304,22 +311,32 @@ function MarketplaceNewPostScreen({ navigation }) {
             onPress={pickImage}
             style={[theme.secondaryButton, styles.uploadButtonContainer]}
           >
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="middle"
-              style={[
-                theme.secondaryButtonText,
-                styleVariables.fontSizes.body,
-                styles.uploadText,
-              ]}
-            >
-              {image.length > 0 ? image.split("/").pop() : "Upload Image "}
-            </Text>
-            <MaterialCommunityIcons
-              name="image-plus"
-              size={18}
-              color={styleVariables.colors.primary}
-            />
+            {imageLoading ? (
+              <ActivityIndicator
+                style={styles.loader}
+                size="small"
+                color={styleVariables.colors.primary}
+              />
+            ) : (
+              <>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                  style={[
+                    theme.secondaryButtonText,
+                    styleVariables.fontSizes.body,
+                    styles.uploadText,
+                  ]}
+                >
+                  {image.length > 0 ? image.split("/").pop() : "Upload Image "}
+                </Text>
+                <MaterialCommunityIcons
+                  name="image-plus"
+                  size={18}
+                  color={styleVariables.colors.primary}
+                />
+              </>
+            )}
           </TouchableOpacity>
         </View>
 

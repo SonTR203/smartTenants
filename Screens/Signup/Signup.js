@@ -107,6 +107,7 @@ const Signup = ({ navigation }) => {
         visibleNotices,
         visibleAnnouncements,
         userProfileImage: defaultProfileImage,
+        isActive: true,
       });
     } catch (error) {
       alert(error);
