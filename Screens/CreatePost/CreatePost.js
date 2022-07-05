@@ -145,7 +145,7 @@ const CreatePost = ({ navigation }) => {
   }
 
   async function moderateImage(imgUrl) {
-    const result = axios
+    const result = await axios
       .get("https://api.sightengine.com/1.0/check.json", {
         params: {
           url: imgUrl,
@@ -185,7 +185,7 @@ const CreatePost = ({ navigation }) => {
     data.append("api_user", `${API_USER}`);
     data.append("api_secret", `${API_KEY}`);
 
-    const result = axios({
+    const result = await axios({
       url: "https://api.sightengine.com/1.0/text/check.json",
       method: "post",
       data: data,

@@ -26,6 +26,7 @@ import {
   deleteImageFromStorage,
   uploadImageToStorage,
 } from "../../utils/firebase.services";
+import axios from "axios";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -35,6 +36,9 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [image, setImage] = useState("");
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
+  // API Keys for SightEngine
+  const API_USER = "278265377";
+  const API_KEY = "38GEu5SU32yy5SYjvzhe";
 
   // function to handle image picking
   const pickImage = async () => {
@@ -66,8 +70,9 @@ function MarketplaceNewPostScreen({ navigation }) {
       const id = uuid.v4();
       const imagePath = `Images/Posts/Marketplace/${id}-${currentUser.userID}.jpg`;
       const imageUrl = await uploadImageToStorage(imagePath, image);
+      const isNsfw = await moderatePost(imageUrl);
       if (imageUrl) {
-        createMarketplacePostFirestore(imageUrl, id);
+        createMarketplacePostFirestore(imageUrl, id, isNsfw);
       } else {
         return;
       }
@@ -76,12 +81,12 @@ function MarketplaceNewPostScreen({ navigation }) {
     }
   };
 
-  const createMarketplacePostFirestore = async (imageUrl, id) => {
+  const createMarketplacePostFirestore = async (imageUrl, id, isNsfw) => {
     try {
       const propObj = {
         buildingLocation: "",
         images: [imageUrl],
-        isNSFW: false,
+        isNSFW: isNsfw,
         id: id,
         postContent: content,
         postTitle: title,
@@ -95,7 +100,12 @@ function MarketplaceNewPostScreen({ navigation }) {
 
       const res = await createItemInFirestore("Marketplace", id, propObj);
       setIsloading(false);
-      if (res) {
+      if (isNsfw) {
+        alert(
+          "We've detected potential suggestive or profane content. Your post will be reviewed."
+        );
+        navigation.navigate("MarketplaceScreen", { reload: true });
+      } else if (res) {
         alert("Marketplace item successfully created!");
         navigation.navigate("MarketplaceScreen", { reload: true });
       } else {
@@ -105,6 +115,86 @@ function MarketplaceNewPostScreen({ navigation }) {
       await deleteImageFromStorage(imageUrl);
     }
   };
+
+  // Moderation //
+  async function moderatePost(imageUrl) {
+    const imgNsfw = await moderateImage(imageUrl);
+    const textNsfw = await moderateText();
+    if (imgNsfw || textNsfw) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  async function moderateImage(imgUrl) {
+    const result = await axios
+      .get("https://api.sightengine.com/1.0/check.json", {
+        params: {
+          url: imgUrl,
+          models: "nudity,wad,offensive,gore",
+          api_user: API_USER,
+          api_secret: API_KEY,
+        },
+      })
+      .then(function (response) {
+        console.log(response.data);
+        return checkResults(response.data);
+      })
+      .catch(function (error) {
+        if (error.response) console.log(error.response.data);
+        else console.log(error.message);
+      });
+    return result;
+  }
+  function checkResults(data) {
+    let drugs = data.drugs > 0.5;
+    let nudity = data.nudity.safe < 0.5;
+    let offensive = data.offensive.prob > 0.5;
+    let weapons = data.weapon > 0.5;
+    let gore = data.gore.prob > 0.5;
+    if (drugs || nudity || offensive || weapons || gore) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async function moderateText() {
+    let data = new FormData();
+    data.append("text", `${title} ${content}`);
+    data.append("lang", "en");
+    data.append("opt_countries", "us,gb,fr");
+    data.append("mode", "standard");
+    data.append("api_user", `${API_USER}`);
+    data.append("api_secret", `${API_KEY}`);
+
+    const result = await axios({
+      url: "https://api.sightengine.com/1.0/text/check.json",
+      method: "post",
+      data: data,
+    })
+      .then(function (response) {
+        console.log(response.data);
+        return textResults(response.data.profanity.matches);
+      })
+      .catch(function (error) {
+        if (error.response) console.log(error.response.data);
+        else console.log(error.message);
+      });
+    return result;
+  }
+  function textResults(response) {
+    if (response.length > 0) {
+      if (
+        response[0].intensity == "high" ||
+        response[0].intensity == "medium"
+      ) {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
 
   const styles = StyleSheet.create({
     container: {
