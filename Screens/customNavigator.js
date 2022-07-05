@@ -1,6 +1,6 @@
 //mix tab and stack navigators: https://www.youtube.com/watch?v=dkriklWelm0&t=139s
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Newsfeed from "./Newsfeed/Newsfeed";
 import BuildingInfo from "./BuildingInfo/BuildingInfo";
@@ -103,9 +103,8 @@ const MarketplaceNavigator = () => {
   );
 };
 
-const NewsfeedNavigator = () => {
+const NewsfeedNavigator = ({ navigation }) => {
   const { post, currentUser, setCurrentUser } = useAppContext();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const auth = getAuth();
@@ -116,18 +115,16 @@ const NewsfeedNavigator = () => {
         const uid = user.uid;
         console.log("user is logged in: ", user.uid);
         const userData = await getItemById("Tenants", uid);
-        if (userData) {
+        if (userData && userData.tenantAuthorized) {
           uploadExpoPushToken(user);
           setCurrentUser(userData);
-          setIsLoggedIn(true);
+          navigation.navigate("Newsfeed");
         }
         // ...
       } else {
         // User is signed out
         // ...
-        setIsLoggedIn(false);
-        setCurrentUser({});
-        console.log("user is logged out");
+        navigation.navigate("Login");
       }
     });
 
@@ -136,7 +133,8 @@ const NewsfeedNavigator = () => {
     };
   }, []);
 
-  if (isLoggedIn) {
+  // currentUser.tenantAuthorized for trigger globally
+  if (currentUser.tenantAuthorized) {
     return (
       <Stack.Navigator>
         <Stack.Screen
