@@ -14,11 +14,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { collection, getDocs, addDoc } from "@firebase/firestore";
 import { useTheme } from "../../ThemeContext";
 import { db } from "../../firebase-config";
-import { useAppContext } from "../../Context/AppContext";
-import {
-  getItemById,
-  uploadExpoPushToken,
-} from "../../utils/firebase.services";
+import { getItemById } from "../../utils/firebase.services";
 
 const auth = getAuth();
 
@@ -27,7 +23,6 @@ const Login = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setCurrentUser } = useAppContext();
 
   /* This function logs the user to the application only if he/she * is registered on Firebase as an authenticated registered user.
    * inputs: none
@@ -39,7 +34,6 @@ const Login = ({ navigation }) => {
         console.log("Logged in with:", userCredentials.user.email);
         if (userCredentials.user.email) {
           findUser(userCredentials.user);
-          uploadExpoPushToken(userCredentials.user);
         }
       })
       .catch((error) => alert(error.message));
@@ -53,11 +47,12 @@ const Login = ({ navigation }) => {
   const findUser = async (user) => {
     const userData = await getItemById("Tenants", user.uid);
     if (userData) {
-      setCurrentUser(userData);
-      createNotificationCollection(userData);
-      navigation.navigate(
-        userData.tenantAuthorized ? "Newsfeed" : "AccountApprovalPending"
-      );
+      if (userData.tenantAuthorized) {
+        navigation.navigate("Newsfeed");
+      } else {
+        createNotificationCollection(userData);
+        navigation.navigate("AccountApprovalPending");
+      }
     } else {
       alert("User not found");
     }
