@@ -4,6 +4,8 @@ import {
   setDoc,
   collection,
   getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 import {
@@ -94,7 +96,9 @@ export const uploadImageToStorage = async (imagePath, newImage) => {
 export const getMarketplaceItems = async () => {
   const colRef = collection(db, "Marketplace");
 
-  const data = await getDocs(colRef);
+  const sortedColRef = query(colRef, where("isNSFW", "==", false));
+
+  const data = await getDocs(sortedColRef);
   const formattedData = data.docs.map((doc) => {
     return {
       ...doc.data(),
