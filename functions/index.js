@@ -72,7 +72,7 @@ exports.notificationsNewMessage = functions.firestore
 // Send notifications to all inactive users when a new message is posted
 exports.notificationsNewComment = functions.firestore
   .document("Newsfeed/{parentId}/peopleWhoCommented/{childId}")
-  .onWrite(async (change, context) => {
+  .onWrite(async (change) => {
     if (change.before.exists === false && change.after.exists === true) {
       log("new people commented on the post, send notification");
       log("data after: ", change.after.data());
@@ -128,7 +128,7 @@ exports.notificationsNewComment = functions.firestore
 // Send notifications to all inactive users when a new message is posted
 exports.notificationsNewLike = functions.firestore
   .document("Newsfeed/{parentId}/peopleWhoLiked/{childId}")
-  .onWrite(async (change, context) => {
+  .onWrite(async (change) => {
     if (change.before.exists === false && change.after.exists === true) {
       log("new people like the post, send notification");
       log("data after: ", change.after.data());
