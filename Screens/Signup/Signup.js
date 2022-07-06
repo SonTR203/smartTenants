@@ -153,7 +153,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[theme.textInputLabel, styleVariables.fontSizes.body]}
               >
-                First name
+                First Name
               </Text>
               <TextInput
                 placeholder="John"
