@@ -1,6 +1,5 @@
 import React from "react";
-import { View, Text, Image, Dimensions } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { View, Text, Image, Dimensions, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
 const windowWidth = Dimensions.get("window").width;
