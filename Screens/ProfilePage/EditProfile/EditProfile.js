@@ -253,7 +253,7 @@ const EditProfile = ({ navigation }) => {
               <Text
                 style={[theme.textInputLabel, styleVariables.fontSizes.body]}
               >
-                Name
+                First Name
               </Text>
               <TextInput
                 placeholder="John"
