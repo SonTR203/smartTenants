@@ -105,7 +105,7 @@ const ProfileGeneral = ({ navigation }) => {
                       styles(styleVariables).colorPrimary,
                     ]}
                   >
-                    12,531
+                    0
                   </Text>
                   <MaterialCommunityIcons
                     name="chevron-right"
