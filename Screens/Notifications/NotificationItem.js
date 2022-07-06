@@ -21,7 +21,7 @@ function NotificationItem({
   useEffect(() => {
     if (notifications) {
       (function calculateTime() {
-        const time = setTime(notifications.timestamp);
+        const time = setTime(notifications.timestamp.seconds * 1000);
         setTimeSincePost(time);
       })();
     }
@@ -50,29 +50,6 @@ function NotificationItem({
       ...postData,
       id: docSnap.id,
     };
-
-    // const likesColReference = collection(
-    //   db,
-    //   "Newsfeed",
-    //   `${docSnap.id}`,
-    //   "peopleWhoLiked"
-    // );
-    // const data = await getDocs(likesColReference);
-    // let numberOfLikes = data.docs.length;
-
-    // let post = {
-    //   comments: postData.comments.arrayValue,
-    //   id: docSnap.id,
-    //   image: postData.images,
-    //   peopleWhoLiked: postData.peopleWhoLiked,
-    //   postContent: postData.postContent,
-    //   userID: postData.userID,
-    //   userProfileImage: postData.userProfileImage,
-    //   userFirstName: postData.userFirstName,
-    //   userLastName: postData.userLastName,
-    //   numberOfLikes: numberOfLikes,
-    //   timestamp: postData.timestamp,
-    // };
 
     if (docSnap.exists()) {
       setPost(formattedPost);
