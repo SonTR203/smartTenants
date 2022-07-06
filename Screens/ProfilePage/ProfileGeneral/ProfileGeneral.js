@@ -136,7 +136,7 @@ const ProfileGeneral = ({ navigation }) => {
             /*Link to the application's developer team on google search*/
             onPress={async () => {
               await WebBrowser.openBrowserAsync(
-                `https://google.com/search?q=intelidev+solutions`
+                `https://www.algonquincollege.com/arie/facilities/data-analytics-centre/`
               );
             }}
           >
@@ -146,7 +146,7 @@ const ProfileGeneral = ({ navigation }) => {
                 styles(styleVariables).intellidevText,
               ]}
             >
-              IntelliDev Solutions
+              Algonquin College DAC
             </Text>
           </TouchableOpacity>
         </View>
