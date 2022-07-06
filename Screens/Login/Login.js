@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   SafeAreaView,
@@ -19,10 +19,18 @@ import { getItemById } from "../../utils/firebase.services";
 const auth = getAuth();
 
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
-const Login = ({ navigation }) => {
+const Login = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // clear the text inputs when the screen is navigated to
+  useEffect(() => {
+    if (route.params && route.params.reload) {
+      setEmail("");
+      setPassword("");
+    }
+  }, [route.params]);
 
   /* This function logs the user to the application only if he/she * is registered on Firebase as an authenticated registered user.
    * inputs: none
@@ -47,7 +55,7 @@ const Login = ({ navigation }) => {
   const findUser = async (user) => {
     const userData = await getItemById("Tenants", user.uid);
     if (userData) {
-      if (userData.tenantAuthorized) {
+      if (userData.tenantAuthorized === true) {
         navigation.navigate("Newsfeed");
       } else {
         createNotificationCollection(userData);

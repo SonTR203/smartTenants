@@ -201,10 +201,10 @@ const EditProfile = ({ navigation }) => {
 
   return (
     <SafeAreaView edges={["top"]}>
-      <ScrollView style={theme.pageContainer}>
-        <StatusBar style="dark" />
+      <KeyboardAvoidingView behavior="padding">
+        <ScrollView style={[theme.pageContainer, theme.globalMargins]}>
+          <StatusBar style="dark" />
 
-        <KeyboardAvoidingView behavior="padding" style={theme.globalMargins}>
           {/* userHeader */}
           <View
             style={{
@@ -396,8 +396,8 @@ const EditProfile = ({ navigation }) => {
               </Text>
             </View>
           </TouchableOpacity>
-        </KeyboardAvoidingView>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

@@ -28,7 +28,7 @@ const ProfileGeneral = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles(styleVariables).container} edges={["top"]}>
-      <StatusBar style="light" />
+      <StatusBar style="auto" />
 
       {/* scroll view body */}
       <ScrollView style={styles(styleVariables).scrollContainer}>
