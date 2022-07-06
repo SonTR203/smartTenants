@@ -58,13 +58,11 @@ function Post({ passedPost, windowWidth }) {
   }, [passedPost]);
 
   const setHeartsToGreen = (array) => {
-    array.map((item) => {
-      if (item == currentUser.userID) {
-        setUserLiked(true);
-      } else {
-        setUserLiked(false);
-      }
-    });
+    if (array.includes(currentUser.userID)) {
+      setUserLiked(true);
+    } else {
+      setUserLiked(false);
+    }
   };
 
   const navigateToIndividualPostScreen = async () => {

@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { getAuth } from "firebase/auth";
-import * as Updates from "expo-updates";
 import * as WebBrowser from "expo-web-browser";
 import { useTheme } from "../../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -16,10 +15,8 @@ function ProfileActions({ navigation }) {
    *output: none
    */
   const logUserOut = async () => {
-    console.log(auth.currentUser.uid);
     await removeExpoPushToken(auth.currentUser.uid);
-    auth.signOut().then(console.log("Tenant signed out"));
-    await Updates.reloadAsync();
+    await auth.signOut();
   };
 
   return (

@@ -13,9 +13,9 @@ import { db } from "../../firebase-config";
 import {
   collection,
   getDocs,
-  addDoc,
   updateDoc,
   doc,
+  setDoc,
 } from "@firebase/firestore";
 import _ from "lodash";
 import { useTheme } from "../../ThemeContext";
@@ -24,6 +24,7 @@ import { Dimensions } from "react-native";
 import { setTime } from "../../utils/setTime";
 import { likePost } from "../../utils/Newsfeed/newsfeed.services";
 import { Timestamp } from "@firebase/firestore";
+import uuid from "react-native-uuid";
 
 const width = Dimensions.get("window").width;
 
@@ -150,24 +151,6 @@ const IndividualPosts = ({ navigation }) => {
     );
   };
 
-  function addCommentNotifications(post) {
-    const peopleWhoCommentedColRef = collection(
-      db,
-      `Tenants/${post.userID}/Notifications`
-    );
-    try {
-      addDoc(peopleWhoCommentedColRef, {
-        content: `${currentUser.firstName} ${currentUser.lastName} commented on your post.`,
-        postID: post.id,
-        userID: post.userID,
-        wasSeen: false,
-        timestamp: Timestamp.fromDate(new Date()),
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   const callBackRender = useCallback(
     ({ item, index }) => renderPostItem({ item, index }),
     [[comments]]
@@ -209,7 +192,6 @@ const IndividualPosts = ({ navigation }) => {
               theme={theme}
               styleVariables={styleVariables}
               getComments={getComments}
-              addCommentNotifications={addCommentNotifications}
               commentCount={commentCount}
               setCommentCount={setCommentCount}
             />
@@ -404,7 +386,6 @@ function ListFooter({
   post,
   currentUser,
   getComments,
-  addCommentNotifications,
   commentCount,
   setCommentCount,
 }) {
@@ -414,24 +395,23 @@ function ListFooter({
   // Post Comments
   const postComment = () => {
     if (textInputValue != "") {
-      const peopleWhoCommentedColRef = collection(
-        db,
-        `Newsfeed/${post.id}/peopleWhoCommented`
-      );
+      const id = uuid.v4();
 
       try {
-        addDoc(peopleWhoCommentedColRef, {
+        setDoc(doc(db, `Newsfeed/${post.id}/peopleWhoCommented`, id), {
+          id: id,
           firstName: currentUser.firstName,
           lastName: currentUser.lastName,
           userProfileImage: currentUser.userProfileImage,
           commentContent: textInputValue,
-          postUserID: post.userID,
+          userID: currentUser.userID,
+          authorID: post.userID,
           timestamp: Timestamp.fromDate(new Date()),
+          postID: post.id,
         }).then(() => {
           setTextInputValue("");
           getComments();
           addCommentCount();
-          addCommentNotifications(post);
         });
       } catch (err) {
         console.log(err);

@@ -49,7 +49,8 @@ const theme = StyleSheet.create({
     display: "flex",
     minHeight: windowHeight,
   },
-  globalMargins: { marginHorizontal: 17 },
+  globalMargins: { paddingHorizontal: 17 },
+  // padding instead of margin to keep the  background color styling
   header: {
     display: "flex",
     justifyContent: "center",

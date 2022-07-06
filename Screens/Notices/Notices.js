@@ -8,6 +8,7 @@ import { useAppContext } from "../../Context/AppContext";
 import NoticeItem from "./NoticeItem";
 import { wait } from "../../utils/wait";
 import ListFooter from "./ListFooter";
+import { StatusBar } from "expo-status-bar";
 
 function Notices({ navigation }) {
   const [notices, setNotices] = useState([]);
@@ -85,6 +86,7 @@ function Notices({ navigation }) {
     <SafeAreaView
       style={{ flex: 1, backgroundColor: styleVariables.colors.white }}
     >
+      <StatusBar style="dark" />
       <FlatList
         data={notices}
         renderItem={({ item }) => {

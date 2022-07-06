@@ -1,7 +1,10 @@
 const functions = require("firebase-functions");
 const { Expo } = require("expo-server-sdk");
+
 const admin = require("firebase-admin");
 admin.initializeApp();
+
+const log = functions.logger.log;
 
 // Send notifications to all inactive users when a new message is posted
 exports.notificationsNewMessage = functions.firestore
@@ -66,32 +69,194 @@ exports.notificationsNewMessage = functions.firestore
     console.log("updateObj", updateLastMessageObj, res);
   });
 
+// Send notifications to all inactive users when a new message is posted
+exports.notificationsNewComment = functions.firestore
+  .document("Newsfeed/{parentId}/peopleWhoCommented/{childId}")
+  .onWrite(async (change) => {
+    if (change.before.exists === false && change.after.exists === true) {
+      log("new people commented on the post, send notification");
+      log("data after: ", change.after.data());
+      let authorExpoPushToken = "";
+      const { authorID, firstName, lastName, postID, userID, id } =
+        change.after.data();
+      log("authorID", authorID);
+      log("userID", userID);
+
+      await admin
+        .firestore()
+        .collection(`ExpoPushTokens`)
+        .where("id", "==", authorID)
+        // .where("isActive", "==", false)
+        .get()
+        .then((result) => {
+          result.forEach((doc) => {
+            const data = doc.data();
+            console.log("author expo push token: ", data.expoPushToken);
+            authorExpoPushToken = data.expoPushToken;
+          });
+        });
+
+      // send notifications to the author if someone else liked the post
+      if (authorExpoPushToken.length > 0 && authorID !== userID) {
+        log("sending notification to author", authorExpoPushToken);
+        sendPushNotification(
+          authorExpoPushToken,
+          "",
+          `${firstName} ${lastName} commented on your post.`,
+          { postID: postID }
+        );
+        await createNotificationItemInFirestore(
+          authorID,
+          userID,
+          postID,
+          firstName,
+          lastName,
+          id,
+          `${firstName} ${lastName} commented on your post.`
+        );
+      }
+    } else if (change.before.exists === true && change.after.exists === false) {
+      log(
+        "someone uncommented on the post, delete notification in Notifications screen"
+      );
+      log("data before: ", change.before.data());
+      const { authorID, id } = change.before.data();
+      await deleteNotificationItemInFirestore(authorID, id);
+    }
+  });
+
+// Send notifications to all inactive users when a new message is posted
+exports.notificationsNewLike = functions.firestore
+  .document("Newsfeed/{parentId}/peopleWhoLiked/{childId}")
+  .onWrite(async (change) => {
+    if (change.before.exists === false && change.after.exists === true) {
+      log("new people like the post, send notification");
+      log("data after: ", change.after.data());
+      let authorExpoPushToken = "";
+      const { authorID, firstName, lastName, postID, userID, id } =
+        change.after.data();
+      log("authorID", authorID);
+      log("userID", userID);
+
+      await admin
+        .firestore()
+        .collection(`ExpoPushTokens`)
+        .where("id", "==", authorID)
+        // .where("isActive", "==", false)
+        .get()
+        .then((result) => {
+          result.forEach((doc) => {
+            const data = doc.data();
+            console.log("author expo push token: ", data.expoPushToken);
+            authorExpoPushToken = data.expoPushToken;
+          });
+        });
+
+      // send notifications to the author if someone else liked the post
+      if (authorExpoPushToken.length > 0 && authorID !== userID) {
+        log("sending notification to author", authorExpoPushToken);
+        sendPushNotification(
+          authorExpoPushToken,
+          "",
+          `${firstName} ${lastName} liked your post.`,
+          { postID: postID }
+        );
+        await createNotificationItemInFirestore(
+          authorID,
+          userID,
+          postID,
+          firstName,
+          lastName,
+          id,
+          `${firstName} ${lastName} liked your post.`
+        );
+      }
+    } else if (change.before.exists === true && change.after.exists === false) {
+      log(
+        "someone unlike the post, delete notification in Notifications screen"
+      );
+      log("data before: ", change.before.data());
+      const { authorID, id } = change.before.data();
+      await deleteNotificationItemInFirestore(authorID, id);
+    }
+  });
+
 // Delete all messages after an amount of time
 exports.scheduledFunctionDeleteAllMessages = functions.pubsub
   .schedule("1,15 of month 09:00")
   .onRun(async () => {
     console.log("This will be run every 15 days! Delete all messages");
     // delete all messages
-    // await admin
-    //   .firestore()
-    //   .collection("channels/QSmhrSmIgEJVdfDBMLMk/messages")
-    //   .get()
-    //   .then((result) => {
-    //     result.forEach((doc) => {
-    //       doc.ref.delete();
-    //     });
-    //   })
-    //   // .delete()
-    //   // .then((result) => {
-    //   //   console.log("All messages deleted: ", result);
-    //   // })
-    //   .catch((error) => {
-    //     console.log("Error deleting messages: ", error);
-    //   });
+    await admin
+      .firestore()
+      .collection("MessagingList")
+      .get()
+      .then((result) => {
+        result.forEach((doc) => {
+          doc.ref.delete();
+        });
+      })
+      // .delete()
+      // .then((result) => {
+      //   console.log("All messages deleted: ", result);
+      // })
+      .catch((error) => {
+        log("Error deleting messages: ", error);
+      });
     return null;
   });
 
-const sendPushNotification = async (pushToken, senderName, content) => {
+const createNotificationItemInFirestore = async (
+  authorID,
+  userID,
+  postID,
+  firstName,
+  lastName,
+  id,
+  content
+) => {
+  const notificationItem = {
+    id: id,
+    content: content,
+    postID: postID,
+    authorID: authorID,
+    userID: userID,
+    wasSeen: false,
+    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+  };
+  log("notificationItem", notificationItem);
+  await admin
+    .firestore()
+    .doc(`Tenants/${authorID}/Notifications/${id}`)
+    .set(notificationItem)
+    .then((result) => {
+      log("Notification item added: ", result);
+    })
+    .catch((error) => {
+      log("Error adding notification item: ", error);
+    });
+};
+
+const deleteNotificationItemInFirestore = async (authorID, id) => {
+  await admin
+    .firestore()
+    .collection(`Tenants/${authorID}/Notifications`)
+    .doc(`${id}`)
+    .delete()
+    .then((result) => {
+      log("Notification item deleted: ", result);
+    })
+    .catch((error) => {
+      log("Error deleting notification item: ", error);
+    });
+};
+
+const sendPushNotification = async (
+  pushToken,
+  senderName,
+  content,
+  data = {}
+) => {
   const expo = new Expo();
   let messages = [];
   // for (let pushToken of pushTokenList) {
@@ -108,10 +273,10 @@ const sendPushNotification = async (pushToken, senderName, content) => {
     sound: "default",
     title: senderName,
     body: content,
-    data: { withSome: "data" },
+    data: data,
   });
   // }
-  console.log("messages: ", messages);
+  log("messages: ", messages);
 
   // The Expo push notification service accepts batches of notifications so
   // that you don't need to send 1000 requests to send 1000 notifications. We

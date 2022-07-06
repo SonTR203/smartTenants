@@ -67,31 +67,8 @@ export const likePost = async (
 };
 
 export const addLike = async (currentUser, post) => {
-  const notificationId = uuid.v4();
   const peopleWhoLikedId = uuid.v4();
   const peopleWhoLikedDocRef = doc(db, "Newsfeed", post.id);
-
-  //=========== creating like notification subcollection in Tenants collection ============
-  try {
-    // dont make notifications if self-liking a post
-    if (currentUser.userID !== post.userID) {
-      await createItemInFirestore(
-        `Tenants/${post.userID}/Notifications`,
-        notificationId,
-        {
-          id: notificationId,
-          content: `${currentUser.firstName} ${currentUser.lastName} liked your post.`,
-          postID: post.id,
-          userID: post.userID,
-          wasSeen: false,
-          timestamp: Date.now(),
-        }
-      );
-    }
-  } catch (error) {
-    console.log("error adding like to Notification", error);
-    return false;
-  }
 
   // =============== adding user to peopleWhoLiked subcollection & update peopleWhoLiked array =============
   try {
@@ -103,6 +80,7 @@ export const addLike = async (currentUser, post) => {
         firstName: currentUser.firstName,
         lastName: currentUser.lastName,
         postID: post.id,
+        authorID: post.userID,
         userID: currentUser.userID,
       }
     );
@@ -149,19 +127,6 @@ export const removeLike = async (currentUser, post) => {
     alert("Error removing like. Please try again later.");
     return false;
   }
-
-  // ========= TODO:  delete notification from other user that there was a like =========
-  // try {
-  //   // const notificationSingleDoc = doc(
-  //   //   db,
-  //   //   `Users/${post.userID}/Notifications/${post.postID}`
-  //   // );
-  //   // const res = await deleteDoc(notificationSingleDoc);
-  //   // console.log("delete notification", res);
-  // } catch (error) {
-  //   console.log("error deleting notification", error);
-  //   return false;
-  // }
 
   return true;
 };

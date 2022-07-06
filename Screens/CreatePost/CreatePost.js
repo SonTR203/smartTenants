@@ -100,6 +100,7 @@ const CreatePost = ({ navigation }) => {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
+      presentationStyle: 0,
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
@@ -137,10 +138,15 @@ const CreatePost = ({ navigation }) => {
   async function moderatePost(imageUrl) {
     const imgNsfw = await moderateImage(imageUrl);
     const textNsfw = await moderateText();
-    if (imgNsfw || textNsfw) {
+    // if either image or text is nsfw, return true
+    if (imgNsfw === true || textNsfw === true) {
       return true;
-    } else {
+      // if both are safe, return false
+    } else if (imgNsfw === false && textNsfw === false) {
       return false;
+      // if something other happened, return undefined to show error
+    } else {
+      return undefined;
     }
   }
 
@@ -177,25 +183,24 @@ const CreatePost = ({ navigation }) => {
   }
 
   async function moderateText() {
-    let data = new FormData();
-    data.append("text", `${postContent}`);
-    data.append("lang", "en");
-    data.append("opt_countries", "us,gb,fr");
-    data.append("mode", "standard");
-    data.append("api_user", `${API_USER}`);
-    data.append("api_secret", `${API_KEY}`);
-
-    const result = await axios({
-      url: "https://api.sightengine.com/1.0/text/check.json",
-      method: "post",
-      data: data,
-    })
+    const result = await axios
+      .get("https://api.sightengine.com/1.0/text/check.json", {
+        params: {
+          text: `${postContent}`,
+          lang: "en",
+          opt_countries: "us,gb,fr",
+          mode: "standard",
+          api_user: `${API_USER}`,
+          api_secret: `${API_KEY}`,
+        },
+      })
       .then(function (response) {
         return textResults(response.data.profanity.matches);
       })
       .catch(function (error) {
-        if (error.response) console.log(error.response.data);
-        else console.log(error.message);
+        if (error.response)
+          console.log("error text moderation axios call: ", error.response);
+        else console.log("error: ", error.message);
       });
     return result;
   }
