@@ -67,23 +67,23 @@ const Signup = ({ navigation }) => {
    */
   const checkTextInputs = () => {
     if (!firstName.trim()) {
-      setErrorText("Please enter your First Name");
+      setErrorText("Please enter your First Name.");
       return false;
     } else if (!lastName.trim()) {
-      setErrorText("Please enter your last Name");
+      setErrorText("Please enter your last Name.");
       return false;
     } else if (!unitNumber.trim() || isNaN(unitNumber.trim())) {
       console.log(+unitNumber);
-      setErrorText("Please enter a Unit Number");
+      setErrorText("Please enter a Unit Number.");
       return false;
     } else if (!buildingID.trim()) {
-      setErrorText("Please enter your Building Id");
+      setErrorText("Please enter your Building Id.");
       return false;
     } else if (!email) {
-      setErrorText("Please enter your Email Address");
+      setErrorText("Please enter your Email Address.");
       return false;
     } else if (!password) {
-      setErrorText("Please enter your Password, at least 6 characters");
+      setErrorText("Please enter your Password, at least 6 characters.");
       return false;
     }
     return true;
