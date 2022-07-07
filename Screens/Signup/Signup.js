@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -10,13 +10,19 @@ import {
   Modal,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "@firebase/firestore";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { setDoc, doc, Timestamp } from "@firebase/firestore";
 import { db } from "../../firebase-config";
 import ModalPicker from "../../components/ModalBuildingPicker";
 import { useTheme } from "../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { uploadExpoPushToken } from "../../utils/firebase.services";
+import * as Progress from "react-native-progress";
+import ErrorArea from "../../components/SignUp/ErrorArea";
 
 const auth = getAuth();
 
@@ -24,6 +30,7 @@ const auth = getAuth();
  * an admin approve their request before they are allowed to the
  * home screen (Newsfeed) */
 const Signup = ({ navigation }) => {
+  const scrollViewRef = useRef();
   const { theme, styleVariables } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,6 +43,9 @@ const Signup = ({ navigation }) => {
   const [tenantAuthorized] = useState(false);
   const defaultProfileImage =
     "https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=38f0365b-cb36-4964-ab8c-7a600073c244";
+
+  const [loading, setLoading] = useState(false);
+  const [errorText, setErrorText] = useState("");
 
   const changeModalVisibility = (bool) => {
     setModalVisible(bool);
@@ -57,23 +67,23 @@ const Signup = ({ navigation }) => {
    */
   const checkTextInputs = () => {
     if (!firstName.trim()) {
-      alert("Please Enter Your First Name");
+      setErrorText("Please Enter Your First Name");
       return false;
     } else if (!lastName.trim()) {
-      alert("Please Enter Your last Name");
+      setErrorText("Please Enter Your last Name");
       return false;
     } else if (!unitNumber.trim() || isNaN(unitNumber.trim())) {
       console.log(+unitNumber);
-      alert("Please Enter a Unit Number");
+      setErrorText("Please Enter a Unit Number");
       return false;
     } else if (!buildingID.trim()) {
-      alert("Please Enter Your Building Id");
+      setErrorText("Please Enter Your Building Id");
       return false;
     } else if (!email) {
-      alert("Please Enter Your Email Address");
+      setErrorText("Please Enter Your Email Address");
       return false;
     } else if (!password) {
-      alert("Please Enter Your Password, at least 6 characters");
+      setErrorText("Please Enter Your Password, at least 6 characters");
       return false;
     }
     return true;
@@ -96,6 +106,7 @@ const Signup = ({ navigation }) => {
         tenantAuthorized,
         userProfileImage: defaultProfileImage,
         isActive: true,
+        timestamp: Timestamp.fromDate(new Date()),
       });
     } catch (error) {
       alert(error);
@@ -117,8 +128,25 @@ const Signup = ({ navigation }) => {
    *outputs: alert message
    */
 
-  function signUpFailure() {
-    alert("You have not been signed up, please try again");
+  function signUpFailure(message) {
+    switch (message.code) {
+      case "auth/email-already-in-use":
+        setErrorText(
+          "An account with this email address already exists. Please, go back to sign in instead."
+        );
+        break;
+      case "auth/invalid-email":
+        setErrorText("Invalid Email.");
+        break;
+      case "auth/too-many-requests":
+        setErrorText("Too many requests. Please try again later.");
+        break;
+      default:
+        setErrorText("Sign Up Failed. Please try again later.");
+        break;
+    }
+
+    scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
   }
 
   /* This function handles the entire sign up process in conjunction *with the nested functions ensuring the user is registered on *Firebase
@@ -126,28 +154,33 @@ const Signup = ({ navigation }) => {
    *outputs: either undefined or an alert message depending on the *error
    */
   const handleSignup = () => {
-    if (!checkTextInputs()) return;
-
+    if (!checkTextInputs()) {
+      scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+      return;
+    }
+    setLoading(true);
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         signUpSuccess(user);
       })
       .catch((error) => {
-        alert(error.message);
-        signUpFailure();
+        signUpFailure(error);
+        signOut(auth);
       });
+    setLoading(false);
   };
 
   return (
     <SafeAreaView style={{ backgroundColor: "white" }}>
       <KeyboardAvoidingView behavior="padding">
         <ScrollView
+          ref={scrollViewRef}
           showsVerticalScrollIndicator={false}
           style={[theme.pageContainer, theme.globalMargins]}
         >
           <StatusBar style="auto" />
-
+          <ErrorArea errorText={errorText} />
           <View id="signupInputs">
             <View id="firstNameInput">
               <Text
@@ -262,7 +295,17 @@ const Signup = ({ navigation }) => {
 
           <View id="signupCTA">
             <TouchableOpacity onPress={handleSignup}>
-              <View style={[theme.primaryButton, { marginTop: 17 }]}>
+              <View
+                style={[
+                  theme.primaryButton,
+                  {
+                    marginTop: 17,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  },
+                ]}
+              >
                 <Text
                   style={[
                     theme.primaryButtonText,
@@ -271,6 +314,17 @@ const Signup = ({ navigation }) => {
                 >
                   Sign Up
                 </Text>
+                {loading && (
+                  <Progress.CircleSnail
+                    style={{
+                      marginLeft: 17,
+                    }}
+                    strokeCap="square"
+                    thickness={2.2}
+                    size={20}
+                    color={"white"}
+                  />
+                )}
               </View>
             </TouchableOpacity>
 

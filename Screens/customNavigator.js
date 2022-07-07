@@ -112,7 +112,7 @@ const NewsfeedNavigator = ({ navigation }) => {
       if (user) {
         // User has just signed in or already signed in from previous session
         const uid = user.uid;
-        console.log("user is logged in: ", user.uid);
+        console.log("user is logged in with id: ", uid);
         const userData = await getItemById("Tenants", uid);
         if (userData && userData.tenantAuthorized) {
           uploadExpoPushToken(user);
@@ -123,10 +123,8 @@ const NewsfeedNavigator = ({ navigation }) => {
       } else {
         // User is not logged in or just signed out
         // ...
+        console.log("user is not logged in");
         setCurrentUser({});
-        navigation.navigate("Login", {
-          reload: true,
-        });
       }
     });
 
