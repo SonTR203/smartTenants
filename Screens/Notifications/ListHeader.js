@@ -2,7 +2,13 @@ import React from "react";
 import { StyleSheet, View, Text, Pressable, Platform } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-function ListHeader({ styleVariables, theme, navigation }) {
+function ListHeader({
+  styleVariables,
+  theme,
+  navigation,
+  noticeCount,
+  announcementCount,
+}) {
   const styles = StyleSheet.create({
     container: { flex: 1 },
     topCard: { elevation: Platform.OS === "android" ? 0 : 20 },
@@ -27,7 +33,10 @@ function ListHeader({ styleVariables, theme, navigation }) {
           <Pressable
             id="announcements"
             onPress={() => {
-              navigation.navigate("Announcements");
+              navigation.navigate("Announcements", {
+                announcementCount: announcementCount,
+                setAnnouncementCount: setAnnouncementCount,
+              });
             }}
             style={[theme.cardButton, styles.cardButton]}
           >
@@ -40,16 +49,18 @@ function ListHeader({ styleVariables, theme, navigation }) {
               Announcements
             </Text>
             <View id="counter" style={theme.counter}>
-              <Text
-                id="notificationCounter"
-                style={[
-                  theme.notificationCounter,
-                  styleVariables.fontSizes.callout,
-                  { color: styleVariables.colors.white },
-                ]}
-              >
-                2
-              </Text>
+              {announcementCount > 0 && (
+                <Text
+                  id="notificationCounter"
+                  style={[
+                    theme.notificationCounter,
+                    styleVariables.fontSizes.callout,
+                    { color: styleVariables.colors.white },
+                  ]}
+                >
+                  {announcementCount}
+                </Text>
+              )}
               <MaterialCommunityIcons
                 name="chevron-right"
                 size={24}
@@ -78,16 +89,18 @@ function ListHeader({ styleVariables, theme, navigation }) {
             Notices
           </Text>
           <View id="counter" style={theme.counter}>
-            <Text
-              id="notificationCounter"
-              style={[
-                theme.notificationCounter,
-                styleVariables.fontSizes.callout,
-                { color: styleVariables.colors.white },
-              ]}
-            >
-              1
-            </Text>
+            {noticeCount > 0 && (
+              <Text
+                id="notificationCounter"
+                style={[
+                  theme.notificationCounter,
+                  styleVariables.fontSizes.callout,
+                  { color: styleVariables.colors.white },
+                ]}
+              >
+                {noticeCount}
+              </Text>
+            )}
             <MaterialCommunityIcons
               name="chevron-right"
               size={24}
