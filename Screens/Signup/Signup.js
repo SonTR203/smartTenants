@@ -41,8 +41,6 @@ const Signup = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [unitNumber, setUnitNumber] = useState("");
   const [tenantAuthorized] = useState(false);
-  const defaultProfileImage =
-    "https://firebasestorage.googleapis.com/v0/b/smarttenant-19566.appspot.com/o/userProfileImages%2FdefaultIcon.png?alt=media&token=38f0365b-cb36-4964-ab8c-7a600073c244";
 
   const [loading, setLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -104,7 +102,7 @@ const Signup = ({ navigation }) => {
         email,
         unitNumber: parseInt(unitNumber),
         tenantAuthorized,
-        userProfileImage: defaultProfileImage,
+        userProfileImage: "",
         isActive: true,
         timestamp: Timestamp.fromDate(new Date()),
       });
@@ -140,6 +138,9 @@ const Signup = ({ navigation }) => {
         break;
       case "auth/too-many-requests":
         setErrorText("Too many requests. Please try again later.");
+        break;
+      case "auth/weak-password":
+        setErrorText("Password needs to be more than 6 characters.");
         break;
       default:
         setErrorText("Sign Up Failed. Please try again later.");

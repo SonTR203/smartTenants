@@ -40,3 +40,23 @@ export const getFileInfo = async (fileURI) => {
   }
   return fileInfo;
 };
+
+export const getRandomGradientColor = () => {
+  const colorArray = [
+    {
+      first: "#63A3FD",
+      second: "red",
+    },
+    {
+      first: "#63A3FD",
+      second: "red",
+    },
+    {
+      first: "#63A3FD",
+      second: "red",
+    },
+  ];
+  const randomColorObj =
+    colorArray[Math.floor(Math.random() * colorArray.length)];
+  return randomColorObj;
+};

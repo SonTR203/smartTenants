@@ -3,6 +3,9 @@ import { View, Text, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 function ErrorArea({ errorText }) {
+  if (errorText.length < 1) {
+    return null;
+  }
   return (
     <View style={styles.container}>
       <Feather name="alert-circle" size={20} color="rgba(255, 66, 66, 1)" />

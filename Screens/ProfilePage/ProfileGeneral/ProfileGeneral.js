@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   SafeAreaView,
   Text,
   TouchableOpacity,
   View,
-  Image,
+  Platform,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../../ThemeContext";
@@ -14,10 +14,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons/";
 import { ScrollView } from "react-native-gesture-handler";
 import * as WebBrowser from "expo-web-browser";
-
-import { Platform } from "expo-modules-core";
-
+import UserAvatar from "react-native-user-avatar";
 import ProfileActions from "./ProfileActions";
+import { getRandomGradientColor } from "../../../utils/Profile/profile.services";
+import { LinearGradient } from "expo-linear-gradient";
 
 /* This is the profile/my info screen for the logged-in user. It *allows the user to navigate to various screens to edit his profile, *see his posts, visit Smart Living residential portal, navigate to *building info screen, admin panel screen if the user is an admin, *as well as logout of the application if the user wishes to
  */
@@ -25,6 +25,8 @@ const ProfileGeneral = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
 
   const { currentUser } = useAppContext();
+  const [randomColor] = useState(getRandomGradientColor());
+  console.log(randomColor);
 
   return (
     <SafeAreaView style={styles(styleVariables).container} edges={["top"]}>
@@ -36,13 +38,29 @@ const ProfileGeneral = ({ navigation }) => {
         <View style={[theme.topCard, styles(styleVariables).topCard]}>
           <View style={styles(styleVariables).headerSection}>
             {/* userImage */}
+
             <View
               id="userImage"
               style={styles(styleVariables).userImageContainer}
             >
-              <Image
-                source={{ uri: `${currentUser.userProfileImage}` }}
-                style={styles(styleVariables).userImage}
+              <LinearGradient
+                // Background Linear Gradient
+                colors={[randomColor.first, randomColor.second]}
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  height: 85,
+                  borderRadius: 42.5,
+                  overflow: "hidden",
+                }}
+              />
+              <UserAvatar
+                name="Avishay Bar"
+                size={85}
+                src={`${currentUser.userProfileImage}`}
+                bgColors={["transparent"]}
               />
             </View>
 
@@ -192,11 +210,6 @@ const styles = (styleVariables) =>
       shadowRadius: 17,
       elevation: 20,
       backgroundColor: "white",
-    },
-    userImage: {
-      width: 85,
-      height: 85,
-      borderRadius: 99,
     },
     fullNameText: { paddingTop: 17, paddingBottom: 8 },
     adminButton: {

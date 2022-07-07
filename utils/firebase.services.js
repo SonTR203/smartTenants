@@ -223,19 +223,22 @@ export const handleFirebaseAuthenticationError = (error) => {
   let errorMessage = "";
   switch (error.code) {
     case "auth/invalid-email":
-      errorMessage = "Invalid email address";
+      errorMessage = "Invalid email address.";
       break;
     case "auth/wrong-password":
-      errorMessage = "Wrong password";
+      errorMessage = "Wrong password.";
       break;
     case "auth/weak-password":
-      errorMessage = "Password is too weak";
+      errorMessage = "Password is too weak.";
       break;
     case "auth/too-many-requests":
-      errorMessage = "Too many requests. Please try again later";
+      errorMessage = "Too many requests. Please try again later.";
+      break;
+    case "auth/user-not-found":
+      errorMessage = "User not found. Please sign up first.";
       break;
     default:
-      errorMessage = "Unknown error";
+      errorMessage = "Unknown error.";
       break;
   }
 

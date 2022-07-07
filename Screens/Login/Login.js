@@ -10,7 +10,7 @@ import {
   Linking,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { collection, getDocs, addDoc } from "@firebase/firestore";
+import { collection, getDocs, addDoc, Timestamp } from "@firebase/firestore";
 import { useTheme } from "../../ThemeContext";
 import { db } from "../../firebase-config";
 import { getItemById, handleSignIn } from "../../utils/firebase.services";
@@ -82,7 +82,7 @@ const Login = ({ navigation, route }) => {
         postID: "",
         userID: loggedInUser.userID,
         wasSeen: true,
-        timestamp: Date.now(),
+        timestamp: Timestamp.fromDate(new Date()),
       });
     }
   };
