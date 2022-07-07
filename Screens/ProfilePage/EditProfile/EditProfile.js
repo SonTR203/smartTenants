@@ -42,6 +42,7 @@ const EditProfile = ({ navigation }) => {
   const [userProfileImage, setUserProfileImage] = useState(
     currentUser.userProfileImage
   );
+  const [saveModal, setSaveModal] = useState(false);
 
   const changeModalVisibility = (bool) => {
     setModalVisible(bool);
@@ -102,7 +103,7 @@ const EditProfile = ({ navigation }) => {
           userProfileImage: currentUser.userProfileImage,
         });
 
-        navigation.navigate("ProfileGeneral");
+        setSaveModal(true);
       } catch (error) {
         console.log(error);
       }
@@ -205,6 +206,35 @@ const EditProfile = ({ navigation }) => {
         <ScrollView style={[theme.pageContainer, theme.globalMargins]}>
           <StatusBar style="dark" />
 
+          <Modal
+            animationType="slide"
+            transparent={false}
+            statusBarTranslucent={true}
+            visible={saveModal}
+            onRequestClose={() => {
+              setSaveModal(!saveModal);
+            }}
+            onShow={() => {
+              setTimeout(() => {
+                setSaveModal(!saveModal);
+                navigation.navigate("ProfileGeneral");
+              }, 2000);
+            }}
+          >
+            <View style={theme.container}>
+              <View style={theme.modalView}>
+                <Text
+                  style={{
+                    fontSize: 17,
+                    fontFamily: "Roboto_400Regular",
+                    color: "#191919",
+                  }}
+                >
+                  {"Changes Saved"}
+                </Text>
+              </View>
+            </View>
+          </Modal>
           {/* userHeader */}
           <View
             style={{
