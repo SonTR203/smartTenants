@@ -10,6 +10,7 @@ import {
   Platform,
   ActivityIndicator,
   ScrollView,
+  StyleSheet,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
@@ -92,6 +93,7 @@ const CreatePost = ({ navigation }) => {
   }
 
   function postFailure() {
+    setIsloading(false);
     setModalText("Post Failed");
     setModalVisible(true);
   }
@@ -222,7 +224,6 @@ const CreatePost = ({ navigation }) => {
     <ScrollView style={theme.pageContainer}>
       <View style={theme.globalMargins}>
         <StatusBar style="auto" />
-        {isLoading && <ActivityIndicator size="large" />}
 
         <Modal
           animationType="slide"
@@ -300,20 +301,37 @@ const CreatePost = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          id="submitPostButton"
-          onPress={handleSelectedImage}
-          style={[theme.primaryButton, { marginBottom: 130 }]}
-        >
-          <Text
-            style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}
+        {isLoading ? (
+          <ActivityIndicator
+            style={styles.loader}
+            size="large"
+            color={styleVariables.colors.primary}
+          />
+        ) : (
+          <TouchableOpacity
+            id="submitPostButton"
+            onPress={handleSelectedImage}
+            style={[theme.primaryButton, { marginBottom: 130 }]}
           >
-            Submit post
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                theme.primaryButtonText,
+                styleVariables.fontSizes.bodyBold,
+              ]}
+            >
+              Submit post
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  loader: {
+    marginBottom: 20,
+  },
+});
 
 export default CreatePost;
