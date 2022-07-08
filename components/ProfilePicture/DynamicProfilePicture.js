@@ -7,10 +7,8 @@ function DynamicProfilePicture({ user, size, borderRadius }) {
   const [randomColor, setRandomColor] = useState(getRandomGradientColor());
 
   useEffect(() => {
-    if (user && user.userProfileImage) {
-      if (user.userProfileImage === "") {
-        setRandomColor(getRandomGradientColor());
-      }
+    if (user && user.userProfileImage && user.userProfileImage === "") {
+      setRandomColor(getRandomGradientColor());
     }
   }, [user.userProfileImage]);
 

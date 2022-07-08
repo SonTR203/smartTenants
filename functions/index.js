@@ -183,7 +183,7 @@ exports.notificationsNewLike = functions.firestore
 
 // Update old posts with new user Profile Picture
 // Send notifications to all inactive users when a new message is posted
-exports.updateOldPostProfilePicture = functions.firestore
+exports.updateProfilePictureNewsfeedAndMarketplace = functions.firestore
   .document("Tenants/{tenantId}")
   .onUpdate(async (change) => {
     // Get an object representing the document
@@ -196,7 +196,7 @@ exports.updateOldPostProfilePicture = functions.firestore
     const { userProfileImage: oldProfileImage } = previousValue;
 
     if (newProfileImage !== oldProfileImage) {
-      log("Tenant profile image changed, update old posts...");
+      log("Tenant profile image changed, updating old posts...");
       await admin
         .firestore()
         .collection(`Newsfeed`)
@@ -207,6 +207,37 @@ exports.updateOldPostProfilePicture = functions.firestore
             const data = doc.data();
             doc.ref.update({ userProfileImage: newProfileImage });
             log("updated new profile pic in post: ", data.postContent);
+          });
+        });
+
+      log("Updating comments...");
+      await admin
+        .firestore()
+        .collectionGroup(`peopleWhoCommented`)
+        .where("userID", "==", userID)
+        .get()
+        .then((result) => {
+          result.forEach((doc) => {
+            const data = doc.data();
+            doc.ref.update({ userProfileImage: newProfileImage });
+            log("updated new profile pic in comment: ", data.commentContent);
+          });
+        });
+
+      log("Updating old marketplace items...");
+      await admin
+        .firestore()
+        .collection(`Marketplace`)
+        .where("userID", "==", userID)
+        .get()
+        .then((result) => {
+          result.forEach((doc) => {
+            const data = doc.data();
+            doc.ref.update({ userProfileImage: newProfileImage });
+            log(
+              "updated new profile pic in marketplace post: ",
+              data.postContent
+            );
           });
         });
     }
