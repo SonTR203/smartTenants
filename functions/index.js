@@ -181,6 +181,37 @@ exports.notificationsNewLike = functions.firestore
     }
   });
 
+// Update old posts with new user Profile Picture
+// Send notifications to all inactive users when a new message is posted
+exports.updateOldPostProfilePicture = functions.firestore
+  .document("Tenants/{tenantId}")
+  .onUpdate(async (change) => {
+    // Get an object representing the document
+    // e.g. {'name': 'Marie', 'age': 66}
+    const newValue = change.after.data();
+    const { userProfileImage: newProfileImage, userID } = newValue;
+
+    // ...or the previous value before this update
+    const previousValue = change.before.data();
+    const { userProfileImage: oldProfileImage } = previousValue;
+
+    if (newProfileImage !== oldProfileImage) {
+      log("Tenant profile image changed, update old posts...");
+      await admin
+        .firestore()
+        .collection(`Newsfeed`)
+        .where("userID", "==", userID)
+        .get()
+        .then((result) => {
+          result.forEach((doc) => {
+            const data = doc.data();
+            doc.ref.update({ userProfileImage: newProfileImage });
+            log("updated new profile pic in post: ", data.postContent);
+          });
+        });
+    }
+  });
+
 // Delete all messages after an amount of time
 exports.scheduledFunctionDeleteAllMessages = functions.pubsub
   .schedule("1,15 of month 09:00")

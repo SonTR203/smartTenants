@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -14,10 +14,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons/";
 import { ScrollView } from "react-native-gesture-handler";
 import * as WebBrowser from "expo-web-browser";
-import UserAvatar from "react-native-user-avatar";
 import ProfileActions from "./ProfileActions";
-import { getRandomGradientColor } from "../../../utils/Profile/profile.services";
-import { LinearGradient } from "expo-linear-gradient";
+import DynamicProfilePicture from "../../../components/ProfilePicture/DynamicProfilePicture";
 
 /* This is the profile/my info screen for the logged-in user. It *allows the user to navigate to various screens to edit his profile, *see his posts, visit Smart Living residential portal, navigate to *building info screen, admin panel screen if the user is an admin, *as well as logout of the application if the user wishes to
  */
@@ -25,8 +23,6 @@ const ProfileGeneral = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
 
   const { currentUser } = useAppContext();
-  const [randomColor] = useState(getRandomGradientColor());
-  console.log(randomColor);
 
   return (
     <SafeAreaView style={styles(styleVariables).container} edges={["top"]}>
@@ -43,24 +39,14 @@ const ProfileGeneral = ({ navigation }) => {
               id="userImage"
               style={styles(styleVariables).userImageContainer}
             >
-              <LinearGradient
-                // Background Linear Gradient
-                colors={[randomColor.first, randomColor.second]}
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  height: 85,
-                  borderRadius: 42.5,
-                  overflow: "hidden",
+              <DynamicProfilePicture
+                user={{
+                  userProfileImage: currentUser.userProfileImage,
+                  firstName: currentUser.firstName,
+                  lastName: currentUser.lastName,
                 }}
-              />
-              <UserAvatar
-                name="Avishay Bar"
                 size={85}
-                src={`${currentUser.userProfileImage}`}
-                bgColors={["transparent"]}
+                borderRadius={42.5}
               />
             </View>
 

@@ -82,6 +82,7 @@ const Newsfeed = ({ navigation, route }) => {
           initialNumToRender={3}
           style={styles.flatlist}
           data={posts}
+          extraData={refreshing}
           keyExtractor={(item) => item.id}
           renderItem={callBackRender}
           refreshControl={

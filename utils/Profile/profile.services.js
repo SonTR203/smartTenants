@@ -45,18 +45,31 @@ export const getRandomGradientColor = () => {
   const colorArray = [
     {
       first: "#63A3FD",
-      second: "red",
+      second: "#3185FC",
     },
     {
-      first: "#63A3FD",
-      second: "red",
+      first: "#FB6B72",
+      second: "#F93943",
     },
     {
-      first: "#63A3FD",
-      second: "red",
+      first: "#FDA0C8",
+      second: "#FC6DAB",
+    },
+    {
+      first: "#BAB8FF",
+      second: "#8884FF",
+    },
+    {
+      first: "#FF6633",
+      second: "#FF4000",
+    },
+    {
+      first: "#7FE692",
+      second: "#53DD6C",
     },
   ];
   const randomColorObj =
     colorArray[Math.floor(Math.random() * colorArray.length)];
+
   return randomColorObj;
 };
