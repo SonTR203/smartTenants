@@ -74,13 +74,13 @@ function PrivateMessagingScreen({ route }) {
     };
   }, [channelId]);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (content) => {
     setSendingText(true);
-    if (messages.length > 0) {
+    if (content.length > 0) {
       const id = uuid.v4();
       const messageObj = {
         id,
-        content: messages,
+        content: content,
         senderId: currentUser.userID,
         senderName: `${currentUser.firstName} ${currentUser.lastName}`,
         created: Timestamp.fromDate(new Date()),
@@ -153,7 +153,10 @@ function PrivateMessagingScreen({ route }) {
           value={messages}
           placeholder="Type in your message"
         />
-        <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
+        <TouchableOpacity
+          style={styles.sendButton}
+          onPress={() => handleSendMessage(messages)}
+        >
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </View>

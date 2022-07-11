@@ -97,14 +97,17 @@ exports.notificationsNewComment = functions.firestore
         });
 
       // send notifications to the author if someone else liked the post
-      if (authorExpoPushToken.length > 0 && authorID !== userID) {
+      if (authorID !== userID) {
         log("sending notification to author", authorExpoPushToken);
-        sendPushNotification(
-          authorExpoPushToken,
-          "",
-          `${firstName} ${lastName} commented on your post.`,
-          { postID: postID }
-        );
+        if (authorExpoPushToken.length > 0) {
+          sendPushNotification(
+            authorExpoPushToken,
+            "",
+            `${firstName} ${lastName} commented on your post.`,
+            { postID: postID }
+          );
+        }
+
         await createNotificationItemInFirestore(
           authorID,
           userID,
@@ -153,14 +156,16 @@ exports.notificationsNewLike = functions.firestore
         });
 
       // send notifications to the author if someone else liked the post
-      if (authorExpoPushToken.length > 0 && authorID !== userID) {
+      if (authorID !== userID) {
         log("sending notification to author", authorExpoPushToken);
-        sendPushNotification(
-          authorExpoPushToken,
-          "",
-          `${firstName} ${lastName} liked your post.`,
-          { postID: postID }
-        );
+        if (authorExpoPushToken.length > 0) {
+          sendPushNotification(
+            authorExpoPushToken,
+            "",
+            `${firstName} ${lastName} liked your post.`,
+            { postID: postID }
+          );
+        }
         await createNotificationItemInFirestore(
           authorID,
           userID,

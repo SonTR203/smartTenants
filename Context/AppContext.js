@@ -28,15 +28,16 @@ function AppProvider({ children }) {
           latestMsgs.push(doc.data());
         });
         // console.log("latestMsgs", latestMsgs.length);
-        if (latestMsgs) {
+        if (latestMsgs.length > 0) {
           const [lastItem] = latestMsgs.slice(-1);
           // console.log("newest message", lastItem);
           // if you receive a NEW message, update UI to alert user
           if (
-            lastItem &&
-            lastItem.lastMessage &&
-            lastItem.lastMessage.senderId !== currentUser.userID &&
-            !lastItem.lastMessage.seen
+            (lastItem &&
+              lastItem.lastMessage &&
+              lastItem.lastMessage.senderId !== currentUser.userID &&
+              !lastItem.lastMessage.seen) ||
+            lastItem.isNew
           ) {
             // alert("You have a new activity in Marketplace chat!");
             setNewPrivateMessages([...newPrivateMessages, lastItem.id]);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, FlatList, RefreshControl, StyleSheet } from "react-native";
+import { View, FlatList, RefreshControl, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
@@ -72,6 +72,14 @@ const Newsfeed = ({ navigation, route }) => {
     <Post passedPost={item} windowWidth={constants.width} />
   );
 
+  const renderListFooter = () => {
+    if (posts.length > 0) {
+      return <ListFooter styleVariables={styleVariables} theme={theme} />;
+    } else {
+      return null;
+    }
+  };
+
   return (
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
@@ -85,6 +93,21 @@ const Newsfeed = ({ navigation, route }) => {
           extraData={refreshing}
           keyExtractor={(item) => item.id}
           renderItem={callBackRender}
+          ListEmptyComponent={() => {
+            return (
+              <View
+                style={{
+                  flex: 1,
+                  marginTop: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  opacity: 0.5,
+                }}
+              >
+                <Text>Your newsfeed is empty. Try creating a post now.</Text>
+              </View>
+            );
+          }}
           refreshControl={
             <RefreshControl
               onRefresh={onRefresh}
@@ -95,9 +118,7 @@ const Newsfeed = ({ navigation, route }) => {
               tintColor={styleVariables.colors.primary}
             />
           }
-          ListFooterComponent={
-            <ListFooter styleVariables={styleVariables} theme={theme} />
-          }
+          ListFooterComponent={renderListFooter}
         />
       </View>
 

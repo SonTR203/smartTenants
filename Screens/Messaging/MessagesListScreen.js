@@ -12,7 +12,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppContext } from "../../Context/AppContext";
 import { db } from "../../firebase-config";
-import { updateItemInFirestore } from "../../utils/firebase.services";
 import { setTime } from "../../utils/setTime";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -54,13 +53,8 @@ function MessagesListScreen({ route, navigation }) {
   const handleNavigateToPrivateMessagingScreen = async (
     otherPersonName,
     otherPersonId,
-    channelId,
-    setSeen
+    channelId
   ) => {
-    await updateItemInFirestore(`MessagingList`, channelId, {
-      isNew: false,
-      "lastMessage.seen": setSeen,
-    });
     navigation.navigate("PrivateMessagingScreen", {
       otherPersonName: otherPersonName,
       otherPersonId: otherPersonId,
@@ -69,7 +63,6 @@ function MessagesListScreen({ route, navigation }) {
   };
 
   const renderItem = ({ item }) => {
-    let updateSeen = false;
     const otherPersonName =
       item.sellerId === currentUser.userID ? item.buyerName : item.sellerName;
     const otherPersonId =
@@ -88,7 +81,6 @@ function MessagesListScreen({ route, navigation }) {
       } else {
         // if you received the last message
         lastMessage = `${item.lastMessage.senderFirstName}: ${item.lastMessage.content}`;
-        updateSeen = true;
       }
     }
     return (
@@ -101,8 +93,7 @@ function MessagesListScreen({ route, navigation }) {
             handleNavigateToPrivateMessagingScreen(
               otherPersonName,
               otherPersonId,
-              item.id,
-              updateSeen
+              item.id
             );
           }}
           style={styles.itemTouchable}
