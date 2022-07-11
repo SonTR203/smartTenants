@@ -72,6 +72,22 @@ const Newsfeed = ({ navigation, route }) => {
     <Post passedPost={item} windowWidth={constants.width} />
   );
 
+  const renderEmpty = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          marginTop: 50,
+          justifyContent: "center",
+          alignItems: "center",
+          opacity: 0.5,
+        }}
+      >
+        <Text>Your newsfeed is empty. Try creating a post now.</Text>
+      </View>
+    );
+  };
+
   const renderListFooter = () => {
     if (posts.length > 0) {
       return <ListFooter styleVariables={styleVariables} theme={theme} />;
@@ -93,21 +109,7 @@ const Newsfeed = ({ navigation, route }) => {
           extraData={refreshing}
           keyExtractor={(item) => item.id}
           renderItem={callBackRender}
-          ListEmptyComponent={() => {
-            return (
-              <View
-                style={{
-                  flex: 1,
-                  marginTop: 50,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  opacity: 0.5,
-                }}
-              >
-                <Text>Your newsfeed is empty. Try creating a post now.</Text>
-              </View>
-            );
-          }}
+          ListEmptyComponent={renderEmpty}
           refreshControl={
             <RefreshControl
               onRefresh={onRefresh}
