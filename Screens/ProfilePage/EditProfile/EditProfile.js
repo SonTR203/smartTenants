@@ -60,10 +60,10 @@ const EditProfile = ({ navigation }) => {
   const checkTextInputs = () => {
     try {
       if (
-        firstName.length > 1 &&
-        lastName.length > 1 &&
-        email.length > 1 &&
-        buildingAddress.length > 1 &&
+        firstName.length >= 1 &&
+        lastName.length >= 1 &&
+        email.length >= 1 &&
+        buildingAddress.length >= 1 &&
         unitNumber
       ) {
         return true;
