@@ -20,6 +20,7 @@ import { Timestamp } from "@firebase/firestore";
 import { useAppContext } from "../../Context/AppContext";
 import uuid from "react-native-uuid";
 import {
+  checkPermissionMediaLibrary,
   compressFileSize,
   getFileInfo,
 } from "../../utils/Profile/profile.services";
@@ -45,27 +46,31 @@ function MarketplaceNewPostScreen({ navigation }) {
 
   // function to handle image picking
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      presentationStyle: 0,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.5,
-    });
+    const permissionResult = await checkPermissionMediaLibrary();
 
-    if (!result.cancelled) {
-      setImageLoading(true);
-      const size = await getFileInfo(result.uri);
-      if (size > 5) {
-        alert(
-          "ERROR",
-          "File size is too large. Please select a file smaller than 5MB"
-        );
-        return;
+    if (permissionResult !== false) {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        presentationStyle: 0,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.5,
+      });
+
+      if (!result.cancelled) {
+        setImageLoading(true);
+        const size = await getFileInfo(result.uri);
+        if (size > 5) {
+          alert(
+            "ERROR",
+            "File size is too large. Please select a file smaller than 5MB"
+          );
+          return;
+        }
+        const path = await compressFileSize(result.uri);
+        setImage(path.uri);
+        setImageLoading(false);
       }
-      const path = await compressFileSize(result.uri);
-      setImage(path.uri);
-      setImageLoading(false);
     }
   };
 
@@ -74,7 +79,7 @@ function MarketplaceNewPostScreen({ navigation }) {
     if (title.length > 0 && content.length > 0 && price && image.length > 0) {
       setIsloading(true);
       const id = uuid.v4();
-      const imagePath = `Images/Posts/Marketplace/${id}-${currentUser.userID}.jpg`;
+      const imagePath = `Images/Posts/Marketplace/${id}-${currentUser.userID}.jpeg`;
       const imageUrl = await uploadImageToStorage(imagePath, image);
       const isNsfw = await moderatePost(imageUrl);
       if (imageUrl) {

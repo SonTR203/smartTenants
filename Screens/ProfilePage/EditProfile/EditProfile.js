@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
-  Platform,
   Alert,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -19,13 +18,14 @@ import { useTheme } from "../../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../../Context/AppContext";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
 import {
+  checkPermissionMediaLibrary,
   compressFileSize,
   getFileInfo,
 } from "../../../utils/Profile/profile.services";
 import DynamicProfilePicture from "../../../components/ProfilePicture/DynamicProfilePicture";
+import { uploadImageToStorage } from "../../../utils/firebase.services";
 
 const EditProfile = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
@@ -110,75 +110,43 @@ const EditProfile = ({ navigation }) => {
 
   //=========================== Change profile picture ====================
 
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== "web") {
-        const { status } =
-          await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== "granted") {
-          Alert.alert(
-            "Sorry, we need camera roll permissions to make this work!"
-          );
-        }
-      }
-    })();
-  }, []);
-
   const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      presentationStyle: 0,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    const permissionResult = await checkPermissionMediaLibrary();
 
-    if (!result.cancelled) {
-      const size = await getFileInfo(result.uri);
-      console.log("file size: ", size);
-      if (size > 5) {
-        Alert.alert(
-          "ERROR",
-          "File size is too large. Please select a file smaller than 5MB"
-        );
-        return;
+    if (permissionResult !== false) {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        presentationStyle: 0,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.1,
+      });
+
+      if (result.cancelled === false) {
+        const size = await getFileInfo(result.uri);
+        if (size > 5) {
+          Alert.alert(
+            "ERROR",
+            "File size is too large. Please select a file smaller than 5MB"
+          );
+          return;
+        }
+        const path = await compressFileSize(result.uri);
+        uploadImage(path.uri);
       }
-      const path = await compressFileSize(result.uri);
-      uploadImage(path.uri);
     }
   };
 
   async function uploadImage(newImage) {
     try {
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-          // return the blob
-          resolve(xhr.response);
-        };
-
-        xhr.onerror = function () {
-          // something went wrong
-          reject(new Error("uriToBlob failed"));
-        };
-        // this helps us get a blob
-        xhr.responseType = "blob";
-        xhr.open("GET", newImage, true);
-
-        xhr.send(null);
-      });
-
-      const imageName = `userProfileImages/${currentUser.userID}/avatar.jpg`;
-      const fileRef = ref(getStorage(), imageName);
-      await uploadBytes(fileRef, blob);
-
-      const imgUrl = await getDownloadURL(fileRef);
-      setUserProfileImage(imgUrl);
+      const imageName = `userProfileImages/${currentUser.userID}/avatar.jpeg`;
+      const imageUrl = await uploadImageToStorage(imageName, newImage);
+      setUserProfileImage(imageUrl);
       setCurrentUser({
         ...currentUser,
-        userProfileImage: imgUrl,
+        userProfileImage: imageUrl,
       });
-      changeProfileImageInDatabase(imgUrl);
+      changeProfileImageInDatabase(imageUrl);
       Alert.alert("Success", "Profile image updated");
     } catch (err) {
       console.log("error uploading image: ", err);

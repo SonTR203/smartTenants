@@ -10,9 +10,10 @@ import {
   Platform,
   ActivityIndicator,
   ScrollView,
+  Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useTheme } from "../../ThemeContext";
 import { useAppContext } from "../../Context/AppContext";
@@ -24,6 +25,11 @@ import {
   uploadImageToStorage,
 } from "../../utils/firebase.services";
 import axios from "axios";
+import {
+  checkPermissionMediaLibrary,
+  compressFileSize,
+  getFileInfo,
+} from "../../utils/Profile/profile.services";
 
 const CreatePost = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
@@ -35,18 +41,6 @@ const CreatePost = ({ navigation }) => {
   const { currentUser } = useAppContext();
   const API_USER = "278265377";
   const API_KEY = "38GEu5SU32yy5SYjvzhe";
-
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== "web") {
-        const { status } =
-          await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== "granted") {
-          alert("Sorry, we need camera roll permissions to make this work!");
-        }
-      }
-    })();
-  }, []);
 
   async function PostContent(imgUrl, id, isNsfw) {
     try {
@@ -99,16 +93,29 @@ const CreatePost = ({ navigation }) => {
   // ============================= IMAGE UPLOAD =============================
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      presentationStyle: 0,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    const permissionResult = await checkPermissionMediaLibrary();
 
-    if (!result.cancelled) {
-      setImage(result.uri);
+    if (permissionResult !== false) {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        presentationStyle: 0,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.1,
+      });
+
+      if (!result.cancelled) {
+        const size = await getFileInfo(result.uri);
+        if (size > 5) {
+          Alert.alert(
+            "ERROR",
+            "File size is too large. Please select a file smaller than 5MB"
+          );
+          return;
+        }
+        const path = await compressFileSize(result.uri);
+        setImage(path.uri);
+      }
     }
   };
 
@@ -128,7 +135,7 @@ const CreatePost = ({ navigation }) => {
     } else {
       try {
         if (!image.cancelled) {
-          const imagePath = `Images/Posts/Newsfeed/${id}-${currentUser.userID}.jpg`;
+          const imagePath = `Images/Posts/Newsfeed/${id}-${currentUser.userID}.jpeg`;
           const imageUrl = await uploadImageToStorage(imagePath, image);
           const isNsfw = await moderatePost(imageUrl);
           PostContent(imageUrl, id, isNsfw);
