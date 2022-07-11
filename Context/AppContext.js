@@ -33,11 +33,10 @@ function AppProvider({ children }) {
           // console.log("newest message", lastItem);
           // if you receive a NEW message, update UI to alert user
           if (
-            (lastItem &&
-              lastItem.lastMessage &&
-              lastItem.lastMessage.senderId !== currentUser.userID &&
-              !lastItem.lastMessage.seen) ||
-            lastItem.isNew
+            lastItem &&
+            lastItem.lastMessage &&
+            lastItem.lastMessage.senderId !== currentUser.userID &&
+            (!lastItem.lastMessage.seen || lastItem.isNew)
           ) {
             // alert("You have a new activity in Marketplace chat!");
             setNewPrivateMessages([...newPrivateMessages, lastItem.id]);

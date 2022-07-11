@@ -194,57 +194,100 @@ exports.updateProfilePictureNewsfeedAndMarketplace = functions.firestore
     // Get an object representing the document
     // e.g. {'name': 'Marie', 'age': 66}
     const newValue = change.after.data();
-    const { userProfileImage: newProfileImage, userID } = newValue;
+    const {
+      userProfileImage: newProfileImage,
+      userID,
+      lastName: newLastName,
+      firstName: newFirstName,
+    } = newValue;
 
     // ...or the previous value before this update
     const previousValue = change.before.data();
-    const { userProfileImage: oldProfileImage } = previousValue;
+    const {
+      userProfileImage: oldProfileImage,
+      lastName: oldLastName,
+      firstName: oldFirstName,
+    } = previousValue;
 
+    // update profile picture if it has changed
     if (newProfileImage !== oldProfileImage) {
       log("Tenant profile image changed, updating old posts...");
-      await admin
-        .firestore()
-        .collection(`Newsfeed`)
-        .where("userID", "==", userID)
-        .get()
-        .then((result) => {
-          result.forEach((doc) => {
-            const data = doc.data();
-            doc.ref.update({ userProfileImage: newProfileImage });
-            log("updated new profile pic in post: ", data.postContent);
-          });
-        });
+      await updateTenantProp(
+        "Newsfeed",
+        userID,
+        { userProfileImage: newProfileImage },
+        false
+      );
 
-      log("Updating comments...");
-      await admin
-        .firestore()
-        .collectionGroup(`peopleWhoCommented`)
-        .where("userID", "==", userID)
-        .get()
-        .then((result) => {
-          result.forEach((doc) => {
-            const data = doc.data();
-            doc.ref.update({ userProfileImage: newProfileImage });
-            log("updated new profile pic in comment: ", data.commentContent);
-          });
-        });
+      log("Updating comments profile image...");
+      await updateTenantProp(
+        "peopleWhoCommented",
+        userID,
+        { userProfileImage: newProfileImage },
+        true
+      );
 
-      log("Updating old marketplace items...");
-      await admin
-        .firestore()
-        .collection(`Marketplace`)
-        .where("userID", "==", userID)
-        .get()
-        .then((result) => {
-          result.forEach((doc) => {
-            const data = doc.data();
-            doc.ref.update({ userProfileImage: newProfileImage });
-            log(
-              "updated new profile pic in marketplace post: ",
-              data.postContent
-            );
-          });
-        });
+      log("Updating old marketplace items profile image...");
+      await updateTenantProp(
+        "Marketplace",
+        userID,
+        { userProfileImage: newProfileImage },
+        false
+      );
+    }
+
+    // update last name if it has changed
+    if (newLastName !== oldLastName) {
+      log("Tenant last name changed, updating old posts...");
+      await updateTenantProp(
+        "Newsfeed",
+        userID,
+        { userLastName: newLastName },
+        false
+      );
+
+      log("Updating comments last name...");
+      await updateTenantProp(
+        "peopleWhoCommented",
+        userID,
+        { lastName: newLastName },
+        true
+      );
+
+      log("Updating old marketplace items last name...");
+      await updateTenantProp(
+        "Marketplace",
+        userID,
+        { userLastName: newLastName },
+        false
+      );
+    }
+
+    // update first name if it has changed
+    if (newFirstName !== oldFirstName) {
+      log("Tenant first name changed, updating old posts...");
+      await updateTenantProp(
+        "Newsfeed",
+        userID,
+        { userFirstName: newFirstName },
+        false
+      );
+
+      log("Updating comments first name...");
+      await updateTenantProp(
+        "peopleWhoCommented",
+        userID,
+        { firstName: newFirstName },
+        true
+      );
+
+      log("Updating old marketplace items first name...");
+      await updateTenantProp(
+        "Marketplace",
+        userID,
+        { userFirstName: newFirstName },
+        false
+      );
     }
   });
 
@@ -263,15 +306,43 @@ exports.scheduledFunctionDeleteAllMessages = functions.pubsub
           doc.ref.delete();
         });
       })
-      // .delete()
-      // .then((result) => {
-      //   console.log("All messages deleted: ", result);
-      // })
       .catch((error) => {
         log("Error deleting messages: ", error);
       });
     return null;
   });
+
+const updateTenantProp = async (collection, userID, newProp, group) => {
+  if (group) {
+    await admin
+      .firestore()
+      .collectionGroup(collection)
+      .where("userID", "==", userID)
+      .get()
+      .then((result) => {
+        result.forEach((doc) => {
+          const data = doc.data();
+          doc.ref.update(newProp);
+          log("updated new tenant prop collection group: ", data);
+        });
+      });
+    return;
+  }
+
+  await admin
+    .firestore()
+    .collection(collection)
+    .where("userID", "==", userID)
+    .get()
+    .then((result) => {
+      result.forEach((doc) => {
+        const data = doc.data();
+        doc.ref.update(newProp);
+        log("updated new tenant prop collection: ", data);
+      });
+    });
+  return;
+};
 
 const createNotificationItemInFirestore = async (
   authorID,

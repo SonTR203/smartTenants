@@ -15,6 +15,7 @@ import { setTime } from "../../utils/setTime";
 import { useAppContext } from "../../Context/AppContext";
 import { doc, getDoc, Timestamp } from "@firebase/firestore";
 import { db } from "../../firebase-config";
+import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 
 function MarketplaceItemInfoScreen({ route, navigation }) {
   const [item, setItem] = useState(null);
@@ -214,9 +215,14 @@ function MarketplaceItemInfoScreen({ route, navigation }) {
         </View>
         {/* PROFILE SECTION */}
         <View style={styles.profileContainer}>
-          <Image
-            style={styles.profileImage}
-            source={{ uri: item.userProfileImage }}
+          <DynamicProfilePicture
+            user={{
+              firstName: item.userFirstName,
+              lastName: item.userLastName,
+              userProfileImage: item.userProfileImage,
+            }}
+            size={43}
+            borderRadius={12}
           />
           <View style={styles.userNameContainer}>
             <Text style={styles.userName}>

@@ -110,7 +110,9 @@ function MessagesListScreen({ route, navigation }) {
             >
               {isNew ? "New Inquiry" : lastMessage}
             </Text>
-            {item.lastMessage ? (
+            {item.lastMessage &&
+            item.lastMessage.timestamp &&
+            item.lastMessage.seen ? (
               <View style={styles.itemTimestamp}>
                 <Text>
                   {setTime(item.lastMessage.timestamp.seconds * 1000)}
