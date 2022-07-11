@@ -184,6 +184,7 @@ const EditProfile = ({ navigation }) => {
       Alert.alert("Success", "Profile image updated");
       setIsLoading(false);
     } catch (err) {
+      setIsLoading(false);
       console.log("error uploading image: ", err);
     }
   }
