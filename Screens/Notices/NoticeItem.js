@@ -1,8 +1,8 @@
 import { React, useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { setTime } from "../../utils/setTime";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase-config";
+import { useAppContext } from "../../Context/AppContext";
+import { updateItemInFirestore } from "../../utils/firebase.services";
 
 function NoticeItem({
   content,
@@ -15,20 +15,21 @@ function NoticeItem({
   id,
 }) {
   const [timeSinceNotice, setTimeSinceNotice] = useState("");
-  const [viewed, setViewed] = useState(wasSeen);
+  const [viewed, setViewed] = useState(false);
+  const { currentUser } = useAppContext();
 
   useEffect(() => {
     const time = setTime(timestamp);
     setTimeSinceNotice(time);
+    if (wasSeen.includes(currentUser.userID)) {
+      setViewed(true);
+    }
   }, []);
 
   const setWasSeenToTrue = async () => {
-    const colRef = doc(db, "Notices", `${id}`);
-    await updateDoc(colRef, {
-      wasSeen: true,
-    }).then(() => {
-      setViewed(true);
-    });
+    wasSeen.push(currentUser.userID);
+    updateItemInFirestore("Notices", id, { wasSeen: wasSeen });
+    setViewed(true);
   };
 
   return (

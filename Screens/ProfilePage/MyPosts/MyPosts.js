@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, RefreshControl } from "react-native";
 import { React, useEffect, useState, useCallback } from "react";
 import { useAppContext } from "../../../Context/AppContext";
 import { useTheme } from "../../../ThemeContext";
@@ -7,17 +7,30 @@ import { StatusBar } from "expo-status-bar";
 import { getMyPosts } from "../../../utils/Profile/profile.services";
 import Post from "../../Newsfeed/Post";
 import { constants } from "../../../utils/constants";
+import { wait } from "../../../utils/wait";
 
 const MyPosts = () => {
   const { currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
   const [userPosts, setUserPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    (async function fetchMyPosts() {
-      const list = await getMyPosts(currentUser);
-      setUserPosts(list);
-    })();
+    fetchMyPosts();
+  }, []);
+
+  async function fetchMyPosts() {
+    const list = await getMyPosts(currentUser);
+    setUserPosts(list);
+    setRefreshing(false);
+  }
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    wait(1000).then(() => {
+      fetchMyPosts();
+    });
   }, []);
 
   const callBackRender = useCallback(
@@ -40,6 +53,16 @@ const MyPosts = () => {
           data={userPosts}
           renderItem={callBackRender}
           keyExtractor={(item) => item.id}
+          refreshControl={
+            <RefreshControl
+              onRefresh={onRefresh}
+              refreshing={refreshing}
+              style={{
+                backgroundColor: styleVariables.colors.white,
+              }}
+              tintColor={styleVariables.colors.primary}
+            />
+          }
           ListFooterComponent={
             <ListFooter styleVariables={styleVariables} theme={theme} />
           }

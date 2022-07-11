@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Alert,
+  StyleSheet,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
@@ -86,6 +87,7 @@ const CreatePost = ({ navigation }) => {
   }
 
   function postFailure() {
+    setIsloading(false);
     setModalText("Post Failed");
     setModalVisible(true);
   }
@@ -183,11 +185,11 @@ const CreatePost = ({ navigation }) => {
     return result;
   }
   function checkResults(data) {
-    let drugs = data.drugs > 0.5;
-    let nudity = data.nudity.safe < 0.5;
-    let offensive = data.offensive.prob > 0.5;
-    let weapons = data.weapon > 0.5;
-    let gore = data.gore.prob > 0.5;
+    let drugs = data.drugs > 0.8;
+    let nudity = data.nudity.safe < 0.2;
+    let offensive = data.offensive.prob > 0.8;
+    let weapons = data.weapon > 0.8;
+    let gore = data.gore.prob > 0.8;
     if (drugs || nudity || offensive || weapons || gore) {
       return true;
     } else {
@@ -235,7 +237,6 @@ const CreatePost = ({ navigation }) => {
     <ScrollView style={theme.pageContainer}>
       <View style={theme.globalMargins}>
         <StatusBar style="auto" />
-        {isLoading && <ActivityIndicator size="large" />}
 
         <Modal
           animationType="slide"
@@ -313,20 +314,37 @@ const CreatePost = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          id="submitPostButton"
-          onPress={handleSelectedImage}
-          style={[theme.primaryButton, { marginBottom: 130 }]}
-        >
-          <Text
-            style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}
+        {isLoading ? (
+          <ActivityIndicator
+            style={styles.loader}
+            size="large"
+            color={styleVariables.colors.primary}
+          />
+        ) : (
+          <TouchableOpacity
+            id="submitPostButton"
+            onPress={handleSelectedImage}
+            style={[theme.primaryButton, { marginBottom: 130 }]}
           >
-            Submit post
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                theme.primaryButtonText,
+                styleVariables.fontSizes.bodyBold,
+              ]}
+            >
+              Submit post
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  loader: {
+    marginBottom: 20,
+  },
+});
 
 export default CreatePost;
