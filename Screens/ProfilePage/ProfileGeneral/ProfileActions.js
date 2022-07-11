@@ -17,6 +17,9 @@ function ProfileActions({ navigation }) {
   const logUserOut = async () => {
     await removeExpoPushToken(auth.currentUser.uid);
     await auth.signOut();
+    navigation.navigate("Login", {
+      reload: true,
+    });
   };
 
   return (
