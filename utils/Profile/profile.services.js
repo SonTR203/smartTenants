@@ -3,6 +3,8 @@ import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { db } from "../../firebase-config";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import _ from "lodash";
+import { Alert, Linking } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
 export const getMyPosts = async (currentUser) => {
   const peopleWhoLikedColRef = collection(db, `Newsfeed`);
@@ -27,8 +29,8 @@ export const getMyPosts = async (currentUser) => {
 
 export const compressFileSize = async (uri) => {
   const compressedUri = await manipulateAsync(uri, [], {
-    compress: 0.6,
-    format: SaveFormat.PNG,
+    compress: 0.5,
+    format: SaveFormat.JPEG,
   });
   return compressedUri;
 };
@@ -39,6 +41,27 @@ export const getFileInfo = async (fileURI) => {
     return fileInfo.size / 1024 / 1024;
   }
   return fileInfo;
+};
+
+export const checkPermissionMediaLibrary = async () => {
+  const permissionResult =
+    await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+  if (permissionResult.granted === false) {
+    Alert.alert("Permission Denied", "You need to allow access to media", [
+      {
+        text: "Settings",
+        style: "cancel",
+        onPress: () => {
+          Linking.openSettings();
+        },
+      },
+      { text: "OK" },
+    ]);
+    return false;
+  } else {
+    return true;
+  }
 };
 
 export const getRandomGradientColor = () => {

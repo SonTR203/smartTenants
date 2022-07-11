@@ -105,22 +105,12 @@ export const getItemById = async (collection, id) => {
 
 export const uploadImageToStorage = async (imagePath, newImage) => {
   try {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", newImage, true);
-      xhr.send(null);
-    });
+    const img = await fetch(newImage);
+    const blob = await img.blob();
 
     const fileRef = ref(getStorage(), imagePath);
     await uploadBytes(fileRef, blob);
+    console.log("uploaded a blob to storage");
 
     const imgUrl = await getDownloadURL(fileRef);
     return imgUrl;
@@ -184,8 +174,6 @@ export async function registerForPushNotificationsAsync() {
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log(token);
-  } else {
-    alert("Must use physical device for Push Notifications");
   }
 
   // if (Platform.OS === "android") {

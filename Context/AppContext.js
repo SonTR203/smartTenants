@@ -27,7 +27,6 @@ function AppProvider({ children }) {
         querySnapshot.forEach((doc) => {
           latestMsgs.push(doc.data());
         });
-        // console.log("latestMsgs", latestMsgs.length);
         if (latestMsgs.length > 0) {
           const [lastItem] = latestMsgs.slice(-1);
           // console.log("newest message", lastItem);

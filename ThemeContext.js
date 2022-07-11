@@ -22,6 +22,7 @@ let styleVariables = {
     primary14: "#395E6624",
     white: "#FFF",
     black: "#191919",
+    placeholderText: "rgba(25, 25, 25, 0.33)",
   },
   fontSizes: {
     hero: { fontSize: 40, fontFamily: "Roboto_400Regular" },

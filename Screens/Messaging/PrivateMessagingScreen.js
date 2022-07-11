@@ -23,8 +23,10 @@ import { createItemInFirestore } from "../../utils/firebase.services";
 import { constants } from "../../utils/constants";
 
 import MessagingBubble from "./MessagingBubble";
+import { useTheme } from "../../ThemeContext";
 
 function PrivateMessagingScreen({ route }) {
+  const { styleVariables } = useTheme();
   const [channelId, setChannelId] = useState(null);
   const [messagesList, setMessagesList] = useState([]);
   const [messages, setMessages] = useState("");
@@ -148,6 +150,7 @@ function PrivateMessagingScreen({ route }) {
       </View>
       <View style={styles.messageContainer}>
         <TextInput
+          placeholderTextColor={styleVariables.colors.placeholderText}
           style={styles.messageInput}
           onChangeText={setMessages}
           value={messages}
