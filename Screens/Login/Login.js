@@ -117,6 +117,7 @@ const Login = ({ navigation, route }) => {
                 Email
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 placeholder="name@company.com"
                 value={email}
                 onChangeText={(text) => setEmail(text)}
@@ -130,6 +131,7 @@ const Login = ({ navigation, route }) => {
                 Password
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 placeholder="••••••••••"
                 value={password}
                 onChangeText={(text) => setPassword(text)}

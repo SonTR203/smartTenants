@@ -190,6 +190,7 @@ const Signup = ({ navigation }) => {
                 First Name
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 placeholder="John"
                 value={firstName}
                 onChangeText={(text) => setFirstName(text)}
@@ -203,6 +204,7 @@ const Signup = ({ navigation }) => {
                 Last Name
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 placeholder="Doe"
                 value={lastName}
                 onChangeText={(text) => setLastName(text)}
@@ -217,6 +219,7 @@ const Signup = ({ navigation }) => {
                 Unit number
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 keyboardType="numeric"
                 placeholder="1234"
                 value={unitNumber}
@@ -270,6 +273,7 @@ const Signup = ({ navigation }) => {
                 Email
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 placeholder="name@company.com"
                 value={email}
                 onChangeText={(text) => {
@@ -285,6 +289,7 @@ const Signup = ({ navigation }) => {
                 Password
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 placeholder="Minimum 8 characters"
                 value={password}
                 onChangeText={(text) => setPassword(text)}

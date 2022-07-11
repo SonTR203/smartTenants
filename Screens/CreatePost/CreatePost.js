@@ -273,6 +273,7 @@ const CreatePost = ({ navigation }) => {
             What's on your mind?
           </Text>
           <TextInput
+            placeholderTextColor={styleVariables.colors.placeholderText}
             onChangeText={(text) => {
               setPostContent(text);
             }}

@@ -288,6 +288,7 @@ const EditProfile = ({ navigation }) => {
                 First Name
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 placeholder="John"
                 defaultValue={currentUser.firstName}
                 onChangeText={(text) => setFirstName(text)}
@@ -301,6 +302,7 @@ const EditProfile = ({ navigation }) => {
                 Last name
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 placeholder="Doe"
                 defaultValue={currentUser.lastName}
                 onChangeText={(text) => setLastName(text)}
@@ -315,6 +317,7 @@ const EditProfile = ({ navigation }) => {
                 Unit number
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 keyboardType="numeric"
                 placeholder="1234"
                 defaultValue={`${
@@ -373,6 +376,7 @@ const EditProfile = ({ navigation }) => {
                 Email
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 placeholder="name@company.com"
                 defaultValue={currentUser.email}
                 onChangeText={(text) => {
@@ -389,6 +393,7 @@ const EditProfile = ({ navigation }) => {
                 Password
               </Text>
               <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
                 placeholder="*******"
                 secureTextEntry={true}
                 //================================= will need to research how to do this SAFELY ==========================

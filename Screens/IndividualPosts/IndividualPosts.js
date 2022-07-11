@@ -446,6 +446,7 @@ function ListFooter({
           Reply
         </Text>
         <TextInput
+          placeholderTextColor={styleVariables.colors.placeholderText}
           onChangeText={(text) => setTextInputValue(text)}
           value={textInputValue}
           placeholder="280 characters maximum"

@@ -66,6 +66,7 @@ const ForgotPassword = () => {
             </Text>
 
             <TextInput
+              placeholderTextColor={styleVariables.colors.placeholderText}
               placeholder="name@company.com"
               value={email}
               onChangeText={(text) => setEmail(text)}

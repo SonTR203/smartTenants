@@ -257,6 +257,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               Title
             </Text>
             <TextInput
+              placeholderTextColor={styleVariables.colors.placeholderText}
               onChangeText={(text) => {
                 setTitle(text);
               }}
@@ -275,6 +276,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               Description
             </Text>
             <TextInput
+              placeholderTextColor={styleVariables.colors.placeholderText}
               onChangeText={(text) => {
                 setContent(text);
               }}
@@ -298,6 +300,7 @@ function MarketplaceNewPostScreen({ navigation }) {
                 styleVariables.fontSizes.body,
                 styles.textInputTitleAndPrice,
               ]}
+              placeholderTextColor={styleVariables.colors.placeholderText}
               multiline={false}
               maxLength={12}
               placeholder="$ 0.00"
