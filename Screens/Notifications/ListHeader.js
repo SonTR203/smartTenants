@@ -33,10 +33,7 @@ function ListHeader({
           <Pressable
             id="announcements"
             onPress={() => {
-              navigation.navigate("Announcements", {
-                announcementCount: announcementCount,
-                setAnnouncementCount: setAnnouncementCount,
-              });
+              navigation.navigate("Announcements");
             }}
             style={[theme.cardButton, styles.cardButton]}
           >
