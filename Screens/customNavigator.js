@@ -103,7 +103,7 @@ const MarketplaceNavigator = () => {
   );
 };
 
-const NewsfeedNavigator = ({ navigation }) => {
+const NewsfeedNavigator = () => {
   const { post, currentUser, setCurrentUser } = useAppContext();
 
   useEffect(() => {
@@ -112,21 +112,18 @@ const NewsfeedNavigator = ({ navigation }) => {
       if (user) {
         // User has just signed in or already signed in from previous session
         const uid = user.uid;
-        console.log("user is logged in: ", user.uid);
+        console.log("user is logged in with id: ", uid);
         const userData = await getItemById("Tenants", uid);
         if (userData && userData.tenantAuthorized) {
           uploadExpoPushToken(user);
           setCurrentUser(userData);
-          navigation.navigate("Newsfeed");
         }
         // ...
       } else {
         // User is not logged in or just signed out
         // ...
+        console.log("user is not logged in");
         setCurrentUser({});
-        navigation.navigate("Login", {
-          reload: true,
-        });
       }
     });
 
@@ -136,90 +133,99 @@ const NewsfeedNavigator = ({ navigation }) => {
   }, []);
 
   return (
-    // show Login screen first if user is not logged in
-    <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen
-        name="Newsfeed"
-        component={Newsfeed}
-        options={{
-          title: "Newsfeed",
-          headerLeft: null,
-          headerShown: true,
-          header: () => <ScreenHeader title={"Newsfeed"} />,
-        }}
-      />
-      <Stack.Screen
-        name="BuildingInfo"
-        component={BuildingInfo}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Building Info"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="CreatePost"
-        component={CreatePost}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Create post"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="IndividualPosts"
-        component={IndividualPosts}
-        options={({ route }) => ({
-          header: (props) => (
-            <CustomSubStackScreenHeader
-              {...props}
-              title={`${post.userFirstName}'s Post`}
-              currentUserId={currentUser.userID}
-              itemUserId={route.params.item.userID}
-              item={route.params.item}
-              previousScreen={"Newsfeed"}
-              collection={"Newsfeed"}
-            />
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{
-          title: "Login",
-          headerShown: false,
-          tabBarVisible: false,
-          // hide tab bar to use when user Logs out in Profile screen
-        }}
-      />
-      <Stack.Screen
-        name="Signup"
-        component={Signup}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Sign up"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="AccountApprovalPending"
-        component={AccountApprovalPending}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={" "} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="ForgotPassword"
-        component={ForgotPassword}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={" "} />
-          ),
-        }}
-      />
+    <Stack.Navigator>
+      {currentUser && currentUser.tenantAuthorized ? (
+        <>
+          <Stack.Screen
+            name="Newsfeed"
+            component={Newsfeed}
+            options={{
+              title: "Newsfeed",
+              headerLeft: null,
+              headerShown: true,
+              header: () => <ScreenHeader title={"Newsfeed"} />,
+            }}
+          />
+          <Stack.Screen
+            name="BuildingInfo"
+            component={BuildingInfo}
+            options={{
+              header: (props) => (
+                <CustomSubStackScreenHeader
+                  {...props}
+                  title={"Building Info"}
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="CreatePost"
+            component={CreatePost}
+            options={{
+              header: (props) => (
+                <CustomSubStackScreenHeader {...props} title={"Create post"} />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="IndividualPosts"
+            component={IndividualPosts}
+            options={({ route }) => ({
+              header: (props) => (
+                <CustomSubStackScreenHeader
+                  {...props}
+                  title={`${post.userFirstName}'s Post`}
+                  currentUserId={currentUser.userID}
+                  itemUserId={route.params.item.userID}
+                  item={route.params.item}
+                  previousScreen={"Newsfeed"}
+                  collection={"Newsfeed"}
+                />
+              ),
+            })}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              title: "Login",
+              headerShown: false,
+              tabBarVisible: false,
+              // hide tab bar to use when user Logs out in Profile screen
+            }}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={Signup}
+            options={{
+              header: (props) => (
+                <CustomSubStackScreenHeader {...props} title={"Sign up"} />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="AccountApprovalPending"
+            component={AccountApprovalPending}
+            options={{
+              header: (props) => (
+                <CustomSubStackScreenHeader {...props} title={" "} />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
+            options={{
+              header: (props) => (
+                <CustomSubStackScreenHeader {...props} title={" "} />
+              ),
+            }}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 };

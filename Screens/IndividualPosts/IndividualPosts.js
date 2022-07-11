@@ -25,6 +25,7 @@ import { setTime } from "../../utils/setTime";
 import { likePost } from "../../utils/Newsfeed/newsfeed.services";
 import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
+import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 
 const width = Dimensions.get("window").width;
 
@@ -113,10 +114,7 @@ const IndividualPosts = ({ navigation }) => {
               alignItems: "center",
             }}
           >
-            <Image
-              source={{ uri: item.userProfileImage }}
-              style={{ width: 43, height: 43, borderRadius: 12 }}
-            />
+            <DynamicProfilePicture user={item} size={43} borderRadius={12} />
             <Text
               style={[
                 styleVariables.fontSizes.bodyBold,
@@ -261,10 +259,16 @@ function ListHeader({
             alignItems: "center",
           }}
         >
-          <Image
-            source={{ uri: `${post.userProfileImage}` }}
-            style={{ width: 43, height: 43, borderRadius: 12 }}
+          <DynamicProfilePicture
+            user={{
+              userProfileImage: post.userProfileImage,
+              firstName: post.userFirstName,
+              lastName: post.userLastName,
+            }}
+            size={43}
+            borderRadius={12}
           />
+
           <Text
             style={[
               styleVariables.fontSizes.bodyBold,

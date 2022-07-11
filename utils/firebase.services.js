@@ -20,6 +20,9 @@ import {
 
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+const auth = getAuth();
 
 export const deleteItemFromFirestore = async (collection, id) => {
   try {
@@ -196,3 +199,48 @@ export async function registerForPushNotificationsAsync() {
 
   return token;
 }
+
+export const handleSignIn = async (email, password) => {
+  try {
+    const uid = signInWithEmailAndPassword(auth, email, password)
+      .then(async (userCredentials) => {
+        console.log("Signed in with email:", userCredentials.user.email);
+        return userCredentials.user.uid;
+      })
+      .catch((error) => {
+        const alertText = handleFirebaseAuthenticationError(error);
+        alert(alertText);
+        return undefined;
+      });
+    return uid;
+  } catch (error) {
+    console.log("error sign in with email and password: ", error);
+  }
+};
+
+export const handleFirebaseAuthenticationError = (error) => {
+  console.log("error  authenticating with Firebase", error.code);
+  let errorMessage = "";
+  switch (error.code) {
+    case "auth/invalid-email":
+      errorMessage = "Invalid email address.";
+      break;
+    case "auth/wrong-password":
+      errorMessage = "Wrong password.";
+      break;
+    case "auth/weak-password":
+      errorMessage = "Password is too weak.";
+      break;
+    case "auth/too-many-requests":
+      errorMessage = "Too many requests. Please try again later.";
+      break;
+    case "auth/user-not-found":
+      errorMessage = "User not found. Please sign up first.";
+      break;
+    default:
+      errorMessage = "Unknown error.";
+      break;
+  }
+
+  return errorMessage;
+};

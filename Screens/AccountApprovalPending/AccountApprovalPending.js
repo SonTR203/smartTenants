@@ -1,12 +1,19 @@
 import React from "react";
-import { View, Text, Image, Dimensions } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { View, Text, Image, Dimensions, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
+import { getAuth, signOut } from "firebase/auth";
 const windowWidth = Dimensions.get("window").width;
 
 function AccountApprovalPending({ navigation }) {
   const { theme, styleVariables } = useTheme();
+  const auth = getAuth();
+
+  // log out if user is unauthorized
+  const handleGoBack = () => {
+    navigation.goBack();
+    signOut(auth);
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
@@ -58,9 +65,7 @@ function AccountApprovalPending({ navigation }) {
         {/* backButton */}
         <TouchableOpacity
           id="backButton"
-          onPress={() => {
-            navigation.navigate("Login");
-          }}
+          onPress={handleGoBack}
           style={theme.secondaryButton}
         >
           <Text

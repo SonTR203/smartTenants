@@ -5,7 +5,6 @@ import {
   Text,
   SafeAreaView,
   KeyboardAvoidingView,
-  Image,
   TextInput,
   TouchableOpacity,
   Modal,
@@ -28,6 +27,7 @@ import {
   compressFileSize,
   getFileInfo,
 } from "../../../utils/Profile/profile.services";
+import DynamicProfilePicture from "../../../components/ProfilePicture/DynamicProfilePicture";
 
 const EditProfile = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
@@ -180,6 +180,10 @@ const EditProfile = ({ navigation }) => {
 
       const imgUrl = await getDownloadURL(fileRef);
       setUserProfileImage(imgUrl);
+      setCurrentUser({
+        ...currentUser,
+        userProfileImage: imgUrl,
+      });
       changeProfileImageInDatabase(imgUrl);
       Alert.alert("Success", "Profile image updated");
       setIsLoading(false);
@@ -269,9 +273,14 @@ const EditProfile = ({ navigation }) => {
                 />
               </View>
             ) : (
-              <Image
-                source={{ uri: userProfileImage }}
-                style={{ height: 85, width: 85, borderRadius: 18 }}
+              <DynamicProfilePicture
+                user={{
+                  userProfileImage: userProfileImage,
+                  firstName: currentUser.firstName,
+                  lastName: currentUser.lastName,
+                }}
+                size={85}
+                borderRadius={18}
               />
             )}
             <View style={{ paddingLeft: 17 }}>

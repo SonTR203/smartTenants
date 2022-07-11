@@ -7,8 +7,10 @@ import {
   Platform,
   TextInput,
   StyleSheet,
-  Keyboard,
+  KeyboardAvoidingView,
   ActivityIndicator,
+  Image,
+  ScrollView,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -210,11 +212,6 @@ function MarketplaceNewPostScreen({ navigation }) {
       paddingLeft: 17,
       paddingRight: 17,
     },
-    bodyContainer: {
-      flex: 1,
-      flexDirection: "column",
-      justifyContent: "space-between",
-    },
     textInputTitleAndPrice: {
       height: 64,
       paddingTop: 22,
@@ -237,134 +234,143 @@ function MarketplaceNewPostScreen({ navigation }) {
 
   return (
     // CONTAINER
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={() => Keyboard.dismiss()}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <StatusBar style="dark" />
       {/* BODY CONTAINER  */}
-      <View style={styles.bodyContainer}>
-        {/* TEXT INPUT SECTIONS  */}
-        <View>
-          {/* TITLE  */}
-          <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
-            Title
-          </Text>
-          <TextInput
-            onChangeText={(text) => {
-              setTitle(text);
-            }}
-            placeholder="What are you selling?"
-            multiline={false}
-            maxLength={60}
-            style={[
-              theme.textInput,
-              styleVariables.fontSizes.body,
-              styles.textInputTitleAndPrice,
-            ]}
-          />
+      <KeyboardAvoidingView
+        style={{
+          flex: 1,
+          height: "100%",
+        }}
+        behavior="height"
+      >
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* TEXT INPUT SECTIONS  */}
+          <View>
+            {/* TITLE  */}
+            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+              Title
+            </Text>
+            <TextInput
+              onChangeText={(text) => {
+                setTitle(text);
+              }}
+              placeholder="What are you selling?"
+              multiline={false}
+              maxLength={60}
+              style={[
+                theme.textInput,
+                styleVariables.fontSizes.body,
+                styles.textInputTitleAndPrice,
+              ]}
+            />
 
-          {/* DESCRIPTION */}
-          <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
-            Description
-          </Text>
-          <TextInput
-            onChangeText={(text) => {
-              setContent(text);
-            }}
-            placeholder="280 characters maximum"
-            multiline={true}
-            maxLength={280}
-            style={[
-              theme.textInput,
-              styleVariables.fontSizes.body,
-              styles.textInputDescription,
-            ]}
-          />
+            {/* DESCRIPTION */}
+            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+              Description
+            </Text>
+            <TextInput
+              onChangeText={(text) => {
+                setContent(text);
+              }}
+              placeholder="280 characters maximum"
+              multiline={true}
+              maxLength={280}
+              style={[
+                theme.textInput,
+                styleVariables.fontSizes.body,
+                styles.textInputDescription,
+              ]}
+            />
 
-          {/* PRICE */}
-          <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
-            Price
-          </Text>
-          <CurrencyInput
-            style={[
-              theme.textInput,
-              styleVariables.fontSizes.body,
-              styles.textInputTitleAndPrice,
-            ]}
-            multiline={false}
-            maxLength={12}
-            placeholder="$ 0.00"
-            minValue={0}
-            separator="."
-            delimiter=","
-            keyboardType="numeric"
-            value={price}
-            onChangeValue={setPrice}
-            prefix="$"
-          />
-
-          {/* UPLOAD IMAGE */}
-          <TouchableOpacity
-            id="uploadImageButton"
-            onPress={pickImage}
-            style={[theme.secondaryButton, styles.uploadButtonContainer]}
-          >
-            {imageLoading ? (
-              <ActivityIndicator
-                style={styles.loader}
-                size="small"
-                color={styleVariables.colors.primary}
-              />
-            ) : (
-              <>
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="middle"
-                  style={[
-                    theme.secondaryButtonText,
-                    styleVariables.fontSizes.body,
-                    styles.uploadText,
-                  ]}
-                >
-                  {image.length > 0 ? image.split("/").pop() : "Upload Image "}
-                </Text>
-                <MaterialCommunityIcons
-                  name="image-plus"
-                  size={18}
+            {/* PRICE */}
+            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+              Price
+            </Text>
+            <CurrencyInput
+              style={[
+                theme.textInput,
+                styleVariables.fontSizes.body,
+                styles.textInputTitleAndPrice,
+              ]}
+              multiline={false}
+              maxLength={12}
+              placeholder="$ 0.00"
+              minValue={0}
+              separator="."
+              delimiter=","
+              keyboardType="numeric"
+              value={price}
+              onChangeValue={setPrice}
+              prefix="$"
+            />
+            <View id="imageUploadPreview" style={theme.container}>
+              {image !== "" ? (
+                <Image
+                  source={{ uri: image }}
+                  style={theme.imageUploadPreview}
+                />
+              ) : null}
+            </View>
+            {/* UPLOAD IMAGE */}
+            <TouchableOpacity
+              id="uploadImageButton"
+              onPress={pickImage}
+              style={[theme.secondaryButton, styles.uploadButtonContainer]}
+            >
+              {imageLoading ? (
+                <ActivityIndicator
+                  style={styles.loader}
+                  size="small"
                   color={styleVariables.colors.primary}
                 />
-              </>
-            )}
-          </TouchableOpacity>
-        </View>
-
-        {/* SUBMIT BUTTON  */}
-        {isLoading ? (
-          <ActivityIndicator
-            style={styles.loader}
-            size="large"
-            color={styleVariables.colors.primary}
-          />
-        ) : (
-          <TouchableOpacity
-            id="submitPostButton"
-            onPress={handleSubmit}
-            style={[theme.primaryButton, {}]}
+              ) : (
+                <>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="middle"
+                    style={[
+                      theme.secondaryButtonText,
+                      styleVariables.fontSizes.body,
+                      styles.uploadText,
+                    ]}
+                  >
+                    {image.length > 0
+                      ? image.split("/").pop()
+                      : "Upload Image "}
+                  </Text>
+                  <MaterialCommunityIcons
+                    name="image-plus"
+                    size={18}
+                    color={styleVariables.colors.primary}
+                  />
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+      {/* SUBMIT BUTTON  */}
+      {isLoading ? (
+        <ActivityIndicator
+          style={styles.loader}
+          size="large"
+          color={styleVariables.colors.primary}
+        />
+      ) : (
+        <TouchableOpacity
+          id="submitPostButton"
+          onPress={handleSubmit}
+          style={[theme.primaryButton, {}]}
+        >
+          <Text
+            style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}
           >
-            <Text
-              style={[
-                theme.primaryButtonText,
-                styleVariables.fontSizes.bodyBold,
-              ]}
-            >
-              Submit post
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </TouchableOpacity>
+            Submit post
+          </Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 }
 

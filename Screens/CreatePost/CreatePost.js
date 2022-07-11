@@ -120,7 +120,13 @@ const CreatePost = ({ navigation }) => {
 
     if (image == null) {
       const isNsfw = await moderateText();
-      PostContent(null, id, isNsfw);
+      if (isNsfw !== undefined) {
+        PostContent(null, id, isNsfw);
+      } else {
+        alert("Error moderating text");
+        setIsloading(false);
+        return;
+      }
     } else {
       try {
         if (!image.cancelled) {

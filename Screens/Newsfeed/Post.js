@@ -6,6 +6,7 @@ import { useAppContext } from "../../Context/AppContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { setTime } from "../../utils/setTime";
 import { likePost } from "../../utils/Newsfeed/newsfeed.services";
+import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 
 //============================== Individual Post Cards ==========================
 function Post({ passedPost, windowWidth }) {
@@ -112,9 +113,14 @@ function Post({ passedPost, windowWidth }) {
             alignItems: "center",
           }}
         >
-          <Image
-            source={{ uri: `${currentPost.userProfileImage}` }}
-            style={{ height: 43, width: 43, borderRadius: 12 }}
+          <DynamicProfilePicture
+            user={{
+              firstName: currentPost.userFirstName,
+              lastName: currentPost.userLastName,
+              userProfileImage: currentPost.userProfileImage,
+            }}
+            size={43}
+            borderRadius={12}
           />
           <Text
             style={[

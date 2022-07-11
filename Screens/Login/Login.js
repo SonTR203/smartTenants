@@ -10,19 +10,18 @@ import {
   Linking,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { collection, getDocs, addDoc } from "@firebase/firestore";
+import { collection, getDocs, addDoc, Timestamp } from "@firebase/firestore";
 import { useTheme } from "../../ThemeContext";
 import { db } from "../../firebase-config";
-import { getItemById } from "../../utils/firebase.services";
-
-const auth = getAuth();
+import { getItemById, handleSignIn } from "../../utils/firebase.services";
+import * as Progress from "react-native-progress";
 
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // clear the text inputs when the screen is navigated to
   useEffect(() => {
@@ -36,15 +35,14 @@ const Login = ({ navigation, route }) => {
    * inputs: none
    * outputs: return the undefined (the default for JS functions)
    */
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async (userCredentials) => {
-        console.log("Logged in with:", userCredentials.user.email);
-        if (userCredentials.user.email) {
-          findUser(userCredentials.user);
-        }
-      })
-      .catch((error) => alert(error.message));
+  const handleLogin = async () => {
+    setLoading(true);
+    const userUID = await handleSignIn(email, password);
+    if (userUID) {
+      findUser(userUID);
+    } else {
+      setLoading(false);
+    }
   };
 
   /* This function gets the logged in user data from Firebase and  * navigates him/her to to the Newsfeed screen (Home screen) if * * authorized or to the Account Approval Pending screen if not
@@ -52,9 +50,10 @@ const Login = ({ navigation, route }) => {
    * inputs: authenticated user object From Firebase
    * outputs: sets the current user object as the Logged in user as stored as per stored data on Firebase
    */
-  const findUser = async (user) => {
-    const userData = await getItemById("Tenants", user.uid);
+  const findUser = async (uid) => {
+    const userData = await getItemById("Tenants", uid);
     if (userData) {
+      setLoading(false);
       if (userData.tenantAuthorized === true) {
         navigation.navigate("Newsfeed");
       } else {
@@ -83,7 +82,7 @@ const Login = ({ navigation, route }) => {
         postID: "",
         userID: loggedInUser.userID,
         wasSeen: true,
-        timestamp: Date.now(),
+        timestamp: Timestamp.fromDate(new Date()),
       });
     }
   };
@@ -168,7 +167,12 @@ const Login = ({ navigation, route }) => {
             <TouchableOpacity
               id="loginButton"
               onPress={handleLogin}
-              style={theme.primaryButton}
+              style={[
+                theme.primaryButton,
+                {
+                  flexDirection: "row",
+                },
+              ]}
             >
               <Text
                 style={[
@@ -178,6 +182,17 @@ const Login = ({ navigation, route }) => {
               >
                 Login
               </Text>
+              {loading && (
+                <Progress.CircleSnail
+                  style={{
+                    marginLeft: 17,
+                  }}
+                  strokeCap="square"
+                  thickness={2.2}
+                  size={20}
+                  color={"white"}
+                />
+              )}
             </TouchableOpacity>
 
             {/* no account CTA */}
