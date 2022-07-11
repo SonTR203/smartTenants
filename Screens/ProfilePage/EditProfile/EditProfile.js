@@ -10,6 +10,8 @@ import {
   Modal,
   Platform,
   Alert,
+  ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { doc, updateDoc } from "@firebase/firestore";
@@ -42,6 +44,9 @@ const EditProfile = ({ navigation }) => {
   const [userProfileImage, setUserProfileImage] = useState(
     currentUser.userProfileImage
   );
+  const [saveModal, setSaveModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const changeModalVisibility = (bool) => {
     setModalVisible(bool);
   };
@@ -101,7 +106,7 @@ const EditProfile = ({ navigation }) => {
           userProfileImage: currentUser.userProfileImage,
         });
 
-        navigation.navigate("ProfileGeneral");
+        setSaveModal(true);
       } catch (error) {
         console.log(error);
       }
@@ -150,6 +155,7 @@ const EditProfile = ({ navigation }) => {
 
   async function uploadImage(newImage) {
     try {
+      setIsLoading(true);
       const blob = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
@@ -180,7 +186,9 @@ const EditProfile = ({ navigation }) => {
       });
       changeProfileImageInDatabase(imgUrl);
       Alert.alert("Success", "Profile image updated");
+      setIsLoading(false);
     } catch (err) {
+      setIsLoading(false);
       console.log("error uploading image: ", err);
     }
   }
@@ -202,12 +210,51 @@ const EditProfile = ({ navigation }) => {
     }
   }
 
+  const styles = StyleSheet.create({
+    profileLoading: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      height: 85,
+      width: 85,
+      borderRadius: 18,
+    },
+  });
+
   return (
     <SafeAreaView edges={["top"]}>
       <KeyboardAvoidingView behavior="padding">
         <ScrollView style={[theme.pageContainer, theme.globalMargins]}>
           <StatusBar style="dark" />
-
+          <Modal
+            animationType="slide"
+            transparent={false}
+            statusBarTranslucent={true}
+            visible={saveModal}
+            onRequestClose={() => {
+              setSaveModal(!saveModal);
+            }}
+            onShow={() => {
+              setTimeout(() => {
+                setSaveModal(!saveModal);
+                navigation.navigate("ProfileGeneral");
+              }, 2000);
+            }}
+          >
+            <View style={theme.container}>
+              <View style={theme.modalView}>
+                <Text
+                  style={{
+                    fontSize: 17,
+                    fontFamily: "Roboto_400Regular",
+                    color: "#191919",
+                  }}
+                >
+                  {"Changes Saved"}
+                </Text>
+              </View>
+            </View>
+          </Modal>
           {/* userHeader */}
           <View
             style={{
@@ -218,16 +265,24 @@ const EditProfile = ({ navigation }) => {
               paddingVertical: 34,
             }}
           >
-            <DynamicProfilePicture
-              user={{
-                userProfileImage: userProfileImage,
-                firstName: currentUser.firstName,
-                lastName: currentUser.lastName,
-              }}
-              size={85}
-              borderRadius={18}
-            />
-
+            {isLoading ? (
+              <View style={styles.profileLoading}>
+                <ActivityIndicator
+                  size="large"
+                  color={styleVariables.colors.primary}
+                />
+              </View>
+            ) : (
+              <DynamicProfilePicture
+                user={{
+                  userProfileImage: userProfileImage,
+                  firstName: currentUser.firstName,
+                  lastName: currentUser.lastName,
+                }}
+                size={85}
+                borderRadius={18}
+              />
+            )}
             <View style={{ paddingLeft: 17 }}>
               <Text
                 style={[styleVariables.fontSizes.title, { marginBottom: 4 }]}
@@ -262,7 +317,7 @@ const EditProfile = ({ navigation }) => {
               <Text
                 style={[theme.textInputLabel, styleVariables.fontSizes.body]}
               >
-                Name
+                First Name
               </Text>
               <TextInput
                 placeholder="John"

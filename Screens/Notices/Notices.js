@@ -2,7 +2,7 @@ import { React, useEffect, useState, useCallback } from "react";
 import { FlatList, StyleSheet, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase-config";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { useTheme } from "../../ThemeContext";
 import { useAppContext } from "../../Context/AppContext";
 import NoticeItem from "./NoticeItem";
@@ -59,18 +59,20 @@ function Notices({ navigation }) {
 
   async function getNotices() {
     const colReference = collection(db, "Notices");
+    const q = query(
+      colReference,
+      where("recipients", "array-contains", currentUser.userID)
+    );
 
-    getDocs(colReference).then((snapshot) => {
-      let noticeList = [];
-      snapshot.docs.forEach((doc) => {
-        noticeList.push({ ...doc.data(), id: doc.id });
-      });
-      console.log(noticeList[0].recipients.includes(currentUser.userID));
-      const filteredNoticeList = noticeList.filter((notice) =>
-        notice.recipients.includes(currentUser.userID)
-      );
-      setNotices(filteredNoticeList);
+    const data = await getDocs(q);
+
+    const formattedData = data.docs.map((doc) => {
+      return {
+        ...doc.data(),
+        id: doc.id,
+      };
     });
+    setNotices(formattedData);
   }
 
   const onRefresh = useCallback(() => {

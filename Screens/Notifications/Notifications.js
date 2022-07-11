@@ -7,7 +7,11 @@ import { useTheme } from "../../ThemeContext";
 import NotificationItem from "./NotificationItem";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
-import { getNotifications } from "../../utils/Notifications/notifications.services";
+import {
+  getNotifications,
+  getNoticeCount,
+  getAnnouncementCount,
+} from "../../utils/Notifications/notifications.services";
 import { wait } from "../../utils/wait";
 
 const Notifications = ({ navigation }) => {
@@ -16,6 +20,8 @@ const Notifications = ({ navigation }) => {
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
   const [refreshing, setRefreshing] = useState(true);
+  const [noticeCount, setNoticeCount] = useState(0);
+  const [announcementCount, setAnnouncementCount] = useState(0);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -23,6 +29,8 @@ const Notifications = ({ navigation }) => {
     wait(1000).then(async () => {
       const list = await getNotifications(currentUser);
       setNotifications(list);
+      fetchNoticeCount();
+      fetchAnnouncementCount();
       setRefreshing(false);
     });
   }, []);
@@ -35,7 +43,18 @@ const Notifications = ({ navigation }) => {
         setRefreshing(false);
       })();
     }
+    fetchNoticeCount();
+    fetchAnnouncementCount();
   }, [currentUser]);
+
+  async function fetchNoticeCount() {
+    const count = await getNoticeCount(currentUser);
+    setNoticeCount(count);
+  }
+  async function fetchAnnouncementCount() {
+    const count = await getAnnouncementCount(currentUser);
+    setAnnouncementCount(count);
+  }
 
   const callBackRender = useCallback(
     ({ item, index }) => renderNotificationItem({ item, index }),
@@ -76,6 +95,8 @@ const Notifications = ({ navigation }) => {
               styleVariables={styleVariables}
               theme={theme}
               navigation={navigation}
+              announcementCount={announcementCount}
+              noticeCount={noticeCount}
             />
           }
           style={styles.flatlist}

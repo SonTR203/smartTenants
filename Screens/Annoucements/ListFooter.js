@@ -21,7 +21,7 @@ function ListFooter({ styleVariables }) {
   return (
     <View style={styles.container}>
       <Text style={[styleVariables.fontSizes.callout, styles.callOut]}>
-        You&apos;ve reached the end
+        You have no further announcements.
       </Text>
     </View>
   );

@@ -158,11 +158,11 @@ function MarketplaceNewPostScreen({ navigation }) {
     return result;
   }
   function checkImageResults(data) {
-    let drugs = data.drugs > 0.5;
-    let nudity = data.nudity.safe < 0.5;
-    let offensive = data.offensive.prob > 0.5;
-    let weapons = data.weapon > 0.5;
-    let gore = data.gore.prob > 0.5;
+    let drugs = data.drugs > 0.8;
+    let nudity = data.nudity.safe < 0.2;
+    let offensive = data.offensive.prob > 0.8;
+    let weapons = data.weapon > 0.8;
+    let gore = data.gore.prob > 0.8;
     if (drugs || nudity || offensive || weapons || gore) {
       return true;
     } else {

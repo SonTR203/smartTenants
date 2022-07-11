@@ -2,17 +2,19 @@ import { React, useState, useEffect, useCallback } from "react";
 import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase-config";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import AnnouncementItem from "./AnnouncementItem";
 import { useTheme } from "../../ThemeContext";
 import { wait } from "../../utils/wait";
 import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
+import { useAppContext } from "../../Context/AppContext";
 
 function Announcements({ navigation }) {
   const [announcements, setAnnouncements] = useState([]);
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
+  const { currentUser } = useAppContext();
 
   useEffect(() => {
     getAnnouncements();
@@ -24,14 +26,20 @@ function Announcements({ navigation }) {
 
   async function getAnnouncements() {
     const colReference = collection(db, "Announcements");
+    const q = query(
+      colReference,
+      where("recipients", "array-contains", currentUser.userID)
+    );
 
-    getDocs(colReference).then((snapshot) => {
-      let announcementList = [];
-      snapshot.docs.forEach((doc) => {
-        announcementList.push({ ...doc.data(), id: doc.id });
-      });
-      setAnnouncements(announcementList);
+    const data = await getDocs(q);
+
+    const formattedData = data.docs.map((doc) => {
+      return {
+        ...doc.data(),
+        id: doc.id,
+      };
     });
+    setAnnouncements(formattedData);
   }
 
   const onRefresh = useCallback(() => {
