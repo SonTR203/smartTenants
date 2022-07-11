@@ -68,7 +68,7 @@ const Signup = ({ navigation }) => {
       setErrorText("Please enter your First Name.");
       return false;
     } else if (!lastName.trim()) {
-      setErrorText("Please enter your last Name.");
+      setErrorText("Please enter your Last Name.");
       return false;
     } else if (!unitNumber.trim() || isNaN(unitNumber.trim())) {
       console.log(+unitNumber);
