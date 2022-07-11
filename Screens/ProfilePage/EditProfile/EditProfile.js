@@ -11,6 +11,8 @@ import {
   Modal,
   Platform,
   Alert,
+  ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { doc, updateDoc } from "@firebase/firestore";
@@ -43,6 +45,7 @@ const EditProfile = ({ navigation }) => {
     currentUser.userProfileImage
   );
   const [saveModal, setSaveModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const changeModalVisibility = (bool) => {
     setModalVisible(bool);
@@ -152,6 +155,7 @@ const EditProfile = ({ navigation }) => {
 
   async function uploadImage(newImage) {
     try {
+      setIsLoading(true);
       const blob = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
@@ -178,6 +182,7 @@ const EditProfile = ({ navigation }) => {
       setUserProfileImage(imgUrl);
       changeProfileImageInDatabase(imgUrl);
       Alert.alert("Success", "Profile image updated");
+      setIsLoading(false);
     } catch (err) {
       console.log("error uploading image: ", err);
     }
@@ -200,12 +205,22 @@ const EditProfile = ({ navigation }) => {
     }
   }
 
+  const styles = StyleSheet.create({
+    profileLoading: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      height: 85,
+      width: 85,
+      borderRadius: 18,
+    },
+  });
+
   return (
     <SafeAreaView edges={["top"]}>
       <KeyboardAvoidingView behavior="padding">
         <ScrollView style={[theme.pageContainer, theme.globalMargins]}>
           <StatusBar style="dark" />
-
           <Modal
             animationType="slide"
             transparent={false}
@@ -245,10 +260,19 @@ const EditProfile = ({ navigation }) => {
               paddingVertical: 34,
             }}
           >
-            <Image
-              source={{ uri: userProfileImage }}
-              style={{ height: 85, width: 85, borderRadius: 18 }}
-            />
+            {isLoading ? (
+              <View style={styles.profileLoading}>
+                <ActivityIndicator
+                  size="large"
+                  color={styleVariables.colors.primary}
+                />
+              </View>
+            ) : (
+              <Image
+                source={{ uri: userProfileImage }}
+                style={{ height: 85, width: 85, borderRadius: 18 }}
+              />
+            )}
             <View style={{ paddingLeft: 17 }}>
               <Text
                 style={[styleVariables.fontSizes.title, { marginBottom: 4 }]}
