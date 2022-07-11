@@ -2,9 +2,8 @@ import { React, useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { setTime } from "../../utils/setTime";
 import { Dimensions } from "react-native";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase-config";
 import { useAppContext } from "../../Context/AppContext";
+import { updateItemInFirestore } from "../../utils/firebase.services";
 const windowWidth = Dimensions.get("window").width;
 
 function AnnouncementItem({
@@ -74,12 +73,8 @@ function AnnouncementItem({
 
   const setWasSeenToTrue = async () => {
     wasSeen.push(currentUser.userID);
-    const colRef = doc(db, "Announcements", `${id}`);
-    await updateDoc(colRef, {
-      wasSeen: wasSeen,
-    }).then(() => {
-      setViewed(true);
-    });
+    updateItemInFirestore("Announcements", id, { wasSeen: wasSeen });
+    setViewed(true);
   };
 
   return (
