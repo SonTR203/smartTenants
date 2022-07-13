@@ -36,6 +36,9 @@ function checkImageResults(data) {
 }
 
 export const moderateText = async (text) => {
+  if (text == "") {
+    return false;
+  }
   const result = await axios
     .get("https://api.sightengine.com/1.0/text/check.json", {
       params: {
