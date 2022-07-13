@@ -8,6 +8,7 @@ import {
   View,
   Image,
   Linking,
+  Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { collection, getDocs, addDoc, Timestamp } from "@firebase/firestore";
@@ -15,9 +16,11 @@ import { useTheme } from "../../ThemeContext";
 import { db } from "../../firebase-config";
 import { getItemById, handleSignIn } from "../../utils/firebase.services";
 import * as Progress from "react-native-progress";
+import { getAuth, signOut } from "firebase/auth";
 
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation, route }) => {
+  const auth = getAuth();
   const { theme, styleVariables } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,11 +57,18 @@ const Login = ({ navigation, route }) => {
     const userData = await getItemById("Tenants", uid);
     if (userData) {
       setLoading(false);
-      if (userData.tenantAuthorized === true) {
-        navigation.navigate("Newsfeed");
+      if (userData.isActive !== true) {
+        Alert.alert(
+          "Your account has been deactivated. Please contact your administrator for more information."
+        );
+        signOut(auth);
       } else {
-        createNotificationCollection(userData);
-        navigation.navigate("AccountApprovalPending");
+        if (userData.tenantAuthorized === true) {
+          navigation.navigate("Newsfeed");
+        } else {
+          createNotificationCollection(userData);
+          navigation.navigate("AccountApprovalPending");
+        }
       }
     } else {
       alert("User not found");
