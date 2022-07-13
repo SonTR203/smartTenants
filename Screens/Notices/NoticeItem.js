@@ -27,9 +27,11 @@ function NoticeItem({
   }, []);
 
   const setWasSeenToTrue = async () => {
-    wasSeen.push(currentUser.userID);
-    updateItemInFirestore("Notices", id, { wasSeen: wasSeen });
-    setViewed(true);
+    if (!wasSeen.includes(currentUser.userID)) {
+      wasSeen.push(currentUser.userID);
+      updateItemInFirestore("Notices", id, { wasSeen: wasSeen });
+      setViewed(true);
+    }
   };
 
   return (
