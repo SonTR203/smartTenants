@@ -101,6 +101,7 @@ const Signup = ({ navigation }) => {
         buildingID,
         buildingAddress,
         buildingName,
+        email,
         unitNumber: parseInt(unitNumber),
         tenantAuthorized,
         userProfileImage: "",
