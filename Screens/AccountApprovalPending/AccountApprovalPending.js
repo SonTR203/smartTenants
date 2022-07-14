@@ -11,7 +11,7 @@ function AccountApprovalPending({ navigation }) {
 
   // log out if user is unauthorized
   const handleGoBack = () => {
-    navigation.goBack();
+    navigation.navigate("Login");
     signOut(auth);
   };
 

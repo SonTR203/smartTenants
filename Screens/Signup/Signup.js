@@ -37,6 +37,7 @@ const Signup = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [buildingAddress, setBuildingAddress] = useState("Select building");
+  const [buildingName, setBuildingName] = useState("");
   const [buildingID, setBuildingID] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [unitNumber, setUnitNumber] = useState("");
@@ -55,9 +56,9 @@ const Signup = ({ navigation }) => {
    */
 
   const setData = (building) => {
-    building = building.buildingAddress.stringValue;
-    setBuildingAddress(building);
-    setBuildingID(building.replace(/\s/g, ""));
+    setBuildingAddress(building.buildingAddress.stringValue);
+    setBuildingName(building.buildingName.stringValue);
+    setBuildingID(building.id);
   };
 
   /* This function validates inputs of the sign up screen not to be  *empty and prompts the user to enter data into empty fields *inputs: none
@@ -99,6 +100,7 @@ const Signup = ({ navigation }) => {
         lastName,
         buildingID,
         buildingAddress,
+        buildingName,
         email,
         unitNumber: parseInt(unitNumber),
         tenantAuthorized,
