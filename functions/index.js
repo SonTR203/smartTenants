@@ -176,8 +176,6 @@ exports.notificationsNewComment = functions.firestore
           authorID,
           userID,
           postID,
-          firstName,
-          lastName,
           id,
           `${firstName} ${lastName} commented on your post.`
         );
@@ -234,8 +232,6 @@ exports.notificationsNewLike = functions.firestore
           authorID,
           userID,
           postID,
-          firstName,
-          lastName,
           id,
           `${firstName} ${lastName} liked your post.`
         );
@@ -263,7 +259,12 @@ exports.updateProfilePictureNewsfeedAndMarketplace = functions.firestore
       userID,
       lastName: newLastName,
       firstName: newFirstName,
+      tenantAuthorized,
     } = newValue;
+
+    if (tenantAuthorized) {
+      await sendNotificationAuthorizedTenant(userID);
+    }
 
     // ...or the previous value before this update
     const previousValue = change.before.data();
@@ -412,8 +413,6 @@ const createNotificationItemInFirestore = async (
   authorID,
   userID,
   postID,
-  firstName,
-  lastName,
   id,
   content
 ) => {
@@ -451,6 +450,32 @@ const deleteNotificationItemInFirestore = async (authorID, id) => {
     .catch((error) => {
       log("Error deleting notification item: ", error);
     });
+};
+
+const sendNotificationAuthorizedTenant = async (userID) => {
+  log("Sending notification to approved tenant...", userID);
+  let userExpoPushToken = "";
+
+  await admin
+    .firestore()
+    .collection(`ExpoPushTokens`)
+    .where("id", "==", userID)
+    .get()
+    .then((result) => {
+      result.forEach((doc) => {
+        const data = doc.data();
+        log("user push token: ", data.expoPushToken);
+        userExpoPushToken = data.expoPushToken;
+      });
+    });
+
+  if (userExpoPushToken.length > 0) {
+    sendPushNotification(
+      userExpoPushToken,
+      "SmartTenant",
+      "Your account has been approved by an admin"
+    );
+  }
 };
 
 const sendPushNotification = async (
