@@ -28,7 +28,6 @@ import {
 } from "../../../utils/Profile/profile.services";
 import DynamicProfilePicture from "../../../components/ProfilePicture/DynamicProfilePicture";
 import { uploadImageToStorage } from "../../../utils/firebase.services";
-import { moderateImage } from "../../../utils/moderation.services";
 
 const EditProfile = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
@@ -148,28 +147,14 @@ const EditProfile = ({ navigation }) => {
       setIsLoading(true);
       const imageName = `userProfileImages/${currentUser.userID}/avatar.jpeg`;
       const imageUrl = await uploadImageToStorage(imageName, newImage);
-      const isNsfw = await moderateImage(imageUrl);
-      if (isNsfw) {
-        Alert.alert(
-          "Sorry, your profile image has been deemed innapropriate, please select another."
-        );
-        setUserProfileImage("");
-        setCurrentUser({
-          ...currentUser,
-          userProfileImage: "",
-        });
-        changeProfileImageInDatabase("");
-        setIsLoading(false);
-      } else {
-        setUserProfileImage(imageUrl);
-        setCurrentUser({
-          ...currentUser,
-          userProfileImage: imageUrl,
-        });
-        changeProfileImageInDatabase(imageUrl);
-        Alert.alert("Success", "Profile image updated");
-        setIsLoading(false);
-      }
+      setUserProfileImage(imageUrl);
+      setCurrentUser({
+        ...currentUser,
+        userProfileImage: imageUrl,
+      });
+      changeProfileImageInDatabase(imageUrl);
+      Alert.alert("Success", "Profile image updated");
+      setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
       console.log("error uploading image: ", err);
