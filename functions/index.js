@@ -70,6 +70,70 @@ exports.notificationsNewMessage = functions.firestore
   });
 
 // Send notifications to all inactive users when a new message is posted
+exports.notificationsNewNotice = functions.firestore
+  .document("Notices/{documentId}")
+  .onCreate(async (snap) => {
+    // Get info of the oncoming message
+    const newValue = snap.data();
+    const { recipients, content, subject } = newValue;
+
+    let ExpoPushTokenList = [];
+
+    await admin
+      .firestore()
+      .collection(`ExpoPushTokens`)
+      .get()
+      .then((result) => {
+        result.forEach((doc) => {
+          const data = doc.data();
+          // Get the correct Expo push token of the recipients
+          if (recipients.includes(data.id)) {
+            ExpoPushTokenList.push(data.expoPushToken);
+          }
+        });
+      });
+
+    // send notifications to the recipients
+    if (ExpoPushTokenList.length > 0) {
+      ExpoPushTokenList.forEach((token) => {
+        sendPushNotification(token, subject, content);
+      });
+    }
+  });
+
+// Send notifications to all inactive users when a new message is posted
+exports.notificationsNewAnnouncement = functions.firestore
+  .document("Announcements/{documentId}")
+  .onCreate(async (snap) => {
+    // Get info of the oncoming message
+    const newValue = snap.data();
+    const { recipients, content, subject } = newValue;
+
+    let ExpoPushTokenList = [];
+
+    await admin
+      .firestore()
+      .collection(`ExpoPushTokens`)
+      .get()
+      .then((result) => {
+        result.forEach((doc) => {
+          const data = doc.data();
+          // Get the correct Expo push token of the recipients
+          if (recipients.includes(data.id)) {
+            ExpoPushTokenList.push(data.expoPushToken);
+          }
+        });
+      });
+
+    // send notifications to the recipients
+    if (ExpoPushTokenList.length > 0) {
+      ExpoPushTokenList.forEach((token) => {
+        sendPushNotification(token, subject, content);
+      });
+    }
+  });
+
+// Send notifications to all inactive users when a new message is posted
 exports.notificationsNewComment = functions.firestore
   .document("Newsfeed/{parentId}/peopleWhoCommented/{childId}")
   .onWrite(async (change) => {
@@ -409,8 +473,8 @@ const sendPushNotification = async (
   messages.push({
     to: pushToken,
     sound: "default",
-    title: senderName,
-    body: content,
+    title: senderName, // Announcement, Notice, someone's name
+    body: content, // content of the message, "liked your post", "commented on your post", etc.
     data: data,
   });
   // }
