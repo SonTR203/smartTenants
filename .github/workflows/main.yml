@@ -17,9 +17,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - uses: expo/expo-github-action@v5
+      - uses: expo/expo-github-action@v7
         with:
-          expo-version: 5.x
+          expo-version: latest
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
       # ESLint and Prettier must be in `package.json`
