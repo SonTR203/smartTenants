@@ -24,6 +24,7 @@ import { constants } from "../../utils/constants";
 
 import MessagingBubble from "./MessagingBubble";
 import { useTheme } from "../../ThemeContext";
+import { StatusBar } from "expo-status-bar";
 
 function PrivateMessagingScreen({ route }) {
   const { styleVariables } = useTheme();
@@ -111,6 +112,7 @@ function PrivateMessagingScreen({ route }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
+      <StatusBar style="dark" />
       <View style={styles.textDisplayContainer}>
         {loading ? (
           <Text style={styles.loadingText}>Loading your messages...</Text>

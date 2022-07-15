@@ -43,6 +43,8 @@ exports.notificationsNewMessage = functions.firestore
       sendPushNotification(otherPersonExpoPushToken, senderName, content, {
         screen: "PrivateMessagingScreen",
         channelId: documentId,
+        senderName: senderName,
+        senderId: senderId,
       });
     }
 

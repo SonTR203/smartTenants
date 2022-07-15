@@ -32,6 +32,15 @@ import * as ExpoNotifications from "expo-notifications";
 
 const Stack = createStackNavigator();
 
+// For in-app notificaion badges & alert. Need use in the future
+// ExpoNotifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: false,
+//     shouldPlaySound: false,
+//     shouldSetBadge: true,
+//   }),
+// });
+
 const MarketplaceNavigator = () => {
   const { currentUser } = useAppContext();
   return (
@@ -108,16 +117,11 @@ const NewsfeedNavigator = ({ navigation }) => {
   const { post, currentUser, setCurrentUser, setPost } = useAppContext();
 
   const responseListener = useRef();
-  useEffect(() => {
-    // notificationListener.current =
-    //   Notifications.addNotificationReceivedListener((notification) => {
-    //     // console.log("addNotificationReceivedListener: ", notification);
-    //   });
 
+  useEffect(() => {
     responseListener.current =
       ExpoNotifications.addNotificationResponseReceivedListener(
         async (response) => {
-          // console.log(response.notification.request.content.data);
           const data = response.notification.request.content.data;
           console.log(data.screen);
           switch (data.screen) {
@@ -131,6 +135,17 @@ const NewsfeedNavigator = ({ navigation }) => {
                 commentId: data.commentId || null,
                 itemUserId: notificationPost.userID,
                 item: notificationPost,
+              });
+              break;
+            }
+            case "PrivateMessagingScreen": {
+              navigation.navigate("MarketplaceNavigator", {
+                screen: "PrivateMessagingScreen",
+                params: {
+                  otherPersonName: data.senderName,
+                  otherPersonId: data.senderId,
+                  channelId: data.channelId,
+                },
               });
               break;
             }
@@ -157,9 +172,6 @@ const NewsfeedNavigator = ({ navigation }) => {
       );
 
     return () => {
-      // Notifications.removeNotificationSubscription(
-      //   notificationListener.current
-      // );
       ExpoNotifications.removeNotificationSubscription(
         responseListener.current
       );
