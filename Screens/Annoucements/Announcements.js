@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase-config";
@@ -10,15 +10,35 @@ import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../Context/AppContext";
 
-function Announcements({ navigation }) {
+function Announcements({ navigation, route }) {
   const [announcements, setAnnouncements] = useState([]);
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const { currentUser } = useAppContext();
+  const listRef = useRef();
 
   useEffect(() => {
     getAnnouncements();
   }, []);
+
+  // execute function
+  useEffect(() => {
+    let timeout;
+    // if there are comments, scroll to the the correct comment
+    if (route.params.announcementId && announcements.length > 0) {
+      const index = announcements
+        .map((announcement) => announcement.id)
+        .indexOf(route.params.announcementId);
+
+      timeout = setTimeout(() => {
+        listRef.current?.scrollToIndex({ animated: true, index: index });
+      }, 500);
+    }
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [route.params, announcements]);
 
   const styles = StyleSheet.create({
     refreshControl: { backgroundColor: "white" },
@@ -58,6 +78,7 @@ function Announcements({ navigation }) {
       <StatusBar style="dark" />
 
       <FlatList
+        ref={listRef}
         data={announcements}
         renderItem={({ item }) => {
           return (

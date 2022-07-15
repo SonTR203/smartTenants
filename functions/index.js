@@ -101,7 +101,7 @@ exports.notificationsNewNotice = functions.firestore
     if (ExpoPushTokenList.length > 0) {
       ExpoPushTokenList.forEach((token) => {
         sendPushNotification(token, subject, content, {
-          screen: "IndividualNotice",
+          screen: "Notices",
           noticeId: documentId,
         });
       });
@@ -137,7 +137,7 @@ exports.notificationsNewAnnouncement = functions.firestore
     if (ExpoPushTokenList.length > 0) {
       ExpoPushTokenList.forEach((token) => {
         sendPushNotification(token, subject, content, {
-          screen: "IndividualAnnouncement",
+          screen: "Announcements",
           announcementId: documentId,
         });
       });

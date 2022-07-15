@@ -33,7 +33,9 @@ function ListHeader({
           <Pressable
             id="announcements"
             onPress={() => {
-              navigation.navigate("Announcements");
+              navigation.navigate("Announcements", {
+                announcementId: null,
+              });
             }}
             style={[theme.cardButton, styles.cardButton]}
           >
@@ -73,7 +75,9 @@ function ListHeader({
         <Pressable
           id="notices"
           onPress={() => {
-            navigation.navigate("Notices");
+            navigation.navigate("Notices", {
+              noticeId: null,
+            });
           }}
           style={[theme.cardButton, styles.cardButtonBottom]}
         >

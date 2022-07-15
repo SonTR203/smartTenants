@@ -134,27 +134,25 @@ const NewsfeedNavigator = ({ navigation }) => {
               });
               break;
             }
-
-            case "IndividualNotice":
-              navigation.navigate("IndividualNotice", {
-                notice: data.notice,
-                previousScreen: "Newsfeed",
-                collection: "Notices",
+            case "Notices":
+              navigation.navigate("NotificationsNavigator", {
+                screen: "Notices",
+                params: {
+                  noticeId: data.noticeId,
+                },
               });
               break;
-            case "IndividualAnnouncement":
-              navigation.navigate("IndividualAnnouncement", {
-                announcement: data.announcement,
-                previousScreen: "Newsfeed",
-                collection: "Announcements",
+            case "Announcements":
+              navigation.navigate("NotificationsNavigator", {
+                screen: "Announcements",
+                params: {
+                  announcementId: data.announcementId,
+                },
               });
               break;
             default:
               break;
           }
-          // navigation.navigate("NotificationsNavigator", {
-          //   screen: "Notifications",
-          // });
         }
       );
 
