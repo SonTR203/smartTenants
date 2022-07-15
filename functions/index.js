@@ -259,12 +259,9 @@ exports.updateProfilePictureNewsfeedAndMarketplace = functions.firestore
       userID,
       lastName: newLastName,
       firstName: newFirstName,
-      tenantAuthorized,
-    } = newValue;
 
-    if (tenantAuthorized) {
-      await sendNotificationAuthorizedTenant(userID);
-    }
+      tenantAuthorized: newTenantAuthorized,
+    } = newValue;
 
     // ...or the previous value before this update
     const previousValue = change.before.data();
@@ -272,7 +269,13 @@ exports.updateProfilePictureNewsfeedAndMarketplace = functions.firestore
       userProfileImage: oldProfileImage,
       lastName: oldLastName,
       firstName: oldFirstName,
+      tenantAuthorized: oldTenantAuthorized,
     } = previousValue;
+
+    if (newTenantAuthorized === true && oldTenantAuthorized === false) {
+      // tenant JUST been approved, send notifications
+      await sendNotificationAuthorizedTenant(userID);
+    }
 
     // update profile picture if it has changed
     if (newProfileImage !== oldProfileImage) {
