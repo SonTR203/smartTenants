@@ -33,21 +33,11 @@ function PrivateMessagingScreen({ route }) {
   const listRef = useRef();
   const [sendingText, setSendingText] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { currentUser, newPrivateMessages, setNewPrivateMessages } =
-    useAppContext();
+  const { currentUser } = useAppContext();
 
   useEffect(() => {
     if (route.params && route.params.channelId) {
       setChannelId(route.params.channelId);
-      // console.log("channel id: ", route.params.channelId);
-      if (newPrivateMessages.length > 0) {
-        // console.log("new private messages: ", newPrivateMessages);
-        const updatedMessages = newPrivateMessages.filter(
-          (message) => message.id === route.params.channelId
-        );
-        // console.log("updatedMessages: ", updatedMessages);
-        setNewPrivateMessages(updatedMessages);
-      }
     }
   }, [route.params]);
 

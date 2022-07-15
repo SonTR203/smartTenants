@@ -16,7 +16,7 @@ function NotificationItem({
 }) {
   const [timeSincePost, setTimeSincePost] = useState("");
 
-  const { currentUser, setPost } = useAppContext();
+  const { currentUser, setPost, notificationBadges } = useAppContext();
 
   useEffect(() => {
     if (notifications) {
@@ -54,92 +54,56 @@ function NotificationItem({
     if (docSnap.exists()) {
       setPost(formattedPost);
       navigation.navigate("IndividualPosts");
+      setWasSeenToTrue(notifications);
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
     }
   }
 
-  if (notifications.postID == "") {
-    return (
-      <View
-        id="post"
-        style={[theme.cardButton, styles(styleVariables).container]}
-      >
-        <View id="notificationContent">
-          <View
-            id="timeStamp-readState"
-            style={styles(styleVariables).timestampContainer}
-          >
-            <Text
-              style={[
-                styleVariables.fontSizes.callout,
-                styles(styleVariables).timestampText,
-              ]}
-            >
-              {timeSincePost}
-            </Text>
-            {notifications.wasSeen == false && (
-              <View
-                id="notificationIndice"
-                style={styles(styleVariables).notificationIndice}
-              />
-            )}
-          </View>
-          <Text>{notifications.content}</Text>
-        </View>
+  const handleViewNotifications = () => {
+    viewNotificationPost(notifications);
+  };
 
-        <MaterialCommunityIcons
-          name="chevron-right"
-          size={24}
-          color={styleVariables.colors.primary}
-          style={styles(styleVariables).chevron}
-        />
+  return (
+    <TouchableOpacity
+      // navigate to post page on press
+      id="post"
+      disabled={notifications.postID == "" ? true : false}
+      onPress={handleViewNotifications}
+      style={[theme.cardButton, styles(styleVariables).container]}
+    >
+      <View id="notificationContent">
+        <View
+          id="timeStamp-readState"
+          style={styles(styleVariables).timestampContainer}
+        >
+          <Text
+            style={[
+              styleVariables.fontSizes.callout,
+              styles(styleVariables).timestampText,
+            ]}
+          >
+            {timeSincePost}
+          </Text>
+          {notificationBadges.unseen.includes(notifications.id) && (
+            <View
+              id="notificationIndice"
+              style={styles(styleVariables).notificationIndice}
+            />
+          )}
+        </View>
+        <Text>{notifications.content}</Text>
       </View>
-    );
-  } else {
-    return (
-      <TouchableOpacity
-        // navigate to post page on press
-        id="post"
-        onPress={() => {
-          viewNotificationPost(notifications);
-          setWasSeenToTrue(notifications);
-        }}
-        style={[theme.cardButton, styles(styleVariables).container]}
-      >
-        <View id="notificationContent">
-          <View
-            id="timeStamp-readState"
-            style={styles(styleVariables).timestampContainer}
-          >
-            <Text
-              style={[
-                styleVariables.fontSizes.callout,
-                styles(styleVariables).timestampText,
-              ]}
-            >
-              {timeSincePost}
-            </Text>
-            {notifications.wasSeen == false && (
-              <View
-                id="notificationIndice"
-                style={styles(styleVariables).notificationIndice}
-              />
-            )}
-          </View>
-          <Text>{notifications.content}</Text>
-        </View>
 
-        <MaterialCommunityIcons
-          name="chevron-right"
-          size={24}
-          color={styleVariables.colors.primary}
-          style={styles(styleVariables).chevron}
-        />
-      </TouchableOpacity>
-    );
-  }
+      <MaterialCommunityIcons
+        name="chevron-right"
+        size={24}
+        color={styleVariables.colors.primary}
+        style={styles(styleVariables).chevron}
+      />
+    </TouchableOpacity>
+  );
 }
 
 const styles = (styleVariables) =>

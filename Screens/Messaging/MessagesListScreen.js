@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "@firebase/firestore";
+// import { collection, getDocs, query, where } from "@firebase/firestore";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import {
@@ -11,44 +11,25 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppContext } from "../../Context/AppContext";
-import { db } from "../../firebase-config";
+// import { db } from "../../firebase-config";
 import { setTime } from "../../utils/setTime";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import _ from "lodash";
 
-function MessagesListScreen({ route, navigation }) {
+function MessagesListScreen({ navigation }) {
   const [messagesList, setMessagesList] = useState([]);
-  const { currentUser, newPrivateMessages } = useAppContext();
+  const { currentUser, marketplaceBadges } = useAppContext();
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      if (
-        (route.params && route.params.userId) ||
-        newPrivateMessages.length > 0
-      ) {
-        fetchMessages(route.params.userId);
-      }
-    });
-
-    return unsubscribe;
-  }, [route.params, newPrivateMessages, navigation]);
-
-  useEffect(() => {
-    if (newPrivateMessages.length > 0 && route.params && route.params.userId) {
-      fetchMessages(route.params.userId);
+    console.log("marketplace screen list: ", marketplaceBadges.list.length);
+    if (marketplaceBadges.list.length > 0) {
+      const sortedListOfNotifications = _.sortBy(
+        marketplaceBadges.list,
+        "timestamp"
+      ).reverse();
+      setMessagesList(sortedListOfNotifications);
     }
-  }, [newPrivateMessages]);
-
-  const fetchMessages = async (id) => {
-    let myPosts = [];
-    const messagesRef = collection(db, `MessagingList`);
-    const q = query(messagesRef, where("hasPeople", "array-contains", id));
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (doc) => {
-      myPosts.push(doc.data());
-    });
-    setMessagesList(myPosts);
-  };
+  }, [marketplaceBadges.list]);
 
   const handleNavigateToPrivateMessagingScreen = async (
     otherPersonName,
@@ -85,7 +66,7 @@ function MessagesListScreen({ route, navigation }) {
     }
     return (
       <View style={styles.itemContainer}>
-        {newPrivateMessages.includes(item.id) ? (
+        {marketplaceBadges.unseen.includes(item.id) ? (
           <MaterialCommunityIcons name="new-box" size={30} color={"red"} />
         ) : null}
         <TouchableOpacity
@@ -110,9 +91,7 @@ function MessagesListScreen({ route, navigation }) {
             >
               {isNew ? "New Inquiry" : lastMessage}
             </Text>
-            {item.lastMessage &&
-            item.lastMessage.timestamp &&
-            item.lastMessage.seen ? (
+            {item.lastMessage ? (
               <View style={styles.itemTimestamp}>
                 <Text>
                   {setTime(item.lastMessage.timestamp.seconds * 1000)}

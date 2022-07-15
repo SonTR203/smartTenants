@@ -23,6 +23,8 @@ import {
   ActionSheetProvider,
   connectActionSheet,
 } from "@expo/react-native-action-sheet";
+import { View } from "react-native";
+import NotificationBadge from "./components/NotificationBadge";
 
 const Tab = createBottomTabNavigator();
 
@@ -62,51 +64,70 @@ function AppContainer({ showSplashscreen, setShowSplashscreen }) {
           ) : (
             <NavigationContainer>
               <Tab.Navigator
-                initialRouteName="Newsfeed "
+                initialRouteName="NewsfeedNavigator"
                 screenOptions={({ route }) => ({
                   tabBarIcon: ({ focused }) => {
                     let iconName;
                     let color;
-                    if (route.name === "Marketplace ") {
+                    if (route.name === "MarketplaceNavigator") {
                       iconName = "store";
                       color = focused ? "#395E66" : "#395E6654";
-                    } else if (route.name === "Newsfeed ") {
+                    } else if (route.name === "NewsfeedNavigator") {
                       iconName = "newspaper";
                       color = focused ? "#395E66" : "#395E6654";
-                    } else if (route.name === "Notifications ") {
+                    } else if (route.name === "NotificationsNavigator") {
                       iconName = "bell";
                       color = focused ? "#395E66" : "#395E6654";
-                    } else if (route.name === "Profile ") {
+                    } else if (route.name === "ProfileNavigator") {
                       iconName = "account";
                       color = focused ? "#395E66" : "#395E6654";
                     }
                     return (
-                      <MaterialCommunityIcons
-                        name={iconName}
-                        size={28}
-                        color={color}
-                      />
+                      <View
+                      // style={{
+                      //   flexDirection: "row",
+                      //   paddingTop: 10,
+                      // }}
+                      >
+                        <MaterialCommunityIcons
+                          name={iconName}
+                          size={28}
+                          color={color}
+                        />
+                        <NotificationBadge screen={route.name} />
+                      </View>
                     );
                   },
+
                   headerShown: false,
                   tabBarActiveTintColor: "#395E66",
                 })}
               >
                 {/* ======= Marketplace ======= */}
                 <Tab.Screen
-                  name="Marketplace "
+                  name="MarketplaceNavigator"
                   component={MarketplaceNavigator}
                   options={{
+                    title: "Marketplace",
                     headerShown: false,
+                    tabBarLabelStyle: {
+                      fontSize: 12,
+                      paddingBottom: 2,
+                    },
                   }}
                 />
 
                 {/* ======= Newsfeed ======= */}
                 <Tab.Screen
-                  name="Newsfeed "
+                  name="NewsfeedNavigator"
                   component={NewsfeedNavigator}
                   options={({ route }) => ({
+                    title: "Newsfeed",
                     left: { display: "none" },
+                    tabBarLabelStyle: {
+                      fontSize: 12,
+                      paddingBottom: 2,
+                    },
                     tabBarStyle: {
                       display: getRouteName(route)
                         ? getRouteName(route)
@@ -117,15 +138,29 @@ function AppContainer({ showSplashscreen, setShowSplashscreen }) {
 
                 {/* ======= Notifications ======= */}
                 <Tab.Screen
-                  name="Notifications "
+                  name="NotificationsNavigator"
                   component={NotificationNavigator}
+                  options={{
+                    title: "Notifications",
+                    tabBarLabelStyle: {
+                      fontSize: 12,
+                      paddingBottom: 2,
+                    },
+                  }}
                 />
 
                 {/* ======= Profile ======= */}
                 <Tab.Screen
-                  name="Profile "
+                  name="ProfileNavigator"
                   component={ProfileNavigator}
-                  options={{ headerShown: false }}
+                  options={{
+                    title: "Profile",
+                    headerShown: false,
+                    tabBarLabelStyle: {
+                      fontSize: 12,
+                      paddingBottom: 2,
+                    },
+                  }}
                   tabBarOptions={{
                     display: "none",
                   }}
