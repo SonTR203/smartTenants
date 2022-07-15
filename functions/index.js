@@ -40,7 +40,10 @@ exports.notificationsNewMessage = functions.firestore
 
     // send notifications to the other person
     if (otherPersonExpoPushToken.length > 0) {
-      sendPushNotification(otherPersonExpoPushToken, senderName, content);
+      sendPushNotification(otherPersonExpoPushToken, senderName, content, {
+        screen: "PrivateMessagingScreen",
+        channelId: documentId,
+      });
     }
 
     // update latest message in the conversation
@@ -72,9 +75,10 @@ exports.notificationsNewMessage = functions.firestore
 // Send notifications to all inactive users when a new message is posted
 exports.notificationsNewNotice = functions.firestore
   .document("Notices/{documentId}")
-  .onCreate(async (snap) => {
+  .onCreate(async (snap, context) => {
     // Get info of the oncoming message
     const newValue = snap.data();
+    const documentId = context.params.documentId;
     const { recipients, content, subject } = newValue;
 
     let ExpoPushTokenList = [];
@@ -96,7 +100,10 @@ exports.notificationsNewNotice = functions.firestore
     // send notifications to the recipients
     if (ExpoPushTokenList.length > 0) {
       ExpoPushTokenList.forEach((token) => {
-        sendPushNotification(token, subject, content);
+        sendPushNotification(token, subject, content, {
+          screen: "IndividualNotice",
+          noticeId: documentId,
+        });
       });
     }
   });
@@ -104,8 +111,9 @@ exports.notificationsNewNotice = functions.firestore
 // Send notifications to all inactive users when a new message is posted
 exports.notificationsNewAnnouncement = functions.firestore
   .document("Announcements/{documentId}")
-  .onCreate(async (snap) => {
+  .onCreate(async (snap, context) => {
     // Get info of the oncoming message
+    const documentId = context.params.documentId;
     const newValue = snap.data();
     const { recipients, content, subject } = newValue;
 
@@ -128,7 +136,10 @@ exports.notificationsNewAnnouncement = functions.firestore
     // send notifications to the recipients
     if (ExpoPushTokenList.length > 0) {
       ExpoPushTokenList.forEach((token) => {
-        sendPushNotification(token, subject, content);
+        sendPushNotification(token, subject, content, {
+          screen: "IndividualAnnouncement",
+          announcementId: documentId,
+        });
       });
     }
   });
@@ -168,7 +179,7 @@ exports.notificationsNewComment = functions.firestore
             authorExpoPushToken,
             "",
             `${firstName} ${lastName} commented on your post.`,
-            { postID: postID }
+            { screen: "IndividualPosts", postId: postID, commentId: id }
           );
         }
 
@@ -225,7 +236,7 @@ exports.notificationsNewLike = functions.firestore
             authorExpoPushToken,
             "",
             `${firstName} ${lastName} liked your post.`,
-            { postID: postID }
+            { screen: "IndividualPosts", postId: postID }
           );
         }
         await createNotificationItemInFirestore(

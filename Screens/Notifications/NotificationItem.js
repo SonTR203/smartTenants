@@ -43,6 +43,11 @@ function NotificationItem({
   };
 
   async function viewNotificationPost(notifications) {
+    // send comment id to scroll to comment
+    const commentId = notifications.content.includes("commented")
+      ? notifications.id
+      : null;
+
     const docRef = doc(db, "Newsfeed", `${notifications.postID}`);
     const docSnap = await getDoc(docRef);
     const postData = docSnap.data();
@@ -53,7 +58,9 @@ function NotificationItem({
 
     if (docSnap.exists()) {
       setPost(formattedPost);
-      navigation.navigate("IndividualPosts");
+      navigation.navigate("IndividualPosts", {
+        commentId: commentId,
+      });
       setWasSeenToTrue(notifications);
     } else {
       // doc.data() will be undefined in this case

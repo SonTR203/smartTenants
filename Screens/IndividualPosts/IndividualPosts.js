@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAppContext } from "../../Context/AppContext";
 import { db } from "../../firebase-config";
 import {
@@ -29,7 +29,7 @@ import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfil
 
 const width = Dimensions.get("window").width;
 
-const IndividualPosts = ({ navigation }) => {
+const IndividualPosts = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const { currentUser, post } = useAppContext();
   const [peoplePerson, setPeoplePerson] = useState("people");
@@ -37,6 +37,7 @@ const IndividualPosts = ({ navigation }) => {
   const [commentCount, setCommentCount] = useState(0);
   const [userLiked, setUserLiked] = useState(false);
   const [numberOfLikes, setNumberOfLikes] = useState(0);
+  const commentListRef = useRef();
 
   // Get all Comments
   const getComments = () => {
@@ -66,6 +67,25 @@ const IndividualPosts = ({ navigation }) => {
       }
     }
   }, [post]);
+
+  // execute function
+  useEffect(() => {
+    let timeout;
+    // if there are comments, scroll to the the correct comment
+    if (route.params.commentId && comments.length > 0) {
+      const index = comments
+        .map((comment) => comment.id)
+        .indexOf(route.params.commentId);
+
+      timeout = setTimeout(() => {
+        commentListRef.current?.scrollToIndex({ animated: true, index: index });
+      }, 500);
+    }
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [route.params, comments]);
 
   const setHeartsToGreen = () => {
     post.peopleWhoLiked.map((item) => {
@@ -169,6 +189,7 @@ const IndividualPosts = ({ navigation }) => {
       <StatusBar style="auto" />
       <View style={theme.pageContainer}>
         <FlatList
+          ref={commentListRef}
           removeClippedSubviews={true}
           ListHeaderComponent={
             <ListHeader
