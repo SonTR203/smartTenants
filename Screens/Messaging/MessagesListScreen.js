@@ -19,7 +19,7 @@ function MessagesListScreen({ navigation }) {
   const { currentUser, marketplaceBadges } = useAppContext();
 
   useEffect(() => {
-    console.log("marketplace screen list: ", marketplaceBadges.list.length);
+    // console.log("marketplace screen list: ", marketplaceBadges.list.length);
     if (marketplaceBadges.list.length > 0) {
       const sortedListOfNotifications = _.sortBy(
         marketplaceBadges.list,
