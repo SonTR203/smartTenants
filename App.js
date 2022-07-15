@@ -83,12 +83,7 @@ function AppContainer({ showSplashscreen, setShowSplashscreen }) {
                       color = focused ? "#395E66" : "#395E6654";
                     }
                     return (
-                      <View
-                      // style={{
-                      //   flexDirection: "row",
-                      //   paddingTop: 10,
-                      // }}
-                      >
+                      <View>
                         <MaterialCommunityIcons
                           name={iconName}
                           size={28}
