@@ -5,6 +5,8 @@ import {
   RefreshControl,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity,
+  Text,
 } from "react-native";
 import { wait } from "../../utils/wait";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,11 +17,14 @@ import MarketplaceItem from "./MarketplaceItem";
 import MarketplaceFirstItem from "./MarketplaceFirstItem";
 import ListFooter from "../Newsfeed/ListFooter";
 import { getMarketplaceItems } from "../../utils/firebase.services";
+import { useAppContext } from "../../Context/AppContext";
+import { Entypo } from "@expo/vector-icons";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
+  const { currentUser, marketplaceBadges } = useAppContext();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -48,6 +53,12 @@ const MarketplaceScreen = ({ navigation, route }) => {
     }
   }, [route.params]);
 
+  const handleNavigate = () => {
+    navigation.navigate("MessagesListScreen", {
+      userId: currentUser.userID,
+    });
+  };
+
   const styles = StyleSheet.create({
     newsfeedContainer: {
       flex: 1,
@@ -74,6 +85,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
     // CONTAINER
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
+
       {/* ITEM LIST  */}
       <View style={styles.flatListContainer}>
         {itemList ? (
@@ -86,10 +98,86 @@ const MarketplaceScreen = ({ navigation, route }) => {
             keyExtractor={(item, index) => item + index}
             ListHeaderComponent={() => {
               return (
-                <MarketplaceFirstItem
-                  item={itemList[0]}
-                  navigation={navigation}
-                />
+                <>
+                  <TouchableOpacity
+                    onPress={handleNavigate}
+                    style={{
+                      margin: 16,
+                      backgroundColor: "white",
+                      padding: 16,
+                      borderRadius: 24,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+
+                      shadowColor: "#000",
+                      shadowOffset: {
+                        width: 0,
+                        height: 1,
+                      },
+                      shadowOpacity: 0.22,
+                      shadowRadius: 2.22,
+
+                      elevation: 3,
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#395E66",
+                          fontSize: 22,
+                          lineHeight: 28,
+                          marginLeft: 6,
+                          fontWeight: "500",
+                        }}
+                      >
+                        Messages
+                      </Text>
+                      {marketplaceBadges.unseen.length > 0 ? (
+                        <View
+                          style={{
+                            width: 24,
+                            height: 24,
+                            marginLeft: 8,
+                            paddingHorizontal: 8,
+                            paddingVertical: 2,
+                            backgroundColor: "#395E66",
+                            borderRadius: 20,
+
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontWeight: "400",
+                              color: "white",
+                              fontSize: 13,
+                              lineHeight: 18,
+                            }}
+                          >
+                            {marketplaceBadges.unseen.length}
+                          </Text>
+                        </View>
+                      ) : null}
+                    </View>
+
+                    <Entypo
+                      name="chevron-small-right"
+                      size={40}
+                      color="#395E66"
+                    />
+                  </TouchableOpacity>
+                  <MarketplaceFirstItem
+                    item={itemList[0]}
+                    navigation={navigation}
+                  />
+                </>
               );
             }}
             renderItem={({ item, index }) => {

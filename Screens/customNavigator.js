@@ -1,6 +1,6 @@
 //mix tab and stack navigators: https://www.youtube.com/watch?v=dkriklWelm0&t=139s
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Newsfeed from "./Newsfeed/Newsfeed";
 import BuildingInfo from "./BuildingInfo/BuildingInfo";
@@ -28,8 +28,18 @@ import PrivateMessagingScreen from "./Messaging/PrivateMessagingScreen";
 import MessagesListScreen from "./Messaging/MessagesListScreen";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getItemById, uploadExpoPushToken } from "../utils/firebase.services";
+import * as ExpoNotifications from "expo-notifications";
 
 const Stack = createStackNavigator();
+
+// For in-app notificaion badges & alert. Need use in the future
+// ExpoNotifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: false,
+//     shouldPlaySound: false,
+//     shouldSetBadge: true,
+//   }),
+// });
 
 const MarketplaceNavigator = () => {
   const { currentUser } = useAppContext();
@@ -103,8 +113,70 @@ const MarketplaceNavigator = () => {
   );
 };
 
-const NewsfeedNavigator = () => {
-  const { post, currentUser, setCurrentUser } = useAppContext();
+const NewsfeedNavigator = ({ navigation }) => {
+  const { post, currentUser, setCurrentUser, setPost } = useAppContext();
+
+  const responseListener = useRef();
+
+  useEffect(() => {
+    responseListener.current =
+      ExpoNotifications.addNotificationResponseReceivedListener(
+        async (response) => {
+          const data = response.notification.request.content.data;
+          console.log(data.screen);
+          switch (data.screen) {
+            case "IndividualPosts": {
+              const notificationPost = await getItemById(
+                "Newsfeed",
+                data.postId
+              );
+              await setPost(notificationPost);
+              navigation.navigate("IndividualPosts", {
+                commentId: data.commentId || null,
+                itemUserId: notificationPost.userID,
+                item: notificationPost,
+              });
+              break;
+            }
+            case "PrivateMessagingScreen": {
+              navigation.navigate("MarketplaceNavigator", {
+                screen: "PrivateMessagingScreen",
+                params: {
+                  otherPersonName: data.senderName,
+                  otherPersonId: data.senderId,
+                  channelId: data.channelId,
+                },
+              });
+              break;
+            }
+            case "Notices":
+              navigation.navigate("NotificationsNavigator", {
+                screen: "Notices",
+                params: {
+                  noticeId: data.noticeId,
+                },
+              });
+              break;
+            case "Announcements":
+              navigation.navigate("NotificationsNavigator", {
+                screen: "Announcements",
+                params: {
+                  announcementId: data.announcementId,
+                },
+              });
+              break;
+            default:
+              break;
+          }
+        }
+      );
+
+    return () => {
+      ExpoNotifications.removeNotificationSubscription(
+        responseListener.current
+      );
+    };
+  }, []);
 
   useEffect(() => {
     const auth = getAuth();

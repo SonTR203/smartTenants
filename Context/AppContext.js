@@ -11,47 +11,88 @@ function AppProvider({ children }) {
   const [unauthorizedUsers, setUnauthorizedUsers] = useState({});
   const [allUsers, setAllUsers] = useState({});
   const [buildings, setBuildings] = useState({});
-  const [newPrivateMessages, setNewPrivateMessages] = useState([]);
+  const [marketplaceBadges, setMarketplaceBadges] = useState({
+    unseen: [],
+    list: [],
+  });
+  const [notificationBadges, setNotificationBadges] = useState({
+    unseen: [],
+    list: [],
+  });
 
   useEffect(() => {
-    let unsubscribe;
+    let unsubscribeMarketplace;
     if (currentUser && currentUser.userID) {
-      console.log("register for notifications");
-      const colReference = collection(db, `MessagingList`);
-      const q = query(
-        colReference,
+      // console.log("register for marketplace notifications");
+      const marketplaceReference = collection(db, `MessagingList`);
+      const marketplaceQuery = query(
+        marketplaceReference,
         where("hasPeople", "array-contains", currentUser.userID)
       );
-      unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const latestMsgs = [];
+      unsubscribeMarketplace = onSnapshot(marketplaceQuery, (querySnapshot) => {
+        const newMessages = [];
+        const messagesList = [];
         querySnapshot.forEach((doc) => {
-          latestMsgs.push(doc.data());
-        });
-        if (latestMsgs.length > 0) {
-          const [lastItem] = latestMsgs.slice(-1);
-          // console.log("newest message", lastItem);
-          // if you receive a NEW message, update UI to alert user
+          const data = doc.data();
           if (
-            lastItem &&
-            lastItem.lastMessage &&
-            lastItem.lastMessage.senderId !== currentUser.userID &&
-            (!lastItem.lastMessage.seen || lastItem.isNew)
+            data.lastMessage &&
+            data.lastMessage.senderId !== currentUser.userID &&
+            (!data.lastMessage.seen || data.isNew)
           ) {
-            // alert("You have a new activity in Marketplace chat!");
-            setNewPrivateMessages([...newPrivateMessages, lastItem.id]);
+            newMessages.push(data.id);
           }
-        }
-        // add code to update UI to alert user of new message
-        // setMessagesList([...latestMsgs]);
+          messagesList.push(data);
+        });
+
+        console.log("messagesList onSnapshot", messagesList.length);
+        setMarketplaceBadges({
+          unseen: newMessages,
+          list: messagesList,
+        });
       });
+
+      return () => {
+        if (unsubscribeMarketplace) {
+          unsubscribeMarketplace();
+        }
+      };
+    }
+  }, [currentUser.userID]);
+
+  useEffect(() => {
+    let unsubscribeNotifications;
+    if (currentUser && currentUser.userID) {
+      const notificationRef = collection(
+        db,
+        `Tenants/${currentUser.userID}/Notifications`
+      );
+      unsubscribeNotifications = onSnapshot(
+        notificationRef,
+        (querySnapshot) => {
+          const unseenNotifications = [];
+          const list = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.wasSeen === false) {
+              unseenNotifications.push(data.id);
+            }
+            list.push(data);
+          });
+
+          setNotificationBadges({
+            unseen: unseenNotifications,
+            list: list,
+          });
+        }
+      );
     }
 
     return () => {
-      if (unsubscribe) {
-        unsubscribe();
+      if (unsubscribeNotifications) {
+        unsubscribeNotifications();
       }
     };
-  }, [currentUser]);
+  }, [currentUser.userID]);
 
   return (
     <AppContext.Provider
@@ -68,8 +109,10 @@ function AppProvider({ children }) {
         setAllUsers,
         buildings,
         setBuildings,
-        newPrivateMessages,
-        setNewPrivateMessages,
+        notificationBadges,
+        setNotificationBadges,
+        marketplaceBadges,
+        setMarketplaceBadges,
       }}
     >
       {children}

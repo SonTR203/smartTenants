@@ -24,6 +24,7 @@ import { constants } from "../../utils/constants";
 
 import MessagingBubble from "./MessagingBubble";
 import { useTheme } from "../../ThemeContext";
+import { StatusBar } from "expo-status-bar";
 
 function PrivateMessagingScreen({ route }) {
   const { styleVariables } = useTheme();
@@ -33,21 +34,11 @@ function PrivateMessagingScreen({ route }) {
   const listRef = useRef();
   const [sendingText, setSendingText] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { currentUser, newPrivateMessages, setNewPrivateMessages } =
-    useAppContext();
+  const { currentUser } = useAppContext();
 
   useEffect(() => {
     if (route.params && route.params.channelId) {
       setChannelId(route.params.channelId);
-      // console.log("channel id: ", route.params.channelId);
-      if (newPrivateMessages.length > 0) {
-        // console.log("new private messages: ", newPrivateMessages);
-        const updatedMessages = newPrivateMessages.filter(
-          (message) => message.id === route.params.channelId
-        );
-        // console.log("updatedMessages: ", updatedMessages);
-        setNewPrivateMessages(updatedMessages);
-      }
     }
   }, [route.params]);
 
@@ -121,6 +112,7 @@ function PrivateMessagingScreen({ route }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
+      <StatusBar style="dark" />
       <View style={styles.textDisplayContainer}>
         {loading ? (
           <Text style={styles.loadingText}>Loading your messages...</Text>

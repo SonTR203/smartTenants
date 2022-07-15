@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { FlatList, StyleSheet, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase-config";
@@ -10,11 +10,12 @@ import { wait } from "../../utils/wait";
 import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
 
-function Notices({ navigation }) {
+function Notices({ navigation, route }) {
   const [notices, setNotices] = useState([]);
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const { currentUser } = useAppContext();
+  const listRef = useRef();
 
   const styles = StyleSheet.create({
     noticeInfo: {
@@ -57,6 +58,24 @@ function Notices({ navigation }) {
     getNotices();
   }, []);
 
+  useEffect(() => {
+    let timeout;
+    // if there are comments, scroll to the the correct comment
+    if (route.params.noticeId && notices.length > 0) {
+      const index = notices
+        .map((announcement) => announcement.id)
+        .indexOf(route.params.noticeId);
+
+      timeout = setTimeout(() => {
+        listRef.current?.scrollToIndex({ animated: true, index: index });
+      }, 500);
+    }
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [route.params, notices]);
+
   async function getNotices() {
     const colReference = collection(db, "Notices");
     const q = query(
@@ -90,6 +109,7 @@ function Notices({ navigation }) {
     >
       <StatusBar style="dark" />
       <FlatList
+        ref={listRef}
         data={notices}
         renderItem={({ item }) => {
           return (

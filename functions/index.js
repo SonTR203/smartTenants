@@ -40,7 +40,12 @@ exports.notificationsNewMessage = functions.firestore
 
     // send notifications to the other person
     if (otherPersonExpoPushToken.length > 0) {
-      sendPushNotification(otherPersonExpoPushToken, senderName, content);
+      sendPushNotification(otherPersonExpoPushToken, senderName, content, {
+        screen: "PrivateMessagingScreen",
+        channelId: documentId,
+        senderName: senderName,
+        senderId: senderId,
+      });
     }
 
     // update latest message in the conversation
@@ -72,9 +77,10 @@ exports.notificationsNewMessage = functions.firestore
 // Send notifications to all inactive users when a new message is posted
 exports.notificationsNewNotice = functions.firestore
   .document("Notices/{documentId}")
-  .onCreate(async (snap) => {
+  .onCreate(async (snap, context) => {
     // Get info of the oncoming message
     const newValue = snap.data();
+    const documentId = context.params.documentId;
     const { recipients, content, subject } = newValue;
 
     let ExpoPushTokenList = [];
@@ -96,7 +102,10 @@ exports.notificationsNewNotice = functions.firestore
     // send notifications to the recipients
     if (ExpoPushTokenList.length > 0) {
       ExpoPushTokenList.forEach((token) => {
-        sendPushNotification(token, subject, content);
+        sendPushNotification(token, subject, content, {
+          screen: "Notices",
+          noticeId: documentId,
+        });
       });
     }
   });
@@ -104,8 +113,9 @@ exports.notificationsNewNotice = functions.firestore
 // Send notifications to all inactive users when a new message is posted
 exports.notificationsNewAnnouncement = functions.firestore
   .document("Announcements/{documentId}")
-  .onCreate(async (snap) => {
+  .onCreate(async (snap, context) => {
     // Get info of the oncoming message
+    const documentId = context.params.documentId;
     const newValue = snap.data();
     const { recipients, content, subject } = newValue;
 
@@ -128,7 +138,10 @@ exports.notificationsNewAnnouncement = functions.firestore
     // send notifications to the recipients
     if (ExpoPushTokenList.length > 0) {
       ExpoPushTokenList.forEach((token) => {
-        sendPushNotification(token, subject, content);
+        sendPushNotification(token, subject, content, {
+          screen: "Announcements",
+          announcementId: documentId,
+        });
       });
     }
   });
@@ -168,7 +181,7 @@ exports.notificationsNewComment = functions.firestore
             authorExpoPushToken,
             "",
             `${firstName} ${lastName} commented on your post.`,
-            { postID: postID }
+            { screen: "IndividualPosts", postId: postID, commentId: id }
           );
         }
 
@@ -225,7 +238,7 @@ exports.notificationsNewLike = functions.firestore
             authorExpoPushToken,
             "",
             `${firstName} ${lastName} liked your post.`,
-            { postID: postID }
+            { screen: "IndividualPosts", postId: postID }
           );
         }
         await createNotificationItemInFirestore(
@@ -259,12 +272,9 @@ exports.updateProfilePictureNewsfeedAndMarketplace = functions.firestore
       userID,
       lastName: newLastName,
       firstName: newFirstName,
-      tenantAuthorized,
-    } = newValue;
 
-    if (tenantAuthorized) {
-      await sendNotificationAuthorizedTenant(userID);
-    }
+      tenantAuthorized: newTenantAuthorized,
+    } = newValue;
 
     // ...or the previous value before this update
     const previousValue = change.before.data();
@@ -272,7 +282,13 @@ exports.updateProfilePictureNewsfeedAndMarketplace = functions.firestore
       userProfileImage: oldProfileImage,
       lastName: oldLastName,
       firstName: oldFirstName,
+      tenantAuthorized: oldTenantAuthorized,
     } = previousValue;
+
+    if (newTenantAuthorized === true && oldTenantAuthorized === false) {
+      // tenant JUST been approved, send notifications
+      await sendNotificationAuthorizedTenant(userID);
+    }
 
     // update profile picture if it has changed
     if (newProfileImage !== oldProfileImage) {

@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Text,
-  Pressable,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { Text, Pressable, StyleSheet } from "react-native";
 import { useTheme } from "../ThemeContext";
 import { useAppContext } from "../Context/AppContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -15,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 function ScreenHeader({ title }) {
   const navigation = useNavigation();
   const { theme, styleVariables } = useTheme();
-  const { currentUser, newPrivateMessages } = useAppContext();
+  const { currentUser } = useAppContext();
   const styles = StyleSheet.create({
     headerPageTitle: {
       color: styleVariables.colors.white,
@@ -31,12 +25,6 @@ function ScreenHeader({ title }) {
       color: styleVariables.colors.white,
     },
   });
-
-  const handleNavigate = () => {
-    navigation.navigate("MessagesListScreen", {
-      userId: currentUser.userID,
-    });
-  };
 
   return (
     <SafeAreaView id="header" style={theme.header}>
@@ -64,42 +52,6 @@ function ScreenHeader({ title }) {
           color={styleVariables.colors.white}
         />
       </Pressable>
-
-      {title === "Marketplace" ? (
-        <View
-          style={{
-            position: "absolute",
-            right: 20,
-            top: 50,
-          }}
-        >
-          <TouchableOpacity
-            onPress={handleNavigate}
-            style={{
-              borderWidth: 2,
-              borderColor: "white",
-              padding: 10,
-              borderRadius: 5,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                fontSize: 15,
-                marginRight: 10,
-              }}
-            >
-              Messages
-            </Text>
-            {newPrivateMessages.length > 0 ? (
-              <MaterialCommunityIcons name="new-box" size={24} color={"red"} />
-            ) : null}
-          </TouchableOpacity>
-        </View>
-      ) : null}
     </SafeAreaView>
   );
 }

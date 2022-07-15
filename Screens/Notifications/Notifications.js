@@ -8,15 +8,15 @@ import NotificationItem from "./NotificationItem";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
 import {
-  getNotifications,
   getNoticeCount,
   getAnnouncementCount,
 } from "../../utils/Notifications/notifications.services";
 import { wait } from "../../utils/wait";
+import _ from "lodash";
 
 const Notifications = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
-  const { currentUser } = useAppContext();
+  const { currentUser, notificationBadges } = useAppContext();
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
   const [refreshing, setRefreshing] = useState(true);
@@ -27,25 +27,30 @@ const Notifications = ({ navigation }) => {
     setRefreshing(true);
 
     wait(1000).then(async () => {
-      const list = await getNotifications(currentUser);
-      setNotifications(list);
       fetchNoticeCount();
       fetchAnnouncementCount();
       setRefreshing(false);
     });
   }, []);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (currentUser) {
-      (async function fetchNotifications() {
-        const list = await getNotifications(currentUser);
-        setNotifications(list);
-        setRefreshing(false);
-      })();
+      await fetchNoticeCount();
+      await fetchAnnouncementCount();
+      setRefreshing(false);
     }
-    fetchNoticeCount();
-    fetchAnnouncementCount();
   }, [currentUser]);
+
+  useEffect(() => {
+    // console.log("notifications screen list: ", notificationBadges.list.length);
+    if (notificationBadges.list.length > 0) {
+      const sortedListOfNotifications = _.sortBy(
+        notificationBadges.list,
+        "timestamp"
+      ).reverse();
+      setNotifications(sortedListOfNotifications);
+    }
+  }, [notificationBadges.list]);
 
   async function fetchNoticeCount() {
     const count = await getNoticeCount(currentUser);
