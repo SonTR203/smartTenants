@@ -29,7 +29,7 @@ import {
   deleteImageFromStorage,
   uploadImageToStorage,
 } from "../../utils/firebase.services";
-import axios from "axios";
+import { moderateImage, moderateText } from "../../utils/moderation.services";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -40,9 +40,6 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [imageLoading, setImageLoading] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
-  // API Keys for SightEngine
-  const API_USER = "278265377";
-  const API_KEY = "38GEu5SU32yy5SYjvzhe";
 
   // function to handle image picking
   const pickImage = async () => {
@@ -131,7 +128,7 @@ function MarketplaceNewPostScreen({ navigation }) {
   // Moderation //
   async function moderatePost(imageUrl) {
     const imgNsfw = await moderateImage(imageUrl);
-    const textNsfw = await moderateText();
+    const textNsfw = await moderateText(`${title} ${content}`);
     // if either image or text is nsfw, return true
     if (imgNsfw === true || textNsfw === true) {
       return true;
@@ -141,72 +138,6 @@ function MarketplaceNewPostScreen({ navigation }) {
       // if something other happened, return undefined to show error
     } else {
       return undefined;
-    }
-  }
-  async function moderateImage(imgUrl) {
-    const result = await axios
-      .get("https://api.sightengine.com/1.0/check.json", {
-        params: {
-          url: imgUrl,
-          models: "nudity,wad,offensive,gore",
-          api_user: API_USER,
-          api_secret: API_KEY,
-        },
-      })
-      .then(function (response) {
-        return checkImageResults(response.data);
-      })
-      .catch(function (error) {
-        if (error.response) console.log(error.response.data);
-        else console.log(error.message);
-      });
-    return result;
-  }
-  function checkImageResults(data) {
-    let drugs = data.drugs > 0.8;
-    let nudity = data.nudity.safe < 0.2;
-    let offensive = data.offensive.prob > 0.8;
-    let weapons = data.weapon > 0.8;
-    let gore = data.gore.prob > 0.8;
-    if (drugs || nudity || offensive || weapons || gore) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  async function moderateText() {
-    const result = await axios
-      .get("https://api.sightengine.com/1.0/text/check.json", {
-        params: {
-          text: `${title} ${content}`,
-          lang: "en",
-          opt_countries: "us,gb,fr",
-          mode: "standard",
-          api_user: `${API_USER}`,
-          api_secret: `${API_KEY}`,
-        },
-      })
-      .then(function (response) {
-        return textResults(response.data.profanity.matches);
-      })
-      .catch(function (error) {
-        if (error.response)
-          console.log("error text moderation axios call: ", error.response);
-        else console.log("error: ", error.message);
-      });
-    return result;
-  }
-  function textResults(response) {
-    if (response.length > 0) {
-      if (
-        response[0].intensity == "high" ||
-        response[0].intensity == "medium"
-      ) {
-        return true;
-      }
-    } else {
-      return false;
     }
   }
 

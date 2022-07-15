@@ -5,6 +5,7 @@ import {
   FlatList,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useCallback } from "react";
@@ -26,6 +27,7 @@ import { likePost } from "../../utils/Newsfeed/newsfeed.services";
 import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
+import { moderateText } from "../../utils/moderation.services";
 
 const width = Dimensions.get("window").width;
 
@@ -397,8 +399,16 @@ function ListFooter({
   const { setPost, post: postContext } = useAppContext();
 
   // Post Comments
-  const postComment = () => {
+  const postComment = async () => {
     if (textInputValue != "") {
+      const isNsfw = await moderateText(textInputValue);
+
+      if (isNsfw) {
+        Alert.alert(
+          "We've detected potential profane or offensive content in your message."
+        );
+        return;
+      }
       const id = uuid.v4();
 
       try {
