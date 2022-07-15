@@ -1,4 +1,3 @@
-// import { collection, getDocs, query, where } from "@firebase/firestore";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import {
@@ -11,7 +10,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppContext } from "../../Context/AppContext";
-// import { db } from "../../firebase-config";
 import { setTime } from "../../utils/setTime";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import _ from "lodash";
