@@ -62,15 +62,15 @@ const CreatePost = ({ navigation }) => {
       };
 
       const res = await createItemInFirestore("Newsfeed", id, propObj);
-      if (res) {
-        postSuccess();
-      } else {
-        throw new Error("Error creating newsfeed item", res);
-      }
       if (isNsfw) {
         alert(
           "We've detected potential suggestive or profane content. Your post will be reviewed."
         );
+        navigation.navigate("Newsfeed", { reload: true });
+      } else if (res) {
+        postSuccess();
+      } else {
+        throw new Error("Error creating newsfeed item", res);
       }
     } catch (error) {
       console.log(error);
