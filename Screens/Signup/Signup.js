@@ -276,7 +276,7 @@ const Signup = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholderTextColor={styleVariables.colors.placeholderText}
-                placeholder="name@company.com"
+                placeholder="name@email.com"
                 value={email}
                 onChangeText={(text) => {
                   setEmail(text);
