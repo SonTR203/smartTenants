@@ -34,6 +34,7 @@ const Signup = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [buildingAddress, setBuildingAddress] = useState("Select building");
@@ -83,6 +84,9 @@ const Signup = ({ navigation }) => {
       return false;
     } else if (!password) {
       setErrorText("Please enter your Password, at least 6 characters.");
+      return false;
+    } else if (password != passwordConfirm) {
+      setErrorText("Your passwords do not match.");
       return false;
     }
     return true;
@@ -295,6 +299,21 @@ const Signup = ({ navigation }) => {
                 placeholder="Minimum 8 characters"
                 value={password}
                 onChangeText={(text) => setPassword(text)}
+                secureTextEntry
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
+            </View>
+            <View id="passwordConfirm">
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Confirm Password
+              </Text>
+              <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholder="Retype your password"
+                value={passwordConfirm}
+                onChangeText={(text) => setPasswordConfirm(text)}
                 secureTextEntry
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
