@@ -1,8 +1,8 @@
-name: PR onCreate Slack Message
+name: Send message to Slack & Comment on PR
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
 
 jobs:
   publish:
