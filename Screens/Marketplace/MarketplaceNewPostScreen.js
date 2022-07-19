@@ -15,7 +15,6 @@ import {
 import { useTheme } from "../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import CurrencyInput from "react-native-currency-input";
 import { Timestamp } from "@firebase/firestore";
 import { useAppContext } from "../../Context/AppContext";
 import uuid from "react-native-uuid";
@@ -30,6 +29,9 @@ import {
   uploadImageToStorage,
 } from "../../utils/firebase.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
+// import  from "react-number-format";
+// import TextInputMask from "react-native-text-input-mask";
+// import { MaskedTextInput } from "react-native-mask-text";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -141,6 +143,17 @@ function MarketplaceNewPostScreen({ navigation }) {
     }
   }
 
+  // format price "0" -> "$0.00" after user finished entering
+  // will be moved to utils folder if used in multiple places
+  const format = (amount) => {
+    return (
+      "$" +
+      parseFloat(amount)
+        .toFixed(2)
+        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,")
+    );
+  };
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -225,23 +238,23 @@ function MarketplaceNewPostScreen({ navigation }) {
             <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
               Price
             </Text>
-            <CurrencyInput
+            <TextInput
+              keyboardType="numeric"
+              value={price}
+              placeholder="$0.00"
+              onEndEditing={(e) => {
+                if (e.nativeEvent.text.length > 0) {
+                  setPrice(format(e.nativeEvent.text));
+                }
+              }}
+              onChangeText={(e) => {
+                setPrice(e);
+              }}
               style={[
                 theme.textInput,
                 styleVariables.fontSizes.body,
                 styles.textInputTitleAndPrice,
               ]}
-              placeholderTextColor={styleVariables.colors.placeholderText}
-              multiline={false}
-              maxLength={12}
-              placeholder="$ 0.00"
-              minValue={0}
-              separator="."
-              delimiter=","
-              keyboardType="numeric"
-              value={price}
-              onChangeValue={setPrice}
-              prefix="$"
             />
             <View id="imageUploadPreview" style={theme.container}>
               {image !== "" ? (

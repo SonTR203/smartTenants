@@ -191,6 +191,11 @@ const IndividualPosts = ({ navigation, route }) => {
       <StatusBar style="auto" />
       <View style={theme.pageContainer}>
         <FlatList
+          getItemLayout={(data, index) => ({
+            length: 126 + 12, // item height + item margin top
+            offset: (126 + 12) * index,
+            index,
+          })}
           ref={commentListRef}
           removeClippedSubviews={true}
           ListHeaderComponent={
