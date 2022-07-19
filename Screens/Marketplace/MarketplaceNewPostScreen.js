@@ -29,9 +29,6 @@ import {
   uploadImageToStorage,
 } from "../../utils/firebase.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
-// import  from "react-number-format";
-// import TextInputMask from "react-native-text-input-mask";
-// import { MaskedTextInput } from "react-native-mask-text";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
