@@ -1,0 +1,37 @@
+name: PR onCreate Slack Message
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  publish:
+    name: Install and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          token: ${{ secrets.EXPO_CLI_TOKEN }}
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.19.0
+        with:
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          channel-id: "C03JH7NEKRR"
+          # For posting a simple plain text message
+          slack-message: "New Pull Request activity :red_circle: \n <${{ github.event.pull_request.html_url || github.event.head_commit.url }}|*${{ github.event.pull_request.title }}*>\n Description: ${{ github.event.pull_request.body }} \n Test the Pull Request application here: https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }} :strong:"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            App PR link is https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: "github-actions[bot]" # The user.login for temporary GitHub tokens
+          allow-repeats: false # This is the default
