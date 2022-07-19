@@ -12,7 +12,7 @@ import {
   useNavigationContainerRef,
 } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { AppProvider, useAppContext } from "./Context/AppContext";
+import { AppContext } from "./Context/AppContext";
 import Splashscreen from "./Screens/Splashscreen/Splashscreen";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import {
@@ -31,10 +31,203 @@ import NotificationBadge from "./components/NotificationBadge";
 import * as ExpoNotifications from "expo-notifications";
 import { getItemById } from "./utils/firebase.services";
 
+import { collection, onSnapshot, query, where } from "@firebase/firestore";
+import { db } from "./firebase-config";
+
 const Tab = createBottomTabNavigator();
 
 function App() {
   const [showSplashscreen, setShowSplashscreen] = useState(true);
+
+  const responseListener = useRef();
+  const navigationRef = useNavigationContainerRef();
+
+  const [post, setPost] = useState({});
+  const [currentUser, setCurrentUser] = useState({});
+  const [notifications, setNotifications] = useState({});
+  const [unauthorizedUsers, setUnauthorizedUsers] = useState({});
+  const [allUsers, setAllUsers] = useState({});
+  const [buildings, setBuildings] = useState({});
+  const [marketplaceBadges, setMarketplaceBadges] = useState({
+    unseen: [],
+    list: [],
+  });
+  const [notificationBadges, setNotificationBadges] = useState({
+    unseen: [],
+    list: [],
+  });
+  const states = {
+    post,
+    setPost,
+    currentUser,
+    setCurrentUser,
+    notifications,
+    setNotifications,
+    unauthorizedUsers,
+    setUnauthorizedUsers,
+    allUsers,
+    setAllUsers,
+    buildings,
+    setBuildings,
+    marketplaceBadges,
+    setMarketplaceBadges,
+    notificationBadges,
+    setNotificationBadges,
+  };
+
+  useEffect(() => {
+    let unsubscribeMarketplace;
+    if (currentUser && currentUser.userID) {
+      // console.log("register for marketplace notifications");
+      const marketplaceReference = collection(db, `MessagingList`);
+      const marketplaceQuery = query(
+        marketplaceReference,
+        where("hasPeople", "array-contains", currentUser.userID)
+      );
+      unsubscribeMarketplace = onSnapshot(marketplaceQuery, (querySnapshot) => {
+        const newMessages = [];
+        const messagesList = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (
+            data.lastMessage &&
+            data.lastMessage.senderId !== currentUser.userID &&
+            (!data.lastMessage.seen || data.isNew)
+          ) {
+            newMessages.push(data.id);
+          }
+          messagesList.push(data);
+        });
+
+        console.log("messagesList onSnapshot", messagesList.length);
+        setMarketplaceBadges({
+          unseen: newMessages,
+          list: messagesList,
+        });
+      });
+
+      return () => {
+        if (unsubscribeMarketplace) {
+          unsubscribeMarketplace();
+        }
+      };
+    }
+  }, [currentUser.userID]);
+
+  useEffect(() => {
+    let unsubscribeNotifications;
+    if (currentUser && currentUser.userID) {
+      const notificationRef = collection(
+        db,
+        `Tenants/${currentUser.userID}/Notifications`
+      );
+      unsubscribeNotifications = onSnapshot(
+        notificationRef,
+        (querySnapshot) => {
+          const unseenNotifications = [];
+          const list = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.wasSeen === false) {
+              unseenNotifications.push(data.id);
+            }
+            list.push(data);
+          });
+
+          setNotificationBadges({
+            unseen: unseenNotifications,
+            list: list,
+          });
+        }
+      );
+    }
+
+    return () => {
+      if (unsubscribeNotifications) {
+        unsubscribeNotifications();
+      }
+    };
+  }, [currentUser.userID]);
+
+  useEffect(() => {
+    let timeout;
+    responseListener.current =
+      ExpoNotifications.addNotificationResponseReceivedListener(
+        async (response) => {
+          const data = response.notification.request.content.data;
+          console.log("in-app: ", data.screen);
+          switch (data.screen) {
+            case "IndividualPosts": {
+              // timeout = setTimeout(async () => {
+              console.log("start navigation");
+              const notificationPost = await getItemById(
+                "Newsfeed",
+                data.postId
+              );
+              setPost(notificationPost);
+              navigationRef.navigate("NewsfeedNavigator", {
+                screen: "IndividualPosts",
+                params: {
+                  commentId: data.commentId || null,
+                  itemUserId: notificationPost.userID,
+                  item: notificationPost,
+                },
+              });
+              // }, 6000);
+
+              break;
+            }
+            case "PrivateMessagingScreen": {
+              // timeout = setTimeout(() => {
+              navigationRef.navigate("MarketplaceNavigator", {
+                screen: "PrivateMessagingScreen",
+                params: {
+                  otherPersonName: data.senderName,
+                  otherPersonId: data.senderId,
+                  channelId: data.channelId,
+                },
+              });
+              // }, 2000);
+
+              break;
+            }
+            case "Notices":
+              // timeout = setTimeout(() => {
+              navigationRef.navigate("NotificationsNavigator", {
+                screen: "Notices",
+                params: {
+                  noticeId: data.noticeId,
+                },
+              });
+              // }, 2000);
+
+              break;
+            case "Announcements":
+              // timeout = setTimeout(() => {
+              navigationRef.navigate("NotificationsNavigator", {
+                screen: "Announcements",
+                params: {
+                  announcementId: data.announcementId,
+                },
+              });
+              // }, 2000);
+
+              break;
+            default:
+              break;
+          }
+        }
+      );
+
+    return () => {
+      ExpoNotifications.removeNotificationSubscription(
+        responseListener.current
+      );
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, []);
 
   let [fontLoaded] = useFonts({
     Roboto_400Regular,
@@ -47,83 +240,24 @@ function App() {
   }
 
   return (
-    <AppProvider>
+    <AppContext.Provider value={states}>
       <AppContainer
+        navigationRef={navigationRef}
         showSplashscreen={showSplashscreen}
         setShowSplashscreen={setShowSplashscreen}
       />
-    </AppProvider>
+    </AppContext.Provider>
   );
 }
 
-function AppContainer({ showSplashscreen, setShowSplashscreen }) {
+function AppContainer({
+  showSplashscreen,
+  setShowSplashscreen,
+  navigationRef,
+}) {
   useEffect(() => {
     const timeout = setTimeout(() => setShowSplashscreen(false), 2000);
     return () => clearTimeout(timeout);
-  }, []);
-  const { setPost } = useAppContext();
-
-  const responseListener = useRef();
-  const navigationRef = useNavigationContainerRef();
-
-  useEffect(() => {
-    responseListener.current =
-      ExpoNotifications.addNotificationResponseReceivedListener(
-        async (response) => {
-          const data = response.notification.request.content.data;
-          console.log("in-app: ", data.screen);
-          switch (data.screen) {
-            case "IndividualPosts": {
-              const notificationPost = await getItemById(
-                "Newsfeed",
-                data.postId
-              );
-              await setPost(notificationPost);
-              navigationRef.navigate("IndividualPosts", {
-                commentId: data.commentId || null,
-                itemUserId: notificationPost.userID,
-                item: notificationPost,
-              });
-              break;
-            }
-            case "PrivateMessagingScreen": {
-              navigationRef.navigate("MarketplaceNavigator", {
-                screen: "PrivateMessagingScreen",
-                params: {
-                  otherPersonName: data.senderName,
-                  otherPersonId: data.senderId,
-                  channelId: data.channelId,
-                },
-              });
-              break;
-            }
-            case "Notices":
-              navigationRef.navigate("NotificationsNavigator", {
-                screen: "Notices",
-                params: {
-                  noticeId: data.noticeId,
-                },
-              });
-              break;
-            case "Announcements":
-              navigationRef.navigate("NotificationsNavigator", {
-                screen: "Announcements",
-                params: {
-                  announcementId: data.announcementId,
-                },
-              });
-              break;
-            default:
-              break;
-          }
-        }
-      );
-
-    return () => {
-      ExpoNotifications.removeNotificationSubscription(
-        responseListener.current
-      );
-    };
   }, []);
 
   return (
