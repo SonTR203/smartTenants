@@ -1,14 +1,11 @@
 name: Send message to Slack & Comment on PR
 
-on:
-  pull_request:
-    types: [opened, synchronize]
+on: [create, pull_request]
 
 jobs:
   publish:
     name: Install and test
     runs-on: ubuntu-latest
-    if: github.run_number == 1
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
