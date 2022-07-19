@@ -29,6 +29,7 @@ import MessagesListScreen from "./Messaging/MessagesListScreen";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getItemById, uploadExpoPushToken } from "../utils/firebase.services";
 import * as ExpoNotifications from "expo-notifications";
+import TermsAndConditions from "./TermsAndConditions/TermsAndConditions";
 
 const Stack = createStackNavigator();
 
@@ -293,6 +294,18 @@ const NewsfeedNavigator = ({ navigation }) => {
             options={{
               header: (props) => (
                 <CustomSubStackScreenHeader {...props} title={" "} />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="TermsAndConditions"
+            component={TermsAndConditions}
+            options={{
+              header: (props) => (
+                <CustomSubStackScreenHeader
+                  {...props}
+                  title={"Terms & Conditions"}
+                />
               ),
             }}
           />

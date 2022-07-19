@@ -362,15 +362,23 @@ const Signup = ({ navigation }) => {
               ]}
             >
               Upon sign up, you accept our terms & conditions outlined in our
-              <Text
-                style={[
-                  styleVariables.fontSizes.calloutBold,
-                  { color: styleVariables.colors.primary },
-                ]}
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("TermsAndConditions");
+                }}
               >
-                {" "}
-                terms of use and privacy policy
-              </Text>
+                <Text
+                  style={[
+                    styleVariables.fontSizes.calloutBold,
+                    {
+                      color: styleVariables.colors.primary,
+                    },
+                  ]}
+                >
+                  {" "}
+                  terms of use and privacy policy
+                </Text>
+              </TouchableOpacity>
             </Text>
           </View>
         </ScrollView>

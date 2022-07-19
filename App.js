@@ -175,7 +175,8 @@ const getRouteName = (route) => {
     routeName?.includes("Login") ||
     routeName?.includes("Signup") ||
     routeName?.includes("AccountApprovalPending") ||
-    routeName?.includes("ForgotPassword")
+    routeName?.includes("ForgotPassword") ||
+    routeName?.includes("TermsAndConditions")
   ) {
     return "none";
   } else if (routeName == undefined) {
