@@ -367,7 +367,6 @@ function ListHeader({
               display: "flex",
               alignItems: "center",
               flexDirection: "row",
-              flex: 1,
             }}
           >
             {userLiked && (
@@ -389,20 +388,22 @@ function ListHeader({
             <Text
               style={[
                 styleVariables.fontSizes.callout,
-                { color: styleVariables.colors.black },
-              ]}
-            >
-              Liked by
-            </Text>
-            <Text
-              style={[
-                styleVariables.fontSizes.calloutBold,
                 {
                   color: styleVariables.colors.black,
                 },
               ]}
             >
-              {` ${numberOfLikes} ${peoplePerson}`}
+              Liked by
+              <Text
+                style={[
+                  styleVariables.fontSizes.calloutBold,
+                  {
+                    color: styleVariables.colors.black,
+                  },
+                ]}
+              >
+                {` ${numberOfLikes} ${peoplePerson}`}
+              </Text>
             </Text>
           </TouchableOpacity>
         </View>
