@@ -53,7 +53,7 @@ jobs:
           # See also: https://api.slack.com/methods/chat.postMessage#channels
           channel-id: "C03JH7NEKRR"
           # For posting a simple plain text message
-          slack-message: "New PR in progress: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nTest the application here: https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }} :strong:"
+          slack-message: "New Pull Request in progress :red_circle: \n <${{ github.event.pull_request.html_url || github.event.head_commit.url }}|**${{ github.event.pull_request.title }}**>\n Test the Pull Request application here: https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }} :strong:"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - uses: mshick/add-pr-comment@v1
