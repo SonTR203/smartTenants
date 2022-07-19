@@ -45,15 +45,26 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=8192
       - run: echo 'App PR link is https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}'
+      # - name: Post to a Slack channel
+      #     id: slack
+      #     uses: slackapi/slack-github-action@v1.19.0
+      #     with:
+      #       # Slack channel id, channel name, or user id to post message.
+      #       # See also: https://api.slack.com/methods/chat.postMessage#channels
+      #       channel-id: "C03JH7NEKRR"
+      #       # For posting a simple plain text message
+      #       slack-message: "New PR in progress: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nTest the application here: https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }} :strong:"
+      #     env:
+      #       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: Post to a Slack channel
           id: slack
           uses: slackapi/slack-github-action@v1.19.0
           with:
             # Slack channel id, channel name, or user id to post message.
             # See also: https://api.slack.com/methods/chat.postMessage#channels
-            channel-id: "C03JH7NEKRR"
+            channel-id: 'C03JH7NEKRR'
             # For posting a simple plain text message
-            slack-message: "New PR in progress: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nTest the application here: https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }} :strong:"
+            slack-message: "GitHub build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
           env:
             SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - uses: mshick/add-pr-comment@v1
