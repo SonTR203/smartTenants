@@ -1,6 +1,8 @@
 name: Send message to Slack & Comment on PR
 
-on: [create, pull_request]
+on:
+  pull_request:
+    types: [opened]
 
 jobs:
   publish:
