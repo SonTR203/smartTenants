@@ -6,7 +6,7 @@ import { useTheme } from "../../ThemeContext";
 // Import Required functions from FireStore
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
-const ForgotPassword = () => {
+const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const auth = getAuth();
 
@@ -14,6 +14,7 @@ const ForgotPassword = () => {
     try {
       await sendPasswordResetEmail(auth, email.trim());
       alert("Password reset link sent!");
+      navigation.goBack();
     } catch (err) {
       console.error(err);
       alert(err.message);

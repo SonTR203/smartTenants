@@ -40,7 +40,6 @@ const EditProfile = ({ navigation }) => {
   );
   const [buildingID, setBuildingID] = useState(currentUser.buildingID);
   const [modalVisible, setModalVisible] = useState(false);
-  const [unitNumber, setUnitNumber] = useState(currentUser.unitNumber);
   const [userProfileImage, setUserProfileImage] = useState(
     currentUser.userProfileImage
   );
@@ -63,8 +62,7 @@ const EditProfile = ({ navigation }) => {
         firstName.length >= 1 &&
         lastName.length >= 1 &&
         email.length >= 1 &&
-        buildingAddress.length >= 1 &&
-        unitNumber
+        buildingAddress.length >= 1
       ) {
         return true;
       } else {
@@ -86,7 +84,6 @@ const EditProfile = ({ navigation }) => {
           buildingID,
           buildingAddress,
           email,
-          unitNumber,
         });
 
         setCurrentUser({
@@ -95,7 +92,6 @@ const EditProfile = ({ navigation }) => {
           buildingID,
           buildingAddress,
           email,
-          unitNumber,
           isAdmin: currentUser.isAdmin,
           myMarketplacePosts: currentUser.myMarketplacePosts,
           myPosts: currentUser.myPosts,
@@ -306,24 +302,6 @@ const EditProfile = ({ navigation }) => {
                 placeholder="Doe"
                 defaultValue={currentUser.lastName}
                 onChangeText={(text) => setLastName(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
-            </View>
-
-            <View id="unitNumberInput">
-              <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
-              >
-                Unit number
-              </Text>
-              <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
-                keyboardType="numeric"
-                placeholder="1234"
-                defaultValue={`${
-                  currentUser.unitNumber ? currentUser.unitNumber : ""
-                }`}
-                onChangeText={(text) => setUnitNumber(parseInt(text))}
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
             </View>

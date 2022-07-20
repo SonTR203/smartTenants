@@ -21,6 +21,7 @@ import {
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { Alert, Linking } from "react-native";
 
 const auth = getAuth();
 
@@ -169,7 +170,20 @@ export async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
+      Alert.alert(
+        "Permission Denied",
+        "You need to allow Notification permissions",
+        [
+          {
+            text: "Settings",
+            style: "cancel",
+            onPress: () => {
+              Linking.openSettings();
+            },
+          },
+          { text: "OK" },
+        ]
+      );
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;

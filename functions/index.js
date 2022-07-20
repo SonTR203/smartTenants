@@ -149,7 +149,8 @@ exports.notificationsNewAnnouncement = functions.firestore
 // Send notifications to all inactive users when a new message is posted
 exports.notificationsNewComment = functions.firestore
   .document("Newsfeed/{parentId}/peopleWhoCommented/{childId}")
-  .onWrite(async (change) => {
+  .onWrite(async (change, context) => {
+    const childId = context.params.childId;
     if (change.before.exists === false && change.after.exists === true) {
       log("new people commented on the post, send notification");
       log("data after: ", change.after.data());
@@ -181,7 +182,12 @@ exports.notificationsNewComment = functions.firestore
             authorExpoPushToken,
             "",
             `${firstName} ${lastName} commented on your post.`,
-            { screen: "IndividualPosts", postId: postID, commentId: id }
+            {
+              screen: "IndividualPosts",
+              postId: postID,
+              commentId: id,
+              notificationId: childId,
+            }
           );
         }
 
@@ -189,7 +195,7 @@ exports.notificationsNewComment = functions.firestore
           authorID,
           userID,
           postID,
-          id,
+          childId,
           `${firstName} ${lastName} commented on your post.`
         );
       }
@@ -206,12 +212,13 @@ exports.notificationsNewComment = functions.firestore
 // Send notifications to all inactive users when a new message is posted
 exports.notificationsNewLike = functions.firestore
   .document("Newsfeed/{parentId}/peopleWhoLiked/{childId}")
-  .onWrite(async (change) => {
+  .onWrite(async (change, context) => {
+    const childId = context.params.childId;
     if (change.before.exists === false && change.after.exists === true) {
       log("new people like the post, send notification");
       log("data after: ", change.after.data());
       let authorExpoPushToken = "";
-      const { authorID, firstName, lastName, postID, userID, id } =
+      const { authorID, firstName, lastName, postID, userID } =
         change.after.data();
       log("authorID", authorID);
       log("userID", userID);
@@ -238,14 +245,18 @@ exports.notificationsNewLike = functions.firestore
             authorExpoPushToken,
             "",
             `${firstName} ${lastName} liked your post.`,
-            { screen: "IndividualPosts", postId: postID }
+            {
+              screen: "IndividualPosts",
+              postId: postID,
+              notificationId: childId,
+            }
           );
         }
         await createNotificationItemInFirestore(
           authorID,
           userID,
           postID,
-          id,
+          childId,
           `${firstName} ${lastName} liked your post.`
         );
       }
