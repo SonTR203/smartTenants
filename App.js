@@ -33,6 +33,7 @@ import { getItemById } from "./utils/firebase.services";
 
 import { collection, onSnapshot, query, where } from "@firebase/firestore";
 import { db } from "./firebase-config";
+import { wait } from "./utils/wait";
 
 const Tab = createBottomTabNavigator();
 
@@ -150,72 +151,66 @@ function App() {
   }, [currentUser.userID]);
 
   useEffect(() => {
-    let timeout;
     responseListener.current =
       ExpoNotifications.addNotificationResponseReceivedListener(
         async (response) => {
           const data = response.notification.request.content.data;
-          console.log("in-app: ", data.screen);
-          switch (data.screen) {
-            case "IndividualPosts": {
-              // timeout = setTimeout(async () => {
-              console.log("start navigation");
-              const notificationPost = await getItemById(
-                "Newsfeed",
-                data.postId
-              );
-              setPost(notificationPost);
-              navigationRef.navigate("NewsfeedNavigator", {
-                screen: "IndividualPosts",
-                params: {
-                  commentId: data.commentId || null,
-                  itemUserId: notificationPost.userID,
-                  item: notificationPost,
-                },
-              });
-              // }, 6000);
+          // if app is opened => no timeout. If app was closed => set timeout of 5s for loading user data & splashscreen.
+          const timeout = currentUser.userID ? 0 : 5000;
+          wait(timeout).then(async () => {
+            switch (data.screen) {
+              case "IndividualPosts": {
+                console.log("start navigation");
+                const notificationPost = await getItemById(
+                  "Newsfeed",
+                  data.postId
+                );
+                setPost(notificationPost);
+                navigationRef.navigate("NewsfeedNavigator", {
+                  screen: "IndividualPosts",
+                  params: {
+                    commentId: data.commentId || null,
+                    itemUserId: notificationPost.userID,
+                    item: notificationPost,
+                  },
+                });
 
-              break;
+                break;
+              }
+              case "PrivateMessagingScreen": {
+                navigationRef.navigate("MarketplaceNavigator", {
+                  screen: "PrivateMessagingScreen",
+                  params: {
+                    otherPersonName: data.senderName,
+                    otherPersonId: data.senderId,
+                    channelId: data.channelId,
+                  },
+                });
+
+                break;
+              }
+              case "Notices":
+                navigationRef.navigate("NotificationsNavigator", {
+                  screen: "Notices",
+                  params: {
+                    noticeId: data.noticeId,
+                  },
+                });
+
+                break;
+              case "Announcements":
+                navigationRef.navigate("NotificationsNavigator", {
+                  screen: "Announcements",
+                  params: {
+                    announcementId: data.announcementId,
+                  },
+                });
+
+                break;
+              default:
+                break;
             }
-            case "PrivateMessagingScreen": {
-              // timeout = setTimeout(() => {
-              navigationRef.navigate("MarketplaceNavigator", {
-                screen: "PrivateMessagingScreen",
-                params: {
-                  otherPersonName: data.senderName,
-                  otherPersonId: data.senderId,
-                  channelId: data.channelId,
-                },
-              });
-              // }, 2000);
-
-              break;
-            }
-            case "Notices":
-              // timeout = setTimeout(() => {
-              navigationRef.navigate("NotificationsNavigator", {
-                screen: "Notices",
-                params: {
-                  noticeId: data.noticeId,
-                },
-              });
-              // }, 2000);
-
-              break;
-            case "Announcements":
-              // timeout = setTimeout(() => {
-              navigationRef.navigate("NotificationsNavigator", {
-                screen: "Announcements",
-                params: {
-                  announcementId: data.announcementId,
-                },
-              });
-              // }, 2000);
-
-              break;
-            default:
-              break;
-          }
+          });
         }
       );
 
@@ -223,9 +218,6 @@ function App() {
       ExpoNotifications.removeNotificationSubscription(
         responseListener.current
       );
-      if (timeout) {
-        clearTimeout(timeout);
-      }
     };
   }, []);
 
