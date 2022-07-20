@@ -34,7 +34,7 @@ function Post({ passedPost, windowWidth }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      if (post && post.id === currentPost.id) {
+      if (post && post.id === currentPost.id && post.updated === true) {
         // set current post to post from context
         // in order to pass in navigation.navigate to IndividualPost
         setCurrentPost({
@@ -67,7 +67,11 @@ function Post({ passedPost, windowWidth }) {
   };
 
   const navigateToIndividualPostScreen = async () => {
-    await setPost(currentPost);
+    const updatedPost = {
+      ...currentPost,
+      updated: false,
+    };
+    await setPost(updatedPost);
     navigation.navigate("IndividualPosts", {
       item: currentPost,
     });
