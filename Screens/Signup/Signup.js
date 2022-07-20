@@ -398,28 +398,29 @@ const Signup = ({ navigation }) => {
             <Text
               style={[
                 styleVariables.fontSizes.callout,
-                { textAlign: "center", marginBottom: 50 },
+                { textAlign: "center" },
               ]}
             >
-              Upon sign up, you accept our terms & conditions outlined in our
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("TermsAndConditions");
-                }}
-              >
-                <Text
-                  style={[
-                    styleVariables.fontSizes.calloutBold,
-                    {
-                      color: styleVariables.colors.primary,
-                    },
-                  ]}
-                >
-                  {" "}
-                  terms of use and privacy policy
-                </Text>
-              </TouchableOpacity>
+              Please review our terms of use to continue
             </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("TermsAndConditions");
+              }}
+            >
+              <Text
+                style={[
+                  styleVariables.fontSizes.calloutBold,
+                  {
+                    color: styleVariables.colors.primary,
+                    marginBottom: 50,
+                    textAlign: "center",
+                  },
+                ]}
+              >
+                Terms & Conditions
+              </Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
