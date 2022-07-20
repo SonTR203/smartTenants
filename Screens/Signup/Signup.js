@@ -327,37 +327,72 @@ const Signup = ({ navigation }) => {
 
           <View id="signupCTA">
             <TouchableOpacity onPress={handleSignup}>
-              <View
-                style={[
-                  theme.primaryButton,
-                  {
-                    marginTop: 17,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  },
-                ]}
-              >
-                <Text
+              {termsRead ? (
+                <View
                   style={[
-                    theme.primaryButtonText,
-                    styleVariables.fontSizes.bodyBold,
+                    theme.primaryButton,
+                    {
+                      marginTop: 17,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    },
                   ]}
                 >
-                  Sign Up
-                </Text>
-                {loading && (
-                  <Progress.CircleSnail
-                    style={{
-                      marginLeft: 17,
-                    }}
-                    strokeCap="square"
-                    thickness={2.2}
-                    size={20}
-                    color={"white"}
-                  />
-                )}
-              </View>
+                  <Text
+                    style={[
+                      theme.primaryButtonText,
+                      styleVariables.fontSizes.bodyBold,
+                    ]}
+                  >
+                    Sign Up
+                  </Text>
+                  {loading && (
+                    <Progress.CircleSnail
+                      style={{
+                        marginLeft: 17,
+                      }}
+                      strokeCap="square"
+                      thickness={2.2}
+                      size={20}
+                      color={"white"}
+                    />
+                  )}
+                </View>
+              ) : (
+                <View
+                  style={[
+                    theme.primaryButton,
+                    {
+                      marginTop: 17,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      opacity: 0.5,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      theme.primaryButtonText,
+                      styleVariables.fontSizes.bodyBold,
+                    ]}
+                  >
+                    Sign Up
+                  </Text>
+                  {loading && (
+                    <Progress.CircleSnail
+                      style={{
+                        marginLeft: 17,
+                      }}
+                      strokeCap="square"
+                      thickness={2.2}
+                      size={20}
+                      color={"white"}
+                    />
+                  )}
+                </View>
+              )}
             </TouchableOpacity>
 
             <Text
