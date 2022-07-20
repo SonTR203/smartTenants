@@ -82,26 +82,50 @@ function TermsAndConditions({ navigation }) {
             paddingBottom: 30,
           }}
         >
-          <View
-            style={[
-              theme.primaryButton,
-              {
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-              },
-            ]}
-          >
-            <Text
+          {termsRead ? (
+            <View
               style={[
-                styleVariables.fontSizes.bodyBold,
-                theme.primaryButtonText,
+                theme.primaryButton,
+                {
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                },
               ]}
             >
-              I Understand
-            </Text>
-          </View>
+              <Text
+                style={[
+                  styleVariables.fontSizes.bodyBold,
+                  theme.primaryButtonText,
+                ]}
+              >
+                I Understand
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={[
+                theme.primaryButton,
+                {
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  opacity: 0.5,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styleVariables.fontSizes.bodyBold,
+                  theme.primaryButtonText,
+                ]}
+              >
+                I Understand
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </View>
