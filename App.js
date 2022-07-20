@@ -31,7 +31,14 @@ import NotificationBadge from "./components/NotificationBadge";
 import * as ExpoNotifications from "expo-notifications";
 import { getItemById } from "./utils/firebase.services";
 
-import { collection, onSnapshot, query, where } from "@firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "@firebase/firestore";
 import { db } from "./firebase-config";
 import { wait } from "./utils/wait";
 
@@ -173,6 +180,18 @@ function App() {
                     itemUserId: notificationPost.userID,
                     item: notificationPost,
                   },
+                });
+
+                // update notification item as seen
+                const colRef = doc(
+                  db,
+                  "Tenants",
+                  currentUser.userID,
+                  "Notifications",
+                  data.notificationId
+                );
+                await updateDoc(colRef, {
+                  wasSeen: true,
                 });
 
                 break;
