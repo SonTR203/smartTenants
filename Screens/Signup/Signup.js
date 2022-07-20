@@ -23,6 +23,7 @@ import { StatusBar } from "expo-status-bar";
 import { uploadExpoPushToken } from "../../utils/firebase.services";
 import * as Progress from "react-native-progress";
 import ErrorArea from "../../components/SignUp/ErrorArea";
+import { useAppContext } from "../../Context/AppContext";
 
 const auth = getAuth();
 
@@ -30,6 +31,7 @@ const auth = getAuth();
  * an admin approve their request before they are allowed to the
  * home screen (Newsfeed) */
 const Signup = ({ navigation }) => {
+  const { termsRead } = useAppContext();
   const scrollViewRef = useRef();
   const { theme, styleVariables } = useTheme();
   const [email, setEmail] = useState("");
@@ -87,6 +89,9 @@ const Signup = ({ navigation }) => {
       return false;
     } else if (password != passwordConfirm) {
       setErrorText("Your passwords do not match.");
+      return false;
+    } else if (!termsRead) {
+      setErrorText("Please read the terms & conditions.");
       return false;
     }
     return true;

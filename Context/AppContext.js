@@ -19,6 +19,7 @@ function AppProvider({ children }) {
     unseen: [],
     list: [],
   });
+  const [termsRead, setTermsRead] = useState(false);
 
   useEffect(() => {
     let unsubscribeMarketplace;
@@ -113,6 +114,8 @@ function AppProvider({ children }) {
         setNotificationBadges,
         marketplaceBadges,
         setMarketplaceBadges,
+        termsRead,
+        setTermsRead,
       }}
     >
       {children}

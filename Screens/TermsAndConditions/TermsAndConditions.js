@@ -1,15 +1,23 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-} from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useTheme } from "../../ThemeContext";
+import { useAppContext } from "../../Context/AppContext";
 
-function TermsAndConditions() {
+function TermsAndConditions({ navigation }) {
   const { theme, styleVariables } = useTheme();
+  const { termsRead, setTermsRead } = useAppContext();
+
+  const hasReachedBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    const bottomPadding = 30;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - bottomPadding
+    );
+  };
 
   return (
     <View
@@ -18,7 +26,15 @@ function TermsAndConditions() {
         { flex: 1, backgroundColor: styleVariables.colors.white },
       ]}
     >
-      <ScrollView>
+      <ScrollView
+        onScroll={({ nativeEvent }) => {
+          if (hasReachedBottom(nativeEvent) && !termsRead) {
+            console.log("user has reached bottom of page");
+            setTermsRead(true);
+          }
+        }}
+        scrollEventThrottle={400}
+      >
         <Text style={[styleVariables.fontSizes.header, { marginBottom: 20 }]}>
           Lorem Ipsum
         </Text>
@@ -58,15 +74,34 @@ function TermsAndConditions() {
           pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum.
         </Text>
-        <TouchableOpacity>
-          <Text
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Signup");
+          }}
+          style={{
+            paddingBottom: 30,
+          }}
+        >
+          <View
             style={[
-              styleVariables.fontSizes.title,
-              { textAlign: "center", paddingBottom: 30 },
+              theme.primaryButton,
+              {
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              },
             ]}
           >
-            I Understand
-          </Text>
+            <Text
+              style={[
+                styleVariables.fontSizes.bodyBold,
+                theme.primaryButtonText,
+              ]}
+            >
+              I Understand
+            </Text>
+          </View>
         </TouchableOpacity>
       </ScrollView>
     </View>
