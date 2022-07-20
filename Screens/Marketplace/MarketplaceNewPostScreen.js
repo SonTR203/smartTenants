@@ -151,6 +151,12 @@ function MarketplaceNewPostScreen({ navigation }) {
     );
   };
 
+  const handleEndEditing = (e) => {
+    if (e.nativeEvent.text.length > 0) {
+      setPrice(format(e.nativeEvent.text));
+    }
+  };
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -239,14 +245,8 @@ function MarketplaceNewPostScreen({ navigation }) {
               keyboardType="numeric"
               value={price}
               placeholder="$0.00"
-              onEndEditing={(e) => {
-                if (e.nativeEvent.text.length > 0) {
-                  setPrice(format(e.nativeEvent.text));
-                }
-              }}
-              onChangeText={(e) => {
-                setPrice(e);
-              }}
+              onEndEditing={handleEndEditing}
+              onChangeText={setPrice}
               style={[
                 theme.textInput,
                 styleVariables.fontSizes.body,
