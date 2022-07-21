@@ -1,6 +1,6 @@
 //mix tab and stack navigators: https://www.youtube.com/watch?v=dkriklWelm0&t=139s
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Newsfeed from "./Newsfeed/Newsfeed";
 import BuildingInfo from "./BuildingInfo/BuildingInfo";
@@ -28,7 +28,6 @@ import PrivateMessagingScreen from "./Messaging/PrivateMessagingScreen";
 import MessagesListScreen from "./Messaging/MessagesListScreen";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getItemById, uploadExpoPushToken } from "../utils/firebase.services";
-import * as ExpoNotifications from "expo-notifications";
 import TermsAndConditions from "./TermsAndConditions/TermsAndConditions";
 
 const Stack = createStackNavigator();
@@ -114,70 +113,8 @@ const MarketplaceNavigator = () => {
   );
 };
 
-const NewsfeedNavigator = ({ navigation }) => {
-  const { post, currentUser, setCurrentUser, setPost } = useAppContext();
-
-  const responseListener = useRef();
-
-  useEffect(() => {
-    responseListener.current =
-      ExpoNotifications.addNotificationResponseReceivedListener(
-        async (response) => {
-          const data = response.notification.request.content.data;
-          console.log(data.screen);
-          switch (data.screen) {
-            case "IndividualPosts": {
-              const notificationPost = await getItemById(
-                "Newsfeed",
-                data.postId
-              );
-              await setPost(notificationPost);
-              navigation.navigate("IndividualPosts", {
-                commentId: data.commentId || null,
-                itemUserId: notificationPost.userID,
-                item: notificationPost,
-              });
-              break;
-            }
-            case "PrivateMessagingScreen": {
-              navigation.navigate("MarketplaceNavigator", {
-                screen: "PrivateMessagingScreen",
-                params: {
-                  otherPersonName: data.senderName,
-                  otherPersonId: data.senderId,
-                  channelId: data.channelId,
-                },
-              });
-              break;
-            }
-            case "Notices":
-              navigation.navigate("NotificationsNavigator", {
-                screen: "Notices",
-                params: {
-                  noticeId: data.noticeId,
-                },
-              });
-              break;
-            case "Announcements":
-              navigation.navigate("NotificationsNavigator", {
-                screen: "Announcements",
-                params: {
-                  announcementId: data.announcementId,
-                },
-              });
-              break;
-            default:
-              break;
-          }
-        }
-      );
-
-    return () => {
-      ExpoNotifications.removeNotificationSubscription(
-        responseListener.current
-      );
-    };
-  }, []);
+const NewsfeedNavigator = () => {
+  const { post, currentUser, setCurrentUser } = useAppContext();
 
   useEffect(() => {
     const auth = getAuth();

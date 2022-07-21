@@ -45,10 +45,3 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=8192
       - run: echo 'App PR link is https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}'
-      - uses: mshick/add-pr-comment@v1
-        with:
-          message: |
-            App PR link is https://expo.dev/@smarttenants/smartTenant?release-channel=pr-${{ github.event.number }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: "github-actions[bot]" # The user.login for temporary GitHub tokens
-          allow-repeats: false # This is the default
