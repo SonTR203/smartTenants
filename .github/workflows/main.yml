@@ -1,9 +1,10 @@
 name: Merge to main branch
 
-on:
-  push:
-    branches:
-      - main
+on: [pull_request]
+# on:
+#   push:
+#     branches:
+#       - main
 jobs:
   publish:
     name: Install and test
