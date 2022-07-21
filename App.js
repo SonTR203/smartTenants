@@ -64,6 +64,7 @@ function App() {
     unseen: [],
     list: [],
   });
+  const [termsRead, setTermsRead] = useState(false);
   const states = {
     post,
     setPost,
@@ -81,6 +82,8 @@ function App() {
     setMarketplaceBadges,
     notificationBadges,
     setNotificationBadges,
+    termsRead,
+    setTermsRead,
   };
 
   useEffect(() => {
@@ -387,7 +390,8 @@ const getRouteName = (route) => {
     routeName?.includes("Login") ||
     routeName?.includes("Signup") ||
     routeName?.includes("AccountApprovalPending") ||
-    routeName?.includes("ForgotPassword")
+    routeName?.includes("ForgotPassword") ||
+    routeName?.includes("TermsAndConditions")
   ) {
     return "none";
   } else if (routeName == undefined) {

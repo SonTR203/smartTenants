@@ -23,6 +23,7 @@ import { StatusBar } from "expo-status-bar";
 import { uploadExpoPushToken } from "../../utils/firebase.services";
 import * as Progress from "react-native-progress";
 import ErrorArea from "../../components/SignUp/ErrorArea";
+import { useAppContext } from "../../Context/AppContext";
 
 const auth = getAuth();
 
@@ -30,10 +31,12 @@ const auth = getAuth();
  * an admin approve their request before they are allowed to the
  * home screen (Newsfeed) */
 const Signup = ({ navigation }) => {
+  const { termsRead } = useAppContext();
   const scrollViewRef = useRef();
   const { theme, styleVariables } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [buildingAddress, setBuildingAddress] = useState("Select building");
@@ -83,6 +86,12 @@ const Signup = ({ navigation }) => {
       return false;
     } else if (!password) {
       setErrorText("Please enter your Password, at least 6 characters.");
+      return false;
+    } else if (password != passwordConfirm) {
+      setErrorText("Your passwords do not match.");
+      return false;
+    } else if (!termsRead) {
+      setErrorText("Please read the terms & conditions.");
       return false;
     }
     return true;
@@ -276,7 +285,7 @@ const Signup = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholderTextColor={styleVariables.colors.placeholderText}
-                placeholder="name@company.com"
+                placeholder="name@email.com"
                 value={email}
                 onChangeText={(text) => {
                   setEmail(text);
@@ -299,60 +308,119 @@ const Signup = ({ navigation }) => {
                 style={[theme.textInput, styleVariables.fontSizes.body]}
               />
             </View>
+            <View id="passwordConfirm">
+              <Text
+                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+              >
+                Confirm Password
+              </Text>
+              <TextInput
+                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholder="Retype your password"
+                value={passwordConfirm}
+                onChangeText={(text) => setPasswordConfirm(text)}
+                secureTextEntry
+                style={[theme.textInput, styleVariables.fontSizes.body]}
+              />
+            </View>
           </View>
 
           <View id="signupCTA">
             <TouchableOpacity onPress={handleSignup}>
-              <View
-                style={[
-                  theme.primaryButton,
-                  {
-                    marginTop: 17,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  },
-                ]}
-              >
-                <Text
+              {termsRead ? (
+                <View
                   style={[
-                    theme.primaryButtonText,
-                    styleVariables.fontSizes.bodyBold,
+                    theme.primaryButton,
+                    {
+                      marginTop: 17,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    },
                   ]}
                 >
-                  Sign Up
-                </Text>
-                {loading && (
-                  <Progress.CircleSnail
-                    style={{
-                      marginLeft: 17,
-                    }}
-                    strokeCap="square"
-                    thickness={2.2}
-                    size={20}
-                    color={"white"}
-                  />
-                )}
-              </View>
+                  <Text
+                    style={[
+                      theme.primaryButtonText,
+                      styleVariables.fontSizes.bodyBold,
+                    ]}
+                  >
+                    Sign Up
+                  </Text>
+                  {loading && (
+                    <Progress.CircleSnail
+                      style={{
+                        marginLeft: 17,
+                      }}
+                      strokeCap="square"
+                      thickness={2.2}
+                      size={20}
+                      color={"white"}
+                    />
+                  )}
+                </View>
+              ) : (
+                <View
+                  style={[
+                    theme.primaryButton,
+                    {
+                      marginTop: 17,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      opacity: 0.5,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      theme.primaryButtonText,
+                      styleVariables.fontSizes.bodyBold,
+                    ]}
+                  >
+                    Sign Up
+                  </Text>
+                  {loading && (
+                    <Progress.CircleSnail
+                      style={{
+                        marginLeft: 17,
+                      }}
+                      strokeCap="square"
+                      thickness={2.2}
+                      size={20}
+                      color={"white"}
+                    />
+                  )}
+                </View>
+              )}
             </TouchableOpacity>
 
             <Text
               style={[
                 styleVariables.fontSizes.callout,
-                { textAlign: "center", marginBottom: 50 },
+                { textAlign: "center" },
               ]}
             >
-              Upon sign up, you accept our terms & conditions outlined in our
+              Please review our terms of use to continue
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("TermsAndConditions");
+              }}
+            >
               <Text
                 style={[
                   styleVariables.fontSizes.calloutBold,
-                  { color: styleVariables.colors.primary },
+                  {
+                    color: styleVariables.colors.primary,
+                    marginBottom: 50,
+                    textAlign: "center",
+                  },
                 ]}
               >
-                {" "}
-                terms of use and privacy policy
+                Terms & Conditions
               </Text>
-            </Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
