@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
+  StyleSheet,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import {
@@ -45,6 +46,7 @@ const Signup = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [unitNumber, setUnitNumber] = useState("");
   const [tenantAuthorized] = useState(false);
+  const [signupPressed, setSignupPressed] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -168,6 +170,7 @@ const Signup = ({ navigation }) => {
   const handleSignup = () => {
     if (!checkTextInputs()) {
       scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+      setSignupPressed(true);
       return;
     }
     setLoading(true);
@@ -183,6 +186,21 @@ const Signup = ({ navigation }) => {
     setLoading(false);
   };
 
+  const styles = StyleSheet.create({
+    inputFieldEmpty: {
+      borderColor: "hsla(348, 92%, 35%, 0.5)",
+    },
+    inputFieldFilled: {
+      borderColor: styleVariables.colors.primary14,
+    },
+    inputLabelEmpty: {
+      color: "#AB0728",
+    },
+    inputLabelFilled: {
+      color: styleVariables.colors.black,
+    },
+  });
+
   return (
     <SafeAreaView style={{ backgroundColor: "white" }}>
       <KeyboardAvoidingView behavior="padding">
@@ -196,7 +214,13 @@ const Signup = ({ navigation }) => {
           <View id="signupInputs">
             <View id="firstNameInput">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.body,
+                  signupPressed && !firstName
+                    ? styles.inputLabelEmpty
+                    : styles.inputLabelFilled,
+                ]}
               >
                 First Name
               </Text>
@@ -205,12 +229,24 @@ const Signup = ({ navigation }) => {
                 placeholder="John"
                 value={firstName}
                 onChangeText={(text) => setFirstName(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInput,
+                  styleVariables.fontSizes.body,
+                  signupPressed && !firstName
+                    ? styles.inputFieldEmpty
+                    : styles.inputFieldFilled,
+                ]}
               />
             </View>
             <View id="lastNameInput">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.body,
+                  signupPressed && !lastName
+                    ? styles.inputLabelEmpty
+                    : styles.inputLabelFilled,
+                ]}
               >
                 Last Name
               </Text>
@@ -219,13 +255,25 @@ const Signup = ({ navigation }) => {
                 placeholder="Doe"
                 value={lastName}
                 onChangeText={(text) => setLastName(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInput,
+                  styleVariables.fontSizes.body,
+                  signupPressed && !lastName
+                    ? styles.inputFieldEmpty
+                    : styles.inputFieldFilled,
+                ]}
               />
             </View>
 
             <View id="unitNumberInput">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.body,
+                  signupPressed && !unitNumber
+                    ? styles.inputLabelEmpty
+                    : styles.inputLabelFilled,
+                ]}
               >
                 Unit number
               </Text>
@@ -235,13 +283,25 @@ const Signup = ({ navigation }) => {
                 placeholder="1234"
                 value={unitNumber}
                 onChangeText={(text) => setUnitNumber(text)}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInput,
+                  styleVariables.fontSizes.body,
+                  signupPressed && !unitNumber
+                    ? styles.inputFieldEmpty
+                    : styles.inputFieldFilled,
+                ]}
               />
             </View>
 
             <View id="buildingSelect">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.body,
+                  signupPressed && !buildingID.trim()
+                    ? styles.inputLabelEmpty
+                    : styles.inputLabelFilled,
+                ]}
               >
                 Building Address
               </Text>
@@ -254,6 +314,9 @@ const Signup = ({ navigation }) => {
                   style={[
                     theme.textInput,
                     styleVariables.fontSizes.body,
+                    signupPressed && !buildingID.trim()
+                      ? styles.inputFieldEmpty
+                      : styles.inputFieldFilled,
                     { color: "#00000080" },
                   ]}
                 >
@@ -279,7 +342,13 @@ const Signup = ({ navigation }) => {
 
             <View id="emailInput">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.body,
+                  signupPressed && !email
+                    ? styles.inputLabelEmpty
+                    : styles.inputLabelFilled,
+                ]}
               >
                 Email
               </Text>
@@ -290,12 +359,24 @@ const Signup = ({ navigation }) => {
                 onChangeText={(text) => {
                   setEmail(text);
                 }}
-                style={[theme.textInput, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInput,
+                  styleVariables.fontSizes.body,
+                  signupPressed && !email
+                    ? styles.inputFieldEmpty
+                    : styles.inputFieldFilled,
+                ]}
               />
             </View>
             <View id="passwordInput">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.body,
+                  signupPressed && !password
+                    ? styles.inputLabelEmpty
+                    : styles.inputLabelFilled,
+                ]}
               >
                 Password
               </Text>
@@ -305,12 +386,25 @@ const Signup = ({ navigation }) => {
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 secureTextEntry
-                style={[theme.textInput, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInput,
+                  styleVariables.fontSizes.body,
+                  signupPressed && !password
+                    ? styles.inputFieldEmpty
+                    : styles.inputFieldFilled,
+                ]}
               />
             </View>
             <View id="passwordConfirm">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.body,
+                  signupPressed &&
+                  (!passwordConfirm || password != passwordConfirm)
+                    ? styles.inputLabelEmpty
+                    : styles.inputLabelFilled,
+                ]}
               >
                 Confirm Password
               </Text>
@@ -320,7 +414,14 @@ const Signup = ({ navigation }) => {
                 value={passwordConfirm}
                 onChangeText={(text) => setPasswordConfirm(text)}
                 secureTextEntry
-                style={[theme.textInput, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInput,
+                  styleVariables.fontSizes.body,
+                  signupPressed &&
+                  (!passwordConfirm || password != passwordConfirm)
+                    ? styles.inputFieldEmpty
+                    : styles.inputFieldFilled,
+                ]}
               />
             </View>
           </View>

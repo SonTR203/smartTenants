@@ -17,7 +17,7 @@ function ErrorArea({ errorText }) {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 20,
-    backgroundColor: "rgba(255, 66, 66, 0.1)",
+    backgroundColor: "hsla(348, 92%, 35%, 0.1)",
     paddingHorizontal: 8,
     paddingVertical: 16,
     borderRadius: 8,
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 15,
     lineHeight: 19,
-    color: "#FF4242",
+    color: "#AB0728",
   },
 });
 
