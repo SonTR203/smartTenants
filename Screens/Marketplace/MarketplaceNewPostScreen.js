@@ -31,8 +31,11 @@ import {
 } from "../../utils/firebase.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
 import ImagePicker from "react-native-image-crop-picker";
-import { AntDesign } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import ImageSVG from "../../components/ImageSVG";
+import { updateImages } from "../../utils/Marketplace/marketplace.services";
+import { maxImages } from "../../utils/constants";
+import * as Progress from "react-native-progress";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -40,7 +43,7 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [price, setPrice] = useState(null);
-  const [image, setImage] = useState("");
+  // const [image, setImage] = useState("");
   const [imageLoading, setImageLoading] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
@@ -62,20 +65,35 @@ function MarketplaceNewPostScreen({ navigation }) {
     },
   ]);
 
-  const openPicker = () => {
+  const openPicker = (multiple, index) => {
     ImagePicker.openPicker({
-      multiple: true,
+      multiple: multiple,
+      compressImageQuality: 0.7,
+      sortOrder: "asc",
     })
-      .then((images) => {
-        console.log("images selected: ", images.length);
+      .then((response) => {
+        setImageLoading(true);
         let newImages = [...selectedImages];
+        if (response.length > 0) {
+          const takeAmount = updateImages(response, selectedImages);
 
-        images.forEach((item, index) => {
+          for (let i = 0; i < takeAmount; i++) {
+            newImages[index + i] = {
+              uri: response[i].path,
+            };
+          }
+
+          if (newImages.length > maxImages) {
+            newImages = newImages.slice(0, maxImages);
+          }
+        } else {
           newImages[index] = {
-            uri: item.path,
+            uri: response.path,
           };
-        });
+        }
+
         setSelectedImages(newImages);
+        setImageLoading(false);
       })
       .catch((error) => {
         console.log("error: ", error);
@@ -83,13 +101,10 @@ function MarketplaceNewPostScreen({ navigation }) {
   };
 
   const deleteSelectedPhoto = (index) => {
-    let newImages = selectedImages.map((item, i) => {
-      if (i === index) {
-        return {
-          uri: "",
-        };
-      }
-      return item;
+    let newImages = [...selectedImages];
+    newImages.splice(index, 1);
+    newImages.push({
+      uri: "",
     });
     setSelectedImages(newImages);
   };
@@ -105,7 +120,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         },
         async (buttonIndex) => {
           if (buttonIndex === 1) {
-            openPicker();
+            openPicker(false, index);
           } else if (buttonIndex === 2) {
             deleteSelectedPhoto(index);
           }
@@ -113,7 +128,7 @@ function MarketplaceNewPostScreen({ navigation }) {
       );
       return;
     }
-    openPicker();
+    openPicker(true, index);
 
     // const permissionResult = await checkPermissionMediaLibrary();
 
@@ -145,17 +160,23 @@ function MarketplaceNewPostScreen({ navigation }) {
 
   const handleSubmit = async () => {
     // if all info is filled out: create random id -> upload image -> create post
-    if (title.length > 0 && content.length > 0 && price && image.length > 0) {
+    const selected = selectedImages.filter((image) => image.uri !== "");
+    if (
+      title.length > 0 &&
+      content.length > 0 &&
+      price &&
+      selected.length > 0
+    ) {
       setIsloading(true);
-      const id = uuid.v4();
-      const imagePath = `Images/Posts/Marketplace/${id}-${currentUser.userID}.jpeg`;
-      const imageUrl = await uploadImageToStorage(imagePath, image);
-      const isNsfw = await moderatePost(imageUrl);
-      if (imageUrl) {
-        createMarketplacePostFirestore(imageUrl, id, isNsfw);
-      } else {
-        return;
-      }
+      // const id = uuid.v4();
+      // const imagePath = `Images/Posts/Marketplace/${id}-${currentUser.userID}.jpeg`;
+      // const imageUrl = await uploadImageToStorage(imagePath, selectedImages);
+      // const isNsfw = await moderatePost(imageUrl);
+      // if (imageUrl) {
+      //   createMarketplacePostFirestore(imageUrl, id, isNsfw);
+      // } else {
+      //   return;
+      // }
     } else {
       alert("Please fill out all fields");
     }
@@ -326,14 +347,6 @@ function MarketplaceNewPostScreen({ navigation }) {
                 styles.textInputTitleAndPrice,
               ]}
             />
-            <View id="imageUploadPreview" style={theme.container}>
-              {image !== "" ? (
-                <Image
-                  source={{ uri: image }}
-                  style={theme.imageUploadPreview}
-                />
-              ) : null}
-            </View>
           </View>
           {/* UPLOAD IMAGE */}
           <FlatList
@@ -348,7 +361,9 @@ function MarketplaceNewPostScreen({ navigation }) {
             renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity
-                  onPress={() => handlePickImage(item.uri, index)}
+                  onPress={() => {
+                    handlePickImage(item.uri, index);
+                  }}
                   style={{
                     width: 80,
                     height: 80,
@@ -359,18 +374,34 @@ function MarketplaceNewPostScreen({ navigation }) {
                     alignItems: "center",
                   }}
                 >
-                  {item.uri !== "" ? (
-                    <Image
-                      source={{ uri: item.uri }}
-                      style={{
-                        width: 80,
-                        height: 80,
-                        borderRadius: 8,
-                      }}
-                    />
-                  ) : (
-                    <AntDesign name="picture" size={24} color="black" />
-                  )}
+                  <>
+                    {imageLoading ? (
+                      <Progress.CircleSnail
+                        style={{
+                          marginLeft: 17,
+                        }}
+                        strokeCap="square"
+                        thickness={2.2}
+                        size={20}
+                        color={"rgba(57, 94, 102, 1)"}
+                      />
+                    ) : (
+                      <>
+                        {item.uri !== "" ? (
+                          <Image
+                            source={{ uri: item.uri }}
+                            style={{
+                              width: 80,
+                              height: 80,
+                              borderRadius: 8,
+                            }}
+                          />
+                        ) : (
+                          <ImageSVG />
+                        )}
+                      </>
+                    )}
+                  </>
                 </TouchableOpacity>
               );
             }}
