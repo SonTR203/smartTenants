@@ -59,6 +59,7 @@ const CreatePost = ({ navigation }) => {
         timestamp: Timestamp.fromDate(new Date()),
         peopleWhoLiked: [],
         commentCount: 0,
+        userBuildingName: currentUser.buildingName,
       };
 
       const res = await createItemInFirestore("Newsfeed", id, propObj);
