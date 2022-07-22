@@ -11,10 +11,11 @@ import {
   ActivityIndicator,
   Image,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
+// import * as ImagePicker from "expo-image-picker";
 import { Timestamp } from "@firebase/firestore";
 import { useAppContext } from "../../Context/AppContext";
 import uuid from "react-native-uuid";
@@ -29,9 +30,13 @@ import {
   uploadImageToStorage,
 } from "../../utils/firebase.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
+import ImagePicker from "react-native-image-crop-picker";
+import { AntDesign } from "@expo/vector-icons";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
+  const { showActionSheetWithOptions } = useActionSheet();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [price, setPrice] = useState(null);
@@ -39,35 +44,103 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [imageLoading, setImageLoading] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
+  const [selectedImages, setSelectedImages] = useState([
+    {
+      uri: "",
+    },
+    {
+      uri: "",
+    },
+    {
+      uri: "",
+    },
+    {
+      uri: "",
+    },
+    {
+      uri: "",
+    },
+  ]);
+
+  const openPicker = () => {
+    ImagePicker.openPicker({
+      multiple: true,
+    })
+      .then((images) => {
+        console.log("images selected: ", images.length);
+        let newImages = [...selectedImages];
+
+        images.forEach((item, index) => {
+          newImages[index] = {
+            uri: item.path,
+          };
+        });
+        setSelectedImages(newImages);
+      })
+      .catch((error) => {
+        console.log("error: ", error);
+      });
+  };
+
+  const deleteSelectedPhoto = (index) => {
+    let newImages = selectedImages.map((item, i) => {
+      if (i === index) {
+        return {
+          uri: "",
+        };
+      }
+      return item;
+    });
+    setSelectedImages(newImages);
+  };
 
   // function to handle image picking
-  const pickImage = async () => {
-    const permissionResult = await checkPermissionMediaLibrary();
-
-    if (permissionResult !== false) {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        presentationStyle: 0,
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 0.5,
-      });
-
-      if (!result.cancelled) {
-        setImageLoading(true);
-        const size = await getFileInfo(result.uri);
-        if (size > 5) {
-          alert(
-            "ERROR",
-            "File size is too large. Please select a file smaller than 5MB"
-          );
-          return;
+  const handlePickImage = async (uri, index) => {
+    if (uri) {
+      showActionSheetWithOptions(
+        {
+          options: ["Cancel", "Replace photo", "Delete photo"],
+          destructiveButtonIndex: 2,
+          cancelButtonIndex: 0,
+        },
+        async (buttonIndex) => {
+          if (buttonIndex === 1) {
+            openPicker();
+          } else if (buttonIndex === 2) {
+            deleteSelectedPhoto(index);
+          }
         }
-        const path = await compressFileSize(result.uri);
-        setImage(path.uri);
-        setImageLoading(false);
-      }
+      );
+      return;
     }
+    openPicker();
+
+    // const permissionResult = await checkPermissionMediaLibrary();
+
+    // if (permissionResult !== false) {
+    //   let result = await ImagePicker.launchImageLibraryAsync({
+    //     presentationStyle: 0,
+    //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //     allowsEditing: true,
+    //     aspect: [4, 3],
+    //     quality: 0.5,
+    //   });
+
+    //   if (!result.cancelled) {
+    //     setImageLoading(true);
+    //     const size = await getFileInfo(result.uri);
+    //     if (size > 5) {
+    //       alert(
+    //         "ERROR",
+    //         "File size is too large. Please select a file smaller than 5MB"
+    //       );
+    //       return;
+    //     }
+    //     const path = await compressFileSize(result.uri);
+    //     setImage(path.uri);
+    //     setImageLoading(false);
+    //   }
+    // }
   };
 
   const handleSubmit = async () => {
@@ -161,8 +234,9 @@ function MarketplaceNewPostScreen({ navigation }) {
     container: {
       flex: 1,
       backgroundColor: "white",
-      paddingLeft: 17,
-      paddingRight: 17,
+    },
+    horizontalMargin: {
+      marginHorizontal: 16,
     },
     textInputTitleAndPrice: {
       height: 64,
@@ -198,7 +272,7 @@ function MarketplaceNewPostScreen({ navigation }) {
       >
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* TEXT INPUT SECTIONS  */}
-          <View>
+          <View style={styles.horizontalMargin}>
             {/* TITLE  */}
             <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
               Title
@@ -227,9 +301,8 @@ function MarketplaceNewPostScreen({ navigation }) {
               onChangeText={(text) => {
                 setContent(text);
               }}
-              placeholder="280 characters maximum"
+              placeholder="Type your text here"
               multiline={true}
-              maxLength={280}
               style={[
                 theme.textInput,
                 styleVariables.fontSizes.body,
@@ -261,8 +334,48 @@ function MarketplaceNewPostScreen({ navigation }) {
                 />
               ) : null}
             </View>
-            {/* UPLOAD IMAGE */}
-            <TouchableOpacity
+          </View>
+          {/* UPLOAD IMAGE */}
+          <FlatList
+            contentContainerStyle={{
+              paddingLeft: 17,
+              paddingRight: 9,
+            }}
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            keyExtractor={(item, index) => item + index}
+            data={selectedImages}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => handlePickImage(item.uri, index)}
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 8,
+                    backgroundColor: "#EBEFF0",
+                    marginRight: 8,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {item.uri !== "" ? (
+                    <Image
+                      source={{ uri: item.uri }}
+                      style={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: 8,
+                      }}
+                    />
+                  ) : (
+                    <AntDesign name="picture" size={24} color="black" />
+                  )}
+                </TouchableOpacity>
+              );
+            }}
+          />
+          {/* <TouchableOpacity
               id="uploadImageButton"
               onPress={pickImage}
               style={[theme.secondaryButton, styles.uploadButtonContainer]}
@@ -295,8 +408,7 @@ function MarketplaceNewPostScreen({ navigation }) {
                   />
                 </>
               )}
-            </TouchableOpacity>
-          </View>
+            </TouchableOpacity> */}
         </ScrollView>
       </KeyboardAvoidingView>
       {/* SUBMIT BUTTON  */}
@@ -307,17 +419,22 @@ function MarketplaceNewPostScreen({ navigation }) {
           color={styleVariables.colors.primary}
         />
       ) : (
-        <TouchableOpacity
-          id="submitPostButton"
-          onPress={handleSubmit}
-          style={[theme.primaryButton, {}]}
-        >
-          <Text
-            style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}
+        <View style={styles.horizontalMargin}>
+          <TouchableOpacity
+            id="submitPostButton"
+            onPress={handleSubmit}
+            style={[theme.primaryButton]}
           >
-            Submit post
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                theme.primaryButtonText,
+                styleVariables.fontSizes.bodyBold,
+              ]}
+            >
+              Submit post
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
