@@ -1,4 +1,5 @@
 import { maxImages } from "../constants";
+import { uploadImageToStorage } from "../firebase.services";
 
 export const updateImages = (response, selectedImages) => {
   let newImages = selectedImages;
@@ -13,4 +14,26 @@ export const updateImages = (response, selectedImages) => {
   //   console.log("remaining", remaining);
 
   return take;
+};
+
+export const uploadMarketplaceImages = async (images, id) => {
+  const publicLinks = [];
+  const urls = images
+    .filter((image) => image.uri !== "")
+    .map((image) => {
+      return image.uri;
+    });
+
+  for await (const url of urls) {
+    const imageName = url.split("/").pop();
+    console.log("uploading image: ", imageName);
+    const imagePath = `Images/Posts/Marketplace/${id}/${imageName}.jpeg`; // 1, 2, 3, 4, 5
+    const imageUrl = await uploadImageToStorage(imagePath, url);
+    if (imageUrl) {
+      publicLinks.push(imageUrl);
+      console.log("uploaded");
+    }
+  }
+
+  return publicLinks;
 };

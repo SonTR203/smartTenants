@@ -12,12 +12,14 @@ import {
   Image,
   ScrollView,
   FlatList,
+  Alert,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 // import * as ImagePicker from "expo-image-picker";
 import { Timestamp } from "@firebase/firestore";
 import { useAppContext } from "../../Context/AppContext";
+import { wait } from "../../utils/wait";
 import uuid from "react-native-uuid";
 import {
   checkPermissionMediaLibrary,
@@ -30,10 +32,13 @@ import {
   uploadImageToStorage,
 } from "../../utils/firebase.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
-import ImagePicker from "react-native-image-crop-picker";
+// import ImagePicker from "react-native-image-crop-picker";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import ImageSVG from "../../components/ImageSVG";
-import { updateImages } from "../../utils/Marketplace/marketplace.services";
+import {
+  updateImages,
+  uploadMarketplaceImages,
+} from "../../utils/Marketplace/marketplace.services";
 import { maxImages } from "../../utils/constants";
 import * as Progress from "react-native-progress";
 
@@ -66,38 +71,57 @@ function MarketplaceNewPostScreen({ navigation }) {
   ]);
 
   const openPicker = (multiple, index) => {
-    ImagePicker.openPicker({
-      multiple: multiple,
-      compressImageQuality: 0.7,
-      sortOrder: "asc",
-    })
-      .then((response) => {
-        setImageLoading(true);
-        let newImages = [...selectedImages];
-        if (response.length > 0) {
-          const takeAmount = updateImages(response, selectedImages);
+    try {
+      // let ImagePicker;
+      // try {
+      //   const ImagePicker = require("react-native-image-crop-picker").default;
+      // } catch (error) {
+      //   console.log(error);
+      // }
+      const ImagePicker = require("react-native-image-crop-picker").default;
+      if (ImagePicker) {
+        ImagePicker.openPicker({
+          multiple: multiple,
+          compressImageQuality: 0.7,
+          sortOrder: "asc",
+        })
+          .then((response) => {
+            setImageLoading(true);
+            let newImages = [...selectedImages];
+            if (response.length > 0) {
+              const takeAmount = updateImages(response, selectedImages);
 
-          for (let i = 0; i < takeAmount; i++) {
-            newImages[index + i] = {
-              uri: response[i].path,
-            };
-          }
+              for (let i = 0; i < takeAmount; i++) {
+                newImages[index + i] = {
+                  uri: response[i].path,
+                };
+              }
 
-          if (newImages.length > maxImages) {
-            newImages = newImages.slice(0, maxImages);
-          }
-        } else {
-          newImages[index] = {
-            uri: response.path,
-          };
-        }
+              if (newImages.length > maxImages) {
+                newImages = newImages.slice(0, maxImages);
+              }
+            } else {
+              newImages[index] = {
+                uri: response.path,
+              };
+            }
 
-        setSelectedImages(newImages);
-        setImageLoading(false);
-      })
-      .catch((error) => {
-        console.log("error: ", error);
-      });
+            // artificially delay the image loading
+            wait(500).then(() => {
+              setImageLoading(false);
+              setSelectedImages(newImages);
+            });
+          })
+          .catch((error) => {
+            console.log("error: ", error);
+          });
+      }
+    } catch (err) {
+      console.log("error: ", err);
+      Alert.alert(
+        "This functionality is not available on Expo Go. Please use the standalone version."
+      );
+    }
   };
 
   const deleteSelectedPhoto = (index) => {
@@ -161,25 +185,31 @@ function MarketplaceNewPostScreen({ navigation }) {
   const handleSubmit = async () => {
     // if all info is filled out: create random id -> upload image -> create post
     const selected = selectedImages.filter((image) => image.uri !== "");
-    if (
-      title.length > 0 &&
-      content.length > 0 &&
-      price &&
-      selected.length > 0
-    ) {
-      setIsloading(true);
-      // const id = uuid.v4();
-      // const imagePath = `Images/Posts/Marketplace/${id}-${currentUser.userID}.jpeg`;
-      // const imageUrl = await uploadImageToStorage(imagePath, selectedImages);
-      // const isNsfw = await moderatePost(imageUrl);
-      // if (imageUrl) {
-      //   createMarketplacePostFirestore(imageUrl, id, isNsfw);
-      // } else {
-      //   return;
-      // }
-    } else {
-      alert("Please fill out all fields");
+    // if (
+    //   title.length > 0 &&
+    //   content.length > 0 &&
+    //   price &&
+    //   selected.length > 0
+    // ) {
+    setIsloading(true);
+    const id = uuid.v4();
+    const imageUrls = await uploadMarketplaceImages(selectedImages, id);
+    console.log("imageUrls: ", imageUrls);
+    if (imageUrls.length > 0) {
+      setIsloading(false);
     }
+
+    // const imagePath = `Images/Posts/Marketplace/${id}-${currentUser.userID}.jpeg`;
+    // const imageUrl = await uploadImageToStorage(imagePath, selectedImages);
+    // const isNsfw = await moderatePost(imageUrls);
+    // if (imageUrl) {
+    //   createMarketplacePostFirestore(imageUrl, id, isNsfw);
+    // } else {
+    //   return;
+    // }
+    // } else {
+    //   alert("Please fill out all fields");
+    // }
   };
 
   const createMarketplacePostFirestore = async (imageUrl, id, isNsfw) => {
