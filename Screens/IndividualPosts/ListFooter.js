@@ -64,6 +64,7 @@ function ListFooter({ getComments, commentCount, setCommentCount }) {
     setPost({
       ...post,
       commentCount: newCommentCount,
+      updated: true,
     });
     const postRef = doc(db, "Newsfeed", post.id);
     updateDoc(postRef, {
