@@ -15,7 +15,7 @@ import {
   Alert,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+// import { MaterialCommunityIcons } from "@expo/vector-icons";
 // import * as ImagePicker from "expo-image-picker";
 import { Timestamp } from "@firebase/firestore";
 import { useAppContext } from "../../Context/AppContext";
@@ -23,13 +23,13 @@ import { wait } from "../../utils/wait";
 import uuid from "react-native-uuid";
 import {
   checkPermissionMediaLibrary,
-  compressFileSize,
-  getFileInfo,
+  // compressFileSize,
+  // getFileInfo,
 } from "../../utils/Profile/profile.services";
 import {
   createItemInFirestore,
   deleteImageFromStorage,
-  uploadImageToStorage,
+  // uploadImageToStorage,
 } from "../../utils/firebase.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
 // import ImagePicker from "react-native-image-crop-picker";
@@ -135,88 +135,58 @@ function MarketplaceNewPostScreen({ navigation }) {
 
   // function to handle image picking
   const handlePickImage = async (uri, index) => {
-    if (uri) {
-      showActionSheetWithOptions(
-        {
-          options: ["Cancel", "Replace photo", "Delete photo"],
-          destructiveButtonIndex: 2,
-          cancelButtonIndex: 0,
-        },
-        async (buttonIndex) => {
-          if (buttonIndex === 1) {
-            openPicker(false, index);
-          } else if (buttonIndex === 2) {
-            deleteSelectedPhoto(index);
+    const permissionResult = await checkPermissionMediaLibrary();
+
+    if (permissionResult !== false) {
+      if (uri) {
+        showActionSheetWithOptions(
+          {
+            options: ["Cancel", "Replace photo", "Delete photo"],
+            destructiveButtonIndex: 2,
+            cancelButtonIndex: 0,
+          },
+          async (buttonIndex) => {
+            if (buttonIndex === 1) {
+              openPicker(false, index);
+            } else if (buttonIndex === 2) {
+              deleteSelectedPhoto(index);
+            }
           }
-        }
-      );
-      return;
+        );
+        return;
+      }
+      openPicker(true, index);
     }
-    openPicker(true, index);
-
-    // const permissionResult = await checkPermissionMediaLibrary();
-
-    // if (permissionResult !== false) {
-    //   let result = await ImagePicker.launchImageLibraryAsync({
-    //     presentationStyle: 0,
-    //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //     allowsEditing: true,
-    //     aspect: [4, 3],
-    //     quality: 0.5,
-    //   });
-
-    //   if (!result.cancelled) {
-    //     setImageLoading(true);
-    //     const size = await getFileInfo(result.uri);
-    //     if (size > 5) {
-    //       alert(
-    //         "ERROR",
-    //         "File size is too large. Please select a file smaller than 5MB"
-    //       );
-    //       return;
-    //     }
-    //     const path = await compressFileSize(result.uri);
-    //     setImage(path.uri);
-    //     setImageLoading(false);
-    //   }
-    // }
   };
 
   const handleSubmit = async () => {
     // if all info is filled out: create random id -> upload image -> create post
     const selected = selectedImages.filter((image) => image.uri !== "");
-    // if (
-    //   title.length > 0 &&
-    //   content.length > 0 &&
-    //   price &&
-    //   selected.length > 0
-    // ) {
-    setIsloading(true);
-    const id = uuid.v4();
-    const imageUrls = await uploadMarketplaceImages(selectedImages, id);
-    console.log("imageUrls: ", imageUrls);
-    if (imageUrls.length > 0) {
-      setIsloading(false);
+    if (
+      title.length > 0 &&
+      content.length > 0 &&
+      price &&
+      selected.length > 0
+    ) {
+      setIsloading(true);
+      setPrice(format(price)); // format price in case event listener didn't get triggered
+      const id = uuid.v4();
+      const imageUrls = await uploadMarketplaceImages(selectedImages, id);
+      console.log("imageUrls: ", imageUrls);
+      if (imageUrls.length > 0) {
+        const isNsfw = await moderatePost(imageUrls);
+        createMarketplacePostFirestore(imageUrls, id, isNsfw);
+      }
+    } else {
+      alert("Please fill out all fields");
     }
-
-    // const imagePath = `Images/Posts/Marketplace/${id}-${currentUser.userID}.jpeg`;
-    // const imageUrl = await uploadImageToStorage(imagePath, selectedImages);
-    // const isNsfw = await moderatePost(imageUrls);
-    // if (imageUrl) {
-    //   createMarketplacePostFirestore(imageUrl, id, isNsfw);
-    // } else {
-    //   return;
-    // }
-    // } else {
-    //   alert("Please fill out all fields");
-    // }
   };
 
-  const createMarketplacePostFirestore = async (imageUrl, id, isNsfw) => {
+  const createMarketplacePostFirestore = async (imageUrls, id, isNsfw) => {
     try {
       const propObj = {
         buildingLocation: "",
-        images: [imageUrl],
+        images: imageUrls,
         isNSFW: isNsfw,
         id: id,
         postContent: content,
@@ -240,18 +210,32 @@ function MarketplaceNewPostScreen({ navigation }) {
         alert("Marketplace item successfully created!");
         navigation.navigate("MarketplaceScreen", { reload: true });
       } else {
-        await deleteImageFromStorage(imageUrl);
+        deleteMarketplaceImages();
         throw new Error("Error creating marketplace item", res.error);
       }
     } catch (err) {
-      await deleteImageFromStorage(imageUrl);
+      deleteMarketplaceImages();
+    }
+  };
+
+  const deleteMarketplaceImages = async (images) => {
+    for await (const image of images) {
+      await deleteImageFromStorage(image);
     }
   };
 
   // Moderation //
-  async function moderatePost(imageUrl) {
-    const imgNsfw = await moderateImage(imageUrl);
+  async function moderatePost(imageUrls) {
+    let imgNsfw = false;
+    for await (const url of imageUrls) {
+      const eachImgNsfw = await moderateImage(url);
+      console.log("each image NSFW is: ", eachImgNsfw);
+      if (eachImgNsfw) {
+        imgNsfw = true;
+      }
+    }
     const textNsfw = await moderateText(`${title} ${content}`);
+    console.log("text NSFW is: ", textNsfw);
     // if either image or text is nsfw, return true
     if (imgNsfw === true || textNsfw === true) {
       return true;
