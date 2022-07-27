@@ -23,6 +23,7 @@ export async function moderateImage(imgUrl) {
   return result;
 }
 function checkImageResults(data) {
+  console.log("data from image moderation", data);
   let drugs = data.drugs > 0.8;
   let nudity = data.nudity.safe < 0.2;
   let offensive = data.offensive.prob > 0.8;
@@ -39,6 +40,7 @@ export const moderateText = async (text) => {
   if (text == "") {
     return false;
   }
+  console.log("checking nsfw for text: ", text);
   const result = await axios
     .get("https://api.sightengine.com/1.0/text/check.json", {
       params: {
@@ -51,6 +53,7 @@ export const moderateText = async (text) => {
       },
     })
     .then(function (response) {
+      console.log("data from text moderation", response.data);
       return textResults(response.data.profanity.matches);
     })
     .catch(function (error) {
