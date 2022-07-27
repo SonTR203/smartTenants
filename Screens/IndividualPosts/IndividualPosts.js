@@ -19,6 +19,7 @@ const IndividualPosts = ({ navigation, route }) => {
   const [commentCount, setCommentCount] = useState(0);
 
   const [userCommentName, setUserCommentName] = useState("");
+  const [userCommentId, setUserCommentId] = useState("");
 
   const commentListRef = useRef();
 
@@ -88,6 +89,7 @@ const IndividualPosts = ({ navigation, route }) => {
       styleVariables={styleVariables}
       width={constants.width}
       setUserCommentName={setUserCommentName}
+      setUserCommentId={setUserCommentId}
     />
   );
 
@@ -107,6 +109,8 @@ const IndividualPosts = ({ navigation, route }) => {
         setCommentCount={setCommentCount}
         userCommentName={userCommentName}
         setUserCommentName={setUserCommentName}
+        userCommentId={userCommentId}
+        setUserCommentId={setUserCommentId}
       />
     );
   };

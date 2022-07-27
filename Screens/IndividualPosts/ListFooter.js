@@ -21,6 +21,8 @@ function ListFooter({
   setCommentCount,
   userCommentName,
   setUserCommentName,
+  setUserCommentId,
+  userCommentId,
 }) {
   const [textInputValue, setTextInputValue] = useState("");
   const { setPost, post, currentUser } = useAppContext();
@@ -39,27 +41,63 @@ function ListFooter({
       }
       const id = uuid.v4();
 
-      try {
-        setDoc(doc(db, `Newsfeed/${post.id}/peopleWhoCommented`, id), {
+      if (userCommentName != "") {
+        replyToComment(id);
+      } else {
+        try {
+          setDoc(doc(db, `Newsfeed/${post.id}/peopleWhoCommented`, id), {
+            id: id,
+            firstName: currentUser.firstName,
+            lastName: currentUser.lastName,
+            userProfileImage: currentUser.userProfileImage,
+            commentContent: textInputValue,
+            userID: currentUser.userID,
+            authorID: post.userID,
+            timestamp: Timestamp.fromDate(new Date()),
+            postID: post.id,
+            replied: false,
+          }).then(() => {
+            setTextInputValue("");
+            getComments();
+            addCommentCount();
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    } else {
+      alert("No Comment to Post");
+    }
+  };
+
+  const replyToComment = async (id) => {
+    try {
+      setDoc(
+        doc(
+          db,
+          `Newsfeed/${post.id}/peopleWhoCommented/${userCommentId}/peopleWhoReplied`,
+          id
+        ),
+        {
           id: id,
           firstName: currentUser.firstName,
           lastName: currentUser.lastName,
           userProfileImage: currentUser.userProfileImage,
           commentContent: textInputValue,
           userID: currentUser.userID,
-          authorID: post.userID,
           timestamp: Timestamp.fromDate(new Date()),
+          authorID: post.userID,
           postID: post.id,
-        }).then(() => {
-          setTextInputValue("");
-          getComments();
-          addCommentCount();
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      alert("No Comment to Post");
+        }
+      ).then(() => {
+        setTextInputValue("");
+        getComments();
+        addCommentCount();
+        setUserCommentId("");
+        setUserCommentName("");
+      });
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -101,6 +139,7 @@ function ListFooter({
               style={styles.cancelReply}
               onPress={() => {
                 setUserCommentName("");
+                setUserCommentId("");
               }}
             >
               <Text style={[styleVariables.fontSizes.title]}>x</Text>

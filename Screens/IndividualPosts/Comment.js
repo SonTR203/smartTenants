@@ -3,7 +3,13 @@ import { setTime } from "../../utils/setTime";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 
-function Comment({ item, theme, styleVariables, setUserCommentName }) {
+function Comment({
+  item,
+  theme,
+  styleVariables,
+  setUserCommentName,
+  setUserCommentId,
+}) {
   const [timeSincePost, setTimeSincePost] = useState("");
 
   useEffect(() => {
@@ -69,6 +75,7 @@ function Comment({ item, theme, styleVariables, setUserCommentName }) {
         <TouchableOpacity
           onPress={() => {
             setUserCommentName(`${item.firstName} ${item.lastName}`);
+            setUserCommentId(item.id);
           }}
         >
           <Text style={[styleVariables.fontSizes.bodyBold, styles.replyText]}>
