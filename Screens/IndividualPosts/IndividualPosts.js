@@ -18,6 +18,8 @@ const IndividualPosts = ({ navigation, route }) => {
   const [comments, setComments] = useState([]);
   const [commentCount, setCommentCount] = useState(0);
 
+  const [userCommentName, setUserCommentName] = useState("");
+
   const commentListRef = useRef();
 
   // Get all Comments
@@ -85,6 +87,7 @@ const IndividualPosts = ({ navigation, route }) => {
       theme={theme}
       styleVariables={styleVariables}
       width={constants.width}
+      setUserCommentName={setUserCommentName}
     />
   );
 
@@ -102,6 +105,8 @@ const IndividualPosts = ({ navigation, route }) => {
         getComments={getComments}
         commentCount={commentCount}
         setCommentCount={setCommentCount}
+        userCommentName={userCommentName}
+        setUserCommentName={setUserCommentName}
       />
     );
   };

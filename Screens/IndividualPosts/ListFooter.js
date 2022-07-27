@@ -15,7 +15,13 @@ import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
 import { useTheme } from "../../ThemeContext";
 
-function ListFooter({ getComments, commentCount, setCommentCount }) {
+function ListFooter({
+  getComments,
+  commentCount,
+  setCommentCount,
+  userCommentName,
+  setUserCommentName,
+}) {
   const [textInputValue, setTextInputValue] = useState("");
   const { setPost, post, currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
@@ -75,10 +81,33 @@ function ListFooter({ getComments, commentCount, setCommentCount }) {
   const styles = StyleSheet.create({
     container: { paddingTop: 34, paddingBottom: 136 },
     inputArea: { minHeight: 68 + 44, paddingTop: 22 },
+    replyView: { marginVertical: 20 },
+    replyName: { color: styleVariables.colors.primary },
+    cancelReply: { padding: 10 },
   });
 
   return (
     <View style={[theme.globalMargins, styles.container]}>
+      {userCommentName != "" && (
+        <View style={styles.replyView}>
+          <Text style={styleVariables.fontSizes.callout}>
+            Replying to{" "}
+            <Text
+              style={[styles.replyName, styleVariables.fontSizes.calloutBold]}
+            >
+              {userCommentName}{" "}
+            </Text>
+            <TouchableOpacity
+              style={styles.cancelReply}
+              onPress={() => {
+                setUserCommentName("");
+              }}
+            >
+              <Text style={[styleVariables.fontSizes.title]}>x</Text>
+            </TouchableOpacity>
+          </Text>
+        </View>
+      )}
       <View>
         <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
           Reply
