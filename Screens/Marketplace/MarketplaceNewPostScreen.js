@@ -153,7 +153,8 @@ function MarketplaceNewPostScreen({ navigation }) {
 
   const handleEndEditing = (e) => {
     if (e.nativeEvent.text.length > 0) {
-      setPrice(format(e.nativeEvent.text));
+      const price = e.nativeEvent.text.replace(/[^0-9]/g, "");
+      setPrice(format(price));
     }
   };
 
