@@ -53,6 +53,7 @@ function ListFooter({
             commentContent: textInputValue,
             userID: currentUser.userID,
             authorID: post.userID,
+            colors: currentUser.colors,
             timestamp: Timestamp.fromDate(new Date()),
             postID: post.id,
             replied: false,
