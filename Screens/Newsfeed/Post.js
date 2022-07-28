@@ -96,7 +96,11 @@ function Post({ passedPost, windowWidth }) {
   }
 
   return (
-    <View id="post" style={theme.cardContainer}>
+    <TouchableOpacity
+      id="post"
+      style={theme.cardContainer}
+      onPress={navigateToIndividualPostScreen}
+    >
       {/* ownerInfo */}
       <View
         id="ownerInfo"
@@ -148,10 +152,7 @@ function Post({ passedPost, windowWidth }) {
       </View>
 
       {/* postContent */}
-      <TouchableOpacity
-        id="postContent"
-        onPress={navigateToIndividualPostScreen}
-      >
+      <View id="postContent">
         <View className="postTextContent">
           <Text
             style={[
@@ -176,7 +177,7 @@ function Post({ passedPost, windowWidth }) {
             }}
           />
         )}
-      </TouchableOpacity>
+      </View>
 
       {/* likeAndComment */}
       <View
@@ -225,9 +226,8 @@ function Post({ passedPost, windowWidth }) {
         </TouchableOpacity>
 
         {/* =========================== COMMENT ============================= */}
-        <TouchableOpacity
+        <View
           id="comment"
-          onPress={navigateToIndividualPostScreen}
           style={{
             display: "flex",
             alignItems: "center",
@@ -249,9 +249,9 @@ function Post({ passedPost, windowWidth }) {
           >
             {numberOfComments}
           </Text>
-        </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
