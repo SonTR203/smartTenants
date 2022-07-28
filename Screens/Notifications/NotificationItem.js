@@ -54,6 +54,7 @@ function NotificationItem({
     const formattedPost = {
       ...postData,
       id: docSnap.id,
+      updated: false,
     };
 
     if (docSnap.exists()) {

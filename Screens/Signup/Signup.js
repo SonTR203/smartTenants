@@ -25,6 +25,7 @@ import { uploadExpoPushToken } from "../../utils/firebase.services";
 import * as Progress from "react-native-progress";
 import ErrorArea from "../../components/SignUp/ErrorArea";
 import { useAppContext } from "../../Context/AppContext";
+import { getRandomGradientColor } from "../../utils/Profile/profile.services";
 
 const auth = getAuth();
 
@@ -113,6 +114,7 @@ const Signup = ({ navigation }) => {
         buildingAddress,
         buildingName,
         email,
+        colors: getRandomGradientColor(),
         unitNumber: parseInt(unitNumber),
         tenantAuthorized,
         userProfileImage: "",

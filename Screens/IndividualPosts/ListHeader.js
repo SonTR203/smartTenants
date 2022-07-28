@@ -68,6 +68,7 @@ function ListHeader() {
               userProfileImage: currentPost.userProfileImage,
               firstName: currentPost.userFirstName,
               lastName: currentPost.userLastName,
+              colors: currentPost.userColors,
             }}
             size={43}
             borderRadius={12}

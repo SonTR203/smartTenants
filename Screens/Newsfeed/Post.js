@@ -122,6 +122,7 @@ function Post({ passedPost, windowWidth }) {
               firstName: currentPost.userFirstName,
               lastName: currentPost.userLastName,
               userProfileImage: currentPost.userProfileImage,
+              colors: currentPost.userColors,
             }}
             size={43}
             borderRadius={12}

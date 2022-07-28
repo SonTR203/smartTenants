@@ -67,28 +67,28 @@ export const checkPermissionMediaLibrary = async () => {
 export const getRandomGradientColor = () => {
   const colorArray = [
     {
-      first: "#63A3FD",
-      second: "#3185FC",
+      start: "#63A3FD",
+      end: "#3185FC",
     },
     {
-      first: "#FB6B72",
-      second: "#F93943",
+      start: "#FB6B72",
+      end: "#F93943",
     },
     {
-      first: "#FDA0C8",
-      second: "#FC6DAB",
+      start: "#FDA0C8",
+      end: "#FC6DAB",
     },
     {
-      first: "#BAB8FF",
-      second: "#8884FF",
+      start: "#BAB8FF",
+      end: "#8884FF",
     },
     {
-      first: "#FF6633",
-      second: "#FF4000",
+      start: "#FF6633",
+      end: "#FF4000",
     },
     {
-      first: "#7FE692",
-      second: "#53DD6C",
+      start: "#7FE692",
+      end: "#53DD6C",
     },
   ];
   const randomColorObj =

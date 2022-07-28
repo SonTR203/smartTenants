@@ -85,6 +85,8 @@ function ListFooter({
           userProfileImage: currentUser.userProfileImage,
           commentContent: textInputValue,
           userID: currentUser.userID,
+          colors: currentUser.colors,
+          authorID: post.userID,
           timestamp: Timestamp.fromDate(new Date()),
           authorID: post.userID,
           postID: post.id,
