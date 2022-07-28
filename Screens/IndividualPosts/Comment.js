@@ -30,7 +30,6 @@ function Comment({
   useEffect(async () => {
     if (item.replied == true) {
       let replyList = await getCommentReplies(item.id);
-      console.log(replyList);
       setReplies(replyList);
     }
   }, [comments]);
