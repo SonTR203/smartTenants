@@ -1,16 +1,19 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
-import { getRandomGradientColor } from "../../utils/Profile/profile.services";
 
 function DynamicProfilePicture({ user, size, borderRadius }) {
-  const [randomColor, setRandomColor] = useState(getRandomGradientColor());
+  const [defaultColor, setDefaultColor] = useState(null);
 
   useEffect(() => {
-    if (user && user.userProfileImage && user.userProfileImage === "") {
-      setRandomColor(getRandomGradientColor());
+    if (user && user.colors) {
+      setDefaultColor(user.colors);
     }
-  }, [user.userProfileImage]);
+  }, [user]);
+
+  if (!defaultColor) {
+    return null;
+  }
 
   return (
     <View>
@@ -23,7 +26,7 @@ function DynamicProfilePicture({ user, size, borderRadius }) {
         <View style={styles.image(size, borderRadius)}>
           <LinearGradient
             // Background Linear Gradient
-            colors={[randomColor.first, randomColor.second]}
+            colors={[defaultColor.start, defaultColor.end]}
             style={styles.linearGradient(size, borderRadius)}
           />
           <View style={styles.textContainer}>

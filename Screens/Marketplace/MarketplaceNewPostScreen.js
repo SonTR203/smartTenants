@@ -102,6 +102,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         userFirstName: currentUser.firstName,
         userLastName: currentUser.lastName,
         userProfileImage: currentUser.userProfileImage,
+        userColors: currentUser.colors,
         timestamp: Timestamp.fromDate(new Date()),
       };
 

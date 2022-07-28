@@ -220,6 +220,7 @@ function MarketplaceItemInfoScreen({ route, navigation }) {
               firstName: item.userFirstName,
               lastName: item.userLastName,
               userProfileImage: item.userProfileImage,
+              colors: item.userColors,
             }}
             size={43}
             borderRadius={12}

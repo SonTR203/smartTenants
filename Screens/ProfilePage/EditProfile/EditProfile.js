@@ -242,6 +242,7 @@ const EditProfile = ({ navigation }) => {
                   userProfileImage: userProfileImage,
                   firstName: currentUser.firstName,
                   lastName: currentUser.lastName,
+                  colors: currentUser.colors,
                 }}
                 size={85}
                 borderRadius={18}
