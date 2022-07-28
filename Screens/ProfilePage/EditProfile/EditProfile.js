@@ -52,10 +52,9 @@ const EditProfile = ({ navigation }) => {
   };
 
   const setData = (building) => {
-    building = building.buildingAddress.stringValue;
-    setBuildingAddress(building);
-    setBuildingID(building.replace(/\s/g, ""));
-    setBuildingName(building.split(",")[0]);
+    setBuildingAddress(building.buildingAddress.stringValue);
+    setBuildingName(building.buildingName.stringValue);
+    setBuildingID(building.id);
   };
 
   const checkTextInputs = () => {
