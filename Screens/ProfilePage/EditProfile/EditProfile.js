@@ -39,6 +39,7 @@ const EditProfile = ({ navigation }) => {
     currentUser.buildingAddress
   );
   const [buildingID, setBuildingID] = useState(currentUser.buildingID);
+  const [buildingName, setBuildingName] = useState(currentUser.buildingName);
   const [modalVisible, setModalVisible] = useState(false);
   const [userProfileImage, setUserProfileImage] = useState(
     currentUser.userProfileImage
@@ -54,6 +55,7 @@ const EditProfile = ({ navigation }) => {
     building = building.buildingAddress.stringValue;
     setBuildingAddress(building);
     setBuildingID(building.replace(/\s/g, ""));
+    setBuildingName(building.split(",")[0]);
   };
 
   const checkTextInputs = () => {
@@ -83,23 +85,18 @@ const EditProfile = ({ navigation }) => {
           lastName,
           buildingID,
           buildingAddress,
+          buildingName,
           email,
         });
 
         setCurrentUser({
+          ...currentUser,
           firstName,
           lastName,
           buildingID,
           buildingAddress,
+          buildingName,
           email,
-          isAdmin: currentUser.isAdmin,
-          myMarketplacePosts: currentUser.myMarketplacePosts,
-          myPosts: currentUser.myPosts,
-          tenantAuthorized: currentUser.tenantAuthorized,
-          userID: currentUser.userID,
-          visibleNotices: currentUser.visibleNotices,
-          visibleAnnouncements: currentUser.visibleAnnouncements,
-          userProfileImage: currentUser.userProfileImage,
         });
 
         setSaveModal(true);
