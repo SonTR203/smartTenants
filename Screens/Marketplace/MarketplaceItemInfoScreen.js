@@ -207,7 +207,7 @@ function MarketplaceItemInfoScreen({ route, navigation }) {
           <Text style={styles.title} numberOfLines={2} ellipsizeMode={"tail"}>
             {item.postTitle}
           </Text>
-          <Text style={styles.price}>${item.price}</Text>
+          <Text style={styles.price}>{item.price}</Text>
         </View>
         {/* ITEM CONTENT  */}
         <View style={styles.contentContainer}>

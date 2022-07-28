@@ -75,7 +75,7 @@ function MarketplaceFirstItem({ item, navigation }) {
           {item.postTitle}
         </Text>
         <Text style={styles.price}>
-          {item.price === 0 ? "Free" : "$" + item.price}
+          {item.price === 0 ? "Free" : item.price}
         </Text>
       </View>
       {/* ITEM CONTENT  */}
