@@ -98,9 +98,29 @@ function ListFooter({
         addCommentCount();
         setUserCommentId("");
         setUserCommentName("");
+        setRepliedTrue(post.id, userCommentId);
       });
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  // sets comment replied to true
+  const setRepliedTrue = async () => {
+    const commentRef = doc(
+      db,
+      "Newsfeed",
+      post.id,
+      "peopleWhoCommented",
+      userCommentId
+    );
+
+    try {
+      await updateDoc(commentRef, {
+        replied: true,
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 

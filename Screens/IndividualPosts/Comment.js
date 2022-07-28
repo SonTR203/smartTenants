@@ -28,8 +28,11 @@ function Comment({
   }, []);
 
   useEffect(async () => {
-    let replyList = await getCommentReplies(item.id);
-    setReplies(replyList);
+    if (item.replied == true) {
+      let replyList = await getCommentReplies(item.id);
+      console.log(replyList);
+      setReplies(replyList);
+    }
   }, [comments]);
 
   const callbackRenderItem = useCallback(
@@ -133,11 +136,13 @@ function Comment({
           </TouchableOpacity>
         </View>
       </View>
-      <FlatList
-        data={replies}
-        keyExtractor={(item) => item.id}
-        renderItem={callbackRenderItem}
-      />
+      {item.replied == true && (
+        <FlatList
+          data={replies}
+          keyExtractor={(item) => item.id}
+          renderItem={callbackRenderItem}
+        />
+      )}
     </View>
   );
 }
