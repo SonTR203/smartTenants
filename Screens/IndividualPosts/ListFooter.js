@@ -14,6 +14,7 @@ import { updateDoc, doc, setDoc } from "@firebase/firestore";
 import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
 import { useTheme } from "../../ThemeContext";
+import { xor } from "lodash";
 
 function ListFooter({
   getComments,
@@ -142,9 +143,18 @@ function ListFooter({
   const styles = StyleSheet.create({
     container: { paddingTop: 34, paddingBottom: 136 },
     inputArea: { minHeight: 68 + 44, paddingTop: 22 },
-    replyView: { marginVertical: 20 },
+    replyView: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginVertical: 20,
+    },
     replyName: { color: styleVariables.colors.primary },
-    cancelReply: { padding: 10 },
+    cancelReply: {
+      color: styleVariables.colors.primary,
+      padding: 10,
+    },
   });
 
   return (
@@ -156,18 +166,19 @@ function ListFooter({
             <Text
               style={[styles.replyName, styleVariables.fontSizes.calloutBold]}
             >
-              {userCommentName}{" "}
+              {userCommentName}
+              {"        "}
             </Text>
-            <TouchableOpacity
-              style={styles.cancelReply}
-              onPress={() => {
-                setUserCommentName("");
-                setUserCommentId("");
-              }}
-            >
-              <Text style={[styleVariables.fontSizes.title]}>x</Text>
-            </TouchableOpacity>
           </Text>
+          <TouchableOpacity
+            style={styles.cancelReply}
+            onPress={() => {
+              setUserCommentName("");
+              setUserCommentId("");
+            }}
+          >
+            <Text style={[styleVariables.fontSizes.header]}>x</Text>
+          </TouchableOpacity>
         </View>
       )}
       <View>
