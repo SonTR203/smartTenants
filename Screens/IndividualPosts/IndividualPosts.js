@@ -40,6 +40,22 @@ const IndividualPosts = ({ navigation, route }) => {
     });
   };
 
+  // Get comment replies
+  const getCommentReplies = async (id) => {
+    const colRef = collection(
+      db,
+      `Newsfeed/${post.id}/peopleWhoCommented/${id}/peopleWhoReplied`
+    );
+
+    const data = await getDocs(colRef);
+    const formattedData = data.docs.map((doc) => {
+      return {
+        ...doc.data(),
+      };
+    });
+    return formattedData;
+  };
+
   // execute function
   useEffect(() => {
     if (post && post.updated === false) {
@@ -90,6 +106,8 @@ const IndividualPosts = ({ navigation, route }) => {
       width={constants.width}
       setUserCommentName={setUserCommentName}
       setUserCommentId={setUserCommentId}
+      getCommentReplies={getCommentReplies}
+      comments={comments}
     />
   );
 
