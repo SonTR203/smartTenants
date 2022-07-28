@@ -41,6 +41,7 @@ function ListFooter({ getComments, commentCount, setCommentCount }) {
           userProfileImage: currentUser.userProfileImage,
           commentContent: textInputValue,
           userID: currentUser.userID,
+          colors: currentUser.colors,
           authorID: post.userID,
           timestamp: Timestamp.fromDate(new Date()),
           postID: post.id,
