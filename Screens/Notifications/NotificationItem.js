@@ -43,6 +43,11 @@ function NotificationItem({
   };
 
   async function viewNotificationPost(notifications) {
+    if (notifications.content.includes("declined")) {
+      setWasSeenToTrue(notifications);
+      return;
+    }
+
     // send comment id to scroll to comment
     const commentId = notifications.content.includes("commented")
       ? notifications.id
