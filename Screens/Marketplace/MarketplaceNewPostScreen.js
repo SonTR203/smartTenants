@@ -22,7 +22,7 @@ import uuid from "react-native-uuid";
 import { checkPermissionMediaLibrary } from "../../utils/Profile/profile.services";
 import {
   createItemInFirestore,
-  deleteImageFromStorage,
+  deleteMultipleImages,
 } from "../../utils/firebase.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
 import { useActionSheet } from "@expo/react-native-action-sheet";
@@ -195,17 +195,11 @@ function MarketplaceNewPostScreen({ navigation }) {
         alert("Marketplace item successfully created!");
         navigation.navigate("MarketplaceScreen", { reload: true });
       } else {
-        deleteMarketplaceImages();
+        deleteMultipleImages(imageUrls);
         throw new Error("Error creating marketplace item", res.error);
       }
     } catch (err) {
-      deleteMarketplaceImages();
-    }
-  };
-
-  const deleteMarketplaceImages = async (images) => {
-    for await (const image of images) {
-      await deleteImageFromStorage(image);
+      deleteMultipleImages(imageUrls);
     }
   };
 

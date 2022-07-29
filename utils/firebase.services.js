@@ -72,6 +72,13 @@ export const createItemInFirestore = async (collection, id, propertyObject) => {
   }
 };
 
+export const deleteMultipleImages = async (images) => {
+  for await (const image of images) {
+    console.log("deleting image", image);
+    await deleteImageFromStorage(image);
+  }
+};
+
 export const deleteImageFromStorage = async (imageName) => {
   try {
     const imageRef = ref(getStorage(), imageName);
