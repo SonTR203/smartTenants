@@ -43,7 +43,10 @@ function NotificationItem({
   };
 
   async function viewNotificationPost(notifications) {
-    if (notifications.content.includes("declined")) {
+    if (
+      notifications.content.includes("declined") ||
+      notifications.content.includes("deleted")
+    ) {
       setWasSeenToTrue(notifications);
       return;
     }
