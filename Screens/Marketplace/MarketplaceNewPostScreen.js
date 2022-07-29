@@ -245,6 +245,37 @@ function MarketplaceNewPostScreen({ navigation }) {
     }
   };
 
+  const renderSelectedImages = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          handlePickImage(item.uri, index);
+        }}
+        style={styles.imageContainer}
+      >
+        <>
+          {imageLoading ? (
+            <Progress.CircleSnail
+              style={styles.loadingMargin}
+              strokeCap="square"
+              thickness={2.2}
+              size={20}
+              color={"rgba(57, 94, 102, 1)"}
+            />
+          ) : (
+            <>
+              {item.uri !== "" ? (
+                <Image source={{ uri: item.uri }} style={styles.imageStyle} />
+              ) : (
+                <ImageSVG />
+              )}
+            </>
+          )}
+        </>
+      </TouchableOpacity>
+    );
+  };
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -271,6 +302,31 @@ function MarketplaceNewPostScreen({ navigation }) {
     loader: {
       marginBottom: 20,
     },
+    keyboardContainer: {
+      flex: 1,
+      height: "100%",
+    },
+    imageSelectionContainer: {
+      paddingLeft: 17,
+      paddingRight: 9,
+    },
+    imageContainer: {
+      width: 80,
+      height: 80,
+      borderRadius: 8,
+      backgroundColor: "#EBEFF0",
+      marginRight: 8,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    loadingMargin: {
+      marginLeft: 17,
+    },
+    imageStyle: {
+      width: 80,
+      height: 80,
+      borderRadius: 8,
+    },
   });
 
   return (
@@ -278,13 +334,7 @@ function MarketplaceNewPostScreen({ navigation }) {
     <View style={styles.container}>
       <StatusBar style="dark" />
       {/* BODY CONTAINER  */}
-      <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          height: "100%",
-        }}
-        behavior="height"
-      >
+      <KeyboardAvoidingView style={styles.keyboardContainer} behavior="height">
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* TEXT INPUT SECTIONS  */}
           <View style={styles.horizontalMargin}>
@@ -344,96 +394,13 @@ function MarketplaceNewPostScreen({ navigation }) {
           </View>
           {/* UPLOAD IMAGE */}
           <FlatList
-            contentContainerStyle={{
-              paddingLeft: 17,
-              paddingRight: 9,
-            }}
+            contentContainerStyle={styles.imageSelectionContainer}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             keyExtractor={(item, index) => item + index}
             data={selectedImages}
-            renderItem={({ item, index }) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    handlePickImage(item.uri, index);
-                  }}
-                  style={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: 8,
-                    backgroundColor: "#EBEFF0",
-                    marginRight: 8,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <>
-                    {imageLoading ? (
-                      <Progress.CircleSnail
-                        style={{
-                          marginLeft: 17,
-                        }}
-                        strokeCap="square"
-                        thickness={2.2}
-                        size={20}
-                        color={"rgba(57, 94, 102, 1)"}
-                      />
-                    ) : (
-                      <>
-                        {item.uri !== "" ? (
-                          <Image
-                            source={{ uri: item.uri }}
-                            style={{
-                              width: 80,
-                              height: 80,
-                              borderRadius: 8,
-                            }}
-                          />
-                        ) : (
-                          <ImageSVG />
-                        )}
-                      </>
-                    )}
-                  </>
-                </TouchableOpacity>
-              );
-            }}
+            renderItem={renderSelectedImages}
           />
-          {/* <TouchableOpacity
-              id="uploadImageButton"
-              onPress={pickImage}
-              style={[theme.secondaryButton, styles.uploadButtonContainer]}
-            >
-              {imageLoading ? (
-                <ActivityIndicator
-                  style={styles.loader}
-                  size="small"
-                  color={styleVariables.colors.primary}
-                />
-              ) : (
-                <>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="middle"
-                    style={[
-                      theme.secondaryButtonText,
-                      styleVariables.fontSizes.body,
-                      styles.uploadText,
-                    ]}
-                  >
-                    {image.length > 0
-                      ? image.split("/").pop()
-                      : "Upload Image "}
-                  </Text>
-                  <MaterialCommunityIcons
-                    name="image-plus"
-                    size={18}
-                    color={styleVariables.colors.primary}
-                  />
-                </>
-              )}
-            </TouchableOpacity> */}
         </ScrollView>
       </KeyboardAvoidingView>
       {/* SUBMIT BUTTON  */}
