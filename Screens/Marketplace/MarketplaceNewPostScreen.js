@@ -15,24 +15,16 @@ import {
   Alert,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
-// import { MaterialCommunityIcons } from "@expo/vector-icons";
-// import * as ImagePicker from "expo-image-picker";
 import { Timestamp } from "@firebase/firestore";
 import { useAppContext } from "../../Context/AppContext";
 import { wait } from "../../utils/wait";
 import uuid from "react-native-uuid";
-import {
-  checkPermissionMediaLibrary,
-  // compressFileSize,
-  // getFileInfo,
-} from "../../utils/Profile/profile.services";
+import { checkPermissionMediaLibrary } from "../../utils/Profile/profile.services";
 import {
   createItemInFirestore,
   deleteImageFromStorage,
-  // uploadImageToStorage,
 } from "../../utils/firebase.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
-// import ImagePicker from "react-native-image-crop-picker";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import ImageSVG from "../../components/ImageSVG";
 import {
@@ -48,7 +40,6 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [price, setPrice] = useState(null);
-  // const [image, setImage] = useState("");
   const [imageLoading, setImageLoading] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
@@ -72,50 +63,43 @@ function MarketplaceNewPostScreen({ navigation }) {
 
   const openPicker = (multiple, index) => {
     try {
-      // let ImagePicker;
-      // try {
-      //   const ImagePicker = require("react-native-image-crop-picker").default;
-      // } catch (error) {
-      //   console.log(error);
-      // }
       const ImagePicker = require("react-native-image-crop-picker").default;
-      if (ImagePicker) {
-        ImagePicker.openPicker({
-          multiple: multiple,
-          compressImageQuality: 0.7,
-          sortOrder: "asc",
-        })
-          .then((response) => {
-            setImageLoading(true);
-            let newImages = [...selectedImages];
-            if (response.length > 0) {
-              const takeAmount = updateImages(response, selectedImages);
+      // call const ImagePicker here so the app won't crash, only the feature is disabled
+      ImagePicker.openPicker({
+        multiple: multiple,
+        compressImageQuality: 0.6,
+        sortOrder: "asc",
+      })
+        .then((response) => {
+          setImageLoading(true);
+          let newImages = [...selectedImages];
+          if (response.length > 0) {
+            const takeAmount = updateImages(response, selectedImages);
 
-              for (let i = 0; i < takeAmount; i++) {
-                newImages[index + i] = {
-                  uri: response[i].path,
-                };
-              }
-
-              if (newImages.length > maxImages) {
-                newImages = newImages.slice(0, maxImages);
-              }
-            } else {
-              newImages[index] = {
-                uri: response.path,
+            for (let i = 0; i < takeAmount; i++) {
+              newImages[index + i] = {
+                uri: response[i].path,
               };
             }
 
-            // artificially delay the image loading
-            wait(500).then(() => {
-              setImageLoading(false);
-              setSelectedImages(newImages);
-            });
-          })
-          .catch((error) => {
-            console.log("error: ", error);
+            if (newImages.length > maxImages) {
+              newImages = newImages.slice(0, maxImages);
+            }
+          } else {
+            newImages[index] = {
+              uri: response.path,
+            };
+          }
+
+          // artificially delay the image loading
+          wait(500).then(() => {
+            setImageLoading(false);
+            setSelectedImages(newImages);
           });
-      }
+        })
+        .catch((error) => {
+          console.log("error openPicker: ", error);
+        });
     } catch (err) {
       console.log("error: ", err);
       Alert.alert(
