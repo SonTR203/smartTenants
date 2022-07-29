@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_USER = "278265377";
-const API_KEY = "38GEu5SU32yy5SYjvzhe";
+const API_USER = "1049474872";
+const API_KEY = "cF9Qa7DverSincQH9PLn";
 
 export async function moderateImage(imgUrl) {
   const result = await axios
