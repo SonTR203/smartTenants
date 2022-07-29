@@ -19,6 +19,7 @@ import ListFooter from "../Newsfeed/ListFooter";
 import { getMarketplaceItems } from "../../utils/firebase.services";
 import { useAppContext } from "../../Context/AppContext";
 import { Entypo } from "@expo/vector-icons";
+import EmptyListComponent from "../../components/EmptyListComponent";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -59,6 +60,43 @@ const MarketplaceScreen = ({ navigation, route }) => {
     });
   };
 
+  const renderEmpty = () => {
+    return <EmptyListComponent screenName={"marketplace"} />;
+  };
+
+  const renderListHeader = () => {
+    return (
+      <>
+        <TouchableOpacity
+          onPress={handleNavigate}
+          style={styles.messageContainer}
+        >
+          <View style={styles.messageView}>
+            <Text style={styles.messageText}>Messages</Text>
+            {marketplaceBadges.unseen.length > 0 ? (
+              <View style={styles.badgeView}>
+                <Text style={styles.badgeNumber}>
+                  {marketplaceBadges.unseen.length}
+                </Text>
+              </View>
+            ) : null}
+          </View>
+
+          <Entypo name="chevron-small-right" size={40} color="#395E66" />
+        </TouchableOpacity>
+        <MarketplaceFirstItem item={itemList[0]} navigation={navigation} />
+      </>
+    );
+  };
+
+  const renderListFooter = () => {
+    if (itemList.length > 0) {
+      return <ListFooter styleVariables={styleVariables} theme={theme} />;
+    } else {
+      return null;
+    }
+  };
+
   const styles = StyleSheet.create({
     newsfeedContainer: {
       flex: 1,
@@ -79,6 +117,54 @@ const MarketplaceScreen = ({ navigation, route }) => {
       overflow: "hidden",
       backgroundColor: "white",
     },
+    messageContainer: {
+      margin: 16,
+      backgroundColor: "white",
+      padding: 16,
+      borderRadius: 24,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 2.22,
+
+      elevation: 3,
+    },
+    messageView: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    messageText: {
+      color: "#395E66",
+      fontSize: 22,
+      lineHeight: 28,
+      marginLeft: 6,
+      fontWeight: "500",
+    },
+    badgeView: {
+      width: 24,
+      height: 24,
+      marginLeft: 8,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      backgroundColor: "#395E66",
+      borderRadius: 20,
+
+      flexDirection: "column",
+      alignItems: "flex-start",
+    },
+    badgeNumber: {
+      fontWeight: "400",
+      color: "white",
+      fontSize: 13,
+      lineHeight: 18,
+    },
   });
 
   return (
@@ -90,96 +176,14 @@ const MarketplaceScreen = ({ navigation, route }) => {
       <View style={styles.flatListContainer}>
         {itemList ? (
           <FlatList
+            ListEmptyComponent={renderEmpty}
             removeClippedSubviews={true}
             initialNumToRender={3}
             style={styles.flatlist}
             data={itemList.slice(1)} // remove first item from list, put first item in Header
             numColumns={2}
             keyExtractor={(item, index) => item + index}
-            ListHeaderComponent={() => {
-              return (
-                <>
-                  <TouchableOpacity
-                    onPress={handleNavigate}
-                    style={{
-                      margin: 16,
-                      backgroundColor: "white",
-                      padding: 16,
-                      borderRadius: 24,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-
-                      shadowColor: "#000",
-                      shadowOffset: {
-                        width: 0,
-                        height: 1,
-                      },
-                      shadowOpacity: 0.22,
-                      shadowRadius: 2.22,
-
-                      elevation: 3,
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "#395E66",
-                          fontSize: 22,
-                          lineHeight: 28,
-                          marginLeft: 6,
-                          fontWeight: "500",
-                        }}
-                      >
-                        Messages
-                      </Text>
-                      {marketplaceBadges.unseen.length > 0 ? (
-                        <View
-                          style={{
-                            width: 24,
-                            height: 24,
-                            marginLeft: 8,
-                            paddingHorizontal: 8,
-                            paddingVertical: 2,
-                            backgroundColor: "#395E66",
-                            borderRadius: 20,
-
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontWeight: "400",
-                              color: "white",
-                              fontSize: 13,
-                              lineHeight: 18,
-                            }}
-                          >
-                            {marketplaceBadges.unseen.length}
-                          </Text>
-                        </View>
-                      ) : null}
-                    </View>
-
-                    <Entypo
-                      name="chevron-small-right"
-                      size={40}
-                      color="#395E66"
-                    />
-                  </TouchableOpacity>
-                  <MarketplaceFirstItem
-                    item={itemList[0]}
-                    navigation={navigation}
-                  />
-                </>
-              );
-            }}
+            ListHeaderComponent={renderListHeader}
             renderItem={({ item, index }) => {
               return (
                 <MarketplaceItem
@@ -199,9 +203,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
                 tintColor={styleVariables.colors.primary}
               />
             }
-            ListFooterComponent={
-              <ListFooter styleVariables={styleVariables} theme={theme} />
-            }
+            ListFooterComponent={renderListFooter}
           />
         ) : (
           <ActivityIndicator

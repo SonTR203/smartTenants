@@ -8,6 +8,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import {
   deleteImageFromStorage,
   deleteItemFromFirestore,
+  deleteMultipleImages,
 } from "../utils/firebase.services.js";
 import { useNavigation } from "@react-navigation/native";
 
@@ -34,9 +35,9 @@ Select an option to edit Marketplace post`,
             props.collection,
             props.item.id
           );
-          props.item.images.length > 0
+          props.item.images.length > 0 && props.item.images.length < 2
             ? await deleteImageFromStorage(props.item.images[0])
-            : null;
+            : await deleteMultipleImages(props.item.images);
           if (resDB) {
             alert("Post deleted.");
           } else {

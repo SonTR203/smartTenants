@@ -18,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.smarttenants.smartTenant"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,6 +32,16 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": ""
+    "description": "",
+    "plugins": [
+      [
+        "with-rn-image-crop-picker",
+        {
+          "PhotoLibraryUsageDescription": "Allow app smartTenant to access your photos",
+          "CameraUsageDescription": "Allow app smartTenant to access your camera",
+          "MicrophoneUsageDescription": "Allow app smartTenant to access your microphone"
+        }
+      ]
+    ]
   }
 }

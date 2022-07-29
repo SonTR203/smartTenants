@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, FlatList, RefreshControl, StyleSheet, Text } from "react-native";
+import { View, FlatList, RefreshControl, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
@@ -9,6 +9,7 @@ import ListFooter from "./ListFooter";
 import { wait } from "../../utils/wait";
 import { getPosts } from "../../utils/Newsfeed/newsfeed.services";
 import Fab from "../../components/Fab";
+import EmptyListComponent from "../../components/EmptyListComponent";
 
 const Newsfeed = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -73,19 +74,7 @@ const Newsfeed = ({ navigation, route }) => {
   );
 
   const renderEmpty = () => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          marginTop: 50,
-          justifyContent: "center",
-          alignItems: "center",
-          opacity: 0.5,
-        }}
-      >
-        <Text>Your newsfeed is empty. Try creating a post now.</Text>
-      </View>
-    );
+    return <EmptyListComponent screenName={"newsfeed"} />;
   };
 
   const renderListFooter = () => {
