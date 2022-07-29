@@ -14,7 +14,6 @@ import { updateDoc, doc, setDoc } from "@firebase/firestore";
 import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
 import { useTheme } from "../../ThemeContext";
-import { xor } from "lodash";
 
 function ListFooter({
   getComments,
@@ -90,7 +89,6 @@ function ListFooter({
           colors: currentUser.colors,
           authorID: post.userID,
           timestamp: Timestamp.fromDate(new Date()),
-          authorID: post.userID,
           postID: post.id,
         }
       ).then(() => {
