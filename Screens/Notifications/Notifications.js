@@ -116,7 +116,7 @@ const Notifications = ({ navigation }) => {
               tintColor={styleVariables.colors.primary}
             />
           }
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => item.id + index}
           ListFooterComponent={
             <ListFooter styleVariables={styleVariables} theme={theme} />
           }

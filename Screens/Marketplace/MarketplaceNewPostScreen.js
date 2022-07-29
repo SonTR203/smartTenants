@@ -180,6 +180,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         userFirstName: currentUser.firstName,
         userLastName: currentUser.lastName,
         userProfileImage: currentUser.userProfileImage,
+        userColors: currentUser.colors,
         timestamp: Timestamp.fromDate(new Date()),
       };
 
@@ -245,7 +246,8 @@ function MarketplaceNewPostScreen({ navigation }) {
 
   const handleEndEditing = (e) => {
     if (e.nativeEvent.text.length > 0) {
-      setPrice(format(e.nativeEvent.text));
+      const price = e.nativeEvent.text.replace(/[^0-9]/g, "");
+      setPrice(format(price));
     }
   };
 

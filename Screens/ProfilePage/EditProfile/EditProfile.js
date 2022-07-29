@@ -39,6 +39,7 @@ const EditProfile = ({ navigation }) => {
     currentUser.buildingAddress
   );
   const [buildingID, setBuildingID] = useState(currentUser.buildingID);
+  const [buildingName, setBuildingName] = useState(currentUser.buildingName);
   const [modalVisible, setModalVisible] = useState(false);
   const [userProfileImage, setUserProfileImage] = useState(
     currentUser.userProfileImage
@@ -51,9 +52,9 @@ const EditProfile = ({ navigation }) => {
   };
 
   const setData = (building) => {
-    building = building.buildingAddress.stringValue;
-    setBuildingAddress(building);
-    setBuildingID(building.replace(/\s/g, ""));
+    setBuildingAddress(building.buildingAddress.stringValue);
+    setBuildingName(building.buildingName.stringValue);
+    setBuildingID(building.id);
   };
 
   const checkTextInputs = () => {
@@ -83,23 +84,18 @@ const EditProfile = ({ navigation }) => {
           lastName,
           buildingID,
           buildingAddress,
+          buildingName,
           email,
         });
 
         setCurrentUser({
+          ...currentUser,
           firstName,
           lastName,
           buildingID,
           buildingAddress,
+          buildingName,
           email,
-          isAdmin: currentUser.isAdmin,
-          myMarketplacePosts: currentUser.myMarketplacePosts,
-          myPosts: currentUser.myPosts,
-          tenantAuthorized: currentUser.tenantAuthorized,
-          userID: currentUser.userID,
-          visibleNotices: currentUser.visibleNotices,
-          visibleAnnouncements: currentUser.visibleAnnouncements,
-          userProfileImage: currentUser.userProfileImage,
         });
 
         setSaveModal(true);
@@ -242,6 +238,7 @@ const EditProfile = ({ navigation }) => {
                   userProfileImage: userProfileImage,
                   firstName: currentUser.firstName,
                   lastName: currentUser.lastName,
+                  colors: currentUser.colors,
                 }}
                 size={85}
                 borderRadius={18}

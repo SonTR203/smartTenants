@@ -53,6 +53,7 @@ const CreatePost = ({ navigation }) => {
         userID: currentUser.userID,
         userFirstName: currentUser.firstName,
         userLastName: currentUser.lastName,
+        userColors: currentUser.colors,
         userProfileImage: currentUser.userProfileImage,
         images: [imgUrl],
         isNSFW: isNsfw,

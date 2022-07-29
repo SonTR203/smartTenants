@@ -15,7 +15,15 @@ import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
 import { useTheme } from "../../ThemeContext";
 
-function ListFooter({ getComments, commentCount, setCommentCount }) {
+function ListFooter({
+  getComments,
+  commentCount,
+  setCommentCount,
+  userCommentName,
+  setUserCommentName,
+  setUserCommentId,
+  userCommentId,
+}) {
   const [textInputValue, setTextInputValue] = useState("");
   const { setPost, post, currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
@@ -33,27 +41,85 @@ function ListFooter({ getComments, commentCount, setCommentCount }) {
       }
       const id = uuid.v4();
 
-      try {
-        setDoc(doc(db, `Newsfeed/${post.id}/peopleWhoCommented`, id), {
+      if (userCommentName != "") {
+        replyToComment(id);
+      } else {
+        try {
+          setDoc(doc(db, `Newsfeed/${post.id}/peopleWhoCommented`, id), {
+            id: id,
+            firstName: currentUser.firstName,
+            lastName: currentUser.lastName,
+            userProfileImage: currentUser.userProfileImage,
+            commentContent: textInputValue,
+            userID: currentUser.userID,
+            authorID: post.userID,
+            colors: currentUser.colors,
+            timestamp: Timestamp.fromDate(new Date()),
+            postID: post.id,
+            replied: false,
+          }).then(() => {
+            setTextInputValue("");
+            getComments();
+            addCommentCount();
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    } else {
+      alert("No Comment to Post");
+    }
+  };
+
+  const replyToComment = async (id) => {
+    try {
+      setDoc(
+        doc(
+          db,
+          `Newsfeed/${post.id}/peopleWhoCommented/${userCommentId}/peopleWhoReplied`,
+          id
+        ),
+        {
           id: id,
           firstName: currentUser.firstName,
           lastName: currentUser.lastName,
           userProfileImage: currentUser.userProfileImage,
           commentContent: textInputValue,
           userID: currentUser.userID,
+          colors: currentUser.colors,
           authorID: post.userID,
           timestamp: Timestamp.fromDate(new Date()),
           postID: post.id,
-        }).then(() => {
-          setTextInputValue("");
-          getComments();
-          addCommentCount();
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      alert("No Comment to Post");
+        }
+      ).then(() => {
+        setTextInputValue("");
+        getComments();
+        addCommentCount();
+        setUserCommentId("");
+        setUserCommentName("");
+        setRepliedTrue(post.id, userCommentId);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // sets comment replied to true
+  const setRepliedTrue = async () => {
+    const commentRef = doc(
+      db,
+      "Newsfeed",
+      post.id,
+      "peopleWhoCommented",
+      userCommentId
+    );
+
+    try {
+      await updateDoc(commentRef, {
+        replied: true,
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -75,10 +141,44 @@ function ListFooter({ getComments, commentCount, setCommentCount }) {
   const styles = StyleSheet.create({
     container: { paddingTop: 34, paddingBottom: 136 },
     inputArea: { minHeight: 68 + 44, paddingTop: 22 },
+    replyView: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginVertical: 20,
+    },
+    replyName: { color: styleVariables.colors.primary },
+    cancelReply: {
+      color: styleVariables.colors.primary,
+      padding: 10,
+    },
   });
 
   return (
     <View style={[theme.globalMargins, styles.container]}>
+      {userCommentName != "" && (
+        <View style={styles.replyView}>
+          <Text style={styleVariables.fontSizes.callout}>
+            Replying to{" "}
+            <Text
+              style={[styles.replyName, styleVariables.fontSizes.calloutBold]}
+            >
+              {userCommentName}
+              {"        "}
+            </Text>
+          </Text>
+          <TouchableOpacity
+            style={styles.cancelReply}
+            onPress={() => {
+              setUserCommentName("");
+              setUserCommentId("");
+            }}
+          >
+            <Text style={[styleVariables.fontSizes.header]}>x</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <View>
         <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
           Reply

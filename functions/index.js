@@ -283,8 +283,8 @@ exports.updateProfilePictureNewsfeedAndMarketplace = functions.firestore
       userID,
       lastName: newLastName,
       firstName: newFirstName,
-
       tenantAuthorized: newTenantAuthorized,
+      buildingName: newBuildingName,
     } = newValue;
 
     // ...or the previous value before this update
@@ -294,11 +294,31 @@ exports.updateProfilePictureNewsfeedAndMarketplace = functions.firestore
       lastName: oldLastName,
       firstName: oldFirstName,
       tenantAuthorized: oldTenantAuthorized,
+      buildingName: oldBuildingName,
     } = previousValue;
 
     if (newTenantAuthorized === true && oldTenantAuthorized === false) {
       // tenant JUST been approved, send notifications
       await sendNotificationAuthorizedTenant(userID);
+    }
+
+    if (newBuildingName !== oldBuildingName) {
+      log(
+        "Tenant moved to a new building, update userBuildingName in Newsfeed & Marketplace posts"
+      );
+      await updateTenantProp(
+        "Newsfeed",
+        userID,
+        { userBuildingName: newBuildingName },
+        false
+      );
+
+      await updateTenantProp(
+        "Marketplace",
+        userID,
+        { userBuildingName: newBuildingName },
+        false
+      );
     }
 
     // update profile picture if it has changed

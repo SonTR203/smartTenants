@@ -44,6 +44,7 @@ const ProfileGeneral = ({ navigation }) => {
                   userProfileImage: currentUser.userProfileImage,
                   firstName: currentUser.firstName,
                   lastName: currentUser.lastName,
+                  colors: currentUser.colors,
                 }}
                 size={85}
                 borderRadius={42.5}

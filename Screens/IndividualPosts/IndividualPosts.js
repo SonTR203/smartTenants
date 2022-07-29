@@ -18,6 +18,9 @@ const IndividualPosts = ({ navigation, route }) => {
   const [comments, setComments] = useState([]);
   const [commentCount, setCommentCount] = useState(0);
 
+  const [userCommentName, setUserCommentName] = useState("");
+  const [userCommentId, setUserCommentId] = useState("");
+
   const commentListRef = useRef();
 
   // Get all Comments
@@ -35,6 +38,22 @@ const IndividualPosts = ({ navigation, route }) => {
       setComments(sortedComments);
       setCommentCount(sortedComments.length);
     });
+  };
+
+  // Get comment replies
+  const getCommentReplies = async (id) => {
+    const colRef = collection(
+      db,
+      `Newsfeed/${post.id}/peopleWhoCommented/${id}/peopleWhoReplied`
+    );
+
+    const data = await getDocs(colRef);
+    const formattedData = data.docs.map((doc) => {
+      return {
+        ...doc.data(),
+      };
+    });
+    return formattedData;
   };
 
   // execute function
@@ -85,6 +104,10 @@ const IndividualPosts = ({ navigation, route }) => {
       theme={theme}
       styleVariables={styleVariables}
       width={constants.width}
+      setUserCommentName={setUserCommentName}
+      setUserCommentId={setUserCommentId}
+      getCommentReplies={getCommentReplies}
+      comments={comments}
     />
   );
 
@@ -102,6 +125,10 @@ const IndividualPosts = ({ navigation, route }) => {
         getComments={getComments}
         commentCount={commentCount}
         setCommentCount={setCommentCount}
+        userCommentName={userCommentName}
+        setUserCommentName={setUserCommentName}
+        userCommentId={userCommentId}
+        setUserCommentId={setUserCommentId}
       />
     );
   };
