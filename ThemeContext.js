@@ -56,8 +56,8 @@ const theme = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     backgroundColor: styleVariables.colors.primary,
-    paddingHorizontal: 17,
-    minHeight: 98,
+    paddingHorizontal: 16,
+    paddingTop: 20,
   },
   firstListItem: {
     display: "flex",
