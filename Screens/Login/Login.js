@@ -153,7 +153,10 @@ const Login = ({ navigation, route }) => {
             {/* forgotPassword */}
             <View
               id="forgotPassword"
-              style={[theme.container, { alignItems: "flex-end" }]}
+              style={[
+                theme.container,
+                { alignItems: "flex-start", marginBottom: 32 },
+              ]}
             >
               <TouchableOpacity
                 onPress={() => {
@@ -162,11 +165,9 @@ const Login = ({ navigation, route }) => {
               >
                 <Text
                   style={[
-                    styleVariables.fontSizes.callout,
+                    styleVariables.fontSizes.calloutBold,
                     {
                       color: styleVariables.colors.primary,
-                      opacity: 0.66,
-                      marginBottom: 8,
                     },
                   ]}
                 >
@@ -192,7 +193,7 @@ const Login = ({ navigation, route }) => {
                   styleVariables.fontSizes.bodyBold,
                 ]}
               >
-                Login
+                Sign In
               </Text>
               {loading && (
                 <Progress.CircleSnail

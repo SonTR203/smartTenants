@@ -193,6 +193,7 @@ const theme = StyleSheet.create({
     shadowRadius: 34,
   },
   textInputLabel: {
+    color: "#4d4d4d",
     backgroundColor: styleVariables.colors.white,
     paddingHorizontal: 8,
     marginTop: -9,
