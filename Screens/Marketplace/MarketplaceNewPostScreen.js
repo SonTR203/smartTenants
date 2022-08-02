@@ -180,6 +180,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         userFirstName: currentUser.firstName,
         userLastName: currentUser.lastName,
         userProfileImage: currentUser.userProfileImage,
+        userBuildingName: currentUser.buildingName,
         userColors: currentUser.colors,
         timestamp: Timestamp.fromDate(new Date()),
       };
