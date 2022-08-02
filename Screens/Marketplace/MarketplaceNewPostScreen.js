@@ -153,7 +153,7 @@ function MarketplaceNewPostScreen({ navigation }) {
       selected.length > 0
     ) {
       setIsloading(true);
-      setPrice(format(price)); // format price in case event listener didn't get triggered
+      price.includes("$") ? null : setPrice(format(price)); // format price in case event listener didn't get triggered
       const id = uuid.v4();
       const imageUrls = await uploadMarketplaceImages(selectedImages, id);
       console.log("imageUrls: ", imageUrls);
