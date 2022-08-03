@@ -113,6 +113,7 @@ export const getItemById = async (collection, id) => {
 
 export const uploadImageToStorage = async (imagePath, newImage) => {
   try {
+    console.log("uploading image to storage: ", imagePath, newImage);
     const img = await fetch(newImage);
     const blob = await img.blob();
 
