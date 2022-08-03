@@ -271,12 +271,11 @@ const theme = StyleSheet.create({
     flexDirection: "row",
   },
   notificationCounter: {
-    padding: 5,
-    paddingHorizontal: 10,
+    paddingVertical: 2,
+    paddingHorizontal: 8,
     backgroundColor: styleVariables.colors.primary,
-    borderRadius: 14,
-    marginRight: 8,
-    overflow: "hidden",
+    borderRadius: 20,
+    marginRight: 14,
   },
   stackHeader: {
     display: "flex",

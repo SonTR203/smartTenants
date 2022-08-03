@@ -44,21 +44,19 @@ function ListHeader({
           >
             Announcements
           </Text>
-          <View
-            id="counter"
-            // style={}
-          >
+          <View id="counter" style={theme.counter}>
             {announcementCount > 0 && (
-              <Text
-                id="notificationCounter"
-                style={[
-                  theme.notificationCounter,
-                  styleVariables.fontSizes.callout,
-                  { color: styleVariables.colors.white },
-                ]}
-              >
-                {announcementCount}
-              </Text>
+              <View style={theme.notificationCounter}>
+                <Text
+                  id="notificationCounter"
+                  style={[
+                    styleVariables.fontSizes.callout,
+                    { color: styleVariables.colors.white },
+                  ]}
+                >
+                  {announcementCount}
+                </Text>
+              </View>
             )}
             <ChevronRightSVG stroke="#395E66" />
           </View>
@@ -86,16 +84,17 @@ function ListHeader({
           </Text>
           <View id="counter" style={theme.counter}>
             {noticeCount > 0 && (
-              <Text
-                id="notificationCounter"
-                style={[
-                  theme.notificationCounter,
-                  styleVariables.fontSizes.callout,
-                  { color: styleVariables.colors.white },
-                ]}
-              >
-                {noticeCount}
-              </Text>
+              <View style={theme.notificationCounter}>
+                <Text
+                  id="notificationCounter"
+                  style={[
+                    styleVariables.fontSizes.callout,
+                    { color: styleVariables.colors.white },
+                  ]}
+                >
+                  {noticeCount}
+                </Text>
+              </View>
             )}
             <ChevronRightSVG stroke="#395E66" />
           </View>
