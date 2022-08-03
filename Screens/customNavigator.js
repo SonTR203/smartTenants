@@ -230,7 +230,10 @@ const NewsfeedNavigator = () => {
             component={ForgotPassword}
             options={{
               header: (props) => (
-                <CustomSubStackScreenHeader {...props} title={" "} />
+                <CustomSubStackScreenHeader
+                  {...props}
+                  title={"Reset password"}
+                />
               ),
             }}
           />

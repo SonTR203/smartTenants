@@ -32,7 +32,7 @@ const ForgotPassword = ({ navigation }) => {
           theme.globalMargins,
           {
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             paddingTop: 27,
             paddingBottom: 34,
             flex: 1,
@@ -41,15 +41,6 @@ const ForgotPassword = ({ navigation }) => {
       >
         {/* pageContent */}
         <View id="pageContent">
-          <Text
-            style={[
-              styleVariables.fontSizes.header,
-              { color: styleVariables.colors.primary, marginBottom: 17 },
-            ]}
-          >
-            Reset password
-          </Text>
-
           <Text
             style={[
               styleVariables.fontSizes.body,
@@ -85,7 +76,7 @@ const ForgotPassword = ({ navigation }) => {
           <Text
             style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}
           >
-            Reset
+            Send link
           </Text>
         </TouchableOpacity>
       </View>
