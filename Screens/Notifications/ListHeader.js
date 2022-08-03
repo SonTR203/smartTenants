@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, View, Text, Pressable, Platform } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { StyleSheet, View, Text, Pressable } from "react-native";
+import ChevronRightSVG from "../../components/Icons/ChevronRightSVG";
 
 function ListHeader({
   styleVariables,
@@ -10,64 +10,59 @@ function ListHeader({
   announcementCount,
 }) {
   const styles = StyleSheet.create({
-    container: { flex: 1 },
-    topCard: { elevation: Platform.OS === "android" ? 0 : 20 },
-    cardButton: { marginTop: 17, marginBottom: 17 },
-    cardButtonBottom: { marginTop: 0, marginBottom: 17 },
     dividerContainer: { width: "100%", alignItems: "center" },
     divider: {
       height: 1.5,
-      width: "66%",
-      backgroundColor: styleVariables.colors.primary,
-      opacity: 0.33,
-      borderRadius: 99,
-      marginBottom: 17,
+      width: "50%",
+      backgroundColor: "#B0BFC2",
+      opacity: 1,
+      marginBottom: 16,
     },
   });
 
   return (
-    <View style={styles.container}>
+    <View>
       {/* announcements */}
-      <View style={theme.firstListItem}>
-        <View id="topCard" style={[theme.topCard, styles.topCard]}>
-          <Pressable
-            id="announcements"
-            onPress={() => {
-              navigation.navigate("Announcements", {
-                announcementId: null,
-              });
-            }}
-            style={[theme.cardButton, styles.cardButton]}
+      <View
+        style={{
+          marginTop: 16,
+        }}
+      >
+        <Pressable
+          onPress={() => {
+            navigation.navigate("Announcements", {
+              announcementId: null,
+            });
+          }}
+          style={theme.cardButton}
+        >
+          <Text
+            style={[
+              styleVariables.fontSizes.title,
+              { color: styleVariables.colors.primary },
+            ]}
           >
-            <Text
-              style={[
-                styleVariables.fontSizes.title,
-                { color: styleVariables.colors.primary },
-              ]}
-            >
-              Announcements
-            </Text>
-            <View id="counter" style={theme.counter}>
-              {announcementCount > 0 && (
-                <Text
-                  id="notificationCounter"
-                  style={[
-                    theme.notificationCounter,
-                    styleVariables.fontSizes.callout,
-                    { color: styleVariables.colors.white },
-                  ]}
-                >
-                  {announcementCount}
-                </Text>
-              )}
-              <MaterialCommunityIcons
-                name="chevron-right"
-                size={24}
-                color={styleVariables.colors.primary}
-              />
-            </View>
-          </Pressable>
-        </View>
+            Announcements
+          </Text>
+          <View
+            id="counter"
+            // style={}
+          >
+            {announcementCount > 0 && (
+              <Text
+                id="notificationCounter"
+                style={[
+                  theme.notificationCounter,
+                  styleVariables.fontSizes.callout,
+                  { color: styleVariables.colors.white },
+                ]}
+              >
+                {announcementCount}
+              </Text>
+            )}
+            <ChevronRightSVG stroke="#395E66" />
+          </View>
+        </Pressable>
       </View>
 
       {/* notices */}
@@ -79,7 +74,7 @@ function ListHeader({
               noticeId: null,
             });
           }}
-          style={[theme.cardButton, styles.cardButtonBottom]}
+          style={theme.cardButton}
         >
           <Text
             style={[
@@ -102,11 +97,7 @@ function ListHeader({
                 {noticeCount}
               </Text>
             )}
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={24}
-              color={styleVariables.colors.primary}
-            />
+            <ChevronRightSVG stroke="#395E66" />
           </View>
         </Pressable>
       </View>

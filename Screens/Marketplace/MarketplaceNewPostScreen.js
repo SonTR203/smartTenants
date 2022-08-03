@@ -26,13 +26,13 @@ import {
 } from "../../utils/firebase.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import ImageSVG from "../../components/ImageSVG";
 import {
   updateImages,
   uploadMarketplaceImages,
 } from "../../utils/Marketplace/marketplace.services";
 import { maxImages } from "../../utils/constants";
 import * as Progress from "react-native-progress";
+import ImageSVG from "../../components/Icons/ImageSVG";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();

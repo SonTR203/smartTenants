@@ -23,6 +23,8 @@ let styleVariables = {
     white: "#FFF",
     black: "#191919",
     placeholderText: "rgba(157, 157, 157, 1)",
+    listFooterText: "rgba(176, 191, 194, 1)",
+    notificationBadge: "#E84855",
   },
   fontSizes: {
     hero: { fontSize: 40, fontFamily: "Roboto_400Regular" },
@@ -31,7 +33,13 @@ let styleVariables = {
     title: { fontSize: 22, fontFamily: "Roboto_500Medium" },
     body: { fontSize: 17, fontFamily: "Roboto_400Regular" },
     bodyBold: { fontSize: 17, fontFamily: "Roboto_500Medium" },
-    callout: { fontSize: 15, fontFamily: "Roboto_400Regular" },
+    callout: {
+      fontSize: 15,
+      fontFamily: "Roboto_400Regular",
+      opacity: 1,
+      color: "#9D9D9D",
+      lineHeight: 20,
+    },
     calloutBold: { fontSize: 15, fontFamily: "Roboto_500Medium" },
   },
 };
@@ -59,27 +67,6 @@ const theme = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 30,
     // minHeight: 98,
-  },
-  firstListItem: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    backgroundColor: styleVariables.colors.primary,
-  },
-  topCard: {
-    backgroundColor: styleVariables.colors.white,
-    width: "100%",
-    // borderTopLeftRadius: 27,
-    // borderTopRightRadius: 27,
-    // shadowColor: styleVariables.colors.black,
-    // shadowOffset: {
-    //   width: 0,
-    //   height: -34,
-    // },
-    // shadowOpacity: 0.14,
-    // shadowRadius: 17,
-    // elevation: 20,
   },
   card: {
     display: "flex",
@@ -254,24 +241,28 @@ const theme = StyleSheet.create({
     color: styleVariables.colors.primary,
   },
   cardButton: {
-    display: "flex",
-    alignItems: "center",
     justifyContent: "space-between",
+    alignItems: "center",
     flexDirection: "row",
     backgroundColor: "white",
-    minHeight: 66,
-    margin: 17,
-    marginTop: 0,
-    padding: 22,
-    borderRadius: 24,
-    shadowColor: styleVariables.colors.primary,
+    marginLeft: 16,
+    marginRight: 16,
+    marginBottom: 16,
+    padding: 16,
+    borderRadius: 16,
+
+    shadowColor: "#4D4D4D", // color: #4D4D4D
     shadowOffset: {
+      // no offset x, y
       width: 0,
-      height: 8,
+      height: 0,
     },
-    shadowOpacity: 0.14,
-    shadowRadius: 34,
-    elevation: 20,
+    shadowOpacity: 0.15, // opacity: 0.15
+    shadowRadius: 24, // radius: 24
+    elevation: 5, // elevation: 5
+
+    // the code above should be similar to the box shadow of
+    //box-shadow: 0px 0px 24px rgba(77, 77, 77, 0.15);
   },
   counter: {
     display: "flex",
