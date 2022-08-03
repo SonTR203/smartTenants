@@ -61,45 +61,85 @@ function MarketplaceNewPostScreen({ navigation }) {
     },
   ]);
 
+  const handleSelectedImages = (response, index, isUsingExpo) => {
+    setImageLoading(true);
+    let newImages = [...selectedImages];
+    if (response.length > 0) {
+      const takeAmount = updateImages(response, selectedImages);
+      for (let i = 0; i < takeAmount; i++) {
+        newImages[index + i] = {
+          uri: response[i].path,
+        };
+      }
+      if (newImages.length > maxImages) {
+        newImages = newImages.slice(0, maxImages);
+      }
+    } else {
+      newImages[index] = {
+        uri: isUsingExpo ? response.uri : response.path,
+      };
+    }
+    // artificially delay the image loading
+    wait(500).then(() => {
+      setImageLoading(false);
+      setSelectedImages(newImages);
+    });
+  };
+
   const openPicker = (multiple, index) => {
     try {
-      const ImagePicker = require("react-native-image-crop-picker").default;
-      // call const ImagePicker here so the app won't crash, only the feature is disabled
-      ImagePicker.openPicker({
-        multiple: multiple,
-        compressImageQuality: 0.6,
-        sortOrder: "asc",
-      })
-        .then((response) => {
-          setImageLoading(true);
-          let newImages = [...selectedImages];
-          if (response.length > 0) {
-            const takeAmount = updateImages(response, selectedImages);
-
-            for (let i = 0; i < takeAmount; i++) {
-              newImages[index + i] = {
-                uri: response[i].path,
-              };
-            }
-
-            if (newImages.length > maxImages) {
-              newImages = newImages.slice(0, maxImages);
-            }
-          } else {
-            newImages[index] = {
-              uri: response.path,
-            };
+      let ImagePicker = require("expo-image-picker");
+      let { launchImageLibraryAsync } = ImagePicker;
+      let options = {
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+        base64: true,
+      };
+      launchImageLibraryAsync(options)
+        .then(async (image) => {
+          if (image) {
+            handleSelectedImages(image, index, true);
           }
-
-          // artificially delay the image loading
-          wait(500).then(() => {
-            setImageLoading(false);
-            setSelectedImages(newImages);
-          });
         })
         .catch((error) => {
-          console.log("error openPicker: ", error);
+          console.log("error expo image picker: ", error);
         });
+      // call const ImagePicker here so the app won't crash, only the feature is disabled
+      // let ImagePicker = require("react-native-image-crop-picker").default;
+      // ImagePicker.openPicker({
+      //   multiple: multiple,
+      //   compressImageQuality: 0.6,
+      //   sortOrder: "asc",
+      // })
+      //   .then((response) => {
+      //   setImageLoading(true);
+      //   let newImages = [...selectedImages];
+      //   if (response.length > 0) {
+      //     const takeAmount = updateImages(response, selectedImages);
+      //     for (let i = 0; i < takeAmount; i++) {
+      //       newImages[index + i] = {
+      //         uri: response[i].path,
+      //       };
+      //     }
+      //     if (newImages.length > maxImages) {
+      //       newImages = newImages.slice(0, maxImages);
+      //     }
+      //   } else {
+      //     newImages[index] = {
+      //       uri: response.path,
+      //     };
+      //   }
+      //   // artificially delay the image loading
+      //   wait(500).then(() => {
+      //     setImageLoading(false);
+      //     setSelectedImages(newImages);
+      //   });
+      // })
+      //   .catch((error) => {
+      //     console.log("error openPicker: ", error);
+      //   });
     } catch (err) {
       console.log("error: ", err);
       Alert.alert(
