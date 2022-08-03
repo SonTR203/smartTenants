@@ -22,12 +22,13 @@ function AnnouncementItem({
 
   const styles = StyleSheet.create({
     announcementInfo: {
-      display: "flex",
+      flex: 1,
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "space-between",
+      justifyContent: "flex-start",
       width: "100%",
-      marginBottom: 12,
+
+      marginBottom: 16,
     },
     imageAndName: {
       display: "flex",
@@ -35,23 +36,20 @@ function AnnouncementItem({
       alignItems: "center",
     },
     profileIcon: {
-      height: 43,
-      width: 43,
-      borderRadius: 12,
+      height: 48,
+      width: 48,
+      borderRadius: 8,
     },
     profileName: {
-      color: styleVariables.colors.black,
-      marginLeft: 8,
+      color: "#4D4D4D",
     },
     announcementContent: {
-      color: styleVariables.colors.black,
-      marginBottom: 17,
+      color: "#4D4D4D",
     },
-    timestampText: { color: styleVariables.colors.black, opacity: 0.66 },
     announcementIndice: {
       height: 8,
       width: 8,
-      backgroundColor: styleVariables.colors.primary,
+      backgroundColor: styleVariables.colors.notificationBadge,
       borderRadius: 99,
       marginLeft: 8,
     },
@@ -59,7 +57,9 @@ function AnnouncementItem({
       height: windowWidth - 68,
       width: windowWidth - 68,
       borderRadius: 16,
-      marginBottom: 17,
+      marginTop: 16,
+
+      backgroundColor: "gray",
     },
   });
 
@@ -79,45 +79,66 @@ function AnnouncementItem({
     }
   };
 
+  const handlePressEvent = () => {
+    navigation.navigate("IndividualAnnouncement", {
+      content: content,
+      timestamp: timeSinceAnnouncement,
+      attatchment: attatchment,
+      theme: theme,
+      styleVariables: styleVariables,
+      styles: styles,
+    });
+    setWasSeenToTrue();
+  };
+
   return (
-    <View id="announcement" style={theme.cardContainer}>
+    <TouchableOpacity
+      onPress={handlePressEvent}
+      id="announcement"
+      style={theme.cardContainer}
+    >
       {/* ownerInfo */}
       <View id="announcementInfo" style={styles.announcementInfo}>
-        <View className="imageAndName" style={styles.imageAndName}>
-          <Image
-            source={require("../../assets/icon.png")}
-            style={styles.profileIcon}
-          />
-          <Text style={[styleVariables.fontSizes.bodyBold, styles.profileName]}>
-            Smart Living Properties
+        {/* Smart Living Properties Profile Picture */}
+        <Image
+          source={require("../../assets/icon.png")}
+          style={styles.profileIcon}
+        />
+
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "column",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+
+            marginLeft: 16,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={[styleVariables.fontSizes.bodyBold, styles.profileName]}
+            >
+              Smart Living Properties
+            </Text>
+            {viewed == false && (
+              <View id="notificationIndice" style={styles.announcementIndice} />
+            )}
+          </View>
+          <Text id="timePosted" style={[styleVariables.fontSizes.callout]}>
+            {timeSinceAnnouncement}
           </Text>
         </View>
-        <Text
-          id="timePosted"
-          style={[styleVariables.fontSizes.callout, styles.timestampText]}
-        >
-          {timeSinceAnnouncement}
-        </Text>
-        {viewed == false && (
-          <View id="notificationIndice" style={styles.announcementIndice} />
-        )}
       </View>
 
       {/* announcement content */}
-      <TouchableOpacity
-        id="announcementContent"
-        onPress={() => {
-          navigation.navigate("IndividualAnnouncement", {
-            content: content,
-            timestamp: timeSinceAnnouncement,
-            attatchment: attatchment,
-            theme: theme,
-            styleVariables: styleVariables,
-            styles: styles,
-          });
-          setWasSeenToTrue();
-        }}
-      >
+      <View>
         <View className="announcementTextContent">
           <Text
             style={[styleVariables.fontSizes.body, styles.announcementContent]}
@@ -133,8 +154,8 @@ function AnnouncementItem({
             style={styles.announcementImage}
           />
         )}
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 }
 

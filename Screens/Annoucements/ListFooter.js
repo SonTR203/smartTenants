@@ -12,7 +12,7 @@ function ListFooter({ styleVariables }) {
       justifyContent: "center",
     },
     callOut: {
-      color: styleVariables.colors.black,
+      color: styleVariables.colors.listFooterText,
       opacity: 0.66,
       paddingBottom: 17,
     },
@@ -21,7 +21,7 @@ function ListFooter({ styleVariables }) {
   return (
     <View style={styles.container}>
       <Text style={[styleVariables.fontSizes.callout, styles.callOut]}>
-        You have no further announcements.
+        There are no more announcements :)
       </Text>
     </View>
   );

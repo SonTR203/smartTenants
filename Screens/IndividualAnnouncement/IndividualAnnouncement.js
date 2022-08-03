@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 
 function IndividualAnnouncement({ route }) {
@@ -8,7 +7,7 @@ function IndividualAnnouncement({ route }) {
     route.params;
 
   return (
-    <SafeAreaView>
+    <View>
       <StatusBar style="dark" />
 
       <View id="announcement" style={theme.cardContainer}>
@@ -50,7 +49,7 @@ function IndividualAnnouncement({ route }) {
           />
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

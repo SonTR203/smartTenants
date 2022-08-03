@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { FlatList, RefreshControl, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { db } from "../../firebase-config";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import AnnouncementItem from "./AnnouncementItem";
@@ -71,29 +70,29 @@ function Announcements({ navigation, route }) {
     });
   }, []);
 
+  const renderItem = ({ item }) => {
+    return (
+      <AnnouncementItem
+        content={item.content}
+        attatchment={item.attatchment[0]}
+        timestamp={item.timestamp}
+        wasSeen={item.wasSeen}
+        id={item.id}
+        navigation={navigation}
+        theme={theme}
+        styleVariables={styleVariables}
+      />
+    );
+  };
+
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: styleVariables.colors.white }}
-    >
+    <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
       <StatusBar style="dark" />
 
       <FlatList
         ref={listRef}
         data={announcements}
-        renderItem={({ item }) => {
-          return (
-            <AnnouncementItem
-              content={item.content}
-              attatchment={item.attatchment[0]}
-              timestamp={item.timestamp}
-              wasSeen={item.wasSeen}
-              id={item.id}
-              navigation={navigation}
-              theme={theme}
-              styleVariables={styleVariables}
-            />
-          );
-        }}
+        renderItem={renderItem}
         refreshControl={
           <RefreshControl
             onRefresh={onRefresh}
@@ -106,7 +105,7 @@ function Announcements({ navigation, route }) {
           <ListFooter styleVariables={styleVariables} theme={theme} />
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
