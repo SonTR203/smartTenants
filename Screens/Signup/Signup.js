@@ -62,8 +62,8 @@ const Signup = ({ navigation }) => {
    */
 
   const setData = (building) => {
-    setBuildingAddress(building.buildingAddress.stringValue);
-    setBuildingName(building.buildingName.stringValue);
+    setBuildingAddress(building.buildingAddress);
+    setBuildingName(building.buildingName);
     setBuildingID(building.id);
   };
 
@@ -332,7 +332,7 @@ const Signup = ({ navigation }) => {
               transparent={true}
               animationType="fade"
               visible={modalVisible}
-              nRequestClose={() => {
+              onRequestClose={() => {
                 changeModalVisibility(false);
               }}
             >

@@ -7,40 +7,74 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { collection, getDocs } from "@firebase/firestore";
 import { db } from "../firebase-config";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "../ThemeContext";
 
-const colRef = collection(db, "Buildings");
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const ModalPicker = (props) => {
+const ModalPicker = ({ changeModalVisibility, setData }) => {
   const [buildings, setBuildings] = useState([]);
+  const { styleVariables, theme } = useTheme();
   const onPressItem = (building) => {
-    props.changeModalVisibility(false);
-    props.setData(building);
+    changeModalVisibility(false);
+    setData(building);
   };
 
   useEffect(() => {
     getBuildings();
   }, []);
 
-  const getBuildings = async () => {
-    const data = await getDocs(colRef);
-    setBuildings(
-      data.docs.map((item) => ({
-        ...item._document.data.value.mapValue.fields,
-        id: item._key.path.segments[6],
-      }))
+  const callBackRender = useCallback(
+    ({ item }) => renderBuildingItem({ item }),
+    [[buildings]]
+  );
+
+  const renderBuildingItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+        style={{
+          backgroundColor: "white",
+          width: width - 34 - 34,
+          margin: 17,
+          display: "flex",
+          flexDirection: "row",
+        }}
+        onPress={() => onPressItem(item)}
+      >
+        <MaterialCommunityIcons
+          name={"office-building"}
+          size={28}
+          color={"#000000"}
+        />
+        <Text style={[styleVariables.fontSizes.body, { marginHorizontal: 20 }]}>
+          {item.buildingAddress}
+        </Text>
+      </TouchableOpacity>
     );
+  };
+
+  const getBuildings = async () => {
+    const colRef = collection(db, "Buildings");
+
+    const data = await getDocs(colRef);
+
+    const formattedData = data.docs.map((doc) => {
+      return {
+        ...doc.data(),
+        id: doc.id,
+      };
+    });
+    setBuildings(formattedData);
   };
 
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: "transparent",
         justifyContent: "flex-end",
       }}
     >
@@ -50,40 +84,20 @@ const ModalPicker = (props) => {
           backgroundColor: "rgba(0,0,0,0.5)",
           marginBottom: -10,
         }}
-        onPress={() => props.changeModalVisibility(false)}
+        onPress={() => changeModalVisibility(false)}
         activeOpacity={1}
       />
       <View
         style={{
           backgroundColor: "white",
           height: height * 0.85,
-          alignItems: "center",
+          alignItems: "flex-start",
           borderRadius: 5,
-
           paddingTop: 20,
           paddingBottom: 20,
         }}
       >
-        <FlatList
-          data={buildings}
-          renderItem={({ item, index }) => {
-            return (
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "white",
-                  width: width - 34 - 34,
-                  margin: 17,
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-                key={index}
-                onPress={() => onPressItem(item)}
-              >
-                <Text>{item.buildingAddress.stringValue}</Text>
-              </TouchableOpacity>
-            );
-          }}
-        />
+        <FlatList data={buildings} renderItem={callBackRender} />
       </View>
     </View>
   );
