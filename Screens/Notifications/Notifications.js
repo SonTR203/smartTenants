@@ -86,7 +86,9 @@ const Notifications = ({ navigation }) => {
         theme={theme}
         navigation={navigation}
         announcementCount={announcementCount}
+        setAnnouncementCount={setAnnouncementCount}
         noticeCount={noticeCount}
+        setNoticeCount={setNoticeCount}
       />
     );
   };

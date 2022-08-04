@@ -59,7 +59,7 @@ function NoticeItem({
       {/* Notice Info */}
       <View id="noticeInfo" style={styles.noticeInfo}>
         <View>
-          <View>
+          <View style={styles.subjectContainer}>
             <Text
               style={[styleVariables.fontSizes.bodyBold, styles.profileName]}
             >

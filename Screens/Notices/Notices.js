@@ -35,9 +35,9 @@ function Notices({ navigation, route }) {
       borderRadius: 12,
     },
     profileName: {
-      color: styleVariables.colors.black,
+      color: "#4D4D4D",
     },
-    timestampText: { opacity: 0.66 },
+    timestampText: { color: "#9D9D9D" },
     noticeIndice: {
       height: 8,
       width: 8,
@@ -64,6 +64,14 @@ function Notices({ navigation, route }) {
       fontSize: 17,
       fontWeight: "500",
       ...styleVariables.shadow,
+    },
+    noticeContent: {
+      color: "#4D4D4D",
+    },
+    subjectContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
   });
 

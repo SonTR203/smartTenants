@@ -8,6 +8,8 @@ function ListHeader({
   navigation,
   noticeCount,
   announcementCount,
+  setNoticeCount,
+  setAnnouncementCount,
 }) {
   const styles = StyleSheet.create({
     dividerContainer: { width: "100%", alignItems: "center" },
@@ -26,12 +28,14 @@ function ListHeader({
   const handlePressAnnouncements = () => {
     navigation.navigate("Announcements", {
       announcementId: null,
+      setAnnouncementCount: setAnnouncementCount,
     });
   };
 
   const handlePressNotices = () => {
     navigation.navigate("Notices", {
       noticeId: null,
+      setNoticeCount: setNoticeCount,
     });
   };
 
