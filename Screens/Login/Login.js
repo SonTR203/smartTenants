@@ -10,6 +10,7 @@ import {
   Linking,
   Alert,
   StyleSheet,
+  Keyboard,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { collection, getDocs, addDoc, Timestamp } from "@firebase/firestore";
@@ -26,6 +27,7 @@ const Login = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   // clear the text inputs when the screen is navigated to
   useEffect(() => {
@@ -34,6 +36,20 @@ const Login = ({ navigation, route }) => {
       setPassword("");
     }
   }, [route.params]);
+
+  useEffect(() => {
+    const showKeyboard = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardOpen(true);
+    });
+    const hideKeyboard = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardOpen(false);
+    });
+
+    return () => {
+      showKeyboard.remove();
+      hideKeyboard.remove();
+    };
+  }, []);
 
   /* This function logs the user to the application only if he/she * is registered on Firebase as an authenticated registered user.
    * inputs: none
@@ -105,6 +121,9 @@ const Login = ({ navigation, route }) => {
     buttonInactive: {
       opacity: 0.5,
     },
+    logoShrunk: {
+      transform: [{ scale: 0.5 }],
+    },
   });
 
   return (
@@ -119,11 +138,14 @@ const Login = ({ navigation, route }) => {
           <View style={[theme.container, {}]}>
             <Image
               source={require("../../assets/SmartLiving_Logo.png")}
-              style={{
-                width: 187,
-                height: 111,
-                margin: "auto",
-              }}
+              style={[
+                {
+                  width: 187,
+                  height: 111,
+                  margin: "auto",
+                },
+                keyboardOpen && styles.logoShrunk,
+              ]}
               resizeMode="contain"
             />
           </View>
