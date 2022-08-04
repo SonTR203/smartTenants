@@ -82,6 +82,7 @@ const theme = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 30,
     // minHeight: 98,
+    //
   },
   card: {
     display: "flex",

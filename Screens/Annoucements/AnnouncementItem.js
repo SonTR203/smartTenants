@@ -1,10 +1,9 @@
 import { React, useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { setTime } from "../../utils/setTime";
-import { Dimensions } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
 import { updateItemInFirestore } from "../../utils/firebase.services";
-const windowWidth = Dimensions.get("window").width;
+import { StatusBar } from "expo-status-bar";
 
 function AnnouncementItem({
   content,
@@ -54,12 +53,11 @@ function AnnouncementItem({
       marginLeft: 8,
     },
     announcementImage: {
-      height: windowWidth - 68,
-      width: windowWidth - 68,
+      height: 204,
       borderRadius: 16,
       marginTop: 16,
 
-      backgroundColor: "gray",
+      backgroundColor: styleVariables.colors.imageLoading,
     },
   });
 
@@ -92,19 +90,16 @@ function AnnouncementItem({
   };
 
   return (
-    <TouchableOpacity
-      onPress={handlePressEvent}
-      id="announcement"
-      style={theme.cardContainer}
-    >
+    <TouchableOpacity onPress={handlePressEvent} style={theme.cardContainer}>
       {/* ownerInfo */}
-      <View id="announcementInfo" style={styles.announcementInfo}>
+      <StatusBar style="light" />
+      <View style={styles.announcementInfo}>
         {/* Smart Living Properties Profile Picture */}
         <Image
           source={require("../../assets/icon.png")}
           style={styles.profileIcon}
         />
-
+        {/*  */}
         <View
           style={{
             flex: 1,
@@ -138,9 +133,16 @@ function AnnouncementItem({
       </View>
 
       {/* announcement content */}
-      <View>
+      <View
+        style={{
+          flex: 1,
+          width: "100%",
+        }}
+      >
         <View className="announcementTextContent">
           <Text
+            numberOfLines={4}
+            ellipsizeMode="tail"
             style={[styleVariables.fontSizes.body, styles.announcementContent]}
           >
             {content}

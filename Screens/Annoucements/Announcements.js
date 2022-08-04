@@ -87,7 +87,7 @@ function Announcements({ navigation, route }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
 
       <FlatList
         ref={listRef}
