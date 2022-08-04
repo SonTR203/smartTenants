@@ -42,20 +42,43 @@ let styleVariables = {
     //box-shadow: 0px 0px 24px rgba(77, 77, 77, 0.15);
   },
   fontSizes: {
-    hero: { fontSize: 40, fontFamily: "Roboto_400Regular" },
-    header: { fontSize: 34, fontFamily: "Roboto_500Medium" },
-    secondaryHeader: { fontSize: 28, fontFamily: "Roboto_500Medium" },
-    title: { fontSize: 22, fontFamily: "Roboto_500Medium" },
-    body: { fontSize: 17, fontFamily: "Roboto_400Regular", lineHeight: 22 },
-    bodyBold: { fontSize: 17, fontFamily: "Roboto_500Medium" },
+    header: {
+      fontSize: 34,
+      fontFamily: "Roboto_500Medium",
+      lineHeight: 41, //added line height
+    },
+    secondaryHeader: {
+      fontSize: 28,
+      fontFamily: "Roboto_500Medium",
+      lineHeight: 34, //added line height
+    },
+    title: {
+      fontSize: 22,
+      fontFamily: "Roboto_500Medium",
+      lineHeight: 28, //added line height
+    },
+    body: {
+      fontSize: 17,
+      fontFamily: "Roboto_400Regular",
+      lineHeight: 22, //added line height
+    },
+    bodyBold: {
+      fontSize: 17,
+      fontFamily: "Roboto_500Medium",
+      lineHeight: 22, //added line height
+    },
     callout: {
       fontSize: 15,
       fontFamily: "Roboto_400Regular",
       opacity: 1,
       color: "#9D9D9D",
-      lineHeight: 20,
+      lineHeight: 20, //added line height
     },
-    calloutBold: { fontSize: 15, fontFamily: "Roboto_500Medium" },
+    calloutBold: {
+      fontSize: 15,
+      fontFamily: "Roboto_500Medium",
+      lineHeight: 20, //added line height
+    },
   },
 };
 
