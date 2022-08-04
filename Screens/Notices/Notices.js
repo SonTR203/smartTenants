@@ -105,6 +105,7 @@ function Notices({ navigation, route }) {
         renderItem={({ item }) => {
           return (
             <NoticeItem
+              attachment={item.attachment}
               subject={item.subject}
               content={item.content}
               timestamp={item.timestamp}
