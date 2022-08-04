@@ -41,6 +41,7 @@ function NoticeItem({
       onPress={() => {
         setWasSeenToTrue();
         navigation.navigate("IndividualNotice", {
+          subject: subject,
           content: content,
           timestamp: timeSinceNotice,
           theme: theme,
