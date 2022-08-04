@@ -45,6 +45,26 @@ function Notices({ navigation, route }) {
       borderRadius: 99,
       marginLeft: 8,
     },
+    contentContainer: {
+      marginTop: 8,
+      marginBottom: 16,
+    },
+    attachmentButton: {
+      marginTop: 22,
+      backgroundColor: styleVariables.colors.primary,
+      marginHorizontal: 16,
+      padding: 16,
+      borderRadius: 16,
+
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    attachmentText: {
+      color: styleVariables.colors.white,
+      fontSize: 17,
+      fontWeight: "500",
+      ...styleVariables.shadow,
+    },
   });
 
   useEffect(() => {
@@ -96,28 +116,34 @@ function Notices({ navigation, route }) {
     });
   }, []);
 
+  const renderItem = ({ item }) => {
+    return (
+      <NoticeItem
+        attachment={item.attachment}
+        subject={item.subject}
+        content={item.content}
+        timestamp={item.timestamp}
+        wasSeen={item.wasSeen}
+        id={item.id}
+        theme={theme}
+        styleVariables={styleVariables}
+        styles={styles}
+        navigation={navigation}
+      />
+    );
+  };
+
+  const renderFooter = () => {
+    return <ListFooter styleVariables={styleVariables} theme={theme} />;
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
       <StatusBar style="light" />
       <FlatList
         ref={listRef}
         data={notices}
-        renderItem={({ item }) => {
-          return (
-            <NoticeItem
-              attachment={item.attachment}
-              subject={item.subject}
-              content={item.content}
-              timestamp={item.timestamp}
-              wasSeen={item.wasSeen}
-              id={item.id}
-              theme={theme}
-              styleVariables={styleVariables}
-              styles={styles}
-              navigation={navigation}
-            />
-          );
-        }}
+        renderItem={renderItem}
         refreshControl={
           <RefreshControl
             onRefresh={onRefresh}
@@ -126,9 +152,7 @@ function Notices({ navigation, route }) {
             tintColor={styleVariables.colors.primary}
           />
         }
-        ListFooterComponent={
-          <ListFooter styleVariables={styleVariables} theme={theme} />
-        }
+        ListFooterComponent={renderFooter}
       />
     </View>
   );

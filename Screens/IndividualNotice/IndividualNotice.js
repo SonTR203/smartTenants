@@ -29,12 +29,7 @@ function IndividualNotice({ route }) {
             </Text>
           </View>
         </View>
-        <View
-          style={{
-            marginTop: 8,
-            marginBottom: 16,
-          }}
-        >
+        <View style={styles.contentContainer}>
           <Text style={[styleVariables.fontSizes.body, styles.noticeContent]}>
             {content}
           </Text>
@@ -46,27 +41,9 @@ function IndividualNotice({ route }) {
       {attachment && (
         <TouchableOpacity
           onPress={_handleOpenPDFInWebBrowser}
-          style={{
-            marginTop: 22,
-            backgroundColor: styleVariables.colors.primary,
-            marginHorizontal: 16,
-            padding: 16,
-            borderRadius: 16,
-
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          style={styles.attachmentButton}
         >
-          <Text
-            style={{
-              color: styleVariables.colors.white,
-              fontSize: 17,
-              fontWeight: "500",
-              ...styleVariables.shadow,
-            }}
-          >
-            View attachment
-          </Text>
+          <Text style={styles.attachmentText}>View attachment</Text>
         </TouchableOpacity>
       )}
     </View>

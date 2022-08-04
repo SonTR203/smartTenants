@@ -85,6 +85,10 @@ function Announcements({ navigation, route }) {
     );
   };
 
+  const renderListFooter = () => {
+    return <ListFooter styleVariables={styleVariables} theme={theme} />;
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
       <StatusBar style="light" />
@@ -101,9 +105,7 @@ function Announcements({ navigation, route }) {
             tintColor={styleVariables.colors.primary}
           />
         }
-        ListFooterComponent={
-          <ListFooter styleVariables={styleVariables} theme={theme} />
-        }
+        ListFooterComponent={renderListFooter}
       />
     </View>
   );

@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { setTime } from "../../utils/setTime";
 import { useAppContext } from "../../Context/AppContext";
@@ -37,40 +37,29 @@ function NoticeItem({
     }
   };
 
+  const handlePressEvent = () => {
+    setWasSeenToTrue();
+    navigation.navigate("IndividualNotice", {
+      attachment: attachment,
+      subject: subject,
+      content: content,
+      timestamp: timeSinceNotice,
+      theme: theme,
+      styleVariables: styleVariables,
+      styles: styles,
+    });
+  };
+
   return (
     <TouchableOpacity
-      onPress={() => {
-        setWasSeenToTrue();
-        navigation.navigate("IndividualNotice", {
-          attachment: attachment,
-          subject: subject,
-          content: content,
-          timestamp: timeSinceNotice,
-          theme: theme,
-          styleVariables: styleVariables,
-          styles: styles,
-        });
-      }}
+      onPress={handlePressEvent}
       id="post"
       style={theme.cardContainer}
     >
       {/* Notice Info */}
       <View id="noticeInfo" style={styles.noticeInfo}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "column",
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
+        <View>
+          <View>
             <Text
               style={[styleVariables.fontSizes.bodyBold, styles.profileName]}
             >
@@ -90,4 +79,4 @@ function NoticeItem({
   );
 }
 
-export default NoticeItem;
+export default memo(NoticeItem);

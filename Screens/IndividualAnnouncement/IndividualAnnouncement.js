@@ -7,15 +7,7 @@ function IndividualAnnouncement({ route }) {
     route.params;
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        margin: 16,
-        padding: 16,
-        borderRadius: 16,
-        backgroundColor: styleVariables.colors.white,
-        ...styleVariables.shadow,
-      }}
-    >
+    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
       <StatusBar style="light" />
 
       {/* ownerInfo */}
@@ -25,24 +17,9 @@ function IndividualAnnouncement({ route }) {
           source={require("../../assets/icon.png")}
           style={styles.profileIcon}
         />
-        {/*  */}
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "column",
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
-
-            marginLeft: 16,
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
+        {/* name container */}
+        <View style={styles.individualNameContainer}>
+          <View style={styles.name}>
             <Text
               style={[styleVariables.fontSizes.bodyBold, styles.profileName]}
             >

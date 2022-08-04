@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { setTime } from "../../utils/setTime";
 import { useAppContext } from "../../Context/AppContext";
@@ -59,6 +59,43 @@ function AnnouncementItem({
 
       backgroundColor: styleVariables.colors.imageLoading,
     },
+    header: {
+      flex: 1,
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
+
+      marginLeft: 16,
+    },
+    nameContainer: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    contentContainer: {
+      flex: 1,
+      width: "100%",
+    },
+    scrollViewContainer: {
+      margin: 16,
+      padding: 16,
+      borderRadius: 16,
+      backgroundColor: styleVariables.colors.white,
+      ...styleVariables.shadow,
+    },
+    individualNameContainer: {
+      flex: 1,
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
+
+      marginLeft: 16,
+    },
+    name: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+    },
   });
 
   useEffect(() => {
@@ -99,24 +136,9 @@ function AnnouncementItem({
           source={require("../../assets/icon.png")}
           style={styles.profileIcon}
         />
-        {/*  */}
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "column",
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
-
-            marginLeft: 16,
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
+        {/* HEADER */}
+        <View style={styles.header}>
+          <View style={styles.nameContainer}>
             <Text
               style={[styleVariables.fontSizes.bodyBold, styles.profileName]}
             >
@@ -133,12 +155,7 @@ function AnnouncementItem({
       </View>
 
       {/* announcement content */}
-      <View
-        style={{
-          flex: 1,
-          width: "100%",
-        }}
-      >
+      <View style={styles.contentContainer}>
         <View className="announcementTextContent">
           <Text
             numberOfLines={4}
@@ -161,4 +178,4 @@ function AnnouncementItem({
   );
 }
 
-export default AnnouncementItem;
+export default memo(AnnouncementItem);
