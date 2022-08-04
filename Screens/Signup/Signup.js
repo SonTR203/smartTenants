@@ -343,11 +343,10 @@ const Signup = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
             </View>
-
             <Modal
               id="buildingSelectModal"
               transparent={true}
-              animationType="fade"
+              animationType="slide"
               visible={modalVisible}
               onRequestClose={() => {
                 changeModalVisibility(false);
