@@ -1,20 +1,11 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
 
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  FlatList,
-} from "react-native";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import { collection, getDocs } from "@firebase/firestore";
 import { db } from "../firebase-config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../ThemeContext";
-
-const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
 
 const ModalPicker = ({ changeModalVisibility, setData }) => {
   const [buildings, setBuildings] = useState([]);
@@ -37,9 +28,8 @@ const ModalPicker = ({ changeModalVisibility, setData }) => {
     return (
       <TouchableOpacity
         style={{
-          backgroundColor: "white",
-          width: width - 34 - 34,
-          margin: 17,
+          width: "90%",
+          marginVertical: 17,
           display: "flex",
           flexDirection: "row",
         }}
@@ -47,10 +37,10 @@ const ModalPicker = ({ changeModalVisibility, setData }) => {
       >
         <MaterialCommunityIcons
           name={"office-building"}
-          size={28}
+          size={20}
           color={"#000000"}
         />
-        <Text style={[styleVariables.fontSizes.body, { marginHorizontal: 20 }]}>
+        <Text style={[styleVariables.fontSizes.body, { marginLeft: 20 }]}>
           {item.buildingAddress}
         </Text>
       </TouchableOpacity>
@@ -80,7 +70,7 @@ const ModalPicker = ({ changeModalVisibility, setData }) => {
     >
       <TouchableOpacity
         style={{
-          flex: 1,
+          flex: 0.3,
           backgroundColor: "rgba(0,0,0,0.5)",
           marginBottom: -10,
         }}
@@ -89,15 +79,40 @@ const ModalPicker = ({ changeModalVisibility, setData }) => {
       />
       <View
         style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
           backgroundColor: "white",
-          height: height * 0.85,
-          alignItems: "flex-start",
-          borderRadius: 5,
-          paddingTop: 20,
-          paddingBottom: 20,
+          alignItems: "center",
+          borderTopLeftRadius: 16,
+          borderTopRightRadius: 16,
+          paddingTop: 24,
+          paddingHorizontal: 24,
         }}
       >
-        <FlatList data={buildings} renderItem={callBackRender} />
+        <View style={{ flex: 1 }}>
+          <FlatList data={buildings} renderItem={callBackRender} />
+        </View>
+        <TouchableOpacity
+          style={[
+            theme.secondaryButton,
+            {
+              borderColor: styleVariables.colors.primary,
+              marginTop: 24,
+              marginBottom: 34,
+            },
+          ]}
+          onPress={() => changeModalVisibility(false)}
+        >
+          <Text
+            style={[
+              styleVariables.fontSizes.bodyBold,
+              { color: styleVariables.colors.primary },
+            ]}
+          >
+            Close
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
