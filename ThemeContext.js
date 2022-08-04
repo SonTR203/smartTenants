@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import { createContext, useContext } from "react";
 import { Dimensions } from "react-native";
-import { shadow } from "react-native-paper";
 
 const ThemeContext = createContext();
 const windowHeight = Dimensions.get("window").height;
