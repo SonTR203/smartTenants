@@ -70,7 +70,7 @@ const ModalPicker = ({ changeModalVisibility, setData }) => {
     >
       <TouchableOpacity
         style={{
-          flex: 0.3,
+          flex: 0.5,
           backgroundColor: "rgba(0,0,0,0.5)",
           marginBottom: -10,
         }}
