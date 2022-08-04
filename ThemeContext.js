@@ -245,18 +245,7 @@ const theme = StyleSheet.create({
     padding: 16,
     borderRadius: 16,
 
-    shadowColor: "#4D4D4D", // color: #4D4D4D
-    shadowOffset: {
-      // no offset x, y
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.15, // opacity: 0.15
-    shadowRadius: 24, // radius: 24
-    elevation: 5, // elevation: 5
-
-    // the code above should be similar to the box shadow of
-    //box-shadow: 0px 0px 24px rgba(77, 77, 77, 0.15);
+    ...styleVariables.shadow,
   },
   counter: {
     display: "flex",

@@ -18,24 +18,28 @@ function ListHeader({
       opacity: 1,
       marginBottom: 16,
     },
+    marginTop: {
+      marginTop: 16,
+    },
   });
+
+  const handlePressAnnouncements = () => {
+    navigation.navigate("Announcements", {
+      announcementId: null,
+    });
+  };
+
+  const handlePressNotices = () => {
+    navigation.navigate("Notices", {
+      noticeId: null,
+    });
+  };
 
   return (
     <View>
       {/* announcements */}
-      <View
-        style={{
-          marginTop: 16,
-        }}
-      >
-        <Pressable
-          onPress={() => {
-            navigation.navigate("Announcements", {
-              announcementId: null,
-            });
-          }}
-          style={theme.cardButton}
-        >
+      <View style={styles.marginTop}>
+        <Pressable onPress={handlePressAnnouncements} style={theme.cardButton}>
           <Text
             style={[
               styleVariables.fontSizes.title,
@@ -67,11 +71,7 @@ function ListHeader({
       <View id="secondTopCard">
         <Pressable
           id="notices"
-          onPress={() => {
-            navigation.navigate("Notices", {
-              noticeId: null,
-            });
-          }}
+          onPress={handlePressNotices}
           style={theme.cardButton}
         >
           <Text

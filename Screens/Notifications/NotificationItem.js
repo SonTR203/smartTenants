@@ -86,40 +86,23 @@ function NotificationItem({
       // navigate to post page on press
       disabled={notifications.postID == "" ? true : false}
       onPress={handleViewNotifications}
-      style={[theme.cardButton, styles(styleVariables).container]}
+      style={[theme.cardButton, styles.container]}
     >
       <View id="notificationContent">
-        <View
-          id="timeStamp-readState"
-          style={styles(styleVariables).timestampContainer}
-        >
+        <View id="timeStamp-readState" style={styles.timestampContainer}>
           <Text style={[styleVariables.fontSizes.callout]}>
             {timeSincePost}
           </Text>
           {notificationBadges.unseen.includes(notifications.id) && (
             <View
               id="notificationIndice"
-              style={styles(styleVariables).notificationIndice}
+              style={styles.notificationIndice(styleVariables)}
             />
           )}
         </View>
-        <Text
-          style={{
-            fontSize: 17,
-            lineHeight: 22,
-            color: "#4D4D4D",
-            fontFamily: "Roboto_400Regular",
-            paddingRight: 21,
-          }}
-        >
+        <Text style={styles.headerText}>
           {notifications.header ? (
-            <Text
-              style={{
-                fontFamily: "Roboto_500Medium",
-              }}
-            >
-              {notifications.header}{" "}
-            </Text>
+            <Text style={styles.fontFamily}>{notifications.header} </Text>
           ) : null}
           {notifications.content}
         </Text>
@@ -131,22 +114,30 @@ function NotificationItem({
     </TouchableOpacity>
   );
 }
-
-const styles = (styleVariables) =>
-  StyleSheet.create({
-    container: { marginTop: 0, marginBottom: 16 },
-    timestampContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: 8,
-    },
-    notificationIndice: {
-      height: 8,
-      width: 8,
-      backgroundColor: styleVariables.colors.notificationBadge,
-      borderRadius: 99,
-      marginLeft: 8,
-    },
-  });
+const styles = StyleSheet.create({
+  container: { marginTop: 0, marginBottom: 16 },
+  timestampContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  notificationIndice: (styleVariables) => ({
+    height: 8,
+    width: 8,
+    backgroundColor: styleVariables.colors.notificationBadge,
+    borderRadius: 99,
+    marginLeft: 8,
+  }),
+  headerText: {
+    fontSize: 17,
+    lineHeight: 22,
+    color: "#4D4D4D",
+    fontFamily: "Roboto_400Regular",
+    paddingRight: 21,
+  },
+  fontFamily: {
+    fontFamily: "Roboto_500Medium",
+  },
+});
 
 export default NotificationItem;
