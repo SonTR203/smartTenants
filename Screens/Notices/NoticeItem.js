@@ -6,6 +6,7 @@ import { updateItemInFirestore } from "../../utils/firebase.services";
 import ChevronRightSVG from "../../components/Icons/ChevronRightSVG";
 
 function NoticeItem({
+  attachment,
   subject,
   content,
   theme,
@@ -41,6 +42,7 @@ function NoticeItem({
       onPress={() => {
         setWasSeenToTrue();
         navigation.navigate("IndividualNotice", {
+          attachment: attachment,
           subject: subject,
           content: content,
           timestamp: timeSinceNotice,

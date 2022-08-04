@@ -1,9 +1,21 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import * as WebBrowser from "expo-web-browser";
 
 function IndividualNotice({ route }) {
-  const { content, theme, timestamp, styleVariables, styles, subject } =
-    route.params;
+  const {
+    content,
+    theme,
+    timestamp,
+    styleVariables,
+    styles,
+    subject,
+    attachment,
+  } = route.params;
+
+  const _handleOpenPDFInWebBrowser = async () => {
+    await WebBrowser.openBrowserAsync(attachment);
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
@@ -31,30 +43,32 @@ function IndividualNotice({ route }) {
           {timestamp}
         </Text>
       </View>
-
-      <TouchableOpacity
-        style={{
-          marginTop: 22,
-          backgroundColor: styleVariables.colors.primary,
-          marginHorizontal: 16,
-          padding: 16,
-          borderRadius: 16,
-
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text
+      {attachment && (
+        <TouchableOpacity
+          onPress={_handleOpenPDFInWebBrowser}
           style={{
-            color: styleVariables.colors.white,
-            fontSize: 17,
-            fontWeight: "500",
-            ...styleVariables.shadow,
+            marginTop: 22,
+            backgroundColor: styleVariables.colors.primary,
+            marginHorizontal: 16,
+            padding: 16,
+            borderRadius: 16,
+
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          View attachment
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={{
+              color: styleVariables.colors.white,
+              fontSize: 17,
+              fontWeight: "500",
+              ...styleVariables.shadow,
+            }}
+          >
+            View attachment
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
