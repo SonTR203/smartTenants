@@ -27,6 +27,20 @@ let styleVariables = {
     notificationBadge: "#E84855",
     imageLoading: "#EDEDED",
   },
+  shadow: {
+    shadowColor: "#4D4D4D", // color: #4D4D4D
+    shadowOffset: {
+      // no offset x, y
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.15, // opacity: 0.15
+    shadowRadius: 24, // radius: 24
+    elevation: 5, // elevation: 5
+
+    // the code above should be similar to the box shadow of
+    //box-shadow: 0px 0px 24px rgba(77, 77, 77, 0.15);
+  },
   fontSizes: {
     hero: { fontSize: 40, fontFamily: "Roboto_400Regular" },
     header: { fontSize: 34, fontFamily: "Roboto_500Medium" },
@@ -46,20 +60,6 @@ let styleVariables = {
 };
 
 const theme = StyleSheet.create({
-  shadowStyle: {
-    shadowColor: "#4D4D4D", // color: #4D4D4D
-    shadowOffset: {
-      // no offset x, y
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.15, // opacity: 0.15
-    shadowRadius: 24, // radius: 24
-    elevation: 5, // elevation: 5
-
-    // the code above should be similar to the box shadow of
-    //box-shadow: 0px 0px 24px rgba(77, 77, 77, 0.15);
-  },
   container: {
     display: "flex",
     alignItems: "center",
@@ -90,14 +90,6 @@ const theme = StyleSheet.create({
     backgroundColor: styleVariables.colors.white,
     padding: 17,
     borderRadius: 24,
-    shadowColor: styleVariables.colors.primary,
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.14,
-    shadowRadius: 34,
-    elevation: 20,
   },
   cardContainer: {
     display: "flex",
@@ -108,19 +100,13 @@ const theme = StyleSheet.create({
     marginHorizontal: 17,
     marginTop: 17,
     borderRadius: 24,
+    ...styleVariables.shadow,
   },
   marketplaceItemContainer: {
     backgroundColor: styleVariables.colors.white,
     marginBottom: 17,
     borderRadius: 24,
-    shadowColor: styleVariables.colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.14,
-    shadowRadius: 34,
-    elevation: 20,
+    ...styleVariables.shadow,
   },
   modalView: {
     width: windowWidth - 34,

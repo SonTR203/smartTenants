@@ -98,10 +98,7 @@ function Comment({
 
   return (
     <View>
-      <View
-        id="userComment"
-        style={[theme.cardContainer, theme.shadowStyle, styles.container]}
-      >
+      <View id="userComment" style={[theme.cardContainer, styles.container]}>
         <View className="commentOwnerInfo" style={styles.ownerInfo}>
           <View
             className="commentOwnerImageAndName"

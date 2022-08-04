@@ -72,7 +72,7 @@ const BuildingInfo = () => {
     <ScrollView style={theme.pageContainer}>
       <StatusBar style="dark" />
       <View style={theme.globalMargins}>
-        <View id="buildingInfoCard" style={theme.card}>
+        <View id="buildingInfoCard" style={[theme.card, theme.shadowStyle]}>
           <Image
             style={theme.buildingImagePreview}
             source={require("../../assets/icon.png")}

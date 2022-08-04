@@ -10,7 +10,7 @@ function IndividualAnnouncement({ route }) {
     <View>
       <StatusBar style="dark" />
 
-      <View id="announcement" style={[theme.cardContainer, theme.shadowStyle]}>
+      <View id="announcement" style={theme.cardContainer}>
         {/* ownerInfo */}
         <View id="announcementInfo" style={styles.announcementInfo}>
           <View className="imageAndName" style={styles.imageAndName}>

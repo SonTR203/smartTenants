@@ -95,7 +95,7 @@ function AnnouncementItem({
     <TouchableOpacity
       onPress={handlePressEvent}
       id="announcement"
-      style={[theme.cardContainer, theme.shadowStyle]}
+      style={theme.cardContainer}
     >
       {/* ownerInfo */}
       <View id="announcementInfo" style={styles.announcementInfo}>
