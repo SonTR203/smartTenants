@@ -288,7 +288,7 @@ const Signup = ({ navigation }) => {
               <TextInput
                 placeholderTextColor={styleVariables.colors.placeholderText}
                 keyboardType="numeric"
-                placeholder="1234"
+                placeholder="123"
                 value={unitNumber}
                 onChangeText={(text) => setUnitNumber(text)}
                 style={[
