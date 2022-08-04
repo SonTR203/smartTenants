@@ -9,6 +9,7 @@ import {
   Image,
   Linking,
   Alert,
+  StyleSheet,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { collection, getDocs, addDoc, Timestamp } from "@firebase/firestore";
@@ -97,6 +98,15 @@ const Login = ({ navigation, route }) => {
     }
   };
 
+  const styles = StyleSheet.create({
+    buttonActive: {
+      opacity: 1,
+    },
+    buttonInactive: {
+      opacity: 0.5,
+    },
+  });
+
   return (
     <SafeAreaView style={{ backgroundColor: styleVariables.colors.white }}>
       <View style={theme.pageContainer}>
@@ -177,36 +187,42 @@ const Login = ({ navigation, route }) => {
             </View>
 
             {/* loginButton */}
-            <TouchableOpacity
-              id="loginButton"
-              onPress={handleLogin}
+            <View
               style={[
-                theme.primaryButton,
-                {
-                  flexDirection: "row",
-                },
+                email && password ? styles.buttonActive : styles.buttonInactive,
               ]}
             >
-              <Text
+              <TouchableOpacity
+                id="loginButton"
+                onPress={handleLogin}
                 style={[
-                  theme.primaryButtonText,
-                  styleVariables.fontSizes.bodyBold,
+                  theme.primaryButton,
+                  {
+                    flexDirection: "row",
+                  },
                 ]}
               >
-                Sign In
-              </Text>
-              {loading && (
-                <Progress.CircleSnail
-                  style={{
-                    marginLeft: 17,
-                  }}
-                  strokeCap="square"
-                  thickness={2.2}
-                  size={20}
-                  color={"white"}
-                />
-              )}
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    theme.primaryButtonText,
+                    styleVariables.fontSizes.bodyBold,
+                  ]}
+                >
+                  Sign In
+                </Text>
+                {loading && (
+                  <Progress.CircleSnail
+                    style={{
+                      marginLeft: 17,
+                    }}
+                    strokeCap="square"
+                    thickness={2.2}
+                    size={20}
+                    color={"white"}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
 
             {/* no account CTA */}
             <View
