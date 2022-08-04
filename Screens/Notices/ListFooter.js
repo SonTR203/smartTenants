@@ -4,17 +4,13 @@ import { StyleSheet, View, Text } from "react-native";
 function ListFooter({ styleVariables }) {
   const styles = StyleSheet.create({
     container: {
-      height: 102,
-      paddingVertical: 17,
-      paddingHorizontal: 34,
+      paddingVertical: 24,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
     },
     callOut: {
       color: styleVariables.colors.listFooterText,
-      opacity: 0.66,
-      paddingBottom: 17,
     },
   });
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { FlatList, StyleSheet, RefreshControl } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { FlatList, StyleSheet, RefreshControl, View } from "react-native";
 import { db } from "../../firebase-config";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useTheme } from "../../ThemeContext";
@@ -24,7 +23,6 @@ function Notices({ navigation, route }) {
       alignItems: "center",
       justifyContent: "space-between",
       width: "100%",
-      marginBottom: 12,
     },
     imageAndName: {
       display: "flex",
@@ -38,17 +36,12 @@ function Notices({ navigation, route }) {
     },
     profileName: {
       color: styleVariables.colors.black,
-      marginLeft: 8,
-    },
-    noticeContent: {
-      color: styleVariables.colors.black,
-      marginBottom: 17,
     },
     timestampText: { opacity: 0.66 },
     noticeIndice: {
       height: 8,
       width: 8,
-      backgroundColor: styleVariables.colors.primary,
+      backgroundColor: styleVariables.colors.notificationBadge,
       borderRadius: 99,
       marginLeft: 8,
     },
@@ -104,16 +97,15 @@ function Notices({ navigation, route }) {
   }, []);
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: styleVariables.colors.white }}
-    >
-      <StatusBar style="dark" />
+    <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
+      <StatusBar style="light" />
       <FlatList
         ref={listRef}
         data={notices}
         renderItem={({ item }) => {
           return (
             <NoticeItem
+              subject={item.subject}
               content={item.content}
               timestamp={item.timestamp}
               wasSeen={item.wasSeen}
@@ -137,7 +129,7 @@ function Notices({ navigation, route }) {
           <ListFooter styleVariables={styleVariables} theme={theme} />
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
