@@ -16,12 +16,7 @@ function CommentReply({ item, theme, styleVariables, styles }) {
       <View id="replyLine" style={styles.replyLine}></View>
       <View
         id="userReply"
-        style={[
-          theme.cardContainer,
-          theme.shadowStyle,
-          styles.container,
-          styles.reply,
-        ]}
+        style={[theme.cardContainer, styles.container, styles.reply]}
       >
         <View className="commentOwnerInfo" style={styles.ownerInfo}>
           <View
