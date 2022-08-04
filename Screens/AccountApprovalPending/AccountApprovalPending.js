@@ -66,7 +66,10 @@ function AccountApprovalPending({ navigation }) {
         <TouchableOpacity
           id="backButton"
           onPress={handleGoBack}
-          style={theme.secondaryButton}
+          style={[
+            theme.secondaryButton,
+            { borderColor: styleVariables.colors.primary },
+          ]}
         >
           <Text
             style={[
@@ -74,7 +77,7 @@ function AccountApprovalPending({ navigation }) {
               styleVariables.fontSizes.bodyBold,
             ]}
           >
-            Go back
+            Back to Sign In
           </Text>
         </TouchableOpacity>
       </View>
