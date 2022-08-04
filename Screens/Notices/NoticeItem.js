@@ -19,7 +19,7 @@ function NoticeItem({
 }) {
   const [timeSinceNotice, setTimeSinceNotice] = useState("");
   const [viewed, setViewed] = useState(false);
-  const { currentUser } = useAppContext();
+  const { currentUser, notices, setNotices } = useAppContext();
 
   useEffect(() => {
     const time = setTime(timestamp);
@@ -34,11 +34,13 @@ function NoticeItem({
       wasSeen.push(currentUser.userID);
       updateItemInFirestore("Notices", id, { wasSeen: wasSeen });
       setViewed(true);
+      // update notices in context
+      const newNoticeCount = notices - 1;
+      setNotices(newNoticeCount);
     }
   };
 
   const handlePressEvent = () => {
-    setWasSeenToTrue();
     navigation.navigate("IndividualNotice", {
       attachment: attachment,
       subject: subject,
@@ -48,6 +50,7 @@ function NoticeItem({
       styleVariables: styleVariables,
       styles: styles,
     });
+    setWasSeenToTrue();
   };
 
   return (

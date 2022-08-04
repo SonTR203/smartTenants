@@ -17,7 +17,7 @@ function AnnouncementItem({
 }) {
   const [timeSinceAnnouncement, setTimeSinceAnnouncement] = useState("");
   const [viewed, setViewed] = useState(false);
-  const { currentUser } = useAppContext();
+  const { currentUser, announcements, setAnnouncements } = useAppContext();
 
   const styles = StyleSheet.create({
     announcementInfo: {
@@ -111,6 +111,9 @@ function AnnouncementItem({
       wasSeen.push(currentUser.userID);
       updateItemInFirestore("Announcements", id, { wasSeen: wasSeen });
       setViewed(true);
+      // update the announcements count in the app context
+      const newAnnouncementCount = announcements - 1;
+      setAnnouncements(newAnnouncementCount);
     }
   };
 

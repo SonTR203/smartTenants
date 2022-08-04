@@ -46,7 +46,7 @@ let styleVariables = {
     header: { fontSize: 34, fontFamily: "Roboto_500Medium" },
     secondaryHeader: { fontSize: 28, fontFamily: "Roboto_500Medium" },
     title: { fontSize: 22, fontFamily: "Roboto_500Medium" },
-    body: { fontSize: 17, fontFamily: "Roboto_400Regular" },
+    body: { fontSize: 17, fontFamily: "Roboto_400Regular", lineHeight: 22 },
     bodyBold: { fontSize: 17, fontFamily: "Roboto_500Medium" },
     callout: {
       fontSize: 15,

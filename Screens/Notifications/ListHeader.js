@@ -1,16 +1,10 @@
 import React from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import ChevronRightSVG from "../../components/Icons/ChevronRightSVG";
+import { useAppContext } from "../../Context/AppContext";
 
-function ListHeader({
-  styleVariables,
-  theme,
-  navigation,
-  noticeCount,
-  announcementCount,
-  setNoticeCount,
-  setAnnouncementCount,
-}) {
+function ListHeader({ styleVariables, theme, navigation }) {
+  const { notices, announcements } = useAppContext();
   const styles = StyleSheet.create({
     dividerContainer: { width: "100%", alignItems: "center" },
     divider: {
@@ -28,14 +22,12 @@ function ListHeader({
   const handlePressAnnouncements = () => {
     navigation.navigate("Announcements", {
       announcementId: null,
-      setAnnouncementCount: setAnnouncementCount,
     });
   };
 
   const handlePressNotices = () => {
     navigation.navigate("Notices", {
       noticeId: null,
-      setNoticeCount: setNoticeCount,
     });
   };
 
@@ -53,7 +45,7 @@ function ListHeader({
             Announcements
           </Text>
           <View id="counter" style={theme.counter}>
-            {announcementCount > 0 && (
+            {announcements > 0 && (
               <View style={theme.notificationCounter}>
                 <Text
                   id="notificationCounter"
@@ -62,7 +54,7 @@ function ListHeader({
                     { color: styleVariables.colors.white },
                   ]}
                 >
-                  {announcementCount}
+                  {announcements}
                 </Text>
               </View>
             )}
@@ -87,7 +79,7 @@ function ListHeader({
             Notices
           </Text>
           <View id="counter" style={theme.counter}>
-            {noticeCount > 0 && (
+            {notices > 0 && (
               <View style={theme.notificationCounter}>
                 <Text
                   id="notificationCounter"
@@ -96,7 +88,7 @@ function ListHeader({
                     { color: styleVariables.colors.white },
                   ]}
                 >
-                  {noticeCount}
+                  {notices}
                 </Text>
               </View>
             )}

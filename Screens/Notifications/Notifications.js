@@ -16,12 +16,11 @@ import _ from "lodash";
 
 const Notifications = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
-  const { currentUser, notificationBadges } = useAppContext();
+  const { currentUser, notificationBadges, setNotices, setAnnouncements } =
+    useAppContext();
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
   const [refreshing, setRefreshing] = useState(true);
-  const [noticeCount, setNoticeCount] = useState(0);
-  const [announcementCount, setAnnouncementCount] = useState(0);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -54,11 +53,11 @@ const Notifications = ({ navigation }) => {
 
   async function fetchNoticeCount() {
     const count = await getNoticeCount(currentUser);
-    setNoticeCount(count);
+    setNotices(count);
   }
   async function fetchAnnouncementCount() {
     const count = await getAnnouncementCount(currentUser);
-    setAnnouncementCount(count);
+    setAnnouncements(count);
   }
 
   const callBackRender = useCallback(
@@ -85,10 +84,6 @@ const Notifications = ({ navigation }) => {
         styleVariables={styleVariables}
         theme={theme}
         navigation={navigation}
-        announcementCount={announcementCount}
-        setAnnouncementCount={setAnnouncementCount}
-        noticeCount={noticeCount}
-        setNoticeCount={setNoticeCount}
       />
     );
   };
