@@ -26,6 +26,7 @@ import * as Progress from "react-native-progress";
 import ErrorArea from "../../components/SignUp/ErrorArea";
 import { useAppContext } from "../../Context/AppContext";
 import { getRandomGradientColor } from "../../utils/Profile/profile.services";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const auth = getAuth();
 
@@ -201,6 +202,11 @@ const Signup = ({ navigation }) => {
     inputLabelFilled: {
       color: styleVariables.colors.black,
     },
+    buildingInput: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
   });
 
   return (
@@ -312,18 +318,29 @@ const Signup = ({ navigation }) => {
                   changeModalVisibility(true);
                 }}
               >
-                <Text
+                <View
                   style={[
                     theme.textInput,
-                    styleVariables.fontSizes.body,
+                    styles.buildingInput,
                     signupPressed && !buildingID.trim()
                       ? styles.inputFieldEmpty
                       : styles.inputFieldFilled,
-                    { color: "#00000080" },
                   ]}
                 >
-                  {buildingAddress}
-                </Text>
+                  <Text
+                    style={[
+                      styleVariables.fontSizes.body,
+                      { color: "#00000080" },
+                    ]}
+                  >
+                    {buildingAddress}
+                  </Text>
+                  <MaterialCommunityIcons
+                    name={"chevron-down"}
+                    size={20}
+                    color={"#00000080"}
+                  />
+                </View>
               </TouchableOpacity>
             </View>
 
