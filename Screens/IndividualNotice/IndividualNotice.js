@@ -9,7 +9,7 @@ function IndividualNotice({ route }) {
     <SafeAreaView
       style={{ flex: 1, backgroundColor: styleVariables.colors.white }}
     >
-      <View style={theme.cardContainer}>
+      <View style={[theme.cardContainer, theme.shadowStyle]}>
         <View id="noticeInfo" style={styles.noticeInfo}>
           <View className="imageAndName" style={styles.imageAndName}>
             <Image

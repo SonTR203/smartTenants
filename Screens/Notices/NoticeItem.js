@@ -35,7 +35,7 @@ function NoticeItem({
   };
 
   return (
-    <View id="post" style={theme.cardContainer}>
+    <View id="post" style={[theme.cardContainer, theme.shadowStyle]}>
       {/* Notice Info */}
       <View id="noticeInfo" style={styles.noticeInfo}>
         <View className="imageAndName" style={styles.imageAndName}>

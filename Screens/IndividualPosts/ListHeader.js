@@ -59,7 +59,10 @@ function ListHeader() {
   }
 
   return (
-    <View id="userPost" style={[theme.cardContainer, styles.container]}>
+    <View
+      id="userPost"
+      style={[theme.cardContainer, theme.shadowStyle, styles.container]}
+    >
       {/* postOwnerInfo */}
       <View className="postOwnerInfo" style={styles.postOwnerInfo}>
         <View className="ownerImageAndName" style={styles.ownerImageAndName}>

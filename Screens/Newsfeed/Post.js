@@ -98,7 +98,7 @@ function Post({ passedPost, windowWidth }) {
   return (
     <TouchableOpacity
       id="post"
-      style={theme.cardContainer}
+      style={[theme.cardContainer, theme.shadowStyle]}
       onPress={navigateToIndividualPostScreen}
     >
       {/* ownerInfo */}
