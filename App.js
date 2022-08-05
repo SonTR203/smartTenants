@@ -41,6 +41,7 @@ import {
 } from "@firebase/firestore";
 import { db } from "./firebase-config";
 import { wait } from "./utils/wait";
+import { TabBar } from "./components/TabBar/TabBar";
 
 const Tab = createBottomTabNavigator();
 
@@ -286,53 +287,42 @@ function AppContainer({
           <NavigationContainer ref={navigationRef}>
             <Tab.Navigator
               initialRouteName="NewsfeedNavigator"
+              tabBar={(props) => {
+                return <TabBar {...props} />;
+              }}
               screenOptions={({ route }) => ({
-                tabBarIcon: ({ focused }) => {
-                  let iconName;
-                  let color;
-                  if (route.name === "MarketplaceNavigator") {
-                    iconName = "store";
-                    color = focused ? "#395E66" : "#395E6654";
-                  } else if (route.name === "NewsfeedNavigator") {
-                    iconName = "newspaper";
-                    color = focused ? "#395E66" : "#395E6654";
-                  } else if (route.name === "NotificationsNavigator") {
-                    iconName = "bell";
-                    color = focused ? "#395E66" : "#395E6654";
-                  } else if (route.name === "ProfileNavigator") {
-                    iconName = "account";
-                    color = focused ? "#395E66" : "#395E6654";
-                  }
-                  return (
-                    <View>
-                      <MaterialCommunityIcons
-                        name={iconName}
-                        size={28}
-                        color={color}
-                      />
-                      <NotificationBadge screen={route.name} />
-                    </View>
-                  );
-                },
+                // tabBarIcon: ({ focused }) => {
+                //   let iconName;
+                //   let color;
+                //   if (route.name === "MarketplaceNavigator") {
+                //     iconName = "store";
+                //     color = focused ? "#395E66" : "#395E6654";
+                //   } else if (route.name === "NewsfeedNavigator") {
+                //     iconName = "newspaper";
+                //     color = focused ? "#395E66" : "#395E6654";
+                //   } else if (route.name === "NotificationsNavigator") {
+                //     iconName = "bell";
+                //     color = focused ? "#395E66" : "#395E6654";
+                //   } else if (route.name === "ProfileNavigator") {
+                //     iconName = "account";
+                //     color = focused ? "#395E66" : "#395E6654";
+                //   }
+                //   return (
+                // <View>
+                //   <MaterialCommunityIcons
+                //     name={iconName}
+                //     size={28}
+                //     color={color}
+                //   />
+                //   <NotificationBadge screen={route.name} />
+                // </View>
+                //   );
+                // },
 
                 headerShown: false,
                 tabBarActiveTintColor: "#395E66",
               })}
             >
-              {/* ======= Marketplace ======= */}
-              <Tab.Screen
-                name="MarketplaceNavigator"
-                component={MarketplaceNavigator}
-                options={{
-                  title: "Marketplace",
-                  headerShown: false,
-                  tabBarLabelStyle: {
-                    fontSize: 12,
-                    paddingBottom: 2,
-                  },
-                }}
-              />
-
               {/* ======= Newsfeed ======= */}
               <Tab.Screen
                 name="NewsfeedNavigator"
@@ -348,6 +338,20 @@ function AppContainer({
                     display: getRouteName(route) ? getRouteName(route) : "none",
                   },
                 })}
+              />
+
+              {/* ======= Marketplace ======= */}
+              <Tab.Screen
+                name="MarketplaceNavigator"
+                component={MarketplaceNavigator}
+                options={{
+                  title: "Marketplace",
+                  headerShown: false,
+                  tabBarLabelStyle: {
+                    fontSize: 12,
+                    paddingBottom: 2,
+                  },
+                }}
               />
 
               {/* ======= Notifications ======= */}
