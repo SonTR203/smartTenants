@@ -216,7 +216,7 @@ export const handleSignIn = async (email, password) => {
         console.log("Signed in with email:", userCredentials.user.email);
         return userCredentials.user.uid;
       })
-      .catch((error) => {
+      .catch(() => {
         return undefined;
       });
     return uid;
