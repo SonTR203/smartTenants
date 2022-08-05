@@ -13,7 +13,6 @@ import {
 } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AppContext } from "./Context/AppContext";
-import Splashscreen from "./Screens/Splashscreen/Splashscreen";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import {
   NewsfeedNavigator,
@@ -45,8 +44,6 @@ import { wait } from "./utils/wait";
 const Tab = createBottomTabNavigator();
 
 function App() {
-  const [showSplashscreen, setShowSplashscreen] = useState(true);
-
   const responseListener = useRef();
   const navigationRef = useNavigationContainerRef();
 
@@ -258,130 +255,113 @@ function App() {
 
   return (
     <AppContext.Provider value={states}>
-      <AppContainer
-        navigationRef={navigationRef}
-        showSplashscreen={showSplashscreen}
-        setShowSplashscreen={setShowSplashscreen}
-      />
+      <AppContainer navigationRef={navigationRef} />
     </AppContext.Provider>
   );
 }
 
-function AppContainer({
-  showSplashscreen,
-  setShowSplashscreen,
-  navigationRef,
-}) {
-  useEffect(() => {
-    const timeout = setTimeout(() => setShowSplashscreen(false), 2000);
-    return () => clearTimeout(timeout);
-  }, []);
-
+function AppContainer({ navigationRef }) {
   return (
     <ActionSheetProvider>
       <ThemeProvider>
-        {showSplashscreen ? (
-          <Splashscreen />
-        ) : (
-          <NavigationContainer ref={navigationRef}>
-            <Tab.Navigator
-              initialRouteName="NewsfeedNavigator"
-              screenOptions={({ route }) => ({
-                tabBarIcon: ({ focused }) => {
-                  let iconName;
-                  let color;
-                  if (route.name === "MarketplaceNavigator") {
-                    iconName = "store";
-                    color = focused ? "#395E66" : "#395E6654";
-                  } else if (route.name === "NewsfeedNavigator") {
-                    iconName = "newspaper";
-                    color = focused ? "#395E66" : "#395E6654";
-                  } else if (route.name === "NotificationsNavigator") {
-                    iconName = "bell";
-                    color = focused ? "#395E66" : "#395E6654";
-                  } else if (route.name === "ProfileNavigator") {
-                    iconName = "account";
-                    color = focused ? "#395E66" : "#395E6654";
-                  }
-                  return (
-                    <View>
-                      <MaterialCommunityIcons
-                        name={iconName}
-                        size={28}
-                        color={color}
-                      />
-                      <NotificationBadge screen={route.name} />
-                    </View>
-                  );
-                },
+        <NavigationContainer ref={navigationRef}>
+          <Tab.Navigator
+            initialRouteName="NewsfeedNavigator"
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused }) => {
+                let iconName;
+                let color;
+                if (route.name === "MarketplaceNavigator") {
+                  iconName = "store";
+                  color = focused ? "#395E66" : "#395E6654";
+                } else if (route.name === "NewsfeedNavigator") {
+                  iconName = "newspaper";
+                  color = focused ? "#395E66" : "#395E6654";
+                } else if (route.name === "NotificationsNavigator") {
+                  iconName = "bell";
+                  color = focused ? "#395E66" : "#395E6654";
+                } else if (route.name === "ProfileNavigator") {
+                  iconName = "account";
+                  color = focused ? "#395E66" : "#395E6654";
+                }
+                return (
+                  <View>
+                    <MaterialCommunityIcons
+                      name={iconName}
+                      size={28}
+                      color={color}
+                    />
+                    <NotificationBadge screen={route.name} />
+                  </View>
+                );
+              },
 
+              headerShown: false,
+              tabBarActiveTintColor: "#395E66",
+            })}
+          >
+            {/* ======= Marketplace ======= */}
+            <Tab.Screen
+              name="MarketplaceNavigator"
+              component={MarketplaceNavigator}
+              options={{
+                title: "Marketplace",
                 headerShown: false,
-                tabBarActiveTintColor: "#395E66",
+                tabBarLabelStyle: {
+                  fontSize: 12,
+                  paddingBottom: 2,
+                },
+              }}
+            />
+
+            {/* ======= Newsfeed ======= */}
+            <Tab.Screen
+              name="NewsfeedNavigator"
+              component={NewsfeedNavigator}
+              options={({ route }) => ({
+                title: "Newsfeed",
+                left: { display: "none" },
+                tabBarLabelStyle: {
+                  fontSize: 12,
+                  paddingBottom: 2,
+                },
+                tabBarStyle: {
+                  display: getRouteName(route) ? getRouteName(route) : "none",
+                },
               })}
-            >
-              {/* ======= Marketplace ======= */}
-              <Tab.Screen
-                name="MarketplaceNavigator"
-                component={MarketplaceNavigator}
-                options={{
-                  title: "Marketplace",
-                  headerShown: false,
-                  tabBarLabelStyle: {
-                    fontSize: 12,
-                    paddingBottom: 2,
-                  },
-                }}
-              />
+            />
 
-              {/* ======= Newsfeed ======= */}
-              <Tab.Screen
-                name="NewsfeedNavigator"
-                component={NewsfeedNavigator}
-                options={({ route }) => ({
-                  title: "Newsfeed",
-                  left: { display: "none" },
-                  tabBarLabelStyle: {
-                    fontSize: 12,
-                    paddingBottom: 2,
-                  },
-                  tabBarStyle: {
-                    display: getRouteName(route) ? getRouteName(route) : "none",
-                  },
-                })}
-              />
+            {/* ======= Notifications ======= */}
+            <Tab.Screen
+              name="NotificationsNavigator"
+              component={NotificationNavigator}
+              options={{
+                title: "Notifications",
+                tabBarLabelStyle: {
+                  fontSize: 12,
+                  paddingBottom: 2,
+                },
+              }}
+            />
 
-              {/* ======= Notifications ======= */}
-              <Tab.Screen
-                name="NotificationsNavigator"
-                component={NotificationNavigator}
-                options={{
-                  title: "Notifications",
-                  tabBarLabelStyle: {
-                    fontSize: 12,
-                    paddingBottom: 2,
-                  },
-                }}
-              />
-
-              {/* ======= Profile ======= */}
-              <Tab.Screen
-                name="ProfileNavigator"
-                component={ProfileNavigator}
-                options={{
-                  title: "Profile",
-                  headerShown: false,
-                  tabBarLabelStyle: {
-                    fontSize: 12,
-                    paddingBottom: 2,
-                  },
-                }}
-                tabBarOptions={{
-                  display: "none",
-                }}
-              />
-            </Tab.Navigator>
-          </NavigationContainer>
-        )}
+            {/* ======= Profile ======= */}
+            <Tab.Screen
+              name="ProfileNavigator"
+              component={ProfileNavigator}
+              options={{
+                title: "Profile",
+                headerShown: false,
+                tabBarLabelStyle: {
+                  fontSize: 12,
+                  paddingBottom: 2,
+                },
+              }}
+              tabBarOptions={{
+                display: "none",
+              }}
+            />
+          </Tab.Navigator>
+        </NavigationContainer>
       </ThemeProvider>
     </ActionSheetProvider>
   );
@@ -394,7 +374,8 @@ const getRouteName = (route) => {
     routeName?.includes("Signup") ||
     routeName?.includes("AccountApprovalPending") ||
     routeName?.includes("ForgotPassword") ||
-    routeName?.includes("TermsAndConditions")
+    routeName?.includes("TermsAndConditions") ||
+    routeName?.includes("Splashscreen")
   ) {
     return "none";
   } else if (routeName == undefined) {
