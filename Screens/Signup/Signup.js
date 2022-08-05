@@ -23,9 +23,10 @@ import { useTheme } from "../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { uploadExpoPushToken } from "../../utils/firebase.services";
 import ErrorArea from "../../components/SignUp/ErrorArea";
-import { useAppContext } from "../../Context/AppContext";
 import { getRandomGradientColor } from "../../utils/Profile/profile.services";
 import LoadingIndicator from "../../components/LoadingIndicator";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 const auth = getAuth();
 
@@ -33,7 +34,6 @@ const auth = getAuth();
  * an admin approve their request before they are allowed to the
  * home screen (Newsfeed) */
 const Signup = ({ navigation }) => {
-  const { termsRead } = useAppContext();
   const scrollViewRef = useRef();
   const { theme, styleVariables } = useTheme();
   const [email, setEmail] = useState("");
@@ -48,6 +48,7 @@ const Signup = ({ navigation }) => {
   const [unitNumber, setUnitNumber] = useState("");
   const [tenantAuthorized] = useState(false);
   const [signupPressed, setSignupPressed] = useState(false);
+  const [checkboxState, setCheckboxState] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -62,8 +63,8 @@ const Signup = ({ navigation }) => {
    */
 
   const setData = (building) => {
-    setBuildingAddress(building.buildingAddress.stringValue);
-    setBuildingName(building.buildingName.stringValue);
+    setBuildingAddress(building.buildingAddress);
+    setBuildingName(building.buildingName);
     setBuildingID(building.id);
   };
 
@@ -87,14 +88,14 @@ const Signup = ({ navigation }) => {
     } else if (!email) {
       setErrorText("Please enter your Email Address.");
       return false;
-    } else if (!password) {
+    } else if (!password || password.length < 6) {
       setErrorText("Please enter your Password, at least 6 characters.");
       return false;
     } else if (password != passwordConfirm) {
       setErrorText("Your passwords do not match.");
       return false;
-    } else if (!termsRead) {
-      setErrorText("Please read the terms & conditions.");
+    } else if (!checkboxState) {
+      setErrorText("Please accept the terms & conditions.");
       return false;
     }
     return true;
@@ -201,6 +202,26 @@ const Signup = ({ navigation }) => {
     inputLabelFilled: {
       color: styleVariables.colors.black,
     },
+    buildingInput: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    terms: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      marginVertical: 20,
+    },
+    termsLink: {
+      color: styleVariables.colors.primary,
+    },
+    signUpButtonActive: {
+      opacity: 1,
+    },
+    signUpButtonInactive: {
+      opacity: 0.5,
+    },
   });
 
   return (
@@ -283,7 +304,7 @@ const Signup = ({ navigation }) => {
               <TextInput
                 placeholderTextColor={styleVariables.colors.placeholderText}
                 keyboardType="numeric"
-                placeholder="1234"
+                placeholder="123"
                 value={unitNumber}
                 onChangeText={(text) => setUnitNumber(text)}
                 style={[
@@ -313,27 +334,37 @@ const Signup = ({ navigation }) => {
                   changeModalVisibility(true);
                 }}
               >
-                <Text
+                <View
                   style={[
                     theme.textInput,
-                    styleVariables.fontSizes.body,
+                    styles.buildingInput,
                     signupPressed && !buildingID.trim()
                       ? styles.inputFieldEmpty
                       : styles.inputFieldFilled,
-                    { color: "#00000080" },
                   ]}
                 >
-                  {buildingAddress}
-                </Text>
+                  <Text
+                    style={[
+                      styleVariables.fontSizes.body,
+                      { color: "#00000080" },
+                    ]}
+                  >
+                    {buildingAddress}
+                  </Text>
+                  <MaterialCommunityIcons
+                    name={"chevron-down"}
+                    size={20}
+                    color={"#00000080"}
+                  />
+                </View>
               </TouchableOpacity>
             </View>
-
             <Modal
               id="buildingSelectModal"
               transparent={true}
-              animationType="fade"
+              animationType="slide"
               visible={modalVisible}
-              nRequestClose={() => {
+              onRequestClose={() => {
                 changeModalVisibility(false);
               }}
             >
@@ -385,7 +416,7 @@ const Signup = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholderTextColor={styleVariables.colors.placeholderText}
-                placeholder="Minimum 8 characters"
+                placeholder="Minimum 6 characters"
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 secureTextEntry
@@ -413,7 +444,7 @@ const Signup = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholderTextColor={styleVariables.colors.placeholderText}
-                placeholder="Retype your password"
+                placeholder="Enter new password again"
                 value={passwordConfirm}
                 onChangeText={(text) => setPasswordConfirm(text)}
                 secureTextEntry
@@ -428,62 +459,25 @@ const Signup = ({ navigation }) => {
               />
             </View>
           </View>
-
-          <View id="signupCTA">
-            <TouchableOpacity onPress={handleSignup}>
-              {termsRead ? (
-                <View
-                  style={[
-                    theme.primaryButton,
-                    {
-                      marginTop: 17,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      theme.primaryButtonText,
-                      styleVariables.fontSizes.bodyBold,
-                    ]}
-                  >
-                    Sign Up
-                  </Text>
-                </View>
-              ) : (
-                <View
-                  style={[
-                    theme.primaryButton,
-                    {
-                      marginTop: 17,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      opacity: 0.5,
-                    },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      theme.primaryButtonText,
-                      styleVariables.fontSizes.bodyBold,
-                    ]}
-                  >
-                    Sign Up
-                  </Text>
-                </View>
-              )}
-            </TouchableOpacity>
-
-            <Text
-              style={[
-                styleVariables.fontSizes.callout,
-                { textAlign: "center" },
-              ]}
-            >
-              Please review our terms of use to continue
+          <View id="termsCheckbox" style={styles.terms}>
+            <BouncyCheckbox
+              size={25}
+              fillColor={styleVariables.colors.primary}
+              iconStyle={{
+                borderRadius: 4,
+                borderColor: styleVariables.colors.primary,
+                borderWidth: 2,
+              }}
+              innerIconStyle={{
+                borderRadius: 4,
+              }}
+              isChecked={checkboxState}
+              onPress={() => {
+                setCheckboxState(!checkboxState);
+              }}
+            />
+            <Text style={styleVariables.fontSizes.callout}>
+              I agree with the{" "}
             </Text>
             <TouchableOpacity
               onPress={() => {
@@ -491,17 +485,42 @@ const Signup = ({ navigation }) => {
               }}
             >
               <Text
-                style={[
-                  styleVariables.fontSizes.calloutBold,
-                  {
-                    color: styleVariables.colors.primary,
-                    marginBottom: 50,
-                    textAlign: "center",
-                  },
-                ]}
+                style={[styleVariables.fontSizes.calloutBold, styles.termsLink]}
               >
                 Terms & Conditions
               </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View
+            id="signupCTA"
+            style={[
+              checkboxState
+                ? styles.signUpButtonActive
+                : styles.signUpButtonInactive,
+            ]}
+          >
+            <TouchableOpacity onPress={handleSignup}>
+              <View
+                style={[
+                  theme.primaryButton,
+                  {
+                    marginTop: 17,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    theme.primaryButtonText,
+                    styleVariables.fontSizes.bodyBold,
+                  ]}
+                >
+                  Sign Up
+                </Text>
+              </View>
             </TouchableOpacity>
           </View>
         </ScrollView>
