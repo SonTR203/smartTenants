@@ -1,7 +1,6 @@
 import React from "react";
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
 import { useTheme } from "../ThemeContext";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 function ScreenHeader({ title }) {
   const { theme, styleVariables } = useTheme();
@@ -12,15 +11,12 @@ function ScreenHeader({ title }) {
   });
 
   return (
-    <SafeAreaView id="header" style={theme.header}>
+    <View id="header" style={theme.header}>
       {/* headerPageTitle */}
-      <Text
-        id="headerPageTitle"
-        style={[styleVariables.fontSizes.header, styles.headerPageTitle]}
-      >
+      <Text style={[styleVariables.fontSizes.header, styles.headerPageTitle]}>
         {title}
       </Text>
-    </SafeAreaView>
+    </View>
   );
 }
 
