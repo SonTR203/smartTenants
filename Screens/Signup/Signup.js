@@ -22,10 +22,10 @@ import ModalPicker from "../../components/ModalBuildingPicker";
 import { useTheme } from "../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { uploadExpoPushToken } from "../../utils/firebase.services";
-import * as Progress from "react-native-progress";
 import ErrorArea from "../../components/SignUp/ErrorArea";
 import { useAppContext } from "../../Context/AppContext";
 import { getRandomGradientColor } from "../../utils/Profile/profile.services";
+import LoadingIndicator from "../../components/LoadingIndicator";
 
 const auth = getAuth();
 
@@ -205,6 +205,7 @@ const Signup = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: "white" }}>
+      <LoadingIndicator visible={loading} />
       <KeyboardAvoidingView behavior="padding">
         <ScrollView
           ref={scrollViewRef}
@@ -450,17 +451,6 @@ const Signup = ({ navigation }) => {
                   >
                     Sign Up
                   </Text>
-                  {loading && (
-                    <Progress.CircleSnail
-                      style={{
-                        marginLeft: 17,
-                      }}
-                      strokeCap="square"
-                      thickness={2.2}
-                      size={20}
-                      color={"white"}
-                    />
-                  )}
                 </View>
               ) : (
                 <View
@@ -483,17 +473,6 @@ const Signup = ({ navigation }) => {
                   >
                     Sign Up
                   </Text>
-                  {loading && (
-                    <Progress.CircleSnail
-                      style={{
-                        marginLeft: 17,
-                      }}
-                      strokeCap="square"
-                      thickness={2.2}
-                      size={20}
-                      color={"white"}
-                    />
-                  )}
                 </View>
               )}
             </TouchableOpacity>
