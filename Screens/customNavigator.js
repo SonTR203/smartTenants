@@ -1,6 +1,6 @@
 //mix tab and stack navigators: https://www.youtube.com/watch?v=dkriklWelm0&t=139s
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Newsfeed from "./Newsfeed/Newsfeed";
 import BuildingInfo from "./BuildingInfo/BuildingInfo";
@@ -29,6 +29,7 @@ import MessagesListScreen from "./Messaging/MessagesListScreen";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getItemById, uploadExpoPushToken } from "../utils/firebase.services";
 import TermsAndConditions from "./TermsAndConditions/TermsAndConditions";
+import Splashscreen from "./Splashscreen/Splashscreen";
 
 const Stack = createStackNavigator();
 
@@ -115,6 +116,13 @@ const MarketplaceNavigator = () => {
 
 const NewsfeedNavigator = () => {
   const { post, currentUser, setCurrentUser } = useAppContext();
+  const [loginStatus, setLoginStatus] = useState(false);
+  const [splashscreenVisible, setSplashScreenVisible] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setSplashScreenVisible(false), 2000);
+    return () => clearTimeout(timeout);
+  }, []);
 
   useEffect(() => {
     const auth = getAuth();
@@ -135,6 +143,7 @@ const NewsfeedNavigator = () => {
         console.log("user is not logged in");
         setCurrentUser({});
       }
+      setLoginStatus(true);
     });
 
     return () => {
@@ -144,7 +153,13 @@ const NewsfeedNavigator = () => {
 
   return (
     <Stack.Navigator>
-      {currentUser && currentUser.tenantAuthorized ? (
+      {!loginStatus || splashscreenVisible ? (
+        <Stack.Screen
+          name="Splashscreen"
+          component={Splashscreen}
+          options={{ headerShown: false }}
+        />
+      ) : currentUser && currentUser.tenantAuthorized ? (
         <>
           <Stack.Screen
             name="Newsfeed"
