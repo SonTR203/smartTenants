@@ -51,6 +51,8 @@ function App() {
   const navigationRef = useNavigationContainerRef();
 
   const [post, setPost] = useState({});
+  const [announcements, setAnnouncements] = useState(0);
+  const [notices, setNotices] = useState(0);
   const [currentUser, setCurrentUser] = useState({});
   const [notifications, setNotifications] = useState({});
   const [unauthorizedUsers, setUnauthorizedUsers] = useState({});
@@ -81,6 +83,10 @@ function App() {
     setMarketplaceBadges,
     notificationBadges,
     setNotificationBadges,
+    announcements,
+    setAnnouncements,
+    notices,
+    setNotices,
   };
 
   useEffect(() => {

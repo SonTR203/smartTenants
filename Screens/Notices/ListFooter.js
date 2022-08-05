@@ -4,24 +4,20 @@ import { StyleSheet, View, Text } from "react-native";
 function ListFooter({ styleVariables }) {
   const styles = StyleSheet.create({
     container: {
-      height: 102,
-      paddingVertical: 17,
-      paddingHorizontal: 34,
+      paddingVertical: 24,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
     },
     callOut: {
-      color: styleVariables.colors.black,
-      opacity: 0.66,
-      paddingBottom: 17,
+      color: styleVariables.colors.listFooterText,
     },
   });
 
   return (
     <View style={styles.container}>
       <Text style={[styleVariables.fontSizes.callout, styles.callOut]}>
-        You have no further notices.
+        There are no more notices :)
       </Text>
     </View>
   );

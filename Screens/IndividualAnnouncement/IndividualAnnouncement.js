@@ -1,39 +1,39 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, Image, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 function IndividualAnnouncement({ route }) {
-  const { content, timestamp, attatchment, theme, styleVariables, styles } =
+  const { content, timestamp, attatchment, styleVariables, styles } =
     route.params;
 
   return (
-    <SafeAreaView>
-      <StatusBar style="dark" />
+    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <StatusBar style="light" />
 
-      <View id="announcement" style={theme.cardContainer}>
-        {/* ownerInfo */}
-        <View id="announcementInfo" style={styles.announcementInfo}>
-          <View className="imageAndName" style={styles.imageAndName}>
-            <Image
-              source={require("../../assets/icon.png")}
-              style={styles.profileIcon}
-            />
+      {/* ownerInfo */}
+      <View style={styles.announcementInfo}>
+        {/* Smart Living Properties Profile Picture */}
+        <Image
+          source={require("../../assets/icon.png")}
+          style={styles.profileIcon}
+        />
+        {/* name container */}
+        <View style={styles.individualNameContainer}>
+          <View style={styles.name}>
             <Text
               style={[styleVariables.fontSizes.bodyBold, styles.profileName]}
             >
               Smart Living Properties
             </Text>
           </View>
-          <Text
-            id="timePosted"
-            style={[styleVariables.fontSizes.callout, styles.timestampText]}
-          >
+          <Text id="timePosted" style={[styleVariables.fontSizes.callout]}>
             {timestamp}
           </Text>
         </View>
+      </View>
 
-        {/* announcement content */}
+      {/* announcement content */}
+      <View>
         <View className="announcementTextContent">
           <Text
             style={[styleVariables.fontSizes.body, styles.announcementContent]}
@@ -50,7 +50,7 @@ function IndividualAnnouncement({ route }) {
           />
         )}
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 }
 

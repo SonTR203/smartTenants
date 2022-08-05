@@ -1,85 +1,74 @@
 import React from "react";
-import { StyleSheet, View, Text, Pressable, Platform } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { StyleSheet, View, Text, Pressable } from "react-native";
+import ChevronRightSVG from "../../components/Icons/ChevronRightSVG";
+import { useAppContext } from "../../Context/AppContext";
 
-function ListHeader({
-  styleVariables,
-  theme,
-  navigation,
-  noticeCount,
-  announcementCount,
-}) {
+function ListHeader({ styleVariables, theme, navigation }) {
+  const { notices, announcements } = useAppContext();
   const styles = StyleSheet.create({
-    container: { flex: 1 },
-    topCard: { elevation: Platform.OS === "android" ? 0 : 20 },
-    cardButton: { marginTop: 17, marginBottom: 17 },
-    cardButtonBottom: { marginTop: 0, marginBottom: 17 },
     dividerContainer: { width: "100%", alignItems: "center" },
     divider: {
       height: 1.5,
-      width: "66%",
-      backgroundColor: styleVariables.colors.primary,
-      opacity: 0.33,
-      borderRadius: 99,
-      marginBottom: 17,
+      width: "50%",
+      backgroundColor: "#B0BFC2",
+      opacity: 1,
+      marginBottom: 16,
+    },
+    marginTop: {
+      marginTop: 16,
     },
   });
 
+  const handlePressAnnouncements = () => {
+    navigation.navigate("Announcements", {
+      announcementId: null,
+    });
+  };
+
+  const handlePressNotices = () => {
+    navigation.navigate("Notices", {
+      noticeId: null,
+    });
+  };
+
   return (
-    <View style={styles.container}>
+    <View>
       {/* announcements */}
-      <View style={theme.firstListItem}>
-        <View id="topCard" style={[theme.topCard, styles.topCard]}>
-          <Pressable
-            id="announcements"
-            onPress={() => {
-              navigation.navigate("Announcements", {
-                announcementId: null,
-              });
-            }}
-            style={[theme.cardButton, styles.cardButton]}
+      <View style={styles.marginTop}>
+        <Pressable onPress={handlePressAnnouncements} style={theme.cardButton}>
+          <Text
+            style={[
+              styleVariables.fontSizes.title,
+              { color: styleVariables.colors.primary },
+            ]}
           >
-            <Text
-              style={[
-                styleVariables.fontSizes.title,
-                { color: styleVariables.colors.primary },
-              ]}
-            >
-              Announcements
-            </Text>
-            <View id="counter" style={theme.counter}>
-              {announcementCount > 0 && (
+            Announcements
+          </Text>
+          <View id="counter" style={theme.counter}>
+            {announcements > 0 && (
+              <View style={theme.notificationCounter}>
                 <Text
                   id="notificationCounter"
                   style={[
-                    theme.notificationCounter,
                     styleVariables.fontSizes.callout,
                     { color: styleVariables.colors.white },
                   ]}
                 >
-                  {announcementCount}
+                  {announcements}
                 </Text>
-              )}
-              <MaterialCommunityIcons
-                name="chevron-right"
-                size={24}
-                color={styleVariables.colors.primary}
-              />
-            </View>
-          </Pressable>
-        </View>
+              </View>
+            )}
+            <ChevronRightSVG stroke="#395E66" />
+          </View>
+        </Pressable>
       </View>
 
       {/* notices */}
       <View id="secondTopCard">
         <Pressable
           id="notices"
-          onPress={() => {
-            navigation.navigate("Notices", {
-              noticeId: null,
-            });
-          }}
-          style={[theme.cardButton, styles.cardButtonBottom]}
+          onPress={handlePressNotices}
+          style={theme.cardButton}
         >
           <Text
             style={[
@@ -90,23 +79,20 @@ function ListHeader({
             Notices
           </Text>
           <View id="counter" style={theme.counter}>
-            {noticeCount > 0 && (
-              <Text
-                id="notificationCounter"
-                style={[
-                  theme.notificationCounter,
-                  styleVariables.fontSizes.callout,
-                  { color: styleVariables.colors.white },
-                ]}
-              >
-                {noticeCount}
-              </Text>
+            {notices > 0 && (
+              <View style={theme.notificationCounter}>
+                <Text
+                  id="notificationCounter"
+                  style={[
+                    styleVariables.fontSizes.callout,
+                    { color: styleVariables.colors.white },
+                  ]}
+                >
+                  {notices}
+                </Text>
+              </View>
             )}
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={24}
-              color={styleVariables.colors.primary}
-            />
+            <ChevronRightSVG stroke="#395E66" />
           </View>
         </Pressable>
       </View>

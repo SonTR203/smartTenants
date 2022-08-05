@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppContext } from "../../Context/AppContext";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { db } from "../../firebase-config";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { setTime } from "../../utils/setTime";
+import ChevronRightSVG from "../../components/Icons/ChevronRightSVG";
 
 function NotificationItem({
   notifications,
@@ -84,61 +84,60 @@ function NotificationItem({
   return (
     <TouchableOpacity
       // navigate to post page on press
-      id="post"
       disabled={notifications.postID == "" ? true : false}
       onPress={handleViewNotifications}
-      style={[theme.cardButton, styles(styleVariables).container]}
+      style={[theme.cardButton, styles.container]}
     >
       <View id="notificationContent">
-        <View
-          id="timeStamp-readState"
-          style={styles(styleVariables).timestampContainer}
-        >
-          <Text
-            style={[
-              styleVariables.fontSizes.callout,
-              styles(styleVariables).timestampText,
-            ]}
-          >
+        <View id="timeStamp-readState" style={styles.timestampContainer}>
+          <Text style={[styleVariables.fontSizes.callout]}>
             {timeSincePost}
           </Text>
           {notificationBadges.unseen.includes(notifications.id) && (
             <View
               id="notificationIndice"
-              style={styles(styleVariables).notificationIndice}
+              style={styles.notificationIndice(styleVariables)}
             />
           )}
         </View>
-        <Text>{notifications.content}</Text>
+        <Text style={styles.headerText}>
+          {notifications.header ? (
+            <Text style={styles.fontFamily}>{notifications.header} </Text>
+          ) : null}
+          {notifications.content}
+        </Text>
       </View>
 
-      <MaterialCommunityIcons
-        name="chevron-right"
-        size={24}
-        color={styleVariables.colors.primary}
-        style={styles(styleVariables).chevron}
-      />
+      {!notifications.postID == "" ? (
+        <ChevronRightSVG stroke="#D2D2D2" />
+      ) : null}
     </TouchableOpacity>
   );
 }
-
-const styles = (styleVariables) =>
-  StyleSheet.create({
-    container: { marginTop: 0, marginBottom: 17 },
-    timestampContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: 8,
-    },
-    timestampText: { opacity: 0.66 },
-    notificationIndice: {
-      height: 8,
-      width: 8,
-      backgroundColor: styleVariables.colors.primary,
-      borderRadius: 99,
-      marginLeft: 8,
-    },
-    chevron: { opacity: 0.33 },
-  });
+const styles = StyleSheet.create({
+  container: { marginTop: 0, marginBottom: 16 },
+  timestampContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  notificationIndice: (styleVariables) => ({
+    height: 8,
+    width: 8,
+    backgroundColor: styleVariables.colors.notificationBadge,
+    borderRadius: 99,
+    marginLeft: 8,
+  }),
+  headerText: {
+    fontSize: 17,
+    lineHeight: 22,
+    color: "#4D4D4D",
+    fontFamily: "Roboto_400Regular",
+    paddingRight: 21,
+  },
+  fontFamily: {
+    fontFamily: "Roboto_500Medium",
+  },
+});
 
 export default NotificationItem;
