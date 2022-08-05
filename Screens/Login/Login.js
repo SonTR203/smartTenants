@@ -9,6 +9,8 @@ import {
   Image,
   Linking,
   Alert,
+  StyleSheet,
+  Keyboard,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { collection, getDocs, addDoc, Timestamp } from "@firebase/firestore";
@@ -25,6 +27,7 @@ const Login = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   // clear the text inputs when the screen is navigated to
   useEffect(() => {
@@ -33,6 +36,20 @@ const Login = ({ navigation, route }) => {
       setPassword("");
     }
   }, [route.params]);
+
+  useEffect(() => {
+    const showKeyboard = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardOpen(true);
+    });
+    const hideKeyboard = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardOpen(false);
+    });
+
+    return () => {
+      showKeyboard.remove();
+      hideKeyboard.remove();
+    };
+  }, []);
 
   /* This function logs the user to the application only if he/she * is registered on Firebase as an authenticated registered user.
    * inputs: none
@@ -97,6 +114,18 @@ const Login = ({ navigation, route }) => {
     }
   };
 
+  const styles = StyleSheet.create({
+    buttonActive: {
+      opacity: 1,
+    },
+    buttonInactive: {
+      opacity: 0.5,
+    },
+    logoShrunk: {
+      transform: [{ scale: 0.5 }],
+    },
+  });
+
   return (
     <SafeAreaView style={{ backgroundColor: styleVariables.colors.white }}>
       <View style={theme.pageContainer}>
@@ -109,11 +138,14 @@ const Login = ({ navigation, route }) => {
           <View style={[theme.container, {}]}>
             <Image
               source={require("../../assets/SmartLiving_Logo.png")}
-              style={{
-                width: 187,
-                height: 111,
-                margin: "auto",
-              }}
+              style={[
+                {
+                  width: 187,
+                  height: 111,
+                  margin: "auto",
+                },
+                keyboardOpen && styles.logoShrunk,
+              ]}
               resizeMode="contain"
             />
           </View>
@@ -153,7 +185,10 @@ const Login = ({ navigation, route }) => {
             {/* forgotPassword */}
             <View
               id="forgotPassword"
-              style={[theme.container, { alignItems: "flex-end" }]}
+              style={[
+                theme.container,
+                { alignItems: "flex-start", marginBottom: 32 },
+              ]}
             >
               <TouchableOpacity
                 onPress={() => {
@@ -162,11 +197,9 @@ const Login = ({ navigation, route }) => {
               >
                 <Text
                   style={[
-                    styleVariables.fontSizes.callout,
+                    styleVariables.fontSizes.calloutBold,
                     {
                       color: styleVariables.colors.primary,
-                      opacity: 0.66,
-                      marginBottom: 8,
                     },
                   ]}
                 >
@@ -176,36 +209,42 @@ const Login = ({ navigation, route }) => {
             </View>
 
             {/* loginButton */}
-            <TouchableOpacity
-              id="loginButton"
-              onPress={handleLogin}
+            <View
               style={[
-                theme.primaryButton,
-                {
-                  flexDirection: "row",
-                },
+                email && password ? styles.buttonActive : styles.buttonInactive,
               ]}
             >
-              <Text
+              <TouchableOpacity
+                id="loginButton"
+                onPress={handleLogin}
                 style={[
-                  theme.primaryButtonText,
-                  styleVariables.fontSizes.bodyBold,
+                  theme.primaryButton,
+                  {
+                    flexDirection: "row",
+                  },
                 ]}
               >
-                Login
-              </Text>
-              {loading && (
-                <Progress.CircleSnail
-                  style={{
-                    marginLeft: 17,
-                  }}
-                  strokeCap="square"
-                  thickness={2.2}
-                  size={20}
-                  color={"white"}
-                />
-              )}
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    theme.primaryButtonText,
+                    styleVariables.fontSizes.bodyBold,
+                  ]}
+                >
+                  Sign In
+                </Text>
+                {loading && (
+                  <Progress.CircleSnail
+                    style={{
+                      marginLeft: 17,
+                    }}
+                    strokeCap="square"
+                    thickness={2.2}
+                    size={20}
+                    color={"white"}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
 
             {/* no account CTA */}
             <View

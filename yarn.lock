@@ -11575,6 +11575,11 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.1.0.tgz#61aaed3096d30eacf2a2127118b5b41387d32a67"
   integrity sha512-Fl7FuabXsJnV5Q1qIOQwx/sagGF18kogb4gpfcG4gjLBWO0WDiiz1ko/ExayuxE7InyQkBLkxRFG5oxY6Uu3Kg==
 
+react-native-bouncy-checkbox@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-bouncy-checkbox/-/react-native-bouncy-checkbox-3.0.2.tgz#f0582db65155e06ccfa9f40f78806672dd892da5"
+  integrity sha512-OaldnDzfnATaT7v08C+vAoywfTZmUaiX5qT/GlWGJiFNMVQOuFFGYlWDhgDg52BGSRbPGlSgwKW3BMB9ubapZA==
+
 react-native-codegen@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/react-native-codegen/-/react-native-codegen-0.0.6.tgz#b3173faa879cf71bfade8d030f9c4698388f6909"

@@ -66,7 +66,6 @@ function App() {
     unseen: [],
     list: [],
   });
-  const [termsRead, setTermsRead] = useState(false);
   const states = {
     post,
     setPost,
@@ -84,8 +83,6 @@ function App() {
     setMarketplaceBadges,
     notificationBadges,
     setNotificationBadges,
-    termsRead,
-    setTermsRead,
     announcements,
     setAnnouncements,
     notices,

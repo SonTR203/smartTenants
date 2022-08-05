@@ -1,23 +1,9 @@
 import React from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useTheme } from "../../ThemeContext";
-import { useAppContext } from "../../Context/AppContext";
 
 function TermsAndConditions({ navigation }) {
   const { theme, styleVariables } = useTheme();
-  const { termsRead, setTermsRead } = useAppContext();
-
-  const hasReachedBottom = ({
-    layoutMeasurement,
-    contentOffset,
-    contentSize,
-  }) => {
-    const bottomPadding = 30;
-    return (
-      layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - bottomPadding
-    );
-  };
 
   return (
     <View
@@ -26,15 +12,7 @@ function TermsAndConditions({ navigation }) {
         { flex: 1, backgroundColor: styleVariables.colors.white },
       ]}
     >
-      <ScrollView
-        onScroll={({ nativeEvent }) => {
-          if (hasReachedBottom(nativeEvent) && !termsRead) {
-            console.log("user has reached bottom of page");
-            setTermsRead(true);
-          }
-        }}
-        scrollEventThrottle={400}
-      >
+      <ScrollView>
         <Text style={[styleVariables.fontSizes.header, { marginBottom: 20 }]}>
           Lorem Ipsum
         </Text>
@@ -74,60 +52,33 @@ function TermsAndConditions({ navigation }) {
           pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum.
         </Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Signup");
-          }}
-          style={{
-            paddingBottom: 30,
-          }}
-        >
-          {termsRead ? (
-            <View
-              style={[
-                theme.primaryButton,
-                {
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styleVariables.fontSizes.bodyBold,
-                  theme.primaryButtonText,
-                ]}
-              >
-                I Understand
-              </Text>
-            </View>
-          ) : (
-            <View
-              style={[
-                theme.primaryButton,
-                {
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  opacity: 0.5,
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styleVariables.fontSizes.bodyBold,
-                  theme.primaryButtonText,
-                ]}
-              >
-                I Understand
-              </Text>
-            </View>
-          )}
-        </TouchableOpacity>
       </ScrollView>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Signup");
+        }}
+        style={{
+          paddingBottom: 34,
+        }}
+      >
+        <View
+          style={[
+            theme.primaryButton,
+            {
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          ]}
+        >
+          <Text
+            style={[styleVariables.fontSizes.bodyBold, theme.primaryButtonText]}
+          >
+            I Understand
+          </Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
