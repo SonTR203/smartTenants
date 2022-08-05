@@ -216,9 +216,7 @@ export const handleSignIn = async (email, password) => {
         console.log("Signed in with email:", userCredentials.user.email);
         return userCredentials.user.uid;
       })
-      .catch((error) => {
-        const alertText = handleFirebaseAuthenticationError(error);
-        alert(alertText);
+      .catch(() => {
         return undefined;
       });
     return uid;

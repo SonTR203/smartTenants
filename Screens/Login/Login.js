@@ -19,6 +19,7 @@ import { db } from "../../firebase-config";
 import { getItemById, handleSignIn } from "../../utils/firebase.services";
 import { getAuth, signOut } from "firebase/auth";
 import LoadingIndicator from "../../components/LoadingIndicator";
+import ErrorArea from "../../components/SignUp/ErrorArea";
 
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation, route }) => {
@@ -28,6 +29,7 @@ const Login = ({ navigation, route }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [errorText, setErrorText] = useState("");
 
   // clear the text inputs when the screen is navigated to
   useEffect(() => {
@@ -62,6 +64,7 @@ const Login = ({ navigation, route }) => {
       findUser(userUID);
     } else {
       setLoading(false);
+      setErrorText("Wrong email or password.");
     }
   };
 
@@ -150,8 +153,10 @@ const Login = ({ navigation, route }) => {
               resizeMode="contain"
             />
           </View>
+          {/* Error Message */}
 
           <View id="LoginContainer" style={theme.globalMargins}>
+            <ErrorArea errorText={errorText} />
             {/* textInput */}
             <View id="emailInput">
               <Text
@@ -193,6 +198,7 @@ const Login = ({ navigation, route }) => {
             >
               <TouchableOpacity
                 onPress={() => {
+                  setErrorText("");
                   navigation.navigate("ForgotPassword");
                 }}
               >
@@ -254,6 +260,7 @@ const Login = ({ navigation, route }) => {
               </Text>
               <TouchableOpacity
                 onPress={() => {
+                  setErrorText("");
                   navigation.navigate("Signup");
                 }}
               >
