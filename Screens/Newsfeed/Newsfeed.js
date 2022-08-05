@@ -1,41 +1,21 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
-import {
-  constants,
-  refreshDelay,
-  refreshingHeight,
-} from "../../utils/constants";
+import { constants, refreshDelay } from "../../utils/constants";
 import Post from "./Post";
 import ListFooter from "./ListFooter";
 import { wait } from "../../utils/wait";
 import { getPosts } from "../../utils/Newsfeed/newsfeed.services";
 import Fab from "../../components/Fab";
 import EmptyListComponent from "../../components/EmptyListComponent";
-import LoadingIndicator from "../../components/LoadingIndicator";
+import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 
 const Newsfeed = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(true);
-  const [offsetY, setOffsetY] = useState(0);
-
-  function onScroll(event) {
-    const { nativeEvent } = event;
-    const { contentOffset } = nativeEvent;
-    const { y } = contentOffset;
-    setOffsetY(y);
-  }
-
-  function onRelease() {
-    // offsetY must be less than the refreshing height
-    // to trigger refresh
-    if (offsetY <= -refreshingHeight && !refreshing) {
-      onRefresh();
-    }
-  }
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -50,21 +30,19 @@ const Newsfeed = ({ navigation, route }) => {
     newsfeedContainer: {
       flex: 1,
       backgroundColor: styleVariables.colors.primary,
-      overflow: "hidden",
     },
     flatlist: {
       flex: 1,
 
       borderTopLeftRadius: 27,
       borderTopRightRadius: 27,
-      backgroundColor: styleVariables.colors.white,
+      backgroundColor: "transparent",
     },
     flatListContainer: {
       flex: 1,
       borderTopLeftRadius: 27,
       borderTopRightRadius: 27,
-      overflow: "hidden",
-      backgroundColor: styleVariables.colors.primary,
+      backgroundColor: "white",
     },
   });
 
@@ -110,8 +88,8 @@ const Newsfeed = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
-      <LoadingIndicator visible={refreshing} />
       <View style={styles.flatListContainer}>
+        <FlatListRefreshControl refreshing={refreshing} />
         <FlatList
           removeClippedSubviews={true}
           initialNumToRender={3}
@@ -122,8 +100,15 @@ const Newsfeed = ({ navigation, route }) => {
           renderItem={callBackRender}
           ListEmptyComponent={renderEmpty}
           ListFooterComponent={renderListFooter}
-          onScroll={onScroll}
-          onResponderRelease={onRelease}
+          refreshControl={
+            <RefreshControl
+              tintColor="transparent"
+              colors={["transparent"]}
+              style={{ backgroundColor: "transparent" }}
+              onRefresh={onRefresh}
+              refreshing={refreshing}
+            />
+          }
         />
       </View>
 

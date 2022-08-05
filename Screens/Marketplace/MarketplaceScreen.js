@@ -3,9 +3,9 @@ import {
   View,
   FlatList,
   StyleSheet,
-  ActivityIndicator,
   TouchableOpacity,
   Text,
+  RefreshControl,
 } from "react-native";
 import { wait } from "../../utils/wait";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -19,31 +19,14 @@ import { getMarketplaceItems } from "../../utils/firebase.services";
 import { useAppContext } from "../../Context/AppContext";
 import { Entypo } from "@expo/vector-icons";
 import EmptyListComponent from "../../components/EmptyListComponent";
-import LoadingIndicator from "../../components/LoadingIndicator";
-import { refreshDelay, refreshingHeight } from "../../utils/constants";
+import { refreshDelay } from "../../utils/constants";
+import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
   const { currentUser, marketplaceBadges } = useAppContext();
-
-  const [offsetY, setOffsetY] = useState(0);
-
-  function onScroll(event) {
-    const { nativeEvent } = event;
-    const { contentOffset } = nativeEvent;
-    const { y } = contentOffset;
-    setOffsetY(y);
-  }
-
-  function onRelease() {
-    // offsetY must be less than the refreshing height
-    // to trigger refresh
-    if (offsetY <= -refreshingHeight && !refreshing) {
-      onRefresh();
-    }
-  }
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -195,31 +178,36 @@ const MarketplaceScreen = ({ navigation, route }) => {
     // CONTAINER
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
-      <LoadingIndicator visible={refreshing} />
 
       {/* ITEM LIST  */}
       <View style={styles.flatListContainer}>
         {itemList ? (
-          <FlatList
-            ListEmptyComponent={renderEmpty}
-            removeClippedSubviews={true}
-            initialNumToRender={3}
-            style={styles.flatlist}
-            data={itemList.slice(1)} // remove first item from list, put first item in Header
-            numColumns={2}
-            keyExtractor={(item, index) => item + index}
-            ListHeaderComponent={renderListHeader}
-            renderItem={renderMarketplaceItems}
-            ListFooterComponent={renderListFooter}
-            onScroll={onScroll}
-            onResponderRelease={onRelease}
-          />
+          <>
+            <FlatListRefreshControl refreshing={refreshing} />
+            <FlatList
+              ListEmptyComponent={renderEmpty}
+              removeClippedSubviews={true}
+              initialNumToRender={3}
+              style={styles.flatlist}
+              data={itemList.slice(1)} // remove first item from list, put first item in Header
+              numColumns={2}
+              keyExtractor={(item, index) => item + index}
+              ListHeaderComponent={renderListHeader}
+              renderItem={renderMarketplaceItems}
+              ListFooterComponent={renderListFooter}
+              refreshControl={
+                <RefreshControl
+                  tintColor="transparent"
+                  colors={["transparent"]}
+                  style={{ backgroundColor: "transparent" }}
+                  onRefresh={onRefresh}
+                  refreshing={refreshing}
+                />
+              }
+            />
+          </>
         ) : (
-          <ActivityIndicator
-            style={styles.loader}
-            size="large"
-            color={styleVariables.colors.primary}
-          />
+          <FlatListRefreshControl refreshing={refreshing} />
         )}
       </View>
 
