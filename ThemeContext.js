@@ -23,16 +23,62 @@ let styleVariables = {
     white: "#FFF",
     black: "#191919",
     placeholderText: "rgba(157, 157, 157, 1)",
+    listFooterText: "rgba(176, 191, 194, 1)",
+    notificationBadge: "#E84855",
+    imageLoading: "#EDEDED",
+  },
+  shadow: {
+    shadowColor: "#4D4D4D", // color: #4D4D4D
+    shadowOffset: {
+      // no offset x, y
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.15, // opacity: 0.15
+    shadowRadius: 24, // radius: 24
+    elevation: 5, // elevation: 5
+
+    // the code above should be similar to the box shadow of
+    //box-shadow: 0px 0px 24px rgba(77, 77, 77, 0.15);
   },
   fontSizes: {
-    hero: { fontSize: 40, fontFamily: "Roboto_400Regular" },
-    header: { fontSize: 34, fontFamily: "Roboto_500Medium" },
-    secondaryHeader: { fontSize: 28, fontFamily: "Roboto_500Medium" },
-    title: { fontSize: 22, fontFamily: "Roboto_500Medium" },
-    body: { fontSize: 17, fontFamily: "Roboto_400Regular" },
-    bodyBold: { fontSize: 17, fontFamily: "Roboto_500Medium" },
-    callout: { fontSize: 15, fontFamily: "Roboto_400Regular" },
-    calloutBold: { fontSize: 15, fontFamily: "Roboto_500Medium" },
+    header: {
+      fontSize: 34,
+      fontFamily: "Roboto_500Medium",
+      lineHeight: 41, //added line height
+    },
+    secondaryHeader: {
+      fontSize: 28,
+      fontFamily: "Roboto_500Medium",
+      lineHeight: 34, //added line height
+    },
+    title: {
+      fontSize: 22,
+      fontFamily: "Roboto_500Medium",
+      lineHeight: 28, //added line height
+    },
+    body: {
+      fontSize: 17,
+      fontFamily: "Roboto_400Regular",
+      lineHeight: 22, //added line height
+    },
+    bodyBold: {
+      fontSize: 17,
+      fontFamily: "Roboto_500Medium",
+      lineHeight: 22, //added line height
+    },
+    callout: {
+      fontSize: 15,
+      fontFamily: "Roboto_400Regular",
+      opacity: 1,
+      color: "#9D9D9D",
+      lineHeight: 20, //added line height
+    },
+    calloutBold: {
+      fontSize: 15,
+      fontFamily: "Roboto_500Medium",
+      lineHeight: 20, //added line height
+    },
   },
 };
 
@@ -56,29 +102,10 @@ const theme = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     backgroundColor: styleVariables.colors.primary,
-    paddingHorizontal: 17,
-    minHeight: 98,
-  },
-  firstListItem: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    backgroundColor: styleVariables.colors.primary,
-  },
-  topCard: {
-    backgroundColor: styleVariables.colors.white,
-    width: "100%",
-    // borderTopLeftRadius: 27,
-    // borderTopRightRadius: 27,
-    // shadowColor: styleVariables.colors.black,
-    // shadowOffset: {
-    //   width: 0,
-    //   height: -34,
-    // },
-    // shadowOpacity: 0.14,
-    // shadowRadius: 17,
-    // elevation: 20,
+    paddingHorizontal: 16,
+    paddingTop: 30,
+    // minHeight: 98,
+    //
   },
   card: {
     display: "flex",
@@ -87,14 +114,6 @@ const theme = StyleSheet.create({
     backgroundColor: styleVariables.colors.white,
     padding: 17,
     borderRadius: 24,
-    shadowColor: styleVariables.colors.primary,
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.14,
-    shadowRadius: 34,
-    elevation: 20,
   },
   cardContainer: {
     display: "flex",
@@ -105,27 +124,13 @@ const theme = StyleSheet.create({
     marginHorizontal: 17,
     marginTop: 17,
     borderRadius: 24,
-    shadowColor: styleVariables.colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.14,
-    shadowRadius: 34,
-    elevation: 20,
+    ...styleVariables.shadow,
   },
   marketplaceItemContainer: {
     backgroundColor: styleVariables.colors.white,
     marginBottom: 17,
     borderRadius: 24,
-    shadowColor: styleVariables.colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.14,
-    shadowRadius: 34,
-    elevation: 20,
+    ...styleVariables.shadow,
   },
   modalView: {
     width: windowWidth - 34,
@@ -253,24 +258,17 @@ const theme = StyleSheet.create({
     color: styleVariables.colors.primary,
   },
   cardButton: {
-    display: "flex",
-    alignItems: "center",
     justifyContent: "space-between",
+    alignItems: "center",
     flexDirection: "row",
     backgroundColor: "white",
-    minHeight: 66,
-    margin: 17,
-    marginTop: 0,
-    padding: 22,
-    borderRadius: 24,
-    shadowColor: styleVariables.colors.primary,
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.14,
-    shadowRadius: 34,
-    elevation: 20,
+    marginLeft: 16,
+    marginRight: 16,
+    marginBottom: 16,
+    padding: 16,
+    borderRadius: 16,
+
+    ...styleVariables.shadow,
   },
   counter: {
     display: "flex",
@@ -279,12 +277,11 @@ const theme = StyleSheet.create({
     flexDirection: "row",
   },
   notificationCounter: {
-    padding: 5,
-    paddingHorizontal: 10,
+    paddingVertical: 2,
+    paddingHorizontal: 8,
     backgroundColor: styleVariables.colors.primary,
-    borderRadius: 14,
-    marginRight: 8,
-    overflow: "hidden",
+    borderRadius: 20,
+    marginRight: 14,
   },
   stackHeader: {
     display: "flex",

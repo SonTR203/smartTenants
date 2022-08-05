@@ -16,12 +16,11 @@ import _ from "lodash";
 
 const Notifications = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
-  const { currentUser, notificationBadges } = useAppContext();
+  const { currentUser, notificationBadges, setNotices, setAnnouncements } =
+    useAppContext();
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
   const [refreshing, setRefreshing] = useState(true);
-  const [noticeCount, setNoticeCount] = useState(0);
-  const [announcementCount, setAnnouncementCount] = useState(0);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -54,11 +53,11 @@ const Notifications = ({ navigation }) => {
 
   async function fetchNoticeCount() {
     const count = await getNoticeCount(currentUser);
-    setNoticeCount(count);
+    setNotices(count);
   }
   async function fetchAnnouncementCount() {
     const count = await getAnnouncementCount(currentUser);
-    setAnnouncementCount(count);
+    setAnnouncements(count);
   }
 
   const callBackRender = useCallback(
@@ -79,31 +78,26 @@ const Notifications = ({ navigation }) => {
     );
   };
 
+  const renderAnnouncementsAndNotices = () => {
+    return (
+      <ListHeader
+        styleVariables={styleVariables}
+        theme={theme}
+        navigation={navigation}
+      />
+    );
+  };
+
+  const renderListEnd = () => {
+    return <ListFooter styleVariables={styleVariables} theme={theme} />;
+  };
+
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: styleVariables.colors.primary }}
-      edges={["top"]}
-    >
+    <SafeAreaView style={styles.safeareaview(styleVariables)} edges={["top"]}>
       <StatusBar style="light" />
-      <View
-        style={{
-          flex: 1,
-          borderTopLeftRadius: 27,
-          borderTopRightRadius: 27,
-          overflow: "hidden",
-          backgroundColor: styleVariables.colors.white,
-        }}
-      >
+      <View style={styles.container}>
         <FlatList
-          ListHeaderComponent={
-            <ListHeader
-              styleVariables={styleVariables}
-              theme={theme}
-              navigation={navigation}
-              announcementCount={announcementCount}
-              noticeCount={noticeCount}
-            />
-          }
+          ListHeaderComponent={renderAnnouncementsAndNotices}
           style={styles.flatlist}
           contentContainerStyle={styles.flatListContainer}
           data={notifications}
@@ -117,9 +111,7 @@ const Notifications = ({ navigation }) => {
             />
           }
           keyExtractor={(item, index) => item.id + index}
-          ListFooterComponent={
-            <ListFooter styleVariables={styleVariables} theme={theme} />
-          }
+          ListFooterComponent={renderListEnd}
         />
       </View>
     </SafeAreaView>
@@ -127,6 +119,17 @@ const Notifications = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  safeareaview: (styleVariables) => ({
+    flex: 1,
+    backgroundColor: styleVariables.colors.primary,
+  }),
+  container: {
+    flex: 1,
+    borderTopLeftRadius: 27,
+    borderTopRightRadius: 27,
+    overflow: "hidden",
+    backgroundColor: "white",
+  },
   flatlist: { flex: 1 },
   flatListContainer: {
     backgroundColor: "white",

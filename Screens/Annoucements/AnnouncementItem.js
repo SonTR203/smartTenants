@@ -1,10 +1,9 @@
-import { React, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { setTime } from "../../utils/setTime";
-import { Dimensions } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
 import { updateItemInFirestore } from "../../utils/firebase.services";
-const windowWidth = Dimensions.get("window").width;
+import { StatusBar } from "expo-status-bar";
 
 function AnnouncementItem({
   content,
@@ -18,16 +17,17 @@ function AnnouncementItem({
 }) {
   const [timeSinceAnnouncement, setTimeSinceAnnouncement] = useState("");
   const [viewed, setViewed] = useState(false);
-  const { currentUser } = useAppContext();
+  const { currentUser, announcements, setAnnouncements } = useAppContext();
 
   const styles = StyleSheet.create({
     announcementInfo: {
-      display: "flex",
+      flex: 1,
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "space-between",
+      justifyContent: "flex-start",
       width: "100%",
-      marginBottom: 12,
+
+      marginBottom: 16,
     },
     imageAndName: {
       display: "flex",
@@ -35,31 +35,66 @@ function AnnouncementItem({
       alignItems: "center",
     },
     profileIcon: {
-      height: 43,
-      width: 43,
-      borderRadius: 12,
+      height: 48,
+      width: 48,
+      borderRadius: 8,
     },
     profileName: {
-      color: styleVariables.colors.black,
-      marginLeft: 8,
+      color: "#4D4D4D",
     },
     announcementContent: {
-      color: styleVariables.colors.black,
-      marginBottom: 17,
+      color: "#4D4D4D",
     },
-    timestampText: { color: styleVariables.colors.black, opacity: 0.66 },
     announcementIndice: {
       height: 8,
       width: 8,
-      backgroundColor: styleVariables.colors.primary,
+      backgroundColor: styleVariables.colors.notificationBadge,
       borderRadius: 99,
       marginLeft: 8,
     },
     announcementImage: {
-      height: windowWidth - 68,
-      width: windowWidth - 68,
+      height: 204,
       borderRadius: 16,
-      marginBottom: 17,
+      marginTop: 16,
+
+      backgroundColor: styleVariables.colors.imageLoading,
+    },
+    header: {
+      flex: 1,
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
+
+      marginLeft: 16,
+    },
+    nameContainer: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    contentContainer: {
+      flex: 1,
+      width: "100%",
+    },
+    scrollViewContainer: {
+      margin: 16,
+      padding: 16,
+      borderRadius: 16,
+      backgroundColor: styleVariables.colors.white,
+      ...styleVariables.shadow,
+    },
+    individualNameContainer: {
+      flex: 1,
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
+
+      marginLeft: 16,
+    },
+    name: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
     },
   });
 
@@ -76,50 +111,58 @@ function AnnouncementItem({
       wasSeen.push(currentUser.userID);
       updateItemInFirestore("Announcements", id, { wasSeen: wasSeen });
       setViewed(true);
+      // update the announcements count in the app context
+      const newAnnouncementCount = announcements - 1;
+      setAnnouncements(newAnnouncementCount);
     }
   };
 
+  const handlePressEvent = () => {
+    navigation.navigate("IndividualAnnouncement", {
+      content: content,
+      timestamp: timeSinceAnnouncement,
+      attatchment: attatchment,
+      theme: theme,
+      styleVariables: styleVariables,
+      styles: styles,
+    });
+    setWasSeenToTrue();
+  };
+
   return (
-    <View id="announcement" style={theme.cardContainer}>
+    <TouchableOpacity onPress={handlePressEvent} style={theme.cardContainer}>
       {/* ownerInfo */}
-      <View id="announcementInfo" style={styles.announcementInfo}>
-        <View className="imageAndName" style={styles.imageAndName}>
-          <Image
-            source={require("../../assets/icon.png")}
-            style={styles.profileIcon}
-          />
-          <Text style={[styleVariables.fontSizes.bodyBold, styles.profileName]}>
-            Smart Living Properties
+      <StatusBar style="light" />
+      <View style={styles.announcementInfo}>
+        {/* Smart Living Properties Profile Picture */}
+        <Image
+          source={require("../../assets/icon.png")}
+          style={styles.profileIcon}
+        />
+        {/* HEADER */}
+        <View style={styles.header}>
+          <View style={styles.nameContainer}>
+            <Text
+              style={[styleVariables.fontSizes.bodyBold, styles.profileName]}
+            >
+              Smart Living Properties
+            </Text>
+            {viewed == false && (
+              <View id="notificationIndice" style={styles.announcementIndice} />
+            )}
+          </View>
+          <Text id="timePosted" style={[styleVariables.fontSizes.callout]}>
+            {timeSinceAnnouncement}
           </Text>
         </View>
-        <Text
-          id="timePosted"
-          style={[styleVariables.fontSizes.callout, styles.timestampText]}
-        >
-          {timeSinceAnnouncement}
-        </Text>
-        {viewed == false && (
-          <View id="notificationIndice" style={styles.announcementIndice} />
-        )}
       </View>
 
       {/* announcement content */}
-      <TouchableOpacity
-        id="announcementContent"
-        onPress={() => {
-          navigation.navigate("IndividualAnnouncement", {
-            content: content,
-            timestamp: timeSinceAnnouncement,
-            attatchment: attatchment,
-            theme: theme,
-            styleVariables: styleVariables,
-            styles: styles,
-          });
-          setWasSeenToTrue();
-        }}
-      >
+      <View style={styles.contentContainer}>
         <View className="announcementTextContent">
           <Text
+            numberOfLines={4}
+            ellipsizeMode="tail"
             style={[styleVariables.fontSizes.body, styles.announcementContent]}
           >
             {content}
@@ -133,9 +176,9 @@ function AnnouncementItem({
             style={styles.announcementImage}
           />
         )}
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 }
 
-export default AnnouncementItem;
+export default memo(AnnouncementItem);

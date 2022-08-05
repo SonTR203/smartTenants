@@ -1,9 +1,11 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import { useTheme } from "../../ThemeContext";
 
 function DynamicProfilePicture({ user, size, borderRadius }) {
   const [defaultColor, setDefaultColor] = useState(null);
+  const { styleVariables } = useTheme();
 
   useEffect(() => {
     if (user && user.colors) {
@@ -20,7 +22,13 @@ function DynamicProfilePicture({ user, size, borderRadius }) {
       {user.userProfileImage !== "" ? (
         <Image
           source={{ uri: user.userProfileImage }}
-          style={styles.image(size, borderRadius)}
+          style={[
+            styles.image(
+              size,
+              borderRadius,
+              styleVariables.colors.imageLoading
+            ),
+          ]}
         />
       ) : (
         <View style={styles.image(size, borderRadius)}>
@@ -42,11 +50,11 @@ function DynamicProfilePicture({ user, size, borderRadius }) {
 }
 
 export const styles = StyleSheet.create({
-  image: (size, borderRadius) => ({
+  image: (size, borderRadius, bgColor) => ({
     width: size,
     height: size,
     borderRadius: borderRadius,
-    backgroundColor: "rgba(0,0,0,0.1)",
+    backgroundColor: `${bgColor}`,
   }),
   linearGradient: (size, borderRadius) => ({
     position: "absolute",
