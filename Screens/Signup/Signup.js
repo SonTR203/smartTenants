@@ -88,7 +88,7 @@ const Signup = ({ navigation }) => {
     } else if (!email) {
       setErrorText("Please enter your Email Address.");
       return false;
-    } else if (!password) {
+    } else if (!password || password.length < 6) {
       setErrorText("Please enter your Password, at least 6 characters.");
       return false;
     } else if (password != passwordConfirm) {
@@ -415,7 +415,7 @@ const Signup = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholderTextColor={styleVariables.colors.placeholderText}
-                placeholder="Minimum 8 characters"
+                placeholder="Minimum 6 characters"
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 secureTextEntry
