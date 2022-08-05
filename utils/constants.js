@@ -6,3 +6,6 @@ export const constants = {
 };
 
 export const maxImages = 5;
+
+export const refreshDelay = 2000;
+export const refreshingHeight = 100;

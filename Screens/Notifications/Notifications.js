@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, FlatList, RefreshControl, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../Context/AppContext";
@@ -13,6 +13,8 @@ import {
 } from "../../utils/Notifications/notifications.services";
 import { wait } from "../../utils/wait";
 import _ from "lodash";
+import LoadingIndicator from "../../components/LoadingIndicator";
+import { refreshDelay, refreshingHeight } from "../../utils/constants";
 
 const Notifications = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
@@ -21,11 +23,27 @@ const Notifications = ({ navigation }) => {
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
   const [refreshing, setRefreshing] = useState(true);
+  const [offsetY, setOffsetY] = useState(0);
+
+  function onScroll(event) {
+    const { nativeEvent } = event;
+    const { contentOffset } = nativeEvent;
+    const { y } = contentOffset;
+    setOffsetY(y);
+  }
+
+  function onRelease() {
+    // offsetY must be less than the refreshing height
+    // to trigger refresh
+    if (offsetY <= -refreshingHeight && !refreshing) {
+      onRefresh();
+    }
+  }
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
 
-    wait(1000).then(async () => {
+    wait(refreshDelay).then(async () => {
       fetchNoticeCount();
       fetchAnnouncementCount();
       setRefreshing(false);
@@ -95,6 +113,7 @@ const Notifications = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeareaview(styleVariables)} edges={["top"]}>
       <StatusBar style="light" />
+      <LoadingIndicator visible={refreshing} />
       <View style={styles.container}>
         <FlatList
           ListHeaderComponent={renderAnnouncementsAndNotices}
@@ -102,16 +121,10 @@ const Notifications = ({ navigation }) => {
           contentContainerStyle={styles.flatListContainer}
           data={notifications}
           renderItem={callBackRender}
-          refreshControl={
-            <RefreshControl
-              onRefresh={onRefresh}
-              refreshing={refreshing}
-              style={styles.refreshControl}
-              tintColor={styleVariables.colors.primary}
-            />
-          }
           keyExtractor={(item, index) => item.id + index}
           ListFooterComponent={renderListEnd}
+          onScroll={onScroll}
+          onResponderRelease={onRelease}
         />
       </View>
     </SafeAreaView>

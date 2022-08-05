@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   FlatList,
-  RefreshControl,
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
@@ -20,6 +19,8 @@ import { getMarketplaceItems } from "../../utils/firebase.services";
 import { useAppContext } from "../../Context/AppContext";
 import { Entypo } from "@expo/vector-icons";
 import EmptyListComponent from "../../components/EmptyListComponent";
+import LoadingIndicator from "../../components/LoadingIndicator";
+import { refreshDelay, refreshingHeight } from "../../utils/constants";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -27,10 +28,27 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const [itemList, setItemList] = useState(null);
   const { currentUser, marketplaceBadges } = useAppContext();
 
+  const [offsetY, setOffsetY] = useState(0);
+
+  function onScroll(event) {
+    const { nativeEvent } = event;
+    const { contentOffset } = nativeEvent;
+    const { y } = contentOffset;
+    setOffsetY(y);
+  }
+
+  function onRelease() {
+    // offsetY must be less than the refreshing height
+    // to trigger refresh
+    if (offsetY <= -refreshingHeight && !refreshing) {
+      onRefresh();
+    }
+  }
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
 
-    wait(1000).then(async () => {
+    wait(refreshDelay).then(async () => {
       const list = await getMarketplaceItems();
       setItemList(list);
       setRefreshing(false);
@@ -95,6 +113,12 @@ const MarketplaceScreen = ({ navigation, route }) => {
     } else {
       return null;
     }
+  };
+
+  const renderMarketplaceItems = ({ item, index }) => {
+    return (
+      <MarketplaceItem item={item} index={index} navigation={navigation} />
+    );
   };
 
   const styles = StyleSheet.create({
@@ -171,6 +195,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
     // CONTAINER
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
+      <LoadingIndicator visible={refreshing} />
 
       {/* ITEM LIST  */}
       <View style={styles.flatListContainer}>
@@ -184,26 +209,10 @@ const MarketplaceScreen = ({ navigation, route }) => {
             numColumns={2}
             keyExtractor={(item, index) => item + index}
             ListHeaderComponent={renderListHeader}
-            renderItem={({ item, index }) => {
-              return (
-                <MarketplaceItem
-                  item={item}
-                  index={index}
-                  navigation={navigation}
-                />
-              );
-            }}
-            refreshControl={
-              <RefreshControl
-                onRefresh={onRefresh}
-                refreshing={refreshing}
-                style={{
-                  backgroundColor: styleVariables.colors.white,
-                }}
-                tintColor={styleVariables.colors.primary}
-              />
-            }
+            renderItem={renderMarketplaceItems}
             ListFooterComponent={renderListFooter}
+            onScroll={onScroll}
+            onResponderRelease={onRelease}
           />
         ) : (
           <ActivityIndicator
