@@ -443,7 +443,7 @@ const Signup = ({ navigation }) => {
               </Text>
               <TextInput
                 placeholderTextColor={styleVariables.colors.placeholderText}
-                placeholder="Retype your password"
+                placeholder="Enter new password again"
                 value={passwordConfirm}
                 onChangeText={(text) => setPasswordConfirm(text)}
                 secureTextEntry
