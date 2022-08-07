@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import NotificationBadge from "../NotificationBadge";
 
@@ -27,8 +27,18 @@ export const BottomMenuItem = ({ label, isCurrent }) => {
         alignItems: "center",
       }}
     >
-      <MaterialCommunityIcons name={newIconName} size={28} color={color} />
+      <MaterialCommunityIcons name={newIconName} size={30} color={color} />
       <NotificationBadge screen={`${label}Navigator`} />
+      <Text
+        style={{
+          fontSize: 12,
+          lineHeight: 16,
+          fontFamily: "Roboto_400Regular",
+          color: isCurrent ? "#395E66" : "#B0BFC2",
+        }}
+      >
+        {label}
+      </Text>
     </View>
   );
 };

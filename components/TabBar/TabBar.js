@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Animated,
 } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { BottomMenuItem } from "./BottomMenuItem";
 export const TabBar = ({ state, descriptors, navigation }) => {
   const totalWidth = Dimensions.get("window").width;
@@ -56,19 +57,31 @@ export const TabBar = ({ state, descriptors, navigation }) => {
               target: route.key,
             });
           };
+
+          const tap = Gesture.Tap()
+            .numberOfTaps(2)
+            .onStart(() => {
+              console.log("Yay, double tap!");
+            });
+
           return (
-            <TouchableOpacity
-              accessibilityRole="button"
-              accessibilityStates={isFocused ? ["selected"] : []}
-              accessibilityLabel={options.tabBarAccessibilityLabel}
-              testID={options.tabBarTestID}
-              onPress={onPress}
-              onLongPress={onLongPress}
-              style={{ flex: 1 }}
-              key={index}
-            >
-              <BottomMenuItem label={label.toString()} isCurrent={isFocused} />
-            </TouchableOpacity>
+            <GestureDetector gesture={tap} key={index}>
+              <TouchableOpacity
+                activeOpacity={1}
+                accessibilityRole="button"
+                accessibilityStates={isFocused ? ["selected"] : []}
+                accessibilityLabel={options.tabBarAccessibilityLabel}
+                testID={options.tabBarTestID}
+                onPress={onPress}
+                onLongPress={onLongPress}
+                style={{ flex: 1 }}
+              >
+                <BottomMenuItem
+                  label={label.toString()}
+                  isCurrent={isFocused}
+                />
+              </TouchableOpacity>
+            </GestureDetector>
           );
         })}
       </View>
@@ -77,7 +90,7 @@ export const TabBar = ({ state, descriptors, navigation }) => {
 };
 const style = StyleSheet.create({
   tabContainer: {
-    height: 84,
+    height: 70,
     shadowOffset: {
       width: 0,
       height: -1,
@@ -86,8 +99,6 @@ const style = StyleSheet.create({
     shadowRadius: 4.0,
     backgroundColor: "white",
     elevation: 10,
-    position: "absolute",
-    bottom: 0,
   },
   slider: {
     height: 4,
