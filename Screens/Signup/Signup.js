@@ -355,7 +355,7 @@ const Signup = ({ navigation }) => {
                   <Text
                     style={[
                       styleVariables.fontSizes.body,
-                      { color: "#00000080" },
+                      { color: styleVariables.colors.placeholderText },
                     ]}
                   >
                     {buildingAddress}
