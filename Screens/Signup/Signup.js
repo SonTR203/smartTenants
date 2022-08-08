@@ -228,6 +228,10 @@ const Signup = ({ navigation }) => {
       justifyContent: "flex-end",
       margin: 0,
     },
+    termsMessage: {
+      marginLeft: -8,
+      color: "#4d4d4d",
+    },
   });
 
   return (
@@ -475,7 +479,9 @@ const Signup = ({ navigation }) => {
                 setCheckboxState(!checkboxState);
               }}
             />
-            <Text style={styleVariables.fontSizes.callout}>
+            <Text
+              style={[styleVariables.fontSizes.callout, styles.termsMessage]}
+            >
               I agree with the{" "}
             </Text>
             <TouchableOpacity
