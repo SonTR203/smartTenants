@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, FlatList, RefreshControl, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
-import { constants } from "../../utils/constants";
+import { constants, refreshDelay } from "../../utils/constants";
 import Post from "./Post";
 import ListFooter from "./ListFooter";
 import { wait } from "../../utils/wait";
 import { getPosts } from "../../utils/Newsfeed/newsfeed.services";
 import Fab from "../../components/Fab";
 import EmptyListComponent from "../../components/EmptyListComponent";
+import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 
 const Newsfeed = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -19,8 +20,9 @@ const Newsfeed = ({ navigation, route }) => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
 
-    wait(1000).then(() => {
-      fetchNotifications();
+    wait(refreshDelay).then(async () => {
+      await fetchNotifications();
+      setRefreshing(false);
     });
   }, []);
 
@@ -28,21 +30,19 @@ const Newsfeed = ({ navigation, route }) => {
     newsfeedContainer: {
       flex: 1,
       backgroundColor: styleVariables.colors.primary,
-      overflow: "hidden",
     },
     flatlist: {
       flex: 1,
 
       borderTopLeftRadius: 27,
       borderTopRightRadius: 27,
-      backgroundColor: styleVariables.colors.white,
+      backgroundColor: "transparent",
     },
     flatListContainer: {
       flex: 1,
       borderTopLeftRadius: 27,
       borderTopRightRadius: 27,
-      overflow: "hidden",
-      backgroundColor: styleVariables.colors.primary,
+      backgroundColor: "white",
     },
   });
 
@@ -88,8 +88,8 @@ const Newsfeed = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
-
       <View style={styles.flatListContainer}>
+        <FlatListRefreshControl refreshing={refreshing} />
         <FlatList
           removeClippedSubviews={true}
           initialNumToRender={3}
@@ -99,17 +99,16 @@ const Newsfeed = ({ navigation, route }) => {
           keyExtractor={(item) => item.id}
           renderItem={callBackRender}
           ListEmptyComponent={renderEmpty}
+          ListFooterComponent={renderListFooter}
           refreshControl={
             <RefreshControl
+              tintColor="transparent"
+              colors={["transparent"]}
+              style={{ backgroundColor: "transparent" }}
               onRefresh={onRefresh}
               refreshing={refreshing}
-              style={{
-                backgroundColor: styleVariables.colors.white,
-              }}
-              tintColor={styleVariables.colors.primary}
             />
           }
-          ListFooterComponent={renderListFooter}
         />
       </View>
 

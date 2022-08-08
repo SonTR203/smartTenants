@@ -17,8 +17,8 @@ import { collection, getDocs, addDoc, Timestamp } from "@firebase/firestore";
 import { useTheme } from "../../ThemeContext";
 import { db } from "../../firebase-config";
 import { getItemById, handleSignIn } from "../../utils/firebase.services";
-import * as Progress from "react-native-progress";
 import { getAuth, signOut } from "firebase/auth";
+import LoadingIndicator from "../../components/LoadingIndicator";
 import ErrorArea from "../../components/SignUp/ErrorArea";
 
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
@@ -131,6 +131,7 @@ const Login = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: styleVariables.colors.white }}>
+      <LoadingIndicator visible={loading} />
       <View style={theme.pageContainer}>
         <StatusBar style="auto" />
         <KeyboardAvoidingView
@@ -238,17 +239,6 @@ const Login = ({ navigation, route }) => {
                 >
                   Sign In
                 </Text>
-                {loading && (
-                  <Progress.CircleSnail
-                    style={{
-                      marginLeft: 17,
-                    }}
-                    strokeCap="square"
-                    thickness={2.2}
-                    size={20}
-                    color={"white"}
-                  />
-                )}
               </TouchableOpacity>
             </View>
 
