@@ -221,7 +221,7 @@ const theme = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    paddingVertical: 20,
+    paddingVertical: 16,
     backgroundColor: styleVariables.colors.primary,
     borderRadius: 18,
     marginBottom: 17,
