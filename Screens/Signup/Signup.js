@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -15,7 +15,13 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { setDoc, doc, Timestamp } from "@firebase/firestore";
+import {
+  collection,
+  getDocs,
+  setDoc,
+  doc,
+  Timestamp,
+} from "@firebase/firestore";
 import { db } from "../../firebase-config";
 import ModalPicker from "../../components/ModalBuildingPicker";
 import { useTheme } from "../../ThemeContext";
@@ -52,6 +58,11 @@ const Signup = ({ navigation }) => {
 
   const [loading, setLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [buildings, setBuildings] = useState([]);
+
+  useEffect(() => {
+    getBuildings();
+  }, []);
 
   const changeModalVisibility = (bool) => {
     setModalVisible(bool);
@@ -187,6 +198,20 @@ const Signup = ({ navigation }) => {
         signOut(auth);
       });
     setLoading(false);
+  };
+
+  const getBuildings = async () => {
+    const colRef = collection(db, "Buildings");
+
+    const data = await getDocs(colRef);
+
+    const formattedData = data.docs.map((doc) => {
+      return {
+        ...doc.data(),
+        id: doc.id,
+      };
+    });
+    setBuildings(formattedData);
   };
 
   const styles = StyleSheet.create({
@@ -374,6 +399,7 @@ const Signup = ({ navigation }) => {
               <ModalPicker
                 changeModalVisibility={changeModalVisibility}
                 setData={setData}
+                buildings={buildings}
               />
             </Modal>
 
