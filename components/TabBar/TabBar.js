@@ -17,7 +17,6 @@ export const TabBar = ({ state, descriptors, navigation }) => {
 
   const getRouteName = (route) => {
     const routeName = getFocusedRouteNameFromRoute(route);
-    console.log("routeName", routeName);
     if (
       routeName?.includes("Login") ||
       routeName?.includes("Signup") ||
