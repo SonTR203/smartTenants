@@ -500,7 +500,14 @@ const Signup = ({ navigation }) => {
           <View
             id="signupCTA"
             style={[
-              checkboxState
+              checkboxState &&
+              firstName.trim() &&
+              lastName.trim() &&
+              unitNumber.trim() &&
+              buildingID.trim() &&
+              email &&
+              password &&
+              passwordConfirm
                 ? styles.signUpButtonActive
                 : styles.signUpButtonInactive,
             ]}
