@@ -207,6 +207,7 @@ const theme = StyleSheet.create({
     zIndex: 2,
   },
   textInput: {
+    color: "#4D4D4D",
     width: "100%",
     borderColor: styleVariables.colors.primary14,
     borderWidth: 2,

@@ -261,10 +261,7 @@ const Login = ({ navigation, route }) => {
               ]}
             >
               <Text
-                style={[
-                  styleVariables.fontSizes.callout,
-                  { color: styleVariables.colors.black },
-                ]}
+                style={[styleVariables.fontSizes.callout, { color: "#4D4D4D" }]}
               >
                 Don't have an account?{" "}
               </Text>
@@ -295,7 +292,9 @@ const Login = ({ navigation, route }) => {
               { marginTop: 34, marginBottom: 8 },
             ]}
           >
-            <Text style={[styleVariables.fontSizes.callout, { opacity: 0.66 }]}>
+            <Text
+              style={[styleVariables.fontSizes.callout, { color: "#4D4D4D" }]}
+            >
               Looking to be one of our future tenants?
             </Text>
             <TouchableOpacity
