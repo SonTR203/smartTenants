@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
-  Modal,
   StyleSheet,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -27,6 +26,7 @@ import ErrorArea from "../../components/SignUp/ErrorArea";
 import { getRandomGradientColor } from "../../utils/Profile/profile.services";
 import ChevronDownSVG from "../../components/Icons/ChevronDownSVG";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import Modal from "react-native-modal";
 
 const auth = getAuth();
 
@@ -223,6 +223,11 @@ const Signup = ({ navigation }) => {
     signUpButtonInactive: {
       opacity: 0.5,
     },
+    buildingSelectModal: {
+      display: "flex",
+      justifyContent: "flex-end",
+      margin: 0,
+    },
   });
 
   return (
@@ -357,12 +362,10 @@ const Signup = ({ navigation }) => {
             </View>
             <Modal
               id="buildingSelectModal"
-              transparent={true}
-              animationType="slide"
-              visible={modalVisible}
-              onRequestClose={() => {
-                changeModalVisibility(false);
-              }}
+              isVisible={modalVisible}
+              backdropOpacity={0.5}
+              onBackdropPress={() => setModalVisible(false)}
+              style={styles.buildingSelectModal}
             >
               <ModalPicker
                 changeModalVisibility={changeModalVisibility}

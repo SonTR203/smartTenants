@@ -60,56 +60,40 @@ const ModalPicker = ({ changeModalVisibility, setData }) => {
   return (
     <View
       style={{
-        flex: 1,
-        justifyContent: "flex-end",
+        flex: 0.6,
+        backgroundColor: "#ffffff",
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        paddingTop: 24,
+        paddingHorizontal: 24,
       }}
     >
-      <TouchableOpacity
-        style={{
-          flex: 0.5,
-          backgroundColor: "rgba(0,0,0,0.5)",
-          marginBottom: -10,
-        }}
-        onPress={() => changeModalVisibility(false)}
-        activeOpacity={1}
-      />
-      <View
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "white",
-          alignItems: "center",
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
-          paddingTop: 24,
-          paddingHorizontal: 24,
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <FlatList data={buildings} renderItem={callBackRender} />
-        </View>
-        <TouchableOpacity
-          style={[
-            theme.secondaryButton,
-            {
-              borderColor: styleVariables.colors.primary,
-              marginTop: 24,
-              marginBottom: 34,
-            },
-          ]}
-          onPress={() => changeModalVisibility(false)}
-        >
-          <Text
-            style={[
-              styleVariables.fontSizes.bodyBold,
-              { color: styleVariables.colors.primary },
-            ]}
-          >
-            Close
-          </Text>
-        </TouchableOpacity>
+      <View style={{ flex: 1 }}>
+        <FlatList data={buildings} renderItem={callBackRender} />
       </View>
+      <TouchableOpacity
+        style={[
+          theme.secondaryButton,
+          {
+            borderColor: styleVariables.colors.primary,
+            marginTop: 24,
+            marginBottom: 34,
+          },
+        ]}
+        onPress={() => changeModalVisibility(false)}
+      >
+        <Text
+          style={[
+            styleVariables.fontSizes.bodyBold,
+            { color: styleVariables.colors.primary },
+          ]}
+        >
+          Close
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
