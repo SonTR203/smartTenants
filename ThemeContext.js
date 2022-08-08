@@ -103,9 +103,8 @@ const theme = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: styleVariables.colors.primary,
     paddingHorizontal: 16,
-    paddingTop: 30,
-    // minHeight: 98,
-    //
+    paddingTop: 40,
+    marginBottom: -10,
   },
   card: {
     display: "flex",
