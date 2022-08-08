@@ -212,7 +212,7 @@ const theme = StyleSheet.create({
     borderWidth: 2,
     backgroundColor: styleVariables.colors.white,
     borderRadius: 18,
-    padding: 22,
+    padding: 18,
     marginBottom: 17,
     zIndex: 1,
   },
