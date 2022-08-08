@@ -25,7 +25,7 @@ import { uploadExpoPushToken } from "../../utils/firebase.services";
 import * as Progress from "react-native-progress";
 import ErrorArea from "../../components/SignUp/ErrorArea";
 import { getRandomGradientColor } from "../../utils/Profile/profile.services";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ChevronDownSVG from "../../components/Icons/ChevronDownSVG";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 const auth = getAuth();
@@ -206,6 +206,7 @@ const Signup = ({ navigation }) => {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
+      alignItems: "center",
     },
     terms: {
       display: "flex",
@@ -350,11 +351,7 @@ const Signup = ({ navigation }) => {
                   >
                     {buildingAddress}
                   </Text>
-                  <MaterialCommunityIcons
-                    name={"chevron-down"}
-                    size={20}
-                    color={"#00000080"}
-                  />
+                  <ChevronDownSVG />
                 </View>
               </TouchableOpacity>
             </View>
