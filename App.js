@@ -13,20 +13,16 @@ import {
 } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AppContext } from "./Context/AppContext";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import {
   NewsfeedNavigator,
   ProfileNavigator,
   NotificationNavigator,
   MarketplaceNavigator,
 } from "./Screens/customNavigator.js";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   ActionSheetProvider,
   connectActionSheet,
 } from "@expo/react-native-action-sheet";
-import { View } from "react-native";
-import NotificationBadge from "./components/NotificationBadge";
 import * as ExpoNotifications from "expo-notifications";
 import { getItemById } from "./utils/firebase.services";
 
@@ -40,6 +36,7 @@ import {
 } from "@firebase/firestore";
 import { db } from "./firebase-config";
 import { wait } from "./utils/wait";
+import { TabBar } from "./components/TabBar/TabBar";
 
 const Tab = createBottomTabNavigator();
 
@@ -267,68 +264,41 @@ function AppContainer({ navigationRef }) {
         <NavigationContainer ref={navigationRef}>
           <Tab.Navigator
             initialRouteName="NewsfeedNavigator"
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused }) => {
-                let iconName;
-                let color;
-                if (route.name === "MarketplaceNavigator") {
-                  iconName = "store";
-                  color = focused ? "#395E66" : "#395E6654";
-                } else if (route.name === "NewsfeedNavigator") {
-                  iconName = "newspaper";
-                  color = focused ? "#395E66" : "#395E6654";
-                } else if (route.name === "NotificationsNavigator") {
-                  iconName = "bell";
-                  color = focused ? "#395E66" : "#395E6654";
-                } else if (route.name === "ProfileNavigator") {
-                  iconName = "account";
-                  color = focused ? "#395E66" : "#395E6654";
-                }
-                return (
-                  <View>
-                    <MaterialCommunityIcons
-                      name={iconName}
-                      size={28}
-                      color={color}
-                    />
-                    <NotificationBadge screen={route.name} />
-                  </View>
-                );
-              },
-
+            tabBar={(props) => <TabBar {...props} />}
+            screenOptions={() => ({
               headerShown: false,
               tabBarActiveTintColor: "#395E66",
+              tabBarStyle: {
+                height: 70,
+                backgroundColor: "white",
+                shadowColor: "#4D4D4D", // color: #4D4D4D
+                shadowOffset: {
+                  // no offset x, y
+                  width: 0,
+                  height: 0,
+                },
+                shadowOpacity: 0.15, // opacity: 0.15
+                shadowRadius: 24, // radius: 24
+                elevation: 5, // elevation: 5
+              },
             })}
           >
+            {/* ======= Newsfeed ======= */}
+            <Tab.Screen
+              name="NewsfeedNavigator"
+              component={NewsfeedNavigator}
+              options={() => ({
+                title: "Newsfeed",
+              })}
+            />
+
             {/* ======= Marketplace ======= */}
             <Tab.Screen
               name="MarketplaceNavigator"
               component={MarketplaceNavigator}
               options={{
                 title: "Marketplace",
-                headerShown: false,
-                tabBarLabelStyle: {
-                  fontSize: 12,
-                  paddingBottom: 2,
-                },
               }}
-            />
-
-            {/* ======= Newsfeed ======= */}
-            <Tab.Screen
-              name="NewsfeedNavigator"
-              component={NewsfeedNavigator}
-              options={({ route }) => ({
-                title: "Newsfeed",
-                left: { display: "none" },
-                tabBarLabelStyle: {
-                  fontSize: 12,
-                  paddingBottom: 2,
-                },
-                tabBarStyle: {
-                  display: getRouteName(route) ? getRouteName(route) : "none",
-                },
-              })}
             />
 
             {/* ======= Notifications ======= */}
@@ -350,14 +320,6 @@ function AppContainer({ navigationRef }) {
               component={ProfileNavigator}
               options={{
                 title: "Profile",
-                headerShown: false,
-                tabBarLabelStyle: {
-                  fontSize: 12,
-                  paddingBottom: 2,
-                },
-              }}
-              tabBarOptions={{
-                display: "none",
               }}
             />
           </Tab.Navigator>
@@ -366,23 +328,6 @@ function AppContainer({ navigationRef }) {
     </ActionSheetProvider>
   );
 }
-
-const getRouteName = (route) => {
-  const routeName = getFocusedRouteNameFromRoute(route);
-  if (
-    routeName?.includes("Login") ||
-    routeName?.includes("Signup") ||
-    routeName?.includes("AccountApprovalPending") ||
-    routeName?.includes("ForgotPassword") ||
-    routeName?.includes("TermsAndConditions") ||
-    routeName?.includes("Splashscreen")
-  ) {
-    return "none";
-  } else if (routeName == undefined) {
-    return "none";
-  }
-  return "flex";
-};
 
 const ConnectedApp = connectActionSheet(App);
 
