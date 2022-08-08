@@ -307,6 +307,10 @@ function AppContainer({ navigationRef }) {
               component={NotificationNavigator}
               options={{
                 title: "Notifications",
+                tabBarLabelStyle: {
+                  fontSize: 12,
+                  paddingBottom: 2,
+                },
               }}
             />
 

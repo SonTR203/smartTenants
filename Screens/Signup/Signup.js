@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
-  Modal,
   StyleSheet,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -16,7 +15,13 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { setDoc, doc, Timestamp } from "@firebase/firestore";
+import {
+  collection,
+  getDocs,
+  setDoc,
+  doc,
+  Timestamp,
+} from "@firebase/firestore";
 import { db } from "../../firebase-config";
 import ModalPicker from "../../components/ModalBuildingPicker";
 import { useTheme } from "../../ThemeContext";
@@ -25,8 +30,9 @@ import { uploadExpoPushToken } from "../../utils/firebase.services";
 import ErrorArea from "../../components/SignUp/ErrorArea";
 import { getRandomGradientColor } from "../../utils/Profile/profile.services";
 import LoadingIndicator from "../../components/LoadingIndicator";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ChevronDownSVG from "../../components/Icons/ChevronDownSVG";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import Modal from "react-native-modal";
 
 const auth = getAuth();
 
@@ -52,6 +58,11 @@ const Signup = ({ navigation }) => {
 
   const [loading, setLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [buildings, setBuildings] = useState([]);
+
+  useEffect(() => {
+    getBuildings();
+  }, []);
 
   const changeModalVisibility = (bool) => {
     setModalVisible(bool);
@@ -189,6 +200,20 @@ const Signup = ({ navigation }) => {
     setLoading(false);
   };
 
+  const getBuildings = async () => {
+    const colRef = collection(db, "Buildings");
+
+    const data = await getDocs(colRef);
+
+    const formattedData = data.docs.map((doc) => {
+      return {
+        ...doc.data(),
+        id: doc.id,
+      };
+    });
+    setBuildings(formattedData);
+  };
+
   const styles = StyleSheet.create({
     inputFieldEmpty: {
       borderColor: "hsla(348, 92%, 35%, 0.5)",
@@ -206,6 +231,7 @@ const Signup = ({ navigation }) => {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
+      alignItems: "center",
     },
     terms: {
       display: "flex",
@@ -221,6 +247,15 @@ const Signup = ({ navigation }) => {
     },
     signUpButtonInactive: {
       opacity: 0.5,
+    },
+    buildingSelectModal: {
+      display: "flex",
+      justifyContent: "flex-end",
+      margin: 0,
+    },
+    termsMessage: {
+      marginLeft: -8,
+      color: "#4d4d4d",
     },
   });
 
@@ -346,31 +381,26 @@ const Signup = ({ navigation }) => {
                   <Text
                     style={[
                       styleVariables.fontSizes.body,
-                      { color: "#00000080" },
+                      { color: styleVariables.colors.placeholderText },
                     ]}
                   >
                     {buildingAddress}
                   </Text>
-                  <MaterialCommunityIcons
-                    name={"chevron-down"}
-                    size={20}
-                    color={"#00000080"}
-                  />
+                  <ChevronDownSVG />
                 </View>
               </TouchableOpacity>
             </View>
             <Modal
               id="buildingSelectModal"
-              transparent={true}
-              animationType="slide"
-              visible={modalVisible}
-              onRequestClose={() => {
-                changeModalVisibility(false);
-              }}
+              isVisible={modalVisible}
+              backdropOpacity={0.5}
+              onBackdropPress={() => setModalVisible(false)}
+              style={styles.buildingSelectModal}
             >
               <ModalPicker
                 changeModalVisibility={changeModalVisibility}
                 setData={setData}
+                buildings={buildings}
               />
             </Modal>
 
@@ -476,7 +506,9 @@ const Signup = ({ navigation }) => {
                 setCheckboxState(!checkboxState);
               }}
             />
-            <Text style={styleVariables.fontSizes.callout}>
+            <Text
+              style={[styleVariables.fontSizes.callout, styles.termsMessage]}
+            >
               I agree with the{" "}
             </Text>
             <TouchableOpacity
@@ -495,7 +527,14 @@ const Signup = ({ navigation }) => {
           <View
             id="signupCTA"
             style={[
-              checkboxState
+              checkboxState &&
+              firstName.trim() &&
+              lastName.trim() &&
+              unitNumber.trim() &&
+              buildingID.trim() &&
+              email &&
+              password &&
+              passwordConfirm
                 ? styles.signUpButtonActive
                 : styles.signUpButtonInactive,
             ]}
