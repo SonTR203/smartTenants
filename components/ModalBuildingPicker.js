@@ -4,8 +4,8 @@ import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import { collection, getDocs } from "@firebase/firestore";
 import { db } from "../firebase-config";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../ThemeContext";
+import BuildingIconSVG from "./Icons/BuildingIconSVG";
 
 const ModalPicker = ({ changeModalVisibility, setData }) => {
   const [buildings, setBuildings] = useState([]);
@@ -35,11 +35,7 @@ const ModalPicker = ({ changeModalVisibility, setData }) => {
         }}
         onPress={() => onPressItem(item)}
       >
-        <MaterialCommunityIcons
-          name={"office-building"}
-          size={20}
-          color={"#000000"}
-        />
+        <BuildingIconSVG />
         <Text style={[styleVariables.fontSizes.body, { marginLeft: 20 }]}>
           {item.buildingAddress}
         </Text>
