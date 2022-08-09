@@ -100,7 +100,8 @@ const theme = StyleSheet.create({
   // padding instead of margin to keep the  background color styling
   header: {
     display: "flex",
-    justifyContent: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
     backgroundColor: styleVariables.colors.primary,
     paddingHorizontal: 16,
     paddingTop: 40,

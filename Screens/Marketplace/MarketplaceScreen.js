@@ -12,8 +12,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import Fab from "../../components/Fab";
-import MarketplaceItem from "./MarketplaceItem";
-import MarketplaceFirstItem from "./MarketplaceFirstItem";
 import ListFooter from "../Newsfeed/ListFooter";
 import { getMarketplaceItems } from "../../utils/firebase.services";
 import { useAppContext } from "../../Context/AppContext";
@@ -21,6 +19,8 @@ import { Entypo } from "@expo/vector-icons";
 import EmptyListComponent from "../../components/EmptyListComponent";
 import { refreshDelay } from "../../utils/constants";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
+import MarketplaceFirstItem from "./MarketplaceItem/MarketplaceFirstItem";
+import MarketplaceItem from "./MarketplaceItem/MarketplaceItem";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();

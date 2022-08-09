@@ -30,6 +30,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getItemById, uploadExpoPushToken } from "../utils/firebase.services";
 import TermsAndConditions from "./TermsAndConditions/TermsAndConditions";
 import Splashscreen from "./Splashscreen/Splashscreen";
+import MarketplaceProfile from "./Marketplace/MarketplaceProfile";
 
 const Stack = createStackNavigator();
 
@@ -42,7 +43,7 @@ const Stack = createStackNavigator();
 //   }),
 // });
 
-const MarketplaceNavigator = () => {
+const MarketplaceNavigator = ({ navigation }) => {
   const { currentUser } = useAppContext();
   return (
     <Stack.Navigator>
@@ -51,7 +52,22 @@ const MarketplaceNavigator = () => {
         component={MarketplaceScreen}
         options={{
           headerShown: true,
-          header: () => <ScreenHeader title={"Marketplace"} />,
+          header: () => (
+            <ScreenHeader title={"Marketplace"} navigation={navigation} />
+          ),
+        }}
+      />
+
+      <Stack.Screen
+        name="MarketplaceProfile"
+        component={MarketplaceProfile}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader
+              {...props}
+              title={"Marketplace profile"}
+            />
+          ),
         }}
       />
       <Stack.Screen

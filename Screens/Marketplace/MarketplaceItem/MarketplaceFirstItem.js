@@ -1,46 +1,42 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { useTheme } from "../../ThemeContext";
-import { constants } from "../../utils/constants";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { useTheme } from "../../../ThemeContext";
+import { constants } from "../../../utils/constants";
 
-function MarketplaceItem({ item, index, navigation }) {
+function MarketplaceFirstItem({ item, navigation }) {
   const { theme } = useTheme();
+
   const styles = StyleSheet.create({
-    container: {
-      marginRight: 17,
-      marginLeft: index % 2 === 0 ? 17 : 0,
-      flex: 0.5,
-    },
+    container: { marginTop: 17, marginLeft: 17, marginRight: 17 },
     image: {
       resizeMode: "cover",
       marginBottom: 17,
-      height: constants.height * 0.2,
+      height: constants.height * 0.25,
       backgroundColor: "black",
-      borderTopRightRadius: 24,
-      borderTopLeftRadius: 24,
+      borderTopRightRadius: 17,
+      borderTopLeftRadius: 17,
     },
     titleContainer: {
       flex: 1,
       marginLeft: 17,
       marginRight: 17,
       marginBottom: 11,
-      flexDirection: "column",
+      flexDirection: "row",
       justifyContent: "space-between",
-      alignItems: "flex-start",
+      alignItems: "center",
     },
     title: {
       flex: 1,
-      fontSize: 17,
+      fontSize: 28,
       fontWeight: "600",
-      lineHeight: 20,
+      lineHeight: 33,
       color: "#191919",
     },
     price: {
       color: "#395E66",
-      marginTop: 6,
-      fontSize: 17,
+      fontSize: 22,
       fontWeight: "400",
-      lineHeight: 20,
+      lineHeight: 26,
     },
     contentContainer: {
       marginLeft: 17,
@@ -50,9 +46,9 @@ function MarketplaceItem({ item, index, navigation }) {
     content: {
       color: "#191919",
       opacity: 0.66,
-      fontSize: 15,
+      fontSize: 17,
       fontWeight: "400",
-      lineHeight: 18,
+      lineHeight: 20,
     },
   });
 
@@ -73,7 +69,7 @@ function MarketplaceItem({ item, index, navigation }) {
     >
       {/* ITEM IMAGE  */}
       <Image style={styles.image} source={{ uri: item.images[0] }} />
-      {/* ITEM TITLE & PRICE */}
+      {/* IMAGE TITLE & PRICE  */}
       <View style={styles.titleContainer}>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
           {item.postTitle}
@@ -82,7 +78,7 @@ function MarketplaceItem({ item, index, navigation }) {
           {item.price === 0 ? "Free" : item.price}
         </Text>
       </View>
-      {/* ITEM CONTENT */}
+      {/* ITEM CONTENT  */}
       <View style={styles.contentContainer}>
         <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
           {item.postContent}
@@ -92,4 +88,4 @@ function MarketplaceItem({ item, index, navigation }) {
   );
 }
 
-export default MarketplaceItem;
+export default MarketplaceFirstItem;
