@@ -26,7 +26,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
-  const { currentUser, marketplaceBadges } = useAppContext();
+  const { currentUser } = useAppContext();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -74,13 +74,6 @@ const MarketplaceScreen = ({ navigation, route }) => {
         >
           <View style={styles.messageView}>
             <Text style={styles.messageText}>Messages</Text>
-            {marketplaceBadges.unseen.length > 0 ? (
-              <View style={styles.badgeView}>
-                <Text style={styles.badgeNumber}>
-                  {marketplaceBadges.unseen.length}
-                </Text>
-              </View>
-            ) : null}
           </View>
 
           <Entypo name="chevron-small-right" size={40} color="#395E66" />
@@ -153,24 +146,6 @@ const MarketplaceScreen = ({ navigation, route }) => {
       lineHeight: 28,
       marginLeft: 6,
       fontWeight: "500",
-    },
-    badgeView: {
-      width: 24,
-      height: 24,
-      marginLeft: 8,
-      paddingHorizontal: 8,
-      paddingVertical: 2,
-      backgroundColor: "#395E66",
-      borderRadius: 20,
-
-      flexDirection: "column",
-      alignItems: "flex-start",
-    },
-    badgeNumber: {
-      fontWeight: "400",
-      color: "white",
-      fontSize: 13,
-      lineHeight: 18,
     },
   });
 

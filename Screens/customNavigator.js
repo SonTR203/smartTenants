@@ -30,7 +30,9 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getItemById, uploadExpoPushToken } from "../utils/firebase.services";
 import TermsAndConditions from "./TermsAndConditions/TermsAndConditions";
 import Splashscreen from "./Splashscreen/Splashscreen";
-import MarketplaceProfile from "./Marketplace/MarketplaceProfile";
+import MarketplaceProfile from "./Marketplace/MarketplaceProfile/MarketplaceProfile";
+import SavedListingsScreen from "./Marketplace/SavedListings/SavedListingsScreen";
+import MyListingsScreen from "./Marketplace/MyListings/MyListingsScreen";
 
 const Stack = createStackNavigator();
 
@@ -67,6 +69,24 @@ const MarketplaceNavigator = ({ navigation }) => {
               {...props}
               title={"Marketplace profile"}
             />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="SavedListings"
+        component={SavedListingsScreen}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Saved listings"} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="MyListings"
+        component={MyListingsScreen}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"My listings"} />
           ),
         }}
       />
