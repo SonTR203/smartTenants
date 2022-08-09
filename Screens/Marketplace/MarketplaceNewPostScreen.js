@@ -33,6 +33,7 @@ import {
 import { maxImages } from "../../utils/constants";
 import * as Progress from "react-native-progress";
 import ImageSVG from "../../components/Icons/ImageSVG";
+import ChevronDownSVG from "../../components/Icons/ChevronDownSVG";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -40,6 +41,7 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [price, setPrice] = useState(null);
+  const [condition, setCondition] = useState("Choose Condition");
   const [imageLoading, setImageLoading] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
@@ -328,6 +330,12 @@ function MarketplaceNewPostScreen({ navigation }) {
       height: 80,
       borderRadius: 8,
     },
+    conditionInput: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
   });
 
   return (
@@ -357,7 +365,23 @@ function MarketplaceNewPostScreen({ navigation }) {
                 styles.textInputTitleAndPrice,
               ]}
             />
-
+            {/* CONDITION */}
+            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+              Condition
+            </Text>
+            <TouchableOpacity onPress={() => {}}>
+              <View style={[theme.textInput, styles.conditionInput]}>
+                <Text
+                  style={[
+                    styleVariables.fontSizes.body,
+                    { color: styleVariables.colors.placeholderText },
+                  ]}
+                >
+                  {condition}
+                </Text>
+                <ChevronDownSVG />
+              </View>
+            </TouchableOpacity>
             {/* DESCRIPTION */}
             <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
               Description
