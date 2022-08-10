@@ -31,7 +31,7 @@ function ScreenSelector({ setAvailable, available }) {
             textAlign: "center",
             fontSize: 22,
             fontWeight: "500",
-            fontFamily: available ? "Roboto_400Regular" : "Roboto_500Medium",
+            fontFamily: !available ? "Roboto_400Regular" : "Roboto_500Medium",
             color: styleVariables.colors.primary,
           }}
         >
@@ -56,7 +56,7 @@ function ScreenSelector({ setAvailable, available }) {
             textAlign: "center",
             fontSize: 22,
             fontWeight: "500",
-            fontFamily: !available ? "Roboto_400Regular" : "Roboto_500Medium",
+            fontFamily: available ? "Roboto_400Regular" : "Roboto_500Medium",
             color: styleVariables.colors.primary,
           }}
         >

@@ -3,7 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../../../ThemeContext";
 import { constants } from "../../../utils/constants";
 
-function MarketplaceFirstItem({ item, navigation, own, sold }) {
+function MarketplaceFirstItem({
+  item,
+  navigation,
+  own,
+  sold,
+  setModalVisible,
+}) {
   const { theme, styleVariables } = useTheme();
 
   const styles = StyleSheet.create({
@@ -86,6 +92,7 @@ function MarketplaceFirstItem({ item, navigation, own, sold }) {
       </View>
       {own || sold ? (
         <TouchableOpacity
+          onPress={() => setModalVisible(true)}
           style={{
             margin: 16,
             padding: 8,
