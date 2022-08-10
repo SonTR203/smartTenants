@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../../../ThemeContext";
 import { constants } from "../../../utils/constants";
 
-function MarketplaceFirstItem({ item, navigation }) {
-  const { theme } = useTheme();
+function MarketplaceFirstItem({ item, navigation, own, sold }) {
+  const { theme, styleVariables } = useTheme();
 
   const styles = StyleSheet.create({
     container: { marginTop: 17, marginLeft: 17, marginRight: 17 },
@@ -41,7 +41,7 @@ function MarketplaceFirstItem({ item, navigation }) {
     contentContainer: {
       marginLeft: 17,
       marginRight: 17,
-      marginBottom: 22,
+      marginBottom: 8,
     },
     content: {
       color: "#191919",
@@ -84,6 +84,32 @@ function MarketplaceFirstItem({ item, navigation }) {
           {item.postContent}
         </Text>
       </View>
+      {own || sold ? (
+        <TouchableOpacity
+          style={{
+            margin: 16,
+            padding: 8,
+            borderRadius: 8,
+            backgroundColor: styleVariables.colors.primary,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              color: "white",
+              fontSize: 17,
+              lineHeight: 22,
+              fontWeight: "400",
+              fontFamily: "Roboto_400Regular",
+            }}
+            numberOfLines={2}
+            ellipsizeMode={"tail"}
+          >
+            {sold ? "List again" : "Mark as sold"}
+          </Text>
+        </TouchableOpacity>
+      ) : null}
     </TouchableOpacity>
   );
 }
