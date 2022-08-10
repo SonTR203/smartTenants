@@ -34,6 +34,8 @@ import { maxImages } from "../../utils/constants";
 import * as Progress from "react-native-progress";
 import ImageSVG from "../../components/Icons/ImageSVG";
 import ChevronDownSVG from "../../components/Icons/ChevronDownSVG";
+import Modal from "react-native-modal";
+import ModalConditionPicker from "../../components/ModalConditionPicker";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -42,6 +44,7 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [content, setContent] = useState("");
   const [price, setPrice] = useState(null);
   const [condition, setCondition] = useState("Choose Condition");
+  const [conditionModalVisible, setConditionModalVisible] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
@@ -336,6 +339,11 @@ function MarketplaceNewPostScreen({ navigation }) {
       justifyContent: "space-between",
       alignItems: "center",
     },
+    conditionSelectModal: {
+      display: "flex",
+      justifyContent: "flex-end",
+      margin: 0,
+    },
   });
 
   return (
@@ -369,7 +377,11 @@ function MarketplaceNewPostScreen({ navigation }) {
             <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
               Condition
             </Text>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity
+              onPress={() => {
+                setConditionModalVisible(true);
+              }}
+            >
               <View style={[theme.textInput, styles.conditionInput]}>
                 <Text
                   style={[
@@ -382,6 +394,20 @@ function MarketplaceNewPostScreen({ navigation }) {
                 <ChevronDownSVG />
               </View>
             </TouchableOpacity>
+            <Modal
+              id="conditionSelectionModal"
+              isVisible={conditionModalVisible}
+              backdropOpacity={0.5}
+              onBackdropPress={() => setConditionModalVisible(false)}
+              style={styles.conditionSelectModal}
+            >
+              <ModalConditionPicker
+                theme={theme}
+                styleVariables={styleVariables}
+                setConditionModalVisible={setConditionModalVisible}
+                setCondition={setCondition}
+              />
+            </Modal>
             {/* DESCRIPTION */}
             <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
               Description
