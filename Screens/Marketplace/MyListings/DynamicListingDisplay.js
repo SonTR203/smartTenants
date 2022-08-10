@@ -1,23 +1,45 @@
-import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   FlatList,
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Modal from "react-native-modal";
+import { updateItemInFirestore } from "../../../utils/firebase.services";
 
 import MarketplaceFirstItem from "../MarketplaceItem/MarketplaceFirstItem";
 
-function AvailableListings({ data }) {
+function DynamicListingDisplay({ data, setData, avaialble }) {
   const [isModalVisible, setModalVisible] = React.useState(false);
+  const [selectedItem, setSelectedItem] = React.useState(undefined);
   const navigation = useNavigation();
+
+  const handleOpenSoldModal = (item) => {
+    if (avaialble) {
+      setModalVisible(true);
+      setSelectedItem(item.id);
+    } else {
+      navigation.navigate("MarketplaceItemInfo", {
+        title: item.userFirstName,
+        item: item,
+      });
+    }
+  };
+
+  const updateDataList = async (id) => {
+    const newDataList = data.filter((item) => item.id !== id);
+    setData(newDataList);
+  };
+
   const renderMyListings = ({ item }) => {
     return (
       <MarketplaceFirstItem
-        setModalVisible={setModalVisible}
+        handleOpenSoldModal={handleOpenSoldModal}
+        sold={avaialble ? false : true}
         own={true}
         item={item}
         navigation={navigation}
@@ -116,7 +138,20 @@ function AvailableListings({ data }) {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => {
+              onPress={async () => {
+                console.log(selectedItem);
+                const res = await updateItemInFirestore(
+                  "Marketplace",
+                  selectedItem,
+                  {
+                    isSold: true,
+                  }
+                );
+                if (!res) {
+                  Alert.alert("Somethign went wrong");
+                } else {
+                  updateDataList(selectedItem);
+                }
                 setModalVisible(false);
               }}
               style={{
@@ -153,4 +188,4 @@ function AvailableListings({ data }) {
   );
 }
 
-export default AvailableListings;
+export default DynamicListingDisplay;

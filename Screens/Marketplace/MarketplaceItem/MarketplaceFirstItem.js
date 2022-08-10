@@ -8,7 +8,7 @@ function MarketplaceFirstItem({
   navigation,
   own,
   sold,
-  setModalVisible,
+  handleOpenSoldModal,
 }) {
   const { theme, styleVariables } = useTheme();
 
@@ -92,7 +92,7 @@ function MarketplaceFirstItem({
       </View>
       {own || sold ? (
         <TouchableOpacity
-          onPress={() => setModalVisible(true)}
+          onPress={() => handleOpenSoldModal(item)}
           style={{
             margin: 16,
             padding: 8,

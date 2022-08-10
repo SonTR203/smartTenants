@@ -173,6 +173,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         images: imageUrls,
         isNSFW: isNsfw,
         id: id,
+        isSold: false,
         postContent: content,
         postTitle: title,
         price: price,
