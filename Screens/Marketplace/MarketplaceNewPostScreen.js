@@ -43,7 +43,8 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [price, setPrice] = useState(null);
-  const [condition, setCondition] = useState("Choose Condition");
+  const [condition, setCondition] = useState("Choose condition");
+  const [category, setCategory] = useState("Choose category");
   const [conditionModalVisible, setConditionModalVisible] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [isLoading, setIsloading] = useState(false);
@@ -333,7 +334,7 @@ function MarketplaceNewPostScreen({ navigation }) {
       height: 80,
       borderRadius: 8,
     },
-    conditionInput: {
+    input: {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
@@ -373,6 +374,23 @@ function MarketplaceNewPostScreen({ navigation }) {
                 styles.textInputTitleAndPrice,
               ]}
             />
+            {/* CATEGORY */}
+            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+              Category
+            </Text>
+            <TouchableOpacity onPress={() => {}}>
+              <View style={[theme.textInput, styles.input]}>
+                <Text
+                  style={[
+                    styleVariables.fontSizes.body,
+                    { color: styleVariables.colors.placeholderText },
+                  ]}
+                >
+                  {category}
+                </Text>
+                <ChevronDownSVG />
+              </View>
+            </TouchableOpacity>
             {/* CONDITION */}
             <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
               Condition
@@ -382,7 +400,7 @@ function MarketplaceNewPostScreen({ navigation }) {
                 setConditionModalVisible(true);
               }}
             >
-              <View style={[theme.textInput, styles.conditionInput]}>
+              <View style={[theme.textInput, styles.input]}>
                 <Text
                   style={[
                     styleVariables.fontSizes.body,
