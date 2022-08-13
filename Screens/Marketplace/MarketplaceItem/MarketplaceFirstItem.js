@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../../../ThemeContext";
 import { useAppContext } from "../../../Context/AppContext";
 import { constants } from "../../../utils/constants";
+import SaveIcon from "../../../components/SaveIcon/SaveIcon";
 
 function MarketplaceFirstItem({
   item,
@@ -11,9 +12,10 @@ function MarketplaceFirstItem({
   sold,
   handleOpenSoldModal,
   saved,
+  handleUnSaved,
 }) {
   const { theme, styleVariables } = useTheme();
-  const { setCurrentMarketplacePost } = useAppContext();
+  const { setCurrentMarketplacePost, currentUser } = useAppContext();
   const styles = StyleSheet.create({
     container: { marginTop: 17, marginLeft: 17, marginRight: 17 },
     image: {
@@ -75,9 +77,24 @@ function MarketplaceFirstItem({
       style={[theme.marketplaceItemContainer, styles.container]}
     >
       {/* ITEM IMAGE  */}
-      <Image style={styles.image} source={{ uri: item.images[0] }}>
-        {/* SAVED ICON  */}
-      </Image>
+      <Image style={styles.image} source={{ uri: item.images[0] }} />
+      {saved && (
+        <SaveIcon
+          isSaved={true}
+          onPress={handleUnSaved}
+          style={{
+            position: "absolute",
+            top: 16,
+            right: 16,
+            padding: 10,
+            backgroundColor: "white",
+            borderRadius: 8,
+            ...styleVariables.shadow,
+          }}
+          size={30}
+        />
+      )}
+
       {/* IMAGE TITLE & PRICE  */}
       <View style={styles.titleContainer}>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>

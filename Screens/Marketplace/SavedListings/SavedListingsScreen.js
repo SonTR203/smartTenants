@@ -5,7 +5,7 @@ import { getMarketplaceItems } from "../../../utils/firebase.services";
 import MarketplaceFirstItem from "../MarketplaceItem/MarketplaceFirstItem";
 
 function SavedListingsScreen({ navigation }) {
-  const { currentUser } = useAppContext();
+  const { currentUser, setCurrentMarketplacePost } = useAppContext();
   const [data, setData] = useState(undefined);
 
   useEffect(async () => {
@@ -18,8 +18,29 @@ function SavedListingsScreen({ navigation }) {
   }, []);
 
   const renderSavedItems = ({ item }) => {
+    const handleUnSaved = () => {
+      const updateSavedList = item.isSavedBy.filter(
+        (item) => item !== currentUser.userID
+      );
+      setCurrentMarketplacePost({
+        ...item,
+        isSavedBy: updateSavedList,
+        updated: true,
+      });
+
+      const updatedSavedListings = data.filter(
+        (listing) => listing.id !== item.id
+      );
+      setData(updatedSavedListings);
+    };
+
     return (
-      <MarketplaceFirstItem saved={true} item={item} navigation={navigation} />
+      <MarketplaceFirstItem
+        handleUnSaved={handleUnSaved}
+        saved={true}
+        item={item}
+        navigation={navigation}
+      />
     );
   };
   return (

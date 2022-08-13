@@ -11,7 +11,6 @@ import {
   deleteMultipleImages,
   updateItemInFirestore,
 } from "../utils/firebase.services.js";
-import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAppContext } from "../Context/AppContext.js";
 import SaveIcon from "../components/SaveIcon/SaveIcon.js";
