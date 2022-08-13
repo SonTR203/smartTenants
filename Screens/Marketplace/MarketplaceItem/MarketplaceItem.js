@@ -1,10 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { useAppContext } from "../../../Context/AppContext";
 import { useTheme } from "../../../ThemeContext";
 import { constants } from "../../../utils/constants";
 
 function MarketplaceItem({ item, index, navigation }) {
   const { theme } = useTheme();
+  const { setCurrentMarketplacePost } = useAppContext();
   const styles = StyleSheet.create({
     container: {
       marginRight: 17,
@@ -63,12 +65,10 @@ function MarketplaceItem({ item, index, navigation }) {
   return (
     // CONTAINER
     <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("MarketplaceItemInfo", {
-          title: item.userFirstName,
-          item: item,
-        })
-      }
+      onPress={() => {
+        setCurrentMarketplacePost(item);
+        navigation.navigate("MarketplaceItemInfo");
+      }}
       style={[theme.marketplaceItemContainer, styles.container]}
     >
       {/* ITEM IMAGE  */}

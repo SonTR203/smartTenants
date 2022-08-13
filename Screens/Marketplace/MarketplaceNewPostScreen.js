@@ -176,6 +176,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         isSold: false,
         postContent: content,
         postTitle: title,
+        isSavedBy: [],
         price: price,
         userID: currentUser.userID,
         userFirstName: currentUser.firstName,

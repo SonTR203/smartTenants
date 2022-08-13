@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 import { updateItemInFirestore } from "../../../utils/firebase.services";
+import { useAppContext } from "../../../Context/AppContext";
 
 import MarketplaceFirstItem from "../MarketplaceItem/MarketplaceFirstItem";
 
@@ -17,16 +18,15 @@ function DynamicListingDisplay({ data, setData, avaialble }) {
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState(undefined);
   const navigation = useNavigation();
+  const { setCurrentMarketplacePost } = useAppContext();
 
   const handleOpenSoldModal = (item) => {
     if (avaialble) {
       setModalVisible(true);
       setSelectedItem(item.id);
     } else {
-      navigation.navigate("MarketplaceItemInfo", {
-        title: item.userFirstName,
-        item: item,
-      });
+      setCurrentMarketplacePost(item);
+      navigation.navigate("MarketplaceItemInfo");
     }
   };
 

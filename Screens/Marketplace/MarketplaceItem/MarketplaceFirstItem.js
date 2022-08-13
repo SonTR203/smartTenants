@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../../../ThemeContext";
+import { useAppContext } from "../../../Context/AppContext";
 import { constants } from "../../../utils/constants";
 
 function MarketplaceFirstItem({
@@ -9,9 +10,10 @@ function MarketplaceFirstItem({
   own,
   sold,
   handleOpenSoldModal,
+  saved,
 }) {
   const { theme, styleVariables } = useTheme();
-
+  const { setCurrentMarketplacePost } = useAppContext();
   const styles = StyleSheet.create({
     container: { marginTop: 17, marginLeft: 17, marginRight: 17 },
     image: {
@@ -27,9 +29,9 @@ function MarketplaceFirstItem({
       marginLeft: 17,
       marginRight: 17,
       marginBottom: 11,
-      flexDirection: "row",
+      flexDirection: "column",
       justifyContent: "space-between",
-      alignItems: "center",
+      alignItems: "flex-start",
     },
     title: {
       flex: 1,
@@ -43,6 +45,7 @@ function MarketplaceFirstItem({
       fontSize: 22,
       fontWeight: "400",
       lineHeight: 26,
+      marginTop: 8,
     },
     contentContainer: {
       marginLeft: 17,
@@ -65,16 +68,16 @@ function MarketplaceFirstItem({
   return (
     // CONTAINER
     <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("MarketplaceItemInfo", {
-          title: item.userFirstName,
-          item: item,
-        })
-      }
+      onPress={() => {
+        setCurrentMarketplacePost(item);
+        navigation.navigate("MarketplaceItemInfo");
+      }}
       style={[theme.marketplaceItemContainer, styles.container]}
     >
       {/* ITEM IMAGE  */}
-      <Image style={styles.image} source={{ uri: item.images[0] }} />
+      <Image style={styles.image} source={{ uri: item.images[0] }}>
+        {/* SAVED ICON  */}
+      </Image>
       {/* IMAGE TITLE & PRICE  */}
       <View style={styles.titleContainer}>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
@@ -84,6 +87,7 @@ function MarketplaceFirstItem({
           {item.price === 0 ? "Free" : item.price}
         </Text>
       </View>
+
       {/* ITEM CONTENT  */}
       <View style={styles.contentContainer}>
         <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>

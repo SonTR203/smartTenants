@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,13 +9,45 @@ import {
   deleteImageFromStorage,
   deleteItemFromFirestore,
   deleteMultipleImages,
+  updateItemInFirestore,
 } from "../utils/firebase.services.js";
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useAppContext } from "../Context/AppContext.js";
+import SaveIcon from "../components/SaveIcon/SaveIcon.js";
 
 export default function CustomSubStackScreenHeader({ ...props }) {
   const { showActionSheetWithOptions } = useActionSheet();
   const { theme, styleVariables } = useTheme();
+  const [isSaved, setIsSaved] = useState(false);
   const navigation = useNavigation();
+  const { setCurrentMarketplacePost } = useAppContext();
+
+  useEffect(() => {
+    if (props.item && props.item.isSavedBy && props.currentUserId) {
+      setIsSaved(props.item.isSavedBy.includes(props.currentUserId));
+    }
+  }, []);
+
+  const handleSaveMarketplaceItem = async () => {
+    console.log("handling save/unsave");
+    const updatedSaveArray = !isSaved
+      ? [...props.item.isSavedBy, props.currentUserId]
+      : props.item.isSavedBy.filter((id) => id !== props.currentUserId);
+    const res = await updateItemInFirestore("Marketplace", props.item.id, {
+      isSavedBy: updatedSaveArray,
+    });
+    if (!res) {
+      alert("Something went wrong. Please try again later.");
+      return;
+    }
+    setIsSaved(!isSaved);
+    setCurrentMarketplacePost({
+      ...props.item,
+      isSavedBy: updatedSaveArray,
+      updated: true,
+    });
+  };
 
   const handleOptions = async () => {
     showActionSheetWithOptions(
@@ -85,6 +117,12 @@ Select an option to edit Marketplace post`,
                 color={styleVariables.colors.black}
               />
             </Pressable>
+          ) : props.item && props.item.isSavedBy ? (
+            <SaveIcon
+              isSaved={isSaved}
+              size={36}
+              onPress={handleSaveMarketplaceItem}
+            />
           ) : null}
         </View>
       </View>

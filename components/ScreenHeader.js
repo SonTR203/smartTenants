@@ -3,10 +3,8 @@ import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 import { useTheme } from "../ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import NotificationBadge from "./NotificationBadge";
-import { useAppContext } from "../Context/AppContext";
 
 function ScreenHeader({ title, navigation }) {
-  const { currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
   const styles = StyleSheet.create({
     headerPageTitle: {
@@ -15,9 +13,7 @@ function ScreenHeader({ title, navigation }) {
   });
 
   const handleNavigate = () => {
-    navigation.navigate("MarketplaceProfile", {
-      userId: currentUser.userID,
-    });
+    navigation.navigate("MarketplaceProfile");
   };
 
   return (

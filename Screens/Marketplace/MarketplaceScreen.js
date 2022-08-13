@@ -26,7 +26,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
-  const { currentUser } = useAppContext();
+  const { currentUser, currentMarketplacePost, setCurrentMarketplacePost } =
+    useAppContext();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -38,7 +39,28 @@ const MarketplaceScreen = ({ navigation, route }) => {
     });
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      if (currentMarketplacePost && currentMarketplacePost.updated) {
+        const updatedItemList = itemList.map((item) => {
+          if (item.id === currentMarketplacePost.id) {
+            return currentMarketplacePost;
+          }
+          return item;
+        });
+        setItemList(updatedItemList);
+        setCurrentMarketplacePost({
+          ...currentMarketplacePost,
+          updated: false,
+        });
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, currentMarketplacePost]);
+
   async function fetchMarketplaceList() {
+    console.log("fetch marketpalace list");
     const list = await getMarketplaceItems();
     setItemList(list);
     setRefreshing(false);
