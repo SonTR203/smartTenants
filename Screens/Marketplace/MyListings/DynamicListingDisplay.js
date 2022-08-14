@@ -6,15 +6,18 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import Modal from "react-native-modal";
-import { updateItemInFirestore } from "../../../utils/firebase.services";
 import { useAppContext } from "../../../Context/AppContext";
 
 import MarketplaceFirstItem from "../MarketplaceItem/MarketplaceFirstItem";
 
-function DynamicListingDisplay({ data, setData, avaialble }) {
+function DynamicListingDisplay({
+  data,
+  setData,
+  avaialble,
+  handleSetListingSold,
+}) {
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState(undefined);
   const navigation = useNavigation();
@@ -32,11 +35,6 @@ function DynamicListingDisplay({ data, setData, avaialble }) {
         item: item,
       });
     }
-  };
-
-  const updateDataList = async (id) => {
-    const newDataList = data.filter((item) => item.id !== id);
-    setData(newDataList);
   };
 
   const renderMyListings = ({ item }) => {
@@ -118,6 +116,7 @@ function DynamicListingDisplay({ data, setData, avaialble }) {
           >
             <TouchableOpacity
               onPress={() => {
+                handleSetListingSold(selectedItem);
                 setModalVisible(false);
               }}
               style={{
@@ -143,19 +142,6 @@ function DynamicListingDisplay({ data, setData, avaialble }) {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={async () => {
-                console.log(selectedItem);
-                const res = await updateItemInFirestore(
-                  "Marketplace",
-                  selectedItem,
-                  {
-                    isSold: true,
-                  }
-                );
-                if (!res) {
-                  Alert.alert("Somethign went wrong");
-                } else {
-                  updateDataList(selectedItem);
-                }
                 setModalVisible(false);
               }}
               style={{
