@@ -26,7 +26,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
-  const { currentUser, currentMarketplacePost, setCurrentMarketplacePost } =
+  const { currentUser, updatedMarketplacePosts, setUpdatedMarketplacePosts } =
     useAppContext();
 
   const onRefresh = useCallback(() => {
@@ -39,28 +39,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
     });
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      if (currentMarketplacePost && currentMarketplacePost.updated) {
-        const updatedItemList = itemList.map((item) => {
-          if (item.id === currentMarketplacePost.id) {
-            return currentMarketplacePost;
-          }
-          return item;
-        });
-        setItemList(updatedItemList);
-        setCurrentMarketplacePost({
-          ...currentMarketplacePost,
-          updated: false,
-        });
-      }
-    });
-
-    return unsubscribe;
-  }, [navigation, currentMarketplacePost]);
-
   async function fetchMarketplaceList() {
-    console.log("fetch marketpalace list");
     const list = await getMarketplaceItems();
     setItemList(list);
     setRefreshing(false);
@@ -69,6 +48,28 @@ const MarketplaceScreen = ({ navigation, route }) => {
   useEffect(() => {
     fetchMarketplaceList();
   }, []);
+
+  /**
+   * Whenever the user save/unsave a Marketplace post,
+   * "updatedMarketplacePosts" is updated to be the changed item.
+   * useEffect is used to listen to these changes to "updatedMarketplacePosts".
+   *
+   * We then find that changed item in the list and update the list with
+   * the newest data.
+   */
+  useEffect(() => {
+    if (updatedMarketplacePosts && updatedMarketplacePosts.length > 0) {
+      // find and replace item in list
+      const updatedItemList = itemList.map((item) => {
+        // if the item is the one that was updated, return the updated item
+        // else, return the original item
+        return updatedMarketplacePosts.find((i) => i.id === item.id) ?? item;
+      });
+
+      setUpdatedMarketplacePosts([]);
+      setItemList(updatedItemList);
+    }
+  }, [updatedMarketplacePosts]);
 
   useEffect(() => {
     if (route.params && route.params.reload) {

@@ -26,7 +26,11 @@ function DynamicListingDisplay({ data, setData, avaialble }) {
       setSelectedItem(item.id);
     } else {
       setCurrentMarketplacePost(item);
-      navigation.navigate("MarketplaceItemInfo");
+      navigation.navigate("MarketplaceItemInfo", {
+        title: item.userFirstName,
+        itemUserId: item.userID,
+        item: item,
+      });
     }
   };
 

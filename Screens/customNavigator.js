@@ -46,7 +46,7 @@ const Stack = createStackNavigator();
 // });
 
 const MarketplaceNavigator = ({ navigation }) => {
-  const { currentUser, currentMarketplacePost } = useAppContext();
+  const { currentUser } = useAppContext();
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -102,14 +102,14 @@ const MarketplaceNavigator = ({ navigation }) => {
       <Stack.Screen
         name="MarketplaceItemInfo"
         component={MarketplaceItemInfoScreen}
-        options={() => ({
+        options={({ route }) => ({
           header: (props) => (
             <CustomSubStackScreenHeader
               {...props}
-              title={currentMarketplacePost.userFirstName + "'s Post"}
+              title={route.params.title + "'s Post"}
               currentUserId={currentUser.userID}
-              itemUserId={currentMarketplacePost.userID}
-              item={currentMarketplacePost}
+              itemUserId={route.params.itemUserId}
+              item={route.params.item}
               previousScreen={"MarketplaceScreen"}
               collection={"Marketplace"}
             />

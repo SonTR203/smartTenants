@@ -20,7 +20,11 @@ export default function CustomSubStackScreenHeader({ ...props }) {
   const { theme, styleVariables } = useTheme();
   const [isSaved, setIsSaved] = useState(false);
   const navigation = useNavigation();
-  const { setCurrentMarketplacePost } = useAppContext();
+  const {
+    setCurrentMarketplacePost,
+    setUpdatedMarketplacePosts,
+    updatedMarketplacePosts,
+  } = useAppContext();
 
   useEffect(() => {
     if (props.item && props.item.isSavedBy && props.currentUserId) {
@@ -46,6 +50,15 @@ export default function CustomSubStackScreenHeader({ ...props }) {
       isSavedBy: updatedSaveArray,
       updated: true,
     });
+
+    // add the updated item to the updatedMarketplacePosts array
+    setUpdatedMarketplacePosts([
+      ...updatedMarketplacePosts,
+      {
+        ...props.item,
+        isSavedBy: updatedSaveArray,
+      },
+    ]);
   };
 
   const handleOptions = async () => {

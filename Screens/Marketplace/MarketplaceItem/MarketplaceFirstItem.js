@@ -15,7 +15,7 @@ function MarketplaceFirstItem({
   handleUnSaved,
 }) {
   const { theme, styleVariables } = useTheme();
-  const { setCurrentMarketplacePost, currentUser } = useAppContext();
+  const { setCurrentMarketplacePost } = useAppContext();
   const styles = StyleSheet.create({
     container: { marginTop: 17, marginLeft: 17, marginRight: 17 },
     image: {
@@ -72,7 +72,11 @@ function MarketplaceFirstItem({
     <TouchableOpacity
       onPress={() => {
         setCurrentMarketplacePost(item);
-        navigation.navigate("MarketplaceItemInfo");
+        navigation.navigate("MarketplaceItemInfo", {
+          title: item.userFirstName,
+          itemUserId: item.userID,
+          item: item,
+        });
       }}
       style={[theme.marketplaceItemContainer, styles.container]}
     >

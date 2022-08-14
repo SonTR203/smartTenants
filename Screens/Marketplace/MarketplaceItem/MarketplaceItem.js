@@ -67,7 +67,11 @@ function MarketplaceItem({ item, index, navigation }) {
     <TouchableOpacity
       onPress={() => {
         setCurrentMarketplacePost(item);
-        navigation.navigate("MarketplaceItemInfo");
+        navigation.navigate("MarketplaceItemInfo", {
+          title: item.userFirstName,
+          itemUserId: item.userID,
+          item: item,
+        });
       }}
       style={[theme.marketplaceItemContainer, styles.container]}
     >
