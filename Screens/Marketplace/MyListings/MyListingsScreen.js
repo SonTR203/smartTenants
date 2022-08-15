@@ -32,19 +32,25 @@ function MyListingsScreen() {
   }, []);
 
   const handleSetListingSold = async (selectedItem) => {
-    // console.log(selectedItem);
-    const res = await updateItemInFirestore("Marketplace", selectedItem, {
+    const res = await updateItemInFirestore("Marketplace", selectedItem.id, {
       isSold: true,
     });
     if (!res) {
-      Alert.alert("Somethign went wrong");
-    } else {
-      const newDataList = setAvailableListings.filter(
-        (item) => item.id !== selectedItem.id
-      );
-      setAvailableListings(newDataList);
-      setSoldListings([...soldListings, selectedItem]);
+      Alert.alert("Something went wrong");
+      return;
     }
+    const updatedItem = {
+      ...selectedItem,
+      isSold: true,
+    };
+    const newDataList = availableListings.filter(
+      (item) => item.id !== selectedItem.id
+    );
+    const newSoldListings = soldListings
+      ? [...soldListings, updatedItem]
+      : [updatedItem];
+    setAvailableListings(newDataList);
+    setSoldListings(newSoldListings);
   };
 
   return (
@@ -57,7 +63,7 @@ function MyListingsScreen() {
       <ScreenSelector available={available} setAvailable={setAvailable} />
       <DynamicListingDisplay
         handleSetListingSold={handleSetListingSold}
-        avaialble={available}
+        available={available}
         setData={available ? setAvailableListings : setSoldListings}
         data={available ? availableListings : soldListings}
       />

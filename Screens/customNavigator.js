@@ -112,6 +112,7 @@ const MarketplaceNavigator = ({ navigation }) => {
               item={route.params.item}
               previousScreen={"MarketplaceScreen"}
               collection={"Marketplace"}
+              openModal={route.params.openModal}
             />
           ),
         })}

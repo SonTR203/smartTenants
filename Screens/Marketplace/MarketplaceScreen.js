@@ -39,9 +39,13 @@ const MarketplaceScreen = ({ navigation, route }) => {
     });
   }, []);
 
+  // only fetching available items, not sold items
   async function fetchMarketplaceList() {
     const list = await getMarketplaceItems();
-    setItemList(list);
+    const avaialbleListings = list.filter((item) => {
+      return !item.isSold;
+    });
+    setItemList(avaialbleListings);
     setRefreshing(false);
   }
 

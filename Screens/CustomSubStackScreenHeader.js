@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 
 import { useTheme } from "../ThemeContext.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -15,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useAppContext } from "../Context/AppContext.js";
 import SaveIcon from "../components/SaveIcon/SaveIcon.js";
 import CustomBottomModal from "../components/CustomBottomModal/index.js";
+import ModalActionConfirm from "../components/CustomBottomModal/ModalActionConfirm/index.js";
 
 export default function CustomSubStackScreenHeader({ ...props }) {
   const { theme, styleVariables } = useTheme();
@@ -33,6 +33,13 @@ export default function CustomSubStackScreenHeader({ ...props }) {
     }
   }, []);
 
+  // open the Modal by default
+  useEffect(() => {
+    if (props.openModal) {
+      setModalVisible(true);
+    }
+  }, [props.openModal]);
+
   const handleDeleteListing = async () => {
     const resDB = await deleteItemFromFirestore(
       props.collection,
@@ -47,13 +54,10 @@ export default function CustomSubStackScreenHeader({ ...props }) {
       alert("Error deleting post. Please try again later.");
       return;
     }
+    setModalVisible(false);
     navigation.navigate(props.previousScreen, {
       reload: true,
     });
-  };
-
-  const handleSetSoldListing = () => {
-    // handle set listing as sold here
   };
 
   const handleSaveMarketplaceItem = async () => {
@@ -85,6 +89,80 @@ export default function CustomSubStackScreenHeader({ ...props }) {
     ]);
   };
 
+  const handleSetListingAsSold = async () => {
+    const res = await updateItemInFirestore("Marketplace", props.item.id, {
+      isSold: props.item.isSold ? false : true,
+    });
+    if (!res) {
+      alert("Something went wrong. Please try again later.");
+    }
+    setModalVisible(false);
+    navigation.navigate(props.previousScreen, {
+      reload: true,
+    });
+    alert("Successfully re-listed item.");
+  };
+
+  const setModalOptions = () => {
+    const markListingText =
+      props.item && props.item.isSold ? "List again" : "Mark listing as sold";
+    const markListingIconName =
+      props.item && props.item.isSold ? "account-cash-outline" : "piggy-bank";
+    const markListingContent =
+      props.item && props.item.isSold
+        ? "List item again?"
+        : "Mark listing as sold?";
+    const markListingSubtitle =
+      props.item && props.item.isSold
+        ? "Your listing will be available immediately"
+        : "You will be able to restore it";
+
+    const options = [
+      {
+        content: "Edit listing",
+        onPress: () => {},
+        iconName: "pencil",
+        iconColor: "#4D4D4D",
+      },
+      {
+        content: "Delete listing",
+        onPress: () => {},
+        iconName: "trash-can-outline",
+        iconColor: "#4D4D4D",
+        renderSubscreen: () => {
+          return (
+            <ModalActionConfirm
+              destructive={true}
+              title="Delete your listing?"
+              subtitle={"You won't be able to restore it"}
+              confirmText="Delete"
+              onConfirm={handleDeleteListing}
+              onCancel={() => setModalVisible(false)}
+            />
+          );
+        },
+      },
+      {
+        content: markListingText,
+        onPress: () => {},
+        iconName: markListingIconName,
+        iconColor: "#4D4D4D",
+        renderSubscreen: () => {
+          return (
+            <ModalActionConfirm
+              title={markListingContent}
+              subtitle={markListingSubtitle}
+              confirmText="Confirm"
+              onConfirm={handleSetListingAsSold}
+              onCancel={() => setModalVisible(false)}
+            />
+          );
+        },
+      },
+    ];
+    return options;
+  };
+
   const styles = StyleSheet.create({
     container: { backgroundColor: "white" },
     headerRight: { minWidth: 36 },
@@ -108,55 +186,8 @@ export default function CustomSubStackScreenHeader({ ...props }) {
       <CustomBottomModal
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
-      >
-        <Pressable
-          onPress={() => {
-            // edit listing here
-            alert("edit listing here");
-          }}
-          style={styles.optionContainer}
-        >
-          <SimpleLineIcons name="pencil" size={18} color="#4D4D4D" />
-          <Text style={styles.modalOptionText}>Edit listing</Text>
-        </Pressable>
-
-        <Pressable onPress={handleDeleteListing} style={styles.optionContainer}>
-          <Feather name="trash" size={18} color="#4D4D4D" />
-          <Text style={styles.modalOptionText}>Delete listing</Text>
-        </Pressable>
-        <Pressable
-          onPress={handleSetSoldListing}
-          style={styles.optionContainer}
-        >
-          <MaterialCommunityIcons name="piggy-bank" size={18} color="#4D4D4D" />
-          <Text style={styles.modalOptionText}>Mark listing as sold</Text>
-        </Pressable>
-
-        <Pressable
-          onPress={() => setModalVisible(false)}
-          style={{
-            backgroundColor: "white",
-            padding: 12,
-            borderRadius: 16,
-            justifyContent: "center",
-            alignItems: "center",
-
-            borderWidth: 2,
-            borderColor: styleVariables.colors.primary,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 17,
-              lineHeight: 22,
-              color: styleVariables.colors.primary,
-              fontFamily: "Roboto_500Medium",
-            }}
-          >
-            Close
-          </Text>
-        </Pressable>
-      </CustomBottomModal>
+        options={setModalOptions()}
+      />
       <View style={[theme.stackHeader, { paddingHorizontal: 17 }]}>
         <Pressable
           onPress={() => {

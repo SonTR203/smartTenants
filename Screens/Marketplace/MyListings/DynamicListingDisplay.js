@@ -1,38 +1,30 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import {
-  FlatList,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
-import Modal from "react-native-modal";
+import { FlatList, Text } from "react-native";
 import { useAppContext } from "../../../Context/AppContext";
 
 import MarketplaceFirstItem from "../MarketplaceItem/MarketplaceFirstItem";
+import CustomBottomModal from "../../../components/CustomBottomModal";
+import ModalActionConfirm from "../../../components/CustomBottomModal/ModalActionConfirm";
 
-function DynamicListingDisplay({
-  data,
-  setData,
-  avaialble,
-  handleSetListingSold,
-}) {
+function DynamicListingDisplay({ data, available, handleSetListingSold }) {
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState(undefined);
   const navigation = useNavigation();
   const { setCurrentMarketplacePost } = useAppContext();
 
   const handleOpenSoldModal = (item) => {
-    if (avaialble) {
+    if (available) {
       setModalVisible(true);
-      setSelectedItem(item.id);
+      setSelectedItem(item);
     } else {
       setCurrentMarketplacePost(item);
       navigation.navigate("MarketplaceItemInfo", {
         title: item.userFirstName,
         itemUserId: item.userID,
         item: item,
+        openModal: true,
+        // open the bottom modal by default
       });
     }
   };
@@ -41,7 +33,7 @@ function DynamicListingDisplay({
     return (
       <MarketplaceFirstItem
         handleOpenSoldModal={handleOpenSoldModal}
-        sold={avaialble ? false : true}
+        sold={available ? false : true}
         own={true}
         item={item}
         navigation={navigation}
@@ -63,116 +55,36 @@ function DynamicListingDisplay({
 
   return (
     <>
-      <Modal
-        style={{ margin: 0, justifyContent: "flex-end" }}
-        coverScreen={true}
-        onBackdropPress={() => setModalVisible(false)}
-        isVisible={isModalVisible}
+      <CustomBottomModal
+        isModalVisible={isModalVisible}
+        setModalVisible={setModalVisible}
+        // options={setModalOptions()}
       >
-        <View
-          style={{
-            height: 181,
-            backgroundColor: "white",
-            borderTopLeftRadius: 16,
-            borderTopRightRadius: 16,
-            padding: 24,
-            paddingBottom: 34,
+        <ModalActionConfirm
+          title={"Mark listing as sold?"}
+          subtitle={"You will be able to restore it"}
+          confirmText="Confirm"
+          onConfirm={() => {
+            handleSetListingSold(selectedItem);
+            setModalVisible(false);
           }}
-        >
-          <View
-            style={{
-              marginBottom: 24,
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontFamily: "Roboto_500Medium",
-                fontSize: 20,
-                lineHeight: 25,
-                color: "#4D4D4D",
-                marginBottom: 8,
-              }}
-            >
-              Mark listing as sold?
-            </Text>
-            <Text
-              style={{
-                textAlign: "center",
-                fontFamily: "Roboto_400Regular",
-                fontSize: 15,
-                lineHeight: 20,
-                color: "#4D4D4D",
-              }}
-            >
-              You will be able to restore it.
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                handleSetListingSold(selectedItem);
-                setModalVisible(false);
-              }}
-              style={{
-                textAlign: "center",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "#EBEFF0",
-                borderRadius: 16,
-                paddingVertical: 12,
-                paddingHorizontal: 51.75,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: "Roboto_400Regular",
-                  color: "#395E66",
-                  fontSize: 17,
-                  lineHeight: 22,
-                }}
-              >
-                Cancel
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={async () => {
-                setModalVisible(false);
-              }}
-              style={{
-                textAlign: "center",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "#395E66",
-                borderRadius: 16,
-                paddingVertical: 12,
-                paddingHorizontal: 51.75,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: "Roboto_500Medium",
-                  color: "#FFFFFF",
-                  fontSize: 17,
-                  lineHeight: 22,
-                }}
-              >
-                Confirm
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+          onCancel={() => setModalVisible(false)}
+        />
+      </CustomBottomModal>
       <FlatList
         data={data}
         renderItem={renderMyListings}
         keyExtractor={(item) => item.id}
-        ListEmptyComponent={() => <Text>You have no listing available</Text>}
+        ListEmptyComponent={() => (
+          <Text
+            style={{
+              marginTop: 20,
+              textAlign: "center",
+            }}
+          >
+            You have no listing
+          </Text>
+        )}
       />
     </>
   );
