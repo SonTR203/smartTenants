@@ -36,6 +36,7 @@ import ImageSVG from "../../components/Icons/ImageSVG";
 import ChevronDownSVG from "../../components/Icons/ChevronDownSVG";
 import Modal from "react-native-modal";
 import ModalConditionPicker from "../../components/ModalConditionPicker";
+import ModalCategoryPicker from "../../components/ModalCategoryPicker";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -46,6 +47,7 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [condition, setCondition] = useState("Choose condition");
   const [category, setCategory] = useState("Choose category");
   const [conditionModalVisible, setConditionModalVisible] = useState(false);
+  const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
@@ -340,7 +342,7 @@ function MarketplaceNewPostScreen({ navigation }) {
       justifyContent: "space-between",
       alignItems: "center",
     },
-    conditionSelectModal: {
+    modal: {
       display: "flex",
       justifyContent: "flex-end",
       margin: 0,
@@ -378,7 +380,11 @@ function MarketplaceNewPostScreen({ navigation }) {
             <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
               Category
             </Text>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity
+              onPress={() => {
+                setCategoryModalVisible(true);
+              }}
+            >
               <View style={[theme.textInput, styles.input]}>
                 <Text
                   style={[
@@ -391,6 +397,20 @@ function MarketplaceNewPostScreen({ navigation }) {
                 <ChevronDownSVG />
               </View>
             </TouchableOpacity>
+            <Modal
+              id="categorySelectionModal"
+              isVisible={categoryModalVisible}
+              backdropOpacity={0.5}
+              onBackdropPress={() => setCategoryModalVisible(false)}
+              style={styles.modal}
+            >
+              <ModalCategoryPicker
+                theme={theme}
+                styleVariables={styleVariables}
+                setCategoryModalVisible={setCategoryModalVisible}
+                setCategory={setCategory}
+              />
+            </Modal>
             {/* CONDITION */}
             <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
               Condition
@@ -417,7 +437,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               isVisible={conditionModalVisible}
               backdropOpacity={0.5}
               onBackdropPress={() => setConditionModalVisible(false)}
-              style={styles.conditionSelectModal}
+              style={styles.modal}
             >
               <ModalConditionPicker
                 theme={theme}
