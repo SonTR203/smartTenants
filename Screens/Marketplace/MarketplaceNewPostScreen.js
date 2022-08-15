@@ -184,6 +184,8 @@ function MarketplaceNewPostScreen({ navigation }) {
         postContent: content,
         postTitle: title,
         price: price,
+        category: category,
+        condition: condition,
         userID: currentUser.userID,
         userFirstName: currentUser.firstName,
         userLastName: currentUser.lastName,
