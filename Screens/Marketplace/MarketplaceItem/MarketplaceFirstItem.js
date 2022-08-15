@@ -61,6 +61,30 @@ function MarketplaceFirstItem({
       fontWeight: "400",
       lineHeight: 20,
     },
+    saveIcon: {
+      position: "absolute",
+      top: 16,
+      right: 16,
+      padding: 10,
+      backgroundColor: "white",
+      borderRadius: 8,
+      ...styleVariables.shadow,
+    },
+    bottomButton: {
+      margin: 16,
+      padding: 8,
+      borderRadius: 8,
+      backgroundColor: styleVariables.colors.primary,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    buttonText: {
+      color: "white",
+      fontSize: 17,
+      lineHeight: 22,
+      fontWeight: "400",
+      fontFamily: "Roboto_400Regular",
+    },
   });
 
   if (!item) {
@@ -86,15 +110,7 @@ function MarketplaceFirstItem({
         <SaveIcon
           isSaved={true}
           onPress={handleUnSaved}
-          style={{
-            position: "absolute",
-            top: 16,
-            right: 16,
-            padding: 10,
-            backgroundColor: "white",
-            borderRadius: 8,
-            ...styleVariables.shadow,
-          }}
+          style={styles.saveIcon}
           size={30}
         />
       )}
@@ -118,23 +134,10 @@ function MarketplaceFirstItem({
       {own || sold ? (
         <TouchableOpacity
           onPress={() => handleOpenSoldModal(item)}
-          style={{
-            margin: 16,
-            padding: 8,
-            borderRadius: 8,
-            backgroundColor: styleVariables.colors.primary,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          style={styles.bottomButton}
         >
           <Text
-            style={{
-              color: "white",
-              fontSize: 17,
-              lineHeight: 22,
-              fontWeight: "400",
-              fontFamily: "Roboto_400Regular",
-            }}
+            style={styles.buttonText}
             numberOfLines={2}
             ellipsizeMode={"tail"}
           >

@@ -49,13 +49,7 @@ function MarketplaceProfile({ navigation }) {
     },
   ];
   return (
-    <View
-      style={{
-        flex: 1,
-        marginTop: 30,
-        backgroundColor: "white",
-      }}
-    >
+    <View style={styles.container}>
       <FlatList
         scrollEnabled={false}
         data={data}
@@ -63,12 +57,7 @@ function MarketplaceProfile({ navigation }) {
         renderItem={({ item }) => {
           return (
             <TouchableOpacity onPress={item.onPress} style={theme.cardButton}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
+              <View style={styles.buttonContainer}>
                 <MaterialCommunityIcons
                   style={{
                     marginRight: 20,
@@ -91,7 +80,7 @@ function MarketplaceProfile({ navigation }) {
                 {marketplaceBadges.unseen.length > 0 && item.id === 1 ? (
                   <View style={styles.badgeView}>
                     <Text style={styles.badgeNumber}>
-                      {marketplaceBadges.unseen.length}
+                      {marketplaceBadges.unseen.length}123
                     </Text>
                   </View>
                 ) : null}
@@ -106,6 +95,11 @@ function MarketplaceProfile({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 30,
+    backgroundColor: "white",
+  },
   badgeView: {
     height: 22,
     paddingHorizontal: 8,
@@ -118,7 +112,10 @@ const styles = StyleSheet.create({
 
     marginRight: 14,
   },
-
+  buttonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   badgeNumber: {
     fontWeight: "400",
     color: "white",

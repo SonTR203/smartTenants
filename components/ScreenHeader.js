@@ -10,6 +10,28 @@ function ScreenHeader({ title, navigation }) {
     headerPageTitle: {
       color: styleVariables.colors.white,
     },
+    marketplaceProfile: {
+      position: "absolute",
+      right: 16,
+      top: 48,
+
+      padding: 10,
+      margin: -10,
+    },
+    profileContainer: {
+      width: 32,
+      height: 32,
+      backgroundColor: "white",
+      borderRadius: 8,
+      alignItems: "center",
+      justifyContent: "center",
+      ...styleVariables.shadow,
+    },
+    badgeContainer: {
+      position: "absolute",
+      right: 74,
+      top: 30,
+    },
   });
 
   const handleNavigate = () => {
@@ -25,38 +47,15 @@ function ScreenHeader({ title, navigation }) {
       {title === "Marketplace" ? (
         <>
           <TouchableOpacity
-            style={{
-              position: "absolute",
-              right: 16,
-              top: 48,
-
-              padding: 10,
-              margin: -10,
-            }}
+            style={styles.marketplaceProfile}
             onPress={handleNavigate}
           >
-            <View
-              style={{
-                width: 32,
-                height: 32,
-                backgroundColor: "white",
-                borderRadius: 8,
-                alignItems: "center",
-                justifyContent: "center",
-                ...styleVariables.shadow,
-              }}
-            >
+            <View style={styles.profileContainer}>
               <Ionicons name="person" size={20} color="#395E66" />
             </View>
           </TouchableOpacity>
 
-          <View
-            style={{
-              position: "absolute",
-              right: 74,
-              top: 30,
-            }}
-          >
+          <View style={styles.badgeContainer}>
             <NotificationBadge screen={`${title}Navigator`} />
           </View>
         </>
