@@ -22,11 +22,14 @@ import MarketplaceFirstItem from "./MarketplaceItem/MarketplaceFirstItem";
 import MarketplaceItem from "./MarketplaceItem/MarketplaceItem";
 import SortSVG from "../../components/Icons/SortSVG";
 import FilterSVG from "../../components/Icons/FilterSVG";
+import Modal from "react-native-modal";
+import FilterModal from "../../components/FilterModal";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
   const { updatedMarketplacePosts, setUpdatedMarketplacePosts } =
     useAppContext();
 
@@ -99,7 +102,12 @@ const MarketplaceScreen = ({ navigation, route }) => {
             </Text>
             <SortSVG />
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.filterBtn, styles.headerBtn]}>
+          <TouchableOpacity
+            onPress={() => {
+              setFilterModalVisible(true);
+            }}
+            style={[styles.filterBtn, styles.headerBtn]}
+          >
             <Text
               style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
             >
@@ -167,12 +175,25 @@ const MarketplaceScreen = ({ navigation, route }) => {
       marginRight: 8,
       color: styleVariables.colors.primary,
     },
+    modal: {
+      display: "flex",
+      justifyContent: "flex-end",
+      margin: 0,
+    },
   });
 
   return (
     // CONTAINER
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
+      <Modal
+        backdropOpacity={0.5}
+        isVisible={filterModalVisible}
+        style={styles.modal}
+        onBackdropPress={() => setFilterModalVisible(false)}
+      >
+        <FilterModal />
+      </Modal>
 
       {/* ITEM LIST  */}
       <View style={styles.flatListContainer}>
