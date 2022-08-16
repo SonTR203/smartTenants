@@ -73,10 +73,6 @@ export const TabBar = ({ state, descriptors, navigation }) => {
           ]}
         />
         {state.routes.map((item, index) => {
-          if (index === 0) {
-            getRouteName(item);
-          }
-
           const { options } = descriptors[item.key];
           const label =
             options.tabBarLabel !== undefined
@@ -119,7 +115,7 @@ export const TabBar = ({ state, descriptors, navigation }) => {
 };
 const style = StyleSheet.create({
   tabContainer: {
-    height: 70,
+    height: "10%", // change to percentage of window height
     backgroundColor: "white",
     shadowColor: "#4D4D4D", // color: #4D4D4D
     shadowOffset: {

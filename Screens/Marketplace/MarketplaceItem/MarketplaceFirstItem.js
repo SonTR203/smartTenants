@@ -1,11 +1,21 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { useTheme } from "../../ThemeContext";
-import { constants } from "../../utils/constants";
+import { useTheme } from "../../../ThemeContext";
+import { useAppContext } from "../../../Context/AppContext";
+import { constants } from "../../../utils/constants";
+import SaveIcon from "../../../components/SaveIcon/SaveIcon";
 
-function MarketplaceFirstItem({ item, navigation }) {
-  const { theme } = useTheme();
-
+function MarketplaceFirstItem({
+  item,
+  navigation,
+  own,
+  sold,
+  handleOpenSoldModal,
+  saved,
+  handleUnSaved,
+}) {
+  const { theme, styleVariables } = useTheme();
+  const { setCurrentMarketplacePost } = useAppContext();
   const styles = StyleSheet.create({
     container: { marginTop: 17, marginLeft: 17, marginRight: 17 },
     image: {
@@ -21,9 +31,9 @@ function MarketplaceFirstItem({ item, navigation }) {
       marginLeft: 17,
       marginRight: 17,
       marginBottom: 11,
-      flexDirection: "row",
+      flexDirection: "column",
       justifyContent: "space-between",
-      alignItems: "center",
+      alignItems: "flex-start",
     },
     title: {
       flex: 1,
@@ -37,11 +47,12 @@ function MarketplaceFirstItem({ item, navigation }) {
       fontSize: 22,
       fontWeight: "400",
       lineHeight: 26,
+      marginTop: 8,
     },
     contentContainer: {
       marginLeft: 17,
       marginRight: 17,
-      marginBottom: 22,
+      marginBottom: 8,
     },
     content: {
       color: "#191919",
@@ -49,6 +60,30 @@ function MarketplaceFirstItem({ item, navigation }) {
       fontSize: 17,
       fontWeight: "400",
       lineHeight: 20,
+    },
+    saveIcon: {
+      position: "absolute",
+      top: 16,
+      right: 16,
+      padding: 10,
+      backgroundColor: "white",
+      borderRadius: 8,
+      ...styleVariables.shadow,
+    },
+    bottomButton: {
+      margin: 16,
+      padding: 8,
+      borderRadius: 8,
+      backgroundColor: styleVariables.colors.primary,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    buttonText: {
+      color: "white",
+      fontSize: 17,
+      lineHeight: 22,
+      fontWeight: "400",
+      fontFamily: "Roboto_400Regular",
     },
   });
 
@@ -59,16 +94,27 @@ function MarketplaceFirstItem({ item, navigation }) {
   return (
     // CONTAINER
     <TouchableOpacity
-      onPress={() =>
+      onPress={() => {
+        setCurrentMarketplacePost(item);
         navigation.navigate("MarketplaceItemInfo", {
           title: item.userFirstName,
+          itemUserId: item.userID,
           item: item,
-        })
-      }
+        });
+      }}
       style={[theme.marketplaceItemContainer, styles.container]}
     >
       {/* ITEM IMAGE  */}
       <Image style={styles.image} source={{ uri: item.images[0] }} />
+      {saved && (
+        <SaveIcon
+          isSaved={true}
+          onPress={handleUnSaved}
+          style={styles.saveIcon}
+          size={30}
+        />
+      )}
+
       {/* IMAGE TITLE & PRICE  */}
       <View style={styles.titleContainer}>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
@@ -78,12 +124,27 @@ function MarketplaceFirstItem({ item, navigation }) {
           {item.price === 0 ? "Free" : item.price}
         </Text>
       </View>
+
       {/* ITEM CONTENT  */}
       <View style={styles.contentContainer}>
         <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
           {item.postContent}
         </Text>
       </View>
+      {own || sold ? (
+        <TouchableOpacity
+          onPress={() => handleOpenSoldModal(item)}
+          style={styles.bottomButton}
+        >
+          <Text
+            style={styles.buttonText}
+            numberOfLines={2}
+            ellipsizeMode={"tail"}
+          >
+            {sold ? "List again" : "Mark as sold"}
+          </Text>
+        </TouchableOpacity>
+      ) : null}
     </TouchableOpacity>
   );
 }
