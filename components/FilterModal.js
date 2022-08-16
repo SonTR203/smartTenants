@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useTheme } from "../ThemeContext";
+import ChevronRightSVG from "./Icons/ChevronRightSVG";
 
 function FilterModal() {
+  const [categoryFilter, setCategoryFilter] = useState("All");
   const { styleVariables, theme } = useTheme();
 
   const styles = StyleSheet.create({
@@ -18,6 +20,8 @@ function FilterModal() {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 32,
     },
     primaryClr: {
       color: styleVariables.colors.primary,
@@ -34,6 +38,15 @@ function FilterModal() {
           </Text>
         </TouchableOpacity>
       </View>
+      <TouchableOpacity style={[styles.filterSection]}>
+        <View>
+          <Text style={[styleVariables.fontSizes.bodyBold]}>Category</Text>
+          <Text style={[styleVariables.fontSizes.body, styles.primaryClr]}>
+            {categoryFilter}
+          </Text>
+        </View>
+        <ChevronRightSVG />
+      </TouchableOpacity>
     </View>
   );
 }
