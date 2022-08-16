@@ -45,6 +45,8 @@ function App() {
   const navigationRef = useNavigationContainerRef();
 
   const [post, setPost] = useState({});
+  const [currentMarketplacePost, setCurrentMarketplacePost] = useState({});
+  const [updatedMarketplacePosts, setUpdatedMarketplacePosts] = useState([]);
   const [announcements, setAnnouncements] = useState(0);
   const [notices, setNotices] = useState(0);
   const [currentUser, setCurrentUser] = useState({});
@@ -81,6 +83,10 @@ function App() {
     setAnnouncements,
     notices,
     setNotices,
+    currentMarketplacePost,
+    setCurrentMarketplacePost,
+    updatedMarketplacePosts,
+    setUpdatedMarketplacePosts,
   };
 
   useEffect(() => {

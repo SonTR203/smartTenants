@@ -12,8 +12,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import Fab from "../../components/Fab";
-import MarketplaceItem from "./MarketplaceItem";
-import MarketplaceFirstItem from "./MarketplaceFirstItem";
 import ListFooter from "../Newsfeed/ListFooter";
 import { getMarketplaceItems } from "../../utils/firebase.services";
 import { useAppContext } from "../../Context/AppContext";
@@ -21,12 +19,15 @@ import { Entypo } from "@expo/vector-icons";
 import EmptyListComponent from "../../components/EmptyListComponent";
 import { refreshDelay } from "../../utils/constants";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
+import MarketplaceFirstItem from "./MarketplaceItem/MarketplaceFirstItem";
+import MarketplaceItem from "./MarketplaceItem/MarketplaceItem";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
-  const { currentUser, marketplaceBadges } = useAppContext();
+  const { currentUser, updatedMarketplacePosts, setUpdatedMarketplacePosts } =
+    useAppContext();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -38,15 +39,41 @@ const MarketplaceScreen = ({ navigation, route }) => {
     });
   }, []);
 
+  // only fetching available items, not sold items
   async function fetchMarketplaceList() {
     const list = await getMarketplaceItems();
-    setItemList(list);
+    const avaialbleListings = list.filter((item) => {
+      return !item.isSold;
+    });
+    setItemList(avaialbleListings);
     setRefreshing(false);
   }
 
   useEffect(() => {
     fetchMarketplaceList();
   }, []);
+
+  /**
+   * Whenever the user save/unsave a Marketplace post,
+   * "updatedMarketplacePosts" is updated to be the changed item.
+   * useEffect is used to listen to these changes to "updatedMarketplacePosts".
+   *
+   * We then find that changed item in the list and update the list with
+   * the newest data.
+   */
+  useEffect(() => {
+    if (updatedMarketplacePosts && updatedMarketplacePosts.length > 0) {
+      // find and replace item in list
+      const updatedItemList = itemList.map((item) => {
+        // if the item is the one that was updated, return the updated item
+        // else, return the original item
+        return updatedMarketplacePosts.find((i) => i.id === item.id) ?? item;
+      });
+
+      setUpdatedMarketplacePosts([]);
+      setItemList(updatedItemList);
+    }
+  }, [updatedMarketplacePosts]);
 
   useEffect(() => {
     if (route.params && route.params.reload) {
@@ -74,13 +101,6 @@ const MarketplaceScreen = ({ navigation, route }) => {
         >
           <View style={styles.messageView}>
             <Text style={styles.messageText}>Messages</Text>
-            {marketplaceBadges.unseen.length > 0 ? (
-              <View style={styles.badgeView}>
-                <Text style={styles.badgeNumber}>
-                  {marketplaceBadges.unseen.length}
-                </Text>
-              </View>
-            ) : null}
           </View>
 
           <Entypo name="chevron-small-right" size={40} color="#395E66" />
@@ -153,24 +173,6 @@ const MarketplaceScreen = ({ navigation, route }) => {
       lineHeight: 28,
       marginLeft: 6,
       fontWeight: "500",
-    },
-    badgeView: {
-      width: 24,
-      height: 24,
-      marginLeft: 8,
-      paddingHorizontal: 8,
-      paddingVertical: 2,
-      backgroundColor: "#395E66",
-      borderRadius: 20,
-
-      flexDirection: "column",
-      alignItems: "flex-start",
-    },
-    badgeNumber: {
-      fontWeight: "400",
-      color: "white",
-      fontSize: 13,
-      lineHeight: 18,
     },
   });
 
