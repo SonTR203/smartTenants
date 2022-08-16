@@ -20,6 +20,8 @@ import { refreshDelay } from "../../utils/constants";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 import MarketplaceFirstItem from "./MarketplaceItem/MarketplaceFirstItem";
 import MarketplaceItem from "./MarketplaceItem/MarketplaceItem";
+import SortSVG from "../../components/Icons/SortSVG";
+import FilterSVG from "../../components/Icons/FilterSVG";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -88,6 +90,24 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const renderListHeader = () => {
     return (
       <>
+        <View style={styles.filterSort}>
+          <TouchableOpacity style={[styles.headerBtn]}>
+            <Text
+              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
+            >
+              Sort
+            </Text>
+            <SortSVG />
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.filterBtn, styles.headerBtn]}>
+            <Text
+              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
+            >
+              Filter
+            </Text>
+            <FilterSVG />
+          </TouchableOpacity>
+        </View>
         <MarketplaceFirstItem item={itemList[0]} navigation={navigation} />
       </>
     );
@@ -126,6 +146,26 @@ const MarketplaceScreen = ({ navigation, route }) => {
       borderTopRightRadius: 27,
       overflow: "hidden",
       backgroundColor: "white",
+    },
+    filterSort: {
+      display: "flex",
+      flexDirection: "row",
+      paddingTop: 16,
+      paddingHorizontal: 8,
+    },
+    headerBtn: {
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#ebeff0",
+      marginHorizontal: 8,
+      borderRadius: 8,
+      paddingVertical: 8,
+    },
+    btnText: {
+      marginRight: 8,
+      color: styleVariables.colors.primary,
     },
   });
 
