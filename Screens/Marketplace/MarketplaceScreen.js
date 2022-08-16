@@ -15,7 +15,6 @@ import Fab from "../../components/Fab";
 import ListFooter from "../Newsfeed/ListFooter";
 import { getMarketplaceItems } from "../../utils/firebase.services";
 import { useAppContext } from "../../Context/AppContext";
-import { Entypo } from "@expo/vector-icons";
 import EmptyListComponent from "../../components/EmptyListComponent";
 import { refreshDelay } from "../../utils/constants";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
@@ -26,7 +25,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
-  const { currentUser, updatedMarketplacePosts, setUpdatedMarketplacePosts } =
+  const { updatedMarketplacePosts, setUpdatedMarketplacePosts } =
     useAppContext();
 
   const onRefresh = useCallback(() => {
@@ -82,12 +81,6 @@ const MarketplaceScreen = ({ navigation, route }) => {
     }
   }, [route.params]);
 
-  const handleNavigate = () => {
-    navigation.navigate("MessagesListScreen", {
-      userId: currentUser.userID,
-    });
-  };
-
   const renderEmpty = () => {
     return <EmptyListComponent screenName={"marketplace"} />;
   };
@@ -95,16 +88,6 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const renderListHeader = () => {
     return (
       <>
-        <TouchableOpacity
-          onPress={handleNavigate}
-          style={styles.messageContainer}
-        >
-          <View style={styles.messageView}>
-            <Text style={styles.messageText}>Messages</Text>
-          </View>
-
-          <Entypo name="chevron-small-right" size={40} color="#395E66" />
-        </TouchableOpacity>
         <MarketplaceFirstItem item={itemList[0]} navigation={navigation} />
       </>
     );
@@ -143,36 +126,6 @@ const MarketplaceScreen = ({ navigation, route }) => {
       borderTopRightRadius: 27,
       overflow: "hidden",
       backgroundColor: "white",
-    },
-    messageContainer: {
-      margin: 16,
-      backgroundColor: "white",
-      padding: 16,
-      borderRadius: 24,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 0.22,
-      shadowRadius: 2.22,
-
-      elevation: 3,
-    },
-    messageView: {
-      flexDirection: "row",
-      alignItems: "center",
-    },
-    messageText: {
-      color: "#395E66",
-      fontSize: 22,
-      lineHeight: 28,
-      marginLeft: 6,
-      fontWeight: "500",
     },
   });
 
