@@ -103,8 +103,8 @@ const Newsfeed = ({ navigation, route }) => {
           refreshControl={
             <RefreshControl
               progressBackgroundColor="white"
-              tintColor="transparent"
               colors={[styleVariables.colors.primary]}
+              tintColor="transparent"
               style={{ backgroundColor: "transparent", color: "transparent" }}
               onRefresh={onRefresh}
               refreshing={refreshing}

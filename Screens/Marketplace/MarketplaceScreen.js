@@ -200,7 +200,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
               refreshControl={
                 <RefreshControl
                   tintColor="transparent"
-                  colors={["transparent"]}
+                  progressBackgroundColor="white"
+                  colors={[styleVariables.colors.primary]}
                   style={{ backgroundColor: "transparent" }}
                   onRefresh={onRefresh}
                   refreshing={refreshing}
