@@ -1,16 +1,27 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { useTheme } from "../ThemeContext";
 import ChevronRightSVG from "./Icons/ChevronRightSVG";
 
 function FilterModal() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [conditionFilter, setConditionFilter] = useState("All");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   const { styleVariables, theme } = useTheme();
 
   const styles = StyleSheet.create({
     modalContainer: {
-      flex: 0.6,
+      flex: 0.7,
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,
       padding: 24,
@@ -32,6 +43,7 @@ function FilterModal() {
       flexDirection: "row",
       justifyContent: "space-around",
       marginTop: 8,
+      marginBottom: 32,
     },
     condition: {
       flex: 1,
@@ -50,88 +62,134 @@ function FilterModal() {
     textWhite: {
       color: styleVariables.colors.white,
     },
+    input: {
+      flex: 1,
+      textAlign: "center",
+      borderWidth: 1,
+      borderColor: styleVariables.colors.primary,
+      borderRadius: 8,
+      paddingVertical: 12,
+      marginTop: 8,
+      color: styleVariables.colors.primary,
+    },
+    min: {
+      marginRight: 16,
+    },
+    max: {
+      marginLeft: 16,
+    },
   });
 
   return (
-    <View style={styles.modalContainer}>
-      <View style={styles.filterSection}>
-        <Text style={[styleVariables.fontSizes.title]}>Filters</Text>
-        <TouchableOpacity>
-          <Text style={[styleVariables.fontSizes.bodyBold, styles.primaryClr]}>
-            Reset all
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {/* CATEGORY SELECTION */}
-      <TouchableOpacity style={[styles.filterSection]}>
-        <View>
-          <Text style={[styleVariables.fontSizes.bodyBold]}>Category</Text>
-          <Text style={[styleVariables.fontSizes.body, styles.primaryClr]}>
-            {categoryFilter}
-          </Text>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.modalContainer}
+      >
+        <View style={styles.filterSection}>
+          <Text style={[styleVariables.fontSizes.title]}>Filters</Text>
+          <TouchableOpacity>
+            <Text
+              style={[styleVariables.fontSizes.bodyBold, styles.primaryClr]}
+            >
+              Reset all
+            </Text>
+          </TouchableOpacity>
         </View>
-        <ChevronRightSVG />
-      </TouchableOpacity>
-      {/* CONDITION SELECTION */}
-      <Text style={styleVariables.fontSizes.bodyBold}>Condition</Text>
-      <View style={[styles.conditions, conditionFilter]}>
-        <TouchableOpacity
-          onPress={() => {
-            setConditionFilter("All");
-          }}
-          style={[
-            styles.condition,
-            conditionFilter == "All" && styles.conditionSelected,
-          ]}
-        >
-          <Text
+        {/* CATEGORY SELECTION */}
+        <TouchableOpacity style={[styles.filterSection]}>
+          <View>
+            <Text style={[styleVariables.fontSizes.bodyBold]}>Category</Text>
+            <Text style={[styleVariables.fontSizes.body, styles.primaryClr]}>
+              {categoryFilter}
+            </Text>
+          </View>
+          <ChevronRightSVG />
+        </TouchableOpacity>
+        {/* CONDITION SELECTION */}
+        <Text style={styleVariables.fontSizes.bodyBold}>Condition</Text>
+        <View style={[styles.conditions]}>
+          <TouchableOpacity
+            onPress={() => {
+              setConditionFilter("All");
+            }}
             style={[
-              styleVariables.fontSizes.body,
-              conditionFilter == "All" && styles.textWhite,
+              styles.condition,
+              conditionFilter == "All" && styles.conditionSelected,
             ]}
           >
-            All
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setConditionFilter("New");
-          }}
-          style={[
-            styles.condition,
-            styles.conditionMargins,
-            conditionFilter == "New" && styles.conditionSelected,
-          ]}
-        >
-          <Text
+            <Text
+              style={[
+                styleVariables.fontSizes.body,
+                conditionFilter == "All" && styles.textWhite,
+              ]}
+            >
+              All
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setConditionFilter("New");
+            }}
             style={[
-              styleVariables.fontSizes.body,
-              conditionFilter == "New" && styles.textWhite,
+              styles.condition,
+              styles.conditionMargins,
+              conditionFilter == "New" && styles.conditionSelected,
             ]}
           >
-            New
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setConditionFilter("Used");
-          }}
-          style={[
-            styles.condition,
-            conditionFilter == "Used" && styles.conditionSelected,
-          ]}
-        >
-          <Text
+            <Text
+              style={[
+                styleVariables.fontSizes.body,
+                conditionFilter == "New" && styles.textWhite,
+              ]}
+            >
+              New
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setConditionFilter("Used");
+            }}
             style={[
-              styleVariables.fontSizes.body,
-              conditionFilter == "Used" && styles.textWhite,
+              styles.condition,
+              conditionFilter == "Used" && styles.conditionSelected,
             ]}
           >
-            Used
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+            <Text
+              style={[
+                styleVariables.fontSizes.body,
+                conditionFilter == "Used" && styles.textWhite,
+              ]}
+            >
+              Used
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styleVariables.fontSizes.bodyBold}>Price</Text>
+        <View style={styles.filterSection}>
+          <TextInput
+            onChangeText={setMinPrice}
+            value={minPrice}
+            keyboardType={"decimal-pad"}
+            style={[styles.input, styles.min]}
+            placeholder={"$0.00"}
+            placeholderTextColor={styleVariables.colors.primary}
+          />
+          <TextInput
+            onChangeText={setMaxPrice}
+            value={maxPrice}
+            keyboardType={"decimal-pad"}
+            style={[styles.input, styles.max]}
+            placeholder={"$0.00"}
+            placeholderTextColor={styleVariables.colors.primary}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 
