@@ -19,6 +19,7 @@ function FilterModal() {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [distance, setDistance] = useState("50");
+  const [listingAmount, setListingAmount] = useState("0");
   const { styleVariables, theme } = useTheme();
 
   const styles = StyleSheet.create({
@@ -85,6 +86,11 @@ function FilterModal() {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
+    },
+    listingButton: {
+      flex: 1,
+      justifyContent: "flex-end",
+      marginBottom: 34,
     },
   });
 
@@ -211,6 +217,18 @@ function FilterModal() {
           minimumTrackTintColor={styleVariables.colors.primary}
           thumbTintColor={styleVariables.colors.primary}
         />
+        <View style={styles.listingButton}>
+          <TouchableOpacity style={theme.primaryButton}>
+            <Text
+              style={[
+                theme.primaryButtonText,
+                styleVariables.fontSizes.bodyBold,
+              ]}
+            >
+              See {listingAmount} listings
+            </Text>
+          </TouchableOpacity>
+        </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
