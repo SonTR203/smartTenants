@@ -11,12 +11,14 @@ import {
 } from "react-native";
 import { useTheme } from "../ThemeContext";
 import ChevronRightSVG from "./Icons/ChevronRightSVG";
+import { Slider } from "@miblanchard/react-native-slider";
 
 function FilterModal() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [conditionFilter, setConditionFilter] = useState("All");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [distance, setDistance] = useState("50");
   const { styleVariables, theme } = useTheme();
 
   const styles = StyleSheet.create({
@@ -77,6 +79,12 @@ function FilterModal() {
     },
     max: {
       marginLeft: 16,
+    },
+    distanceTitle: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
     },
   });
 
@@ -188,6 +196,21 @@ function FilterModal() {
             placeholderTextColor={styleVariables.colors.primary}
           />
         </View>
+        <View style={styles.distanceTitle}>
+          <Text style={styleVariables.fontSizes.bodyBold}>Distance</Text>
+          <Text>{distance + "km"}</Text>
+        </View>
+        <Slider
+          value={distance}
+          onValueChange={(value) => {
+            setDistance(Math.round(value));
+          }}
+          minimumValue={0}
+          maximumValue={100}
+          maximumTrackTintColor={styleVariables.colors.primary14}
+          minimumTrackTintColor={styleVariables.colors.primary}
+          thumbTintColor={styleVariables.colors.primary}
+        />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
