@@ -17,24 +17,24 @@ import { doc, getDoc, Timestamp } from "@firebase/firestore";
 import { db } from "../../firebase-config";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 
-function MarketplaceItemInfoScreen({ route, navigation }) {
+function MarketplaceItemInfoScreen({ navigation }) {
   const [item, setItem] = useState(null);
   const [imageList, setImageList] = useState([]);
   const [hoursAgo, setHoursAgo] = useState(null);
-  const { currentUser } = useAppContext();
+  const { currentUser, currentMarketplacePost } = useAppContext();
 
   // check for item passed from previous screen & display info
   useEffect(() => {
-    if (route.params && route.params.item) {
+    if (currentMarketplacePost) {
       // use timestamp format from Firebase instead of just storing the timestamp in the database
-      const time = setTime(route.params.item.timestamp.seconds * 1000);
+      const time = setTime(currentMarketplacePost.timestamp.seconds * 1000);
       setHoursAgo(time);
-      if (route.params.item.images.length > 0) {
-        setImageList(route.params.item.images);
+      if (currentMarketplacePost.images.length > 0) {
+        setImageList(currentMarketplacePost.images);
       }
-      setItem(route.params.item);
+      setItem(currentMarketplacePost);
     }
-  }, [route]);
+  }, [currentMarketplacePost]);
 
   const handleSendMessage = async () => {
     const id = `${currentUser.userID}-${item.userID}`;

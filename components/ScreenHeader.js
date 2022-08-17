@@ -1,58 +1,66 @@
 import React from "react";
-import { Text, Pressable, StyleSheet } from "react-native";
+import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 import { useTheme } from "../ThemeContext";
-import { useAppContext } from "../Context/AppContext";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import NotificationBadge from "./NotificationBadge";
 
-function ScreenHeader({ title }) {
-  const navigation = useNavigation();
+function ScreenHeader({ title, navigation }) {
   const { theme, styleVariables } = useTheme();
-  const { currentUser } = useAppContext();
   const styles = StyleSheet.create({
     headerPageTitle: {
       color: styleVariables.colors.white,
-      marginBottom: 4,
     },
-    buildingInfo: {
-      display: "flex",
-      flexDirection: "row",
+    marketplaceProfile: {
+      position: "absolute",
+      right: 16,
+      top: 48,
+
+      padding: 10,
+      margin: -10,
+    },
+    profileContainer: {
+      width: 32,
+      height: 32,
+      backgroundColor: "white",
+      borderRadius: 8,
       alignItems: "center",
-      opacity: 0.66,
+      justifyContent: "center",
+      ...styleVariables.shadow,
     },
-    buildingAddress: {
-      color: styleVariables.colors.white,
+    badgeContainer: {
+      position: "absolute",
+      right: 74,
+      top: 30,
     },
   });
 
+  const handleNavigate = () => {
+    navigation.navigate("MarketplaceProfile");
+  };
+
   return (
-    <SafeAreaView id="header" style={theme.header}>
+    <View style={theme.header}>
       {/* headerPageTitle */}
-      <Text
-        id="headerPageTitle"
-        style={[styleVariables.fontSizes.header, styles.headerPageTitle]}
-      >
+      <Text style={[styleVariables.fontSizes.header, styles.headerPageTitle]}>
         {title}
       </Text>
+      {title === "Marketplace" ? (
+        <>
+          <TouchableOpacity
+            style={styles.marketplaceProfile}
+            onPress={handleNavigate}
+          >
+            <View style={styles.profileContainer}>
+              <Ionicons name="person" size={20} color="#395E66" />
+            </View>
+          </TouchableOpacity>
 
-      <Pressable
-        id="buildingInfo"
-        onPress={() => {
-          navigation.navigate("BuildingInfo");
-        }}
-        style={styles.buildingInfo}
-      >
-        <Text style={[styleVariables.fontSizes.body, styles.buildingAddress]}>
-          {currentUser.buildingAddress}
-        </Text>
-        <MaterialCommunityIcons
-          name="chevron-right"
-          size={24}
-          color={styleVariables.colors.white}
-        />
-      </Pressable>
-    </SafeAreaView>
+          <View style={styles.badgeContainer}>
+            <NotificationBadge screen={`${title}Navigator`} />
+          </View>
+        </>
+      ) : null}
+    </View>
   );
 }
 

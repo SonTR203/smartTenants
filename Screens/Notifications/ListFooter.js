@@ -4,15 +4,12 @@ import { StyleSheet, View, Text } from "react-native";
 function ListFooter({ styleVariables }) {
   const styles = StyleSheet.create({
     container: {
-      height: 102,
-      paddingVertical: 17,
-      paddingHorizontal: 34,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
     },
     callOut: {
-      color: styleVariables.colors.black,
+      color: styleVariables.colors.listFooterText,
       opacity: 0.66,
       paddingBottom: 17,
     },
@@ -21,7 +18,7 @@ function ListFooter({ styleVariables }) {
   return (
     <View style={styles.container}>
       <Text style={[styleVariables.fontSizes.callout, styles.callOut]}>
-        You&apos;ve reached the end
+        There are no more notifications :)
       </Text>
     </View>
   );

@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
 
@@ -23,6 +29,15 @@ const ForgotPassword = ({ navigation }) => {
 
   const { theme, styleVariables } = useTheme();
 
+  const styles = StyleSheet.create({
+    buttonActive: {
+      opacity: 1,
+    },
+    buttonInactive: {
+      opacity: 0.5,
+    },
+  });
+
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
       <StatusBar style="auto" />
@@ -32,7 +47,7 @@ const ForgotPassword = ({ navigation }) => {
           theme.globalMargins,
           {
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             paddingTop: 27,
             paddingBottom: 34,
             flex: 1,
@@ -41,15 +56,6 @@ const ForgotPassword = ({ navigation }) => {
       >
         {/* pageContent */}
         <View id="pageContent">
-          <Text
-            style={[
-              styleVariables.fontSizes.header,
-              { color: styleVariables.colors.primary, marginBottom: 17 },
-            ]}
-          >
-            Reset password
-          </Text>
-
           <Text
             style={[
               styleVariables.fontSizes.body,
@@ -70,24 +76,29 @@ const ForgotPassword = ({ navigation }) => {
               placeholderTextColor={styleVariables.colors.placeholderText}
               placeholder="name@email.com"
               value={email}
-              onChangeText={(text) => setEmail(text)}
+              onChangeText={setEmail}
               style={[theme.textInput, styleVariables.fontSizes.body]}
             />
           </View>
         </View>
 
         {/* submitEmailButton */}
-        <TouchableOpacity
-          id="sendResetEmail"
-          onPress={handleReset}
-          style={theme.primaryButton}
-        >
-          <Text
-            style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}
+        <View style={[email ? styles.buttonActive : styles.buttonInactive]}>
+          <TouchableOpacity
+            id="sendResetEmail"
+            onPress={handleReset}
+            style={[theme.primaryButton]}
           >
-            Reset
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                theme.primaryButtonText,
+                styleVariables.fontSizes.bodyBold,
+              ]}
+            >
+              Send link
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

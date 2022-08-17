@@ -1,90 +1,77 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
 
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  FlatList,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import { collection, getDocs } from "@firebase/firestore";
-import { db } from "../firebase-config";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
+import React, { useCallback } from "react";
+import { useTheme } from "../ThemeContext";
+import BuildingIconSVG from "./Icons/BuildingIconSVG";
 
-const colRef = collection(db, "Buildings");
-const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
-
-const ModalPicker = (props) => {
-  const [buildings, setBuildings] = useState([]);
+const ModalPicker = ({ changeModalVisibility, setData, buildings }) => {
+  const { styleVariables, theme } = useTheme();
   const onPressItem = (building) => {
-    props.changeModalVisibility(false);
-    props.setData(building);
+    changeModalVisibility(false);
+    setData(building);
   };
+  const callBackRender = useCallback(
+    ({ item }) => renderBuildingItem({ item }),
+    [[buildings]]
+  );
 
-  useEffect(() => {
-    getBuildings();
-  }, []);
-
-  const getBuildings = async () => {
-    const data = await getDocs(colRef);
-    setBuildings(
-      data.docs.map((item) => ({
-        ...item._document.data.value.mapValue.fields,
-        id: item._key.path.segments[6],
-      }))
+  const renderBuildingItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+        style={{
+          width: "90%",
+          marginVertical: 17,
+          display: "flex",
+          flexDirection: "row",
+        }}
+        onPress={() => onPressItem(item)}
+      >
+        <BuildingIconSVG />
+        <Text style={[styleVariables.fontSizes.body, { marginLeft: 20 }]}>
+          {item.buildingAddress}
+        </Text>
+      </TouchableOpacity>
     );
   };
 
   return (
     <View
       style={{
-        flex: 1,
-        backgroundColor: "transparent",
-        justifyContent: "flex-end",
+        flex: 0.6,
+        backgroundColor: "#ffffff",
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        paddingTop: 24,
+        paddingHorizontal: 24,
       }}
     >
-      <TouchableOpacity
-        style={{
-          flex: 1,
-          backgroundColor: "rgba(0,0,0,0.5)",
-          marginBottom: -10,
-        }}
-        onPress={() => props.changeModalVisibility(false)}
-        activeOpacity={1}
-      />
-      <View
-        style={{
-          backgroundColor: "white",
-          height: height * 0.85,
-          alignItems: "center",
-          borderRadius: 5,
-
-          paddingTop: 20,
-          paddingBottom: 20,
-        }}
-      >
-        <FlatList
-          data={buildings}
-          renderItem={({ item, index }) => {
-            return (
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "white",
-                  width: width - 34 - 34,
-                  margin: 17,
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-                key={index}
-                onPress={() => onPressItem(item)}
-              >
-                <Text>{item.buildingAddress.stringValue}</Text>
-              </TouchableOpacity>
-            );
-          }}
-        />
+      <View style={{ flex: 1 }}>
+        <FlatList data={buildings} renderItem={callBackRender} />
       </View>
+      <TouchableOpacity
+        style={[
+          theme.secondaryButton,
+          {
+            borderColor: styleVariables.colors.primary,
+            marginTop: 24,
+            marginBottom: 34,
+          },
+        ]}
+        onPress={() => changeModalVisibility(false)}
+      >
+        <Text
+          style={[
+            styleVariables.fontSizes.bodyBold,
+            { color: styleVariables.colors.primary },
+          ]}
+        >
+          Close
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };

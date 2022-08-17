@@ -28,8 +28,8 @@ function NotificationBadge({ screen }) {
       style={{
         backgroundColor: "rgba(232, 72, 85, 1)",
         position: "absolute",
-        left: 15,
-        top: 4,
+        left: 45,
+        top: 10,
         justifyContent: "center",
         alignItems: "center",
         paddingVertical: 4,

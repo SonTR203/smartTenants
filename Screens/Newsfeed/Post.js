@@ -174,6 +174,7 @@ function Post({ passedPost, windowWidth }) {
               width: windowWidth - 68,
               borderRadius: 16,
               marginBottom: 17,
+              backgroundColor: styleVariables.colors.imageLoading,
             }}
           />
         )}

@@ -1,10 +1,13 @@
-import { React, useEffect, useState } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import React, { useEffect, useState, memo } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 import { setTime } from "../../utils/setTime";
 import { useAppContext } from "../../Context/AppContext";
 import { updateItemInFirestore } from "../../utils/firebase.services";
+import ChevronRightSVG from "../../components/Icons/ChevronRightSVG";
 
 function NoticeItem({
+  attachment,
+  subject,
   content,
   theme,
   styleVariables,
@@ -16,7 +19,7 @@ function NoticeItem({
 }) {
   const [timeSinceNotice, setTimeSinceNotice] = useState("");
   const [viewed, setViewed] = useState(false);
-  const { currentUser } = useAppContext();
+  const { currentUser, notices, setNotices } = useAppContext();
 
   useEffect(() => {
     const time = setTime(timestamp);
@@ -31,52 +34,52 @@ function NoticeItem({
       wasSeen.push(currentUser.userID);
       updateItemInFirestore("Notices", id, { wasSeen: wasSeen });
       setViewed(true);
+      // update notices in context
+      const newNoticeCount = notices - 1;
+      setNotices(newNoticeCount);
     }
   };
 
+  const handlePressEvent = () => {
+    navigation.navigate("IndividualNotice", {
+      attachment: attachment,
+      subject: subject,
+      content: content,
+      timestamp: timeSinceNotice,
+      theme: theme,
+      styleVariables: styleVariables,
+      styles: styles,
+    });
+    setWasSeenToTrue();
+  };
+
   return (
-    <View id="post" style={theme.cardContainer}>
+    <TouchableOpacity
+      onPress={handlePressEvent}
+      id="post"
+      style={theme.cardContainer}
+    >
       {/* Notice Info */}
       <View id="noticeInfo" style={styles.noticeInfo}>
-        <View className="imageAndName" style={styles.imageAndName}>
-          <Image
-            source={require("../../assets/icon.png")}
-            style={styles.profileIcon}
-          />
-          <Text style={[styleVariables.fontSizes.bodyBold, styles.profileName]}>
-            {"Smart Living Properties"}
+        <View>
+          <View style={styles.subjectContainer}>
+            <Text
+              style={[styleVariables.fontSizes.bodyBold, styles.profileName]}
+            >
+              {subject}
+            </Text>
+            {viewed == false && (
+              <View id="notificationIndice" style={styles.noticeIndice} />
+            )}
+          </View>
+          <Text id="timePosted" style={[styleVariables.fontSizes.callout]}>
+            {timeSinceNotice}
           </Text>
         </View>
-        <Text style={[styleVariables.fontSizes.callout, styles.timestampText]}>
-          {timeSinceNotice}
-        </Text>
-        {viewed == false && (
-          <View id="notificationIndice" style={styles.noticeIndice} />
-        )}
+        <ChevronRightSVG stroke="#D2D2D2" />
       </View>
-
-      {/* Notice content */}
-      <TouchableOpacity
-        id="noticeContent"
-        onPress={() => {
-          setWasSeenToTrue();
-          navigation.navigate("IndividualNotice", {
-            content: content,
-            timestamp: timeSinceNotice,
-            theme: theme,
-            styleVariables: styleVariables,
-            styles: styles,
-          });
-        }}
-      >
-        <View className="noticeTextContent">
-          <Text style={[styleVariables.fontSizes.body, styles.noticeContent]}>
-            {content}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 }
 
-export default NoticeItem;
+export default memo(NoticeItem);

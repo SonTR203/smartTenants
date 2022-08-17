@@ -196,7 +196,8 @@ exports.notificationsNewComment = functions.firestore
           userID,
           postID,
           childId,
-          `${firstName} ${lastName} commented on your post.`
+          `${firstName} ${lastName}`,
+          "commented on your post."
         );
       }
     } else if (change.before.exists === true && change.after.exists === false) {
@@ -257,7 +258,8 @@ exports.notificationsNewLike = functions.firestore
           userID,
           postID,
           childId,
-          `${firstName} ${lastName} liked your post.`
+          `${firstName} ${lastName}`,
+          "liked your post."
         );
       }
     } else if (change.before.exists === true && change.after.exists === false) {
@@ -461,10 +463,12 @@ const createNotificationItemInFirestore = async (
   userID,
   postID,
   id,
+  header,
   content
 ) => {
   const notificationItem = {
     id: id,
+    header: header,
     content: content,
     postID: postID,
     authorID: authorID,

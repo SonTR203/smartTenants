@@ -1,6 +1,6 @@
 //mix tab and stack navigators: https://www.youtube.com/watch?v=dkriklWelm0&t=139s
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Newsfeed from "./Newsfeed/Newsfeed";
 import BuildingInfo from "./BuildingInfo/BuildingInfo";
@@ -29,6 +29,10 @@ import MessagesListScreen from "./Messaging/MessagesListScreen";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getItemById, uploadExpoPushToken } from "../utils/firebase.services";
 import TermsAndConditions from "./TermsAndConditions/TermsAndConditions";
+import Splashscreen from "./Splashscreen/Splashscreen";
+import MarketplaceProfile from "./Marketplace/MarketplaceProfile/MarketplaceProfile";
+import SavedListingsScreen from "./Marketplace/SavedListings/SavedListingsScreen";
+import MyListingsScreen from "./Marketplace/MyListings/MyListingsScreen";
 
 const Stack = createStackNavigator();
 
@@ -41,7 +45,7 @@ const Stack = createStackNavigator();
 //   }),
 // });
 
-const MarketplaceNavigator = () => {
+const MarketplaceNavigator = ({ navigation }) => {
   const { currentUser } = useAppContext();
   return (
     <Stack.Navigator>
@@ -50,7 +54,40 @@ const MarketplaceNavigator = () => {
         component={MarketplaceScreen}
         options={{
           headerShown: true,
-          header: () => <ScreenHeader title={"Marketplace"} />,
+          header: () => (
+            <ScreenHeader title={"Marketplace"} navigation={navigation} />
+          ),
+        }}
+      />
+
+      <Stack.Screen
+        name="MarketplaceProfile"
+        component={MarketplaceProfile}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader
+              {...props}
+              title={"Marketplace profile"}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="SavedListings"
+        component={SavedListingsScreen}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Saved listings"} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="MyListings"
+        component={MyListingsScreen}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"My listings"} />
+          ),
         }}
       />
       <Stack.Screen
@@ -71,10 +108,11 @@ const MarketplaceNavigator = () => {
               {...props}
               title={route.params.title + "'s Post"}
               currentUserId={currentUser.userID}
-              itemUserId={route.params.item.userID}
+              itemUserId={route.params.itemUserId}
               item={route.params.item}
               previousScreen={"MarketplaceScreen"}
               collection={"Marketplace"}
+              openModal={route.params.openModal}
             />
           ),
         })}
@@ -115,6 +153,13 @@ const MarketplaceNavigator = () => {
 
 const NewsfeedNavigator = () => {
   const { post, currentUser, setCurrentUser } = useAppContext();
+  const [loginStatus, setLoginStatus] = useState(false);
+  const [splashscreenVisible, setSplashScreenVisible] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setSplashScreenVisible(false), 2000);
+    return () => clearTimeout(timeout);
+  }, []);
 
   useEffect(() => {
     const auth = getAuth();
@@ -135,6 +180,7 @@ const NewsfeedNavigator = () => {
         console.log("user is not logged in");
         setCurrentUser({});
       }
+      setLoginStatus(true);
     });
 
     return () => {
@@ -144,7 +190,13 @@ const NewsfeedNavigator = () => {
 
   return (
     <Stack.Navigator>
-      {currentUser && currentUser.tenantAuthorized ? (
+      {!loginStatus || splashscreenVisible ? (
+        <Stack.Screen
+          name="Splashscreen"
+          component={Splashscreen}
+          options={{ headerShown: false }}
+        />
+      ) : currentUser && currentUser.tenantAuthorized ? (
         <>
           <Stack.Screen
             name="Newsfeed"
@@ -230,7 +282,10 @@ const NewsfeedNavigator = () => {
             component={ForgotPassword}
             options={{
               header: (props) => (
-                <CustomSubStackScreenHeader {...props} title={" "} />
+                <CustomSubStackScreenHeader
+                  {...props}
+                  title={"Reset password"}
+                />
               ),
             }}
           />

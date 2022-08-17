@@ -26,13 +26,17 @@ import {
 } from "../../utils/firebase.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import ImageSVG from "../../components/ImageSVG";
 import {
   updateImages,
   uploadMarketplaceImages,
 } from "../../utils/Marketplace/marketplace.services";
 import { maxImages } from "../../utils/constants";
 import * as Progress from "react-native-progress";
+import ImageSVG from "../../components/Icons/ImageSVG";
+import ChevronDownSVG from "../../components/Icons/ChevronDownSVG";
+import Modal from "react-native-modal";
+import ModalConditionPicker from "../../components/ModalConditionPicker";
+import ModalCategoryPicker from "../../components/ModalCategoryPicker";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -40,6 +44,10 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [price, setPrice] = useState(null);
+  const [condition, setCondition] = useState("Choose condition");
+  const [category, setCategory] = useState("Choose category");
+  const [conditionModalVisible, setConditionModalVisible] = useState(false);
+  const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
@@ -193,7 +201,7 @@ function MarketplaceNewPostScreen({ navigation }) {
       selected.length > 0
     ) {
       setIsloading(true);
-      setPrice(format(price)); // format price in case event listener didn't get triggered
+      price.includes("$") ? null : setPrice(format(price)); // format price in case event listener didn't get triggered
       const id = uuid.v4();
       const imageUrls = await uploadMarketplaceImages(selectedImages, id);
       console.log("imageUrls: ", imageUrls);
@@ -213,9 +221,13 @@ function MarketplaceNewPostScreen({ navigation }) {
         images: imageUrls,
         isNSFW: isNsfw,
         id: id,
+        isSold: false,
         postContent: content,
         postTitle: title,
+        isSavedBy: [],
         price: price,
+        category: category,
+        condition: condition,
         userID: currentUser.userID,
         userFirstName: currentUser.firstName,
         userLastName: currentUser.lastName,
@@ -368,6 +380,17 @@ function MarketplaceNewPostScreen({ navigation }) {
       height: 80,
       borderRadius: 8,
     },
+    input: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    modal: {
+      display: "flex",
+      justifyContent: "flex-end",
+      margin: 0,
+    },
   });
 
   return (
@@ -397,7 +420,76 @@ function MarketplaceNewPostScreen({ navigation }) {
                 styles.textInputTitleAndPrice,
               ]}
             />
-
+            {/* CATEGORY */}
+            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+              Category
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setCategoryModalVisible(true);
+              }}
+            >
+              <View style={[theme.textInput, styles.input]}>
+                <Text
+                  style={[
+                    styleVariables.fontSizes.body,
+                    { color: styleVariables.colors.placeholderText },
+                  ]}
+                >
+                  {category}
+                </Text>
+                <ChevronDownSVG />
+              </View>
+            </TouchableOpacity>
+            <Modal
+              id="categorySelectionModal"
+              isVisible={categoryModalVisible}
+              backdropOpacity={0.5}
+              onBackdropPress={() => setCategoryModalVisible(false)}
+              style={styles.modal}
+            >
+              <ModalCategoryPicker
+                theme={theme}
+                styleVariables={styleVariables}
+                setCategoryModalVisible={setCategoryModalVisible}
+                setCategory={setCategory}
+              />
+            </Modal>
+            {/* CONDITION */}
+            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+              Condition
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setConditionModalVisible(true);
+              }}
+            >
+              <View style={[theme.textInput, styles.input]}>
+                <Text
+                  style={[
+                    styleVariables.fontSizes.body,
+                    { color: styleVariables.colors.placeholderText },
+                  ]}
+                >
+                  {condition}
+                </Text>
+                <ChevronDownSVG />
+              </View>
+            </TouchableOpacity>
+            <Modal
+              id="conditionSelectionModal"
+              isVisible={conditionModalVisible}
+              backdropOpacity={0.5}
+              onBackdropPress={() => setConditionModalVisible(false)}
+              style={styles.modal}
+            >
+              <ModalConditionPicker
+                theme={theme}
+                styleVariables={styleVariables}
+                setConditionModalVisible={setConditionModalVisible}
+                setCondition={setCondition}
+              />
+            </Modal>
             {/* DESCRIPTION */}
             <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
               Description
