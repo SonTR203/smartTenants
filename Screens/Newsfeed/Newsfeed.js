@@ -102,9 +102,10 @@ const Newsfeed = ({ navigation, route }) => {
           ListFooterComponent={renderListFooter}
           refreshControl={
             <RefreshControl
+              progressBackgroundColor="white"
               tintColor="transparent"
-              colors={["transparent"]}
-              style={{ backgroundColor: "transparent" }}
+              colors={[styleVariables.colors.primary]}
+              style={{ backgroundColor: "transparent", color: "transparent" }}
               onRefresh={onRefresh}
               refreshing={refreshing}
             />
