@@ -40,7 +40,10 @@ export async function getNoticeCount(currentUser) {
     };
   });
   formattedData.forEach((notice) => {
-    if (!notice.wasSeen.includes(currentUser.userID)) {
+    if (
+      notice.wasSeen.filter((user) => user.userID === currentUser.userID)
+        .length === 0
+    ) {
       unseenNoticeCount++;
     }
   });
@@ -62,7 +65,10 @@ export async function getAnnouncementCount(currentUser) {
     };
   });
   formattedData.forEach((announcement) => {
-    if (!announcement.wasSeen.includes(currentUser.userID)) {
+    if (
+      announcement.wasSeen.filter((user) => user.userID === currentUser.userID)
+        .length === 0
+    ) {
       unseenAnnouncementCount++;
     }
   });

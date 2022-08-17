@@ -99,7 +99,7 @@ function AnnouncementItem({
   });
 
   useEffect(() => {
-    const time = setTime(timestamp);
+    const time = setTime(timestamp.seconds * 1000);
     setTimeSinceAnnouncement(time);
     if (wasSeen.includes(currentUser.userID)) {
       setViewed(true);

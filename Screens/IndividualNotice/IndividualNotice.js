@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 
 function IndividualNotice({ route }) {
@@ -14,12 +14,29 @@ function IndividualNotice({ route }) {
   } = route.params;
 
   const _handleOpenPDFInWebBrowser = async () => {
-    await WebBrowser.openBrowserAsync(attachment);
+    try {
+      await WebBrowser.openBrowserAsync(attachment);
+    } catch (error) {
+      console.log("Open PDF Error: ", error);
+      Alert.alert("Error", "There was an error opening the PDF");
+    }
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
-      <View style={theme.cardContainer}>
+    <ScrollView
+      style={{
+        flex: 1,
+        backgroundColor: styleVariables.colors.white,
+      }}
+    >
+      <View
+        style={[
+          theme.cardContainer,
+          {
+            marginBottom: 16,
+          },
+        ]}
+      >
         <View id="noticeInfo" style={styles.noticeInfo}>
           <View className="imageAndName" style={styles.imageAndName}>
             <Text
@@ -46,7 +63,7 @@ function IndividualNotice({ route }) {
           <Text style={styles.attachmentText}>View attachment</Text>
         </TouchableOpacity>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
