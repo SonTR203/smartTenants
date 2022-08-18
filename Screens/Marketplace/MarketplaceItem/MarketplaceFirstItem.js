@@ -4,6 +4,7 @@ import { useTheme } from "../../../ThemeContext";
 import { useAppContext } from "../../../Context/AppContext";
 import { constants } from "../../../utils/constants";
 import SaveIcon from "../../../components/SaveIcon/SaveIcon";
+import { LinearGradient } from "expo-linear-gradient";
 
 function MarketplaceFirstItem({
   item,
@@ -13,11 +14,16 @@ function MarketplaceFirstItem({
   handleOpenSoldModal,
   saved,
   handleUnSaved,
+  isPopular = false,
 }) {
   const { theme, styleVariables } = useTheme();
   const { setCurrentMarketplacePost } = useAppContext();
   const styles = StyleSheet.create({
-    container: { marginTop: 17, marginLeft: 17, marginRight: 17 },
+    container: {
+      marginTop: 17,
+      marginLeft: 17,
+      marginRight: 17,
+    },
     image: {
       resizeMode: "cover",
       marginBottom: 17,
@@ -52,7 +58,7 @@ function MarketplaceFirstItem({
     contentContainer: {
       marginLeft: 17,
       marginRight: 17,
-      marginBottom: 8,
+      marginBottom: 16,
     },
     content: {
       color: "#191919",
@@ -72,6 +78,7 @@ function MarketplaceFirstItem({
     },
     bottomButton: {
       margin: 16,
+      marginTop: 8,
       padding: 8,
       borderRadius: 8,
       backgroundColor: styleVariables.colors.primary,
@@ -105,7 +112,24 @@ function MarketplaceFirstItem({
       style={[theme.marketplaceItemContainer, styles.container]}
     >
       {/* ITEM IMAGE  */}
+
       <Image style={styles.image} source={{ uri: item.images[0] }} />
+      <LinearGradient
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          borderRadius: 17,
+          borderBottomEndRadius: 0,
+          borderBottomStartRadius: 0,
+
+          width: "100%",
+          height: constants.height * 0.25,
+        }}
+        colors={["rgba(0, 0, 0, 0.15)", "rgba(0, 0, 0, 0)"]}
+      />
       {saved && (
         <SaveIcon
           isSaved={true}
@@ -113,6 +137,31 @@ function MarketplaceFirstItem({
           style={styles.saveIcon}
           size={30}
         />
+      )}
+      {isPopular && (
+        <View
+          style={{
+            position: "absolute",
+            top: 16,
+            right: 16,
+            paddingHorizontal: 8,
+            paddingVertical: 4,
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            borderRadius: 8,
+            ...styleVariables.shadow,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 15,
+              lineHeight: 20,
+              color: styleVariables.colors.popularOrange,
+              textAlign: "center",
+            }}
+          >
+            Popular 🔥️
+          </Text>
+        </View>
       )}
 
       {/* IMAGE TITLE & PRICE  */}

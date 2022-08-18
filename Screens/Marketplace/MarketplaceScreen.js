@@ -89,6 +89,9 @@ const MarketplaceScreen = ({ navigation, route }) => {
   };
 
   const renderEmpty = () => {
+    if (itemList.length === 1) {
+      return null;
+    }
     return <EmptyListComponent screenName={"marketplace"} />;
   };
 
