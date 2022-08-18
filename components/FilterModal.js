@@ -238,7 +238,7 @@ function FilterModal() {
           </View>
           <Slider
             value={distance}
-            onValueChange={(value) => {
+            onSlidingComplete={(value) => {
               setDistance(Math.round(value));
             }}
             minimumValue={0}
