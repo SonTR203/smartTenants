@@ -108,7 +108,11 @@ const MarketplaceScreen = ({ navigation, route }) => {
 
           <Entypo name="chevron-small-right" size={40} color="#395E66" />
         </TouchableOpacity>
-        <MarketplaceFirstItem item={itemList[0]} navigation={navigation} />
+        <MarketplaceFirstItem
+          isPopular={true}
+          item={itemList[0]}
+          navigation={navigation}
+        />
       </>
     );
   };

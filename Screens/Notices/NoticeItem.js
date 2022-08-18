@@ -55,7 +55,7 @@ function NoticeItem({
       attachment: attachment[0] ? attachment[0] : null,
       subject: subject,
       content: content,
-      timestamp: timeSinceNotice,
+      timestamp: timestamp.seconds * 1000,
       theme: theme,
       styleVariables: styleVariables,
       styles: styles,

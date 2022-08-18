@@ -52,7 +52,14 @@ function IndividualNotice({ route }) {
           </Text>
         </View>
         <Text style={[styleVariables.fontSizes.callout, styles.timestampText]}>
-          {timestamp}
+          {new Date(timestamp).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          })}
         </Text>
       </View>
       {attachment && (
