@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -8,10 +8,13 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  Animated,
 } from "react-native";
 import { useTheme } from "../ThemeContext";
 import ChevronRightSVG from "./Icons/ChevronRightSVG";
 import { Slider } from "@miblanchard/react-native-slider";
+import { constants } from "../utils/constants";
+import ModalCategoryPicker from "./ModalCategoryPicker";
 
 function FilterModal() {
   const [categoryFilter, setCategoryFilter] = useState("All");
@@ -21,6 +24,22 @@ function FilterModal() {
   const [distance, setDistance] = useState("50");
   const [listingAmount, setListingAmount] = useState("0");
   const { styleVariables, theme } = useTheme();
+  const slideInOut = useRef(new Animated.Value(constants.width)).current;
+
+  const slideIn = () => {
+    Animated.timing(slideInOut, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+  const slideOut = () => {
+    Animated.timing(slideInOut, {
+      toValue: constants.width,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const styles = StyleSheet.create({
     modalContainer: {
@@ -75,13 +94,13 @@ function FilterModal() {
       marginTop: 8,
       color: styleVariables.colors.primary,
     },
-    min: {
+    marginRight: {
       marginRight: 16,
     },
-    max: {
+    marginLeft: {
       marginLeft: 16,
     },
-    distanceTitle: {
+    sectionTitle: {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
@@ -91,6 +110,15 @@ function FilterModal() {
       flex: 1,
       justifyContent: "flex-end",
       marginBottom: 34,
+    },
+    categoryList: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      transform: [{ translateX: slideInOut }],
+      backgroundColor: "#fff",
     },
   });
 
@@ -104,119 +132,134 @@ function FilterModal() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.modalContainer}
       >
-        <View style={styles.filterSection}>
-          <Text style={[styleVariables.fontSizes.title]}>Filters</Text>
-          <TouchableOpacity>
-            <Text
-              style={[styleVariables.fontSizes.bodyBold, styles.primaryClr]}
-            >
-              Reset all
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {/* CATEGORY SELECTION */}
-        <TouchableOpacity style={[styles.filterSection]}>
-          <View>
-            <Text style={[styleVariables.fontSizes.bodyBold]}>Category</Text>
-            <Text style={[styleVariables.fontSizes.body, styles.primaryClr]}>
-              {categoryFilter}
-            </Text>
+        <View>
+          <View style={styles.filterSection}>
+            <Text style={[styleVariables.fontSizes.title]}>Filters</Text>
+            <TouchableOpacity>
+              <Text
+                style={[styleVariables.fontSizes.bodyBold, styles.primaryClr]}
+              >
+                Reset all
+              </Text>
+            </TouchableOpacity>
           </View>
-          <ChevronRightSVG />
-        </TouchableOpacity>
-        {/* CONDITION SELECTION */}
-        <Text style={styleVariables.fontSizes.bodyBold}>Condition</Text>
-        <View style={[styles.conditions]}>
-          <TouchableOpacity
-            onPress={() => {
-              setConditionFilter("All");
-            }}
-            style={[
-              styles.condition,
-              conditionFilter == "All" && styles.conditionSelected,
-            ]}
-          >
-            <Text
+          {/* CATEGORY SELECTION */}
+          <TouchableOpacity onPress={slideIn} style={[styles.filterSection]}>
+            <View>
+              <Text style={[styleVariables.fontSizes.bodyBold]}>Category</Text>
+              <Text style={[styleVariables.fontSizes.body, styles.primaryClr]}>
+                {categoryFilter}
+              </Text>
+            </View>
+            <ChevronRightSVG />
+          </TouchableOpacity>
+          {/* CONDITION SELECTION */}
+          <Text style={styleVariables.fontSizes.bodyBold}>Condition</Text>
+          <View style={[styles.conditions]}>
+            <TouchableOpacity
+              onPress={() => {
+                setConditionFilter("All");
+              }}
               style={[
-                styleVariables.fontSizes.body,
-                conditionFilter == "All" && styles.textWhite,
+                styles.condition,
+                conditionFilter == "All" && styles.conditionSelected,
               ]}
             >
-              All
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setConditionFilter("New");
-            }}
-            style={[
-              styles.condition,
-              styles.conditionMargins,
-              conditionFilter == "New" && styles.conditionSelected,
-            ]}
-          >
-            <Text
+              <Text
+                style={[
+                  styleVariables.fontSizes.body,
+                  conditionFilter == "All" && styles.textWhite,
+                ]}
+              >
+                All
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setConditionFilter("New");
+              }}
               style={[
-                styleVariables.fontSizes.body,
-                conditionFilter == "New" && styles.textWhite,
+                styles.condition,
+                styles.conditionMargins,
+                conditionFilter == "New" && styles.conditionSelected,
               ]}
             >
-              New
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setConditionFilter("Used");
-            }}
-            style={[
-              styles.condition,
-              conditionFilter == "Used" && styles.conditionSelected,
-            ]}
-          >
-            <Text
+              <Text
+                style={[
+                  styleVariables.fontSizes.body,
+                  conditionFilter == "New" && styles.textWhite,
+                ]}
+              >
+                New
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setConditionFilter("Used");
+              }}
               style={[
-                styleVariables.fontSizes.body,
-                conditionFilter == "Used" && styles.textWhite,
+                styles.condition,
+                conditionFilter == "Used" && styles.conditionSelected,
               ]}
             >
-              Used
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={styleVariables.fontSizes.bodyBold}>Price</Text>
-        <View style={styles.filterSection}>
-          <TextInput
-            onChangeText={setMinPrice}
-            value={minPrice}
-            keyboardType={"decimal-pad"}
-            style={[styles.input, styles.min]}
-            placeholder={"$0.00"}
-            placeholderTextColor={styleVariables.colors.primary}
+              <Text
+                style={[
+                  styleVariables.fontSizes.body,
+                  conditionFilter == "Used" && styles.textWhite,
+                ]}
+              >
+                Used
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {/* PRICE FILTER */}
+          <Text style={styleVariables.fontSizes.bodyBold}>Price</Text>
+          <View style={styles.filterSection}>
+            <TextInput
+              onChangeText={setMinPrice}
+              value={minPrice}
+              keyboardType={"decimal-pad"}
+              style={[styles.input, styles.marginRight]}
+              placeholder={"$0.00"}
+              placeholderTextColor={styleVariables.colors.primary}
+            />
+            <TextInput
+              onChangeText={setMaxPrice}
+              value={maxPrice}
+              keyboardType={"decimal-pad"}
+              style={[styles.input, styles.marginLeft]}
+              placeholder={"$0.00"}
+              placeholderTextColor={styleVariables.colors.primary}
+            />
+          </View>
+          <View style={styles.sectionTitle}>
+            <Text style={styleVariables.fontSizes.bodyBold}>Distance</Text>
+            <Text>{distance + "km"}</Text>
+          </View>
+          <Slider
+            value={distance}
+            onValueChange={(value) => {
+              setDistance(Math.round(value));
+            }}
+            minimumValue={0}
+            maximumValue={100}
+            maximumTrackTintColor={styleVariables.colors.primary14}
+            minimumTrackTintColor={styleVariables.colors.primary}
+            thumbTintColor={styleVariables.colors.primary}
           />
-          <TextInput
-            onChangeText={setMaxPrice}
-            value={maxPrice}
-            keyboardType={"decimal-pad"}
-            style={[styles.input, styles.max]}
-            placeholder={"$0.00"}
-            placeholderTextColor={styleVariables.colors.primary}
-          />
+          {/* CATEGORY LIST */}
+          <Animated.View style={styles.categoryList}>
+            <ModalCategoryPicker
+              styleVariables={styleVariables}
+              theme={theme}
+              closeCategory={slideOut}
+              categoryFilter={categoryFilter}
+              setCategoryFilter={setCategoryFilter}
+              isFilterModal={true}
+            />
+          </Animated.View>
         </View>
-        <View style={styles.distanceTitle}>
-          <Text style={styleVariables.fontSizes.bodyBold}>Distance</Text>
-          <Text>{distance + "km"}</Text>
-        </View>
-        <Slider
-          value={distance}
-          onValueChange={(value) => {
-            setDistance(Math.round(value));
-          }}
-          minimumValue={0}
-          maximumValue={100}
-          maximumTrackTintColor={styleVariables.colors.primary14}
-          minimumTrackTintColor={styleVariables.colors.primary}
-          thumbTintColor={styleVariables.colors.primary}
-        />
+
         <View style={styles.listingButton}>
           <TouchableOpacity style={theme.primaryButton}>
             <Text
