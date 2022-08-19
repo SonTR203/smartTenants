@@ -13,7 +13,7 @@ function ModalConditionPicker({
 
   const styles = StyleSheet.create({
     modalContainer: {
-      flex: 0.3,
+      // flex: 0.4,
       backgroundColor: "#ffffff",
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,
@@ -37,16 +37,13 @@ function ModalConditionPicker({
       alignItems: "center",
     },
     checkBoxContainer: {
-      flex: 1,
-      justifyContent: "space-between",
-      paddingTop: 24,
-      paddingBottom: 16,
+      paddingVertical: 10,
     },
   });
   return (
     <View style={styles.modalContainer}>
       <View style={styles.checkBoxContainer}>
-        <View style={styles.checkBox}>
+        <View style={[styles.checkBox, { marginBottom: 30 }]}>
           <Text style={styleVariables.fontSizes.body}>New</Text>
           <BouncyCheckbox
             size={28}
