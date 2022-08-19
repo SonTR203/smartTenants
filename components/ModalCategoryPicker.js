@@ -90,22 +90,24 @@ function ModalCategoryPicker({
       }}
     >
       <Text style={[styleVariables.fontSizes.body]}>{category}</Text>
-      <BouncyCheckbox
-        size={28}
-        fillColor={styleVariables.colors.primary}
-        iconStyle={{
-          width: 20,
-          height: 20,
-          borderColor: styleVariables.colors.primary,
-        }}
-        style={styles.subCategoryCheckbox}
-        disableText={true}
-        disableBuiltInState={true}
-        isChecked={categoryFilter == category}
-        onPress={() => {
-          setCategoryFilter(category);
-        }}
-      />
+      {isFilterModal && (
+        <BouncyCheckbox
+          size={28}
+          fillColor={styleVariables.colors.primary}
+          iconStyle={{
+            width: 20,
+            height: 20,
+            borderColor: styleVariables.colors.primary,
+          }}
+          style={styles.subCategoryCheckbox}
+          disableText={true}
+          disableBuiltInState={true}
+          isChecked={categoryFilter == category}
+          onPress={() => {
+            setCategoryFilter(category);
+          }}
+        />
+      )}
     </TouchableOpacity>
   );
 
