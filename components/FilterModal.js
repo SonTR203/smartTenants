@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Animated,
+  Platform,
 } from "react-native";
 import { useTheme } from "../ThemeContext";
 import ChevronRightSVG from "./Icons/ChevronRightSVG";
@@ -44,8 +45,8 @@ function FilterModal({
         categoryFilter,
         conditionFilter,
         minPrice,
-        maxPrice,
-        distance
+        maxPrice
+        // distance
       );
       setListingAmount(filteredList.length);
     } else {
@@ -82,8 +83,8 @@ function FilterModal({
       categoryFilter,
       conditionFilter,
       minPrice,
-      maxPrice,
-      distance
+      maxPrice
+      // distance
     );
     setFilteredItemList(filteredList);
     setFilterModalVisible(false);

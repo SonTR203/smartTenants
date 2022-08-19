@@ -43,8 +43,8 @@ export const getFilteredList = (
   category,
   condition,
   min,
-  max,
-  distance
+  max
+  // distance
 ) => {
   const filteredList = data.filter((item) => {
     if (
