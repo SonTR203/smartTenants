@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
+import { FlatList, RefreshControl, View } from "react-native";
 import { db } from "../../firebase-config";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import AnnouncementItem from "./AnnouncementItem";
@@ -8,6 +8,7 @@ import { wait } from "../../utils/wait";
 import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../Context/AppContext";
+import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 
 function Announcements({ navigation, route }) {
   const [announcements, setAnnouncements] = useState([]);
@@ -38,10 +39,6 @@ function Announcements({ navigation, route }) {
       clearTimeout(timeout);
     };
   }, [route.params, announcements]);
-
-  const styles = StyleSheet.create({
-    refreshControl: { backgroundColor: "white" },
-  });
 
   async function getAnnouncements() {
     const colReference = collection(db, "Announcements");
@@ -93,17 +90,19 @@ function Announcements({ navigation, route }) {
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
       <StatusBar style="light" />
-
+      <FlatListRefreshControl refreshing={refreshing} />
       <FlatList
         ref={listRef}
         data={announcements}
         renderItem={renderItem}
         refreshControl={
           <RefreshControl
+            progressBackgroundColor="white"
+            colors={[styleVariables.colors.primary]}
+            tintColor="transparent"
+            style={{ backgroundColor: "transparent", color: "transparent" }}
             onRefresh={onRefresh}
             refreshing={refreshing}
-            style={styles.refreshControl}
-            tintColor={styleVariables.colors.primary}
           />
         }
         ListFooterComponent={renderListFooter}

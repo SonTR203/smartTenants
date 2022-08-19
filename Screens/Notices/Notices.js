@@ -8,6 +8,7 @@ import NoticeItem from "./NoticeItem";
 import { wait } from "../../utils/wait";
 import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
+import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 
 function Notices({ navigation, route }) {
   const [notices, setNotices] = useState([]);
@@ -148,16 +149,19 @@ function Notices({ navigation, route }) {
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
       <StatusBar style="light" />
+      <FlatListRefreshControl refreshing={refreshing} />
       <FlatList
         ref={listRef}
         data={notices}
         renderItem={renderItem}
         refreshControl={
           <RefreshControl
+            progressBackgroundColor="white"
+            colors={[styleVariables.colors.primary]}
+            tintColor="transparent"
+            style={{ backgroundColor: "transparent", color: "transparent" }}
             onRefresh={onRefresh}
             refreshing={refreshing}
-            style={styles.refreshControl}
-            tintColor={styleVariables.colors.primary}
           />
         }
         ListFooterComponent={renderFooter}

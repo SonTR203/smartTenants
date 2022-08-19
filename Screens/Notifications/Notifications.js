@@ -27,11 +27,16 @@ const Notifications = ({ navigation }) => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
 
-    wait(refreshDelay).then(async () => {
-      fetchNoticeCount();
-      fetchAnnouncementCount();
-      setRefreshing(false);
-    });
+    wait(refreshDelay)
+      .then(async () => {
+        fetchNoticeCount();
+        fetchAnnouncementCount();
+        setRefreshing(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setRefreshing(false);
+      });
   }, []);
 
   useEffect(async () => {
