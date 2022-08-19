@@ -52,10 +52,11 @@ export async function getNoticeCount(currentUser) {
 
 export async function getAnnouncementCount(currentUser) {
   let unseenAnnouncementCount = 0;
+  console.log("building Name: ", currentUser.buildingName);
   const announcementCol = collection(db, "Announcements");
   const newAnnouncementCol = query(
     announcementCol,
-    where("recipients", "array-contains", currentUser.userID)
+    where("recipients", "array-contains", currentUser.buildingName)
   );
   const data = await getDocs(newAnnouncementCol);
   const formattedData = data.docs.map((doc) => {
@@ -64,10 +65,11 @@ export async function getAnnouncementCount(currentUser) {
       id: doc.id,
     };
   });
+  console.log("formattedData: ", formattedData);
   formattedData.forEach((announcement) => {
     if (
-      announcement.wasSeen.filter((user) => user.userID === currentUser.userID)
-        .length === 0
+      !announcement.wasSeen.includes(currentUser.userID) ||
+      !announcement.wasSeen
     ) {
       unseenAnnouncementCount++;
     }

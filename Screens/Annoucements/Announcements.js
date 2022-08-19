@@ -47,7 +47,7 @@ function Announcements({ navigation, route }) {
     const colReference = collection(db, "Announcements");
     const q = query(
       colReference,
-      where("recipients", "array-contains", currentUser.userID)
+      where("recipients", "array-contains", currentUser.buildingName)
     );
 
     const data = await getDocs(q);
@@ -58,6 +58,7 @@ function Announcements({ navigation, route }) {
         id: doc.id,
       };
     });
+    console.log("formattedData: ", formattedData);
     setAnnouncements(formattedData);
   }
 
@@ -74,7 +75,7 @@ function Announcements({ navigation, route }) {
     return (
       <AnnouncementItem
         content={item.content}
-        attatchment={item.attatchment[0]}
+        attachment={item.attachment[0]}
         timestamp={item.timestamp}
         wasSeen={item.wasSeen}
         id={item.id}

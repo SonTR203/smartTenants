@@ -55,10 +55,12 @@ const Notifications = ({ navigation }) => {
 
   async function fetchNoticeCount() {
     const count = await getNoticeCount(currentUser);
+    console.log("notice count: ", count);
     setNotices(count);
   }
   async function fetchAnnouncementCount() {
     const count = await getAnnouncementCount(currentUser);
+    console.log("announcement count: ", count);
     setAnnouncements(count);
   }
 

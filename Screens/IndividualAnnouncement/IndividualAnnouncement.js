@@ -3,7 +3,7 @@ import { View, Text, Image, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 function IndividualAnnouncement({ route }) {
-  const { content, timestamp, attatchment, styleVariables, styles } =
+  const { content, timestamp, attachment, styleVariables, styles } =
     route.params;
 
   return (
@@ -41,10 +41,10 @@ function IndividualAnnouncement({ route }) {
             {content}
           </Text>
         </View>
-        {attatchment != "" && (
+        {attachment != "" && (
           <Image
             source={{
-              uri: `${attatchment}`,
+              uri: `${attachment}`,
             }}
             style={styles.announcementImage}
           />

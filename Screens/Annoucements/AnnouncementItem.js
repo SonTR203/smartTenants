@@ -7,7 +7,7 @@ import { StatusBar } from "expo-status-bar";
 
 function AnnouncementItem({
   content,
-  attatchment,
+  attachment,
   timestamp,
   wasSeen,
   theme,
@@ -121,7 +121,7 @@ function AnnouncementItem({
     navigation.navigate("IndividualAnnouncement", {
       content: content,
       timestamp: timeSinceAnnouncement,
-      attatchment: attatchment,
+      attachment: attachment,
       theme: theme,
       styleVariables: styleVariables,
       styles: styles,
@@ -168,10 +168,10 @@ function AnnouncementItem({
             {content}
           </Text>
         </View>
-        {attatchment != "" && (
+        {attachment != "" && (
           <Image
             source={{
-              uri: `${attatchment}`,
+              uri: `${attachment}`,
             }}
             style={styles.announcementImage}
           />
