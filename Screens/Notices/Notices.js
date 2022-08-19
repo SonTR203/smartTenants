@@ -151,6 +151,11 @@ function Notices({ navigation, route }) {
       <StatusBar style="light" />
       <FlatListRefreshControl refreshing={refreshing} />
       <FlatList
+        getItemLayout={(data, index) => ({
+          length: data.length,
+          offset: data.length * index,
+          index,
+        })}
         ref={listRef}
         data={notices}
         renderItem={renderItem}

@@ -216,7 +216,7 @@ function App() {
               }
               case "Notices":
                 navigationRef.navigate("NotificationsNavigator", {
-                  screen: "Notices",
+                  screen: "Notifications",
                   params: {
                     noticeId: data.noticeId,
                   },
@@ -225,7 +225,7 @@ function App() {
                 break;
               case "Announcements":
                 navigationRef.navigate("NotificationsNavigator", {
-                  screen: "Announcements",
+                  screen: "Notifications",
                   params: {
                     announcementId: data.announcementId,
                   },

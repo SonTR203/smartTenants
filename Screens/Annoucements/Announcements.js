@@ -93,6 +93,11 @@ function Announcements({ navigation, route }) {
       <FlatListRefreshControl refreshing={refreshing} />
       <FlatList
         ref={listRef}
+        getItemLayout={(data, index) => ({
+          length: data.length,
+          offset: data.length * index,
+          index,
+        })}
         data={announcements}
         renderItem={renderItem}
         refreshControl={

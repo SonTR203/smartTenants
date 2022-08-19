@@ -16,13 +16,27 @@ import _ from "lodash";
 import { refreshDelay } from "../../utils/constants";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 
-const Notifications = ({ navigation }) => {
+const Notifications = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const { currentUser, notificationBadges, setNotices, setAnnouncements } =
     useAppContext();
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
   const [refreshing, setRefreshing] = useState(true);
+
+  useEffect(() => {
+    if (route.params && route.params.announcementId) {
+      navigation.navigate("Announcements", {
+        announcementId: route.params.announcementId,
+      });
+    }
+
+    if (route.params && route.params.noticeId) {
+      navigation.navigate("Notices", {
+        noticeId: route.params.noticeId,
+      });
+    }
+  }, [route.params]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);

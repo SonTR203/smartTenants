@@ -170,7 +170,7 @@ const NewsfeedNavigator = () => {
         console.log("user is logged in with id: ", uid);
         const userData = await getItemById("Tenants", uid);
         if (userData && userData.tenantAuthorized && userData.isActive) {
-          uploadExpoPushToken(user);
+          uploadExpoPushToken(userData.userID, userData.buildingName);
           setCurrentUser(userData);
         }
         // ...
@@ -373,7 +373,7 @@ const NotificationNavigator = () => {
   const { post } = useAppContext();
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Notifications">
       <Stack.Screen
         name="Notifications"
         component={Notifications}
