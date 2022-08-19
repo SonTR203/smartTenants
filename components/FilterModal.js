@@ -17,7 +17,11 @@ import { constants } from "../utils/constants";
 import ModalCategoryPicker from "./ModalCategoryPicker";
 import { getFilteredList } from "../utils/Marketplace/marketplace.services";
 
-function FilterModal({ marketplaceData }) {
+function FilterModal({
+  marketplaceData,
+  setFilteredItemList,
+  setFilterModalVisible,
+}) {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [conditionFilter, setConditionFilter] = useState("All");
   const [minPrice, setMinPrice] = useState("");
@@ -70,6 +74,19 @@ function FilterModal({ marketplaceData }) {
     setMaxPrice("");
     setMinPrice("");
     setDistance("0");
+  };
+
+  const applyFilters = () => {
+    const filteredList = getFilteredList(
+      marketplaceData,
+      categoryFilter,
+      conditionFilter,
+      minPrice,
+      maxPrice,
+      distance
+    );
+    setFilteredItemList(filteredList);
+    setFilterModalVisible(false);
   };
 
   const styles = StyleSheet.create({
@@ -292,7 +309,7 @@ function FilterModal({ marketplaceData }) {
         </View>
 
         <View style={styles.listingButton}>
-          <TouchableOpacity style={theme.primaryButton}>
+          <TouchableOpacity onPress={applyFilters} style={theme.primaryButton}>
             <Text
               style={[
                 theme.primaryButtonText,

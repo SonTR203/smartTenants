@@ -29,6 +29,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
+  const [filteredItemList, setFilteredItemList] = useState(null);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const { updatedMarketplacePosts, setUpdatedMarketplacePosts } =
     useAppContext();
@@ -116,7 +117,10 @@ const MarketplaceScreen = ({ navigation, route }) => {
             <FilterSVG />
           </TouchableOpacity>
         </View>
-        <MarketplaceFirstItem item={itemList[0]} navigation={navigation} />
+        <MarketplaceFirstItem
+          item={filteredItemList ? filteredItemList[0] : itemList[0]}
+          navigation={navigation}
+        />
       </>
     );
   };
@@ -192,7 +196,11 @@ const MarketplaceScreen = ({ navigation, route }) => {
         style={styles.modal}
         onBackdropPress={() => setFilterModalVisible(false)}
       >
-        <FilterModal marketplaceData={itemList} />
+        <FilterModal
+          marketplaceData={itemList}
+          setFilteredItemList={setFilteredItemList}
+          setFilterModalVisible={setFilterModalVisible}
+        />
       </Modal>
 
       {/* ITEM LIST  */}
@@ -205,7 +213,9 @@ const MarketplaceScreen = ({ navigation, route }) => {
               removeClippedSubviews={true}
               initialNumToRender={3}
               style={styles.flatlist}
-              data={itemList.slice(1)} // remove first item from list, put first item in Header
+              data={
+                filteredItemList ? filteredItemList.slice(1) : itemList.slice(1)
+              } // remove first item from list, put first item in Header
               numColumns={2}
               keyExtractor={(item, index) => item + index}
               ListHeaderComponent={renderListHeader}
