@@ -64,6 +64,14 @@ function FilterModal({ marketplaceData }) {
     }).start();
   };
 
+  const resetFilters = () => {
+    setCategoryFilter("All");
+    setConditionFilter("All");
+    setMaxPrice("");
+    setMinPrice("");
+    setDistance("0");
+  };
+
   const styles = StyleSheet.create({
     modalContainer: {
       flex: 0.7,
@@ -158,7 +166,7 @@ function FilterModal({ marketplaceData }) {
         <View>
           <View style={styles.filterSection}>
             <Text style={[styleVariables.fontSizes.title]}>Filters</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={resetFilters}>
               <Text
                 style={[styleVariables.fontSizes.bodyBold, styles.primaryClr]}
               >
