@@ -192,7 +192,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         style={styles.modal}
         onBackdropPress={() => setFilterModalVisible(false)}
       >
-        <FilterModal />
+        <FilterModal marketplaceData={itemList} />
       </Modal>
 
       {/* ITEM LIST  */}

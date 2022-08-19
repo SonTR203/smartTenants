@@ -37,3 +37,29 @@ export const uploadMarketplaceImages = async (images, id) => {
     return null;
   }
 };
+
+export const getFilteredList = (
+  data,
+  category,
+  condition,
+  min,
+  max,
+  distance
+) => {
+  const filteredList = data.filter((item) => {
+    if (
+      (item.category == category || category == "All") &&
+      (item.condition == condition || condition == "All") &&
+      (parseFloat(item.price.substr(1).replace(",", "")) >= parseInt(min) ||
+        min == "") &&
+      (parseFloat(item.price.substr(1).replace(",", "")) <= parseInt(max) ||
+        max == "")
+    ) {
+      return true;
+    }
+
+    return false;
+  });
+
+  return filteredList;
+};

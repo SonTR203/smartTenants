@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -15,16 +15,39 @@ import ChevronRightSVG from "./Icons/ChevronRightSVG";
 import { Slider } from "@miblanchard/react-native-slider";
 import { constants } from "../utils/constants";
 import ModalCategoryPicker from "./ModalCategoryPicker";
+import { getFilteredList } from "../utils/Marketplace/marketplace.services";
 
-function FilterModal() {
+function FilterModal({ marketplaceData }) {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [conditionFilter, setConditionFilter] = useState("All");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const [distance, setDistance] = useState("50");
+  const [distance, setDistance] = useState("0");
   const [listingAmount, setListingAmount] = useState("0");
   const { styleVariables, theme } = useTheme();
   const slideInOut = useRef(new Animated.Value(constants.width)).current;
+
+  useEffect(() => {
+    if (
+      categoryFilter != "All" ||
+      conditionFilter != "All" ||
+      minPrice != "" ||
+      maxPrice != ""
+      // || distance != "0"
+    ) {
+      const filteredList = getFilteredList(
+        marketplaceData,
+        categoryFilter,
+        conditionFilter,
+        minPrice,
+        maxPrice,
+        distance
+      );
+      setListingAmount(filteredList.length);
+    } else {
+      setListingAmount("all");
+    }
+  }, [categoryFilter, conditionFilter, minPrice, maxPrice, distance]);
 
   const slideIn = () => {
     Animated.timing(slideInOut, {
