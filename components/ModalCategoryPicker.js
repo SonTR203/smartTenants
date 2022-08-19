@@ -10,6 +10,7 @@ import {
 import ChevronRightSVG from "../components/Icons/ChevronRightSVG";
 import CategoryIconSVG from "../components/Icons/CategoryIconSVG";
 import ChevronLeftSVG from "../components/Icons/ChevronLeftSVG";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { categories, constants } from "../utils/constants";
 
 function ModalCategoryPicker({
@@ -17,6 +18,10 @@ function ModalCategoryPicker({
   styleVariables,
   setCategoryModalVisible,
   setCategory,
+  categoryFilter,
+  setCategoryFilter,
+  closeCategory,
+  isFilterModal,
 }) {
   const [subCategories, setSubCategories] = useState([]);
   const [categoryTitle, setCategoryTitle] = useState("");
@@ -42,8 +47,13 @@ function ModalCategoryPicker({
       style={styles.categoryItem}
       onPress={() => {
         if (category == "Free Goods") {
-          setCategory(category);
-          setCategoryModalVisible(false);
+          if (isFilterModal) {
+            setCategoryFilter(category);
+            closeCategory();
+          } else {
+            setCategory(category);
+            setCategoryModalVisible(false);
+          }
         } else {
           setSubCategories(subCategories);
           setCategoryTitle(category);
@@ -69,15 +79,35 @@ function ModalCategoryPicker({
     <TouchableOpacity
       style={styles.categoryItem}
       onPress={() => {
-        if (category == "Other") {
-          setCategory(`${categoryTitle} (${category})`);
+        if (isFilterModal) {
+          setCategoryFilter(category);
         } else {
           setCategory(category);
         }
-        setCategoryModalVisible(false);
+        if (!isFilterModal) {
+          setCategoryModalVisible(false);
+        }
       }}
     >
       <Text style={[styleVariables.fontSizes.body]}>{category}</Text>
+      {isFilterModal && (
+        <BouncyCheckbox
+          size={28}
+          fillColor={styleVariables.colors.primary}
+          iconStyle={{
+            width: 20,
+            height: 20,
+            borderColor: styleVariables.colors.primary,
+          }}
+          style={styles.subCategoryCheckbox}
+          disableText={true}
+          disableBuiltInState={true}
+          isChecked={categoryFilter == category}
+          onPress={() => {
+            setCategoryFilter(category);
+          }}
+        />
+      )}
     </TouchableOpacity>
   );
 
@@ -87,13 +117,13 @@ function ModalCategoryPicker({
 
   const styles = StyleSheet.create({
     modalContainer: {
-      flex: 0.6,
+      flex: isFilterModal ? 1 : 0.6,
       backgroundColor: "#ffffff",
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,
       display: "flex",
       flexDirection: "column",
-      paddingHorizontal: 24,
+      paddingHorizontal: isFilterModal ? 0 : 24,
     },
     closeBtn: {
       borderColor: styleVariables.colors.primary,
@@ -126,7 +156,6 @@ function ModalCategoryPicker({
       left: 0,
       right: 0,
       bottom: 0,
-      // transform: [{ translateX: subCategoryVisible ? 0 : constants.width }],
       transform: [{ translateX: slideInOut }],
       backgroundColor: "#fff",
     },
@@ -134,16 +163,79 @@ function ModalCategoryPicker({
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      marginTop: 24,
+      marginTop: isFilterModal ? 0 : 24,
     },
     subCategoryTitle: {
       color: "#4d4d4d",
       marginLeft: 10,
     },
+    title: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    marginLeft: {
+      marginLeft: 16,
+    },
+    primaryClr: {
+      color: styleVariables.colors.primary,
+    },
+    filterCheckbox: {
+      marginTop: 34,
+      marginRight: 4,
+      paddingBottom: 5,
+    },
+    subCategoryCheckbox: {
+      marginRight: 4,
+    },
   });
   return (
     <View style={styles.modalContainer}>
       <View style={styles.categoryList}>
+        {isFilterModal && (
+          <View>
+            <View style={styles.title}>
+              <TouchableOpacity onPress={closeCategory} style={styles.title}>
+                <ChevronLeftSVG />
+                <Text
+                  style={[styleVariables.fontSizes.title, styles.marginLeft]}
+                >
+                  Category
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setCategoryFilter("All");
+                }}
+              >
+                <Text
+                  style={[styleVariables.fontSizes.bodyBold, styles.primaryClr]}
+                >
+                  Reset
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.title, styles.filterCheckbox]}>
+              <Text style={styleVariables.fontSizes.body}>All</Text>
+              <BouncyCheckbox
+                size={28}
+                fillColor={styleVariables.colors.primary}
+                iconStyle={{
+                  width: 20,
+                  height: 20,
+                  borderColor: styleVariables.colors.primary,
+                }}
+                disableText={true}
+                disableBuiltInState={true}
+                isChecked={categoryFilter == "All"}
+                onPress={() => {
+                  setCategoryFilter("All");
+                }}
+              />
+            </View>
+          </View>
+        )}
         <FlatList data={categories} renderItem={renderCategoryItem} />
         <Animated.View style={styles.subCategoryContainer}>
           <TouchableOpacity style={styles.subCategoryHeader} onPress={slideOut}>
@@ -154,17 +246,23 @@ function ModalCategoryPicker({
               {categoryTitle}
             </Text>
           </TouchableOpacity>
-          <FlatList data={subCategories} renderItem={renderSubCategoryItem} />
+          <FlatList
+            data={subCategories}
+            renderItem={renderSubCategoryItem}
+            contentContainerStyle={{ paddingBottom: isFilterModal && 4 }}
+          />
         </Animated.View>
       </View>
-      <TouchableOpacity
-        style={[theme.secondaryButton, styles.closeBtn]}
-        onPress={() => setCategoryModalVisible(false)}
-      >
-        <Text style={[styleVariables.fontSizes.bodyBold, styles.btnText]}>
-          Close
-        </Text>
-      </TouchableOpacity>
+      {!isFilterModal && (
+        <TouchableOpacity
+          style={[theme.secondaryButton, styles.closeBtn]}
+          onPress={() => setCategoryModalVisible(false)}
+        >
+          <Text style={[styleVariables.fontSizes.bodyBold, styles.btnText]}>
+            Close
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
