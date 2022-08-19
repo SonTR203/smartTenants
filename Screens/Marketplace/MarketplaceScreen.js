@@ -24,6 +24,7 @@ import SortSVG from "../../components/Icons/SortSVG";
 import FilterSVG from "../../components/Icons/FilterSVG";
 import Modal from "react-native-modal";
 import FilterModal from "../../components/FilterModal";
+import SortModal from "../../components/SortModal";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -31,6 +32,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const [itemList, setItemList] = useState(null);
   const [filteredItemList, setFilteredItemList] = useState(null);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
+  const [sortModalVisible, setSortModalVisible] = useState(false);
   const { updatedMarketplacePosts, setUpdatedMarketplacePosts } =
     useAppContext();
 
@@ -95,7 +97,12 @@ const MarketplaceScreen = ({ navigation, route }) => {
     return (
       <>
         <View style={styles.filterSort}>
-          <TouchableOpacity style={[styles.headerBtn]}>
+          <TouchableOpacity
+            onPress={() => {
+              setSortModalVisible(true);
+            }}
+            style={[styles.headerBtn]}
+          >
             <Text
               style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
             >
@@ -190,6 +197,16 @@ const MarketplaceScreen = ({ navigation, route }) => {
     // CONTAINER
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
+      {/* SORT MODAL */}
+      <Modal
+        backdropOpacity={0.5}
+        isVisible={sortModalVisible}
+        style={styles.modal}
+        onBackdropPress={() => setSortModalVisible(false)}
+      >
+        <SortModal />
+      </Modal>
+      {/* FILTER MODAL */}
       <Modal
         backdropOpacity={0.5}
         isVisible={filterModalVisible}
