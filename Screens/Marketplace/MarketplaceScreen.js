@@ -33,6 +33,12 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const [filteredItemList, setFilteredItemList] = useState(null);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [sortModalVisible, setSortModalVisible] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [conditionFilter, setConditionFilter] = useState("All");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [distance, setDistance] = useState("0");
+  const [listingAmount, setListingAmount] = useState("0");
   const { updatedMarketplacePosts, setUpdatedMarketplacePosts } =
     useAppContext();
 
@@ -221,6 +227,18 @@ const MarketplaceScreen = ({ navigation, route }) => {
           marketplaceData={itemList}
           setFilteredItemList={setFilteredItemList}
           setFilterModalVisible={setFilterModalVisible}
+          categoryFilter={categoryFilter}
+          setCategoryFilter={setCategoryFilter}
+          conditionFilter={conditionFilter}
+          setConditionFilter={setConditionFilter}
+          minPrice={minPrice}
+          setMinPrice={setMinPrice}
+          maxPrice={maxPrice}
+          setMaxPrice={setMaxPrice}
+          distance={distance}
+          setDistance={setDistance}
+          listingAmount={listingAmount}
+          setListingAmount={setListingAmount}
         />
       </Modal>
 

@@ -22,13 +22,19 @@ function FilterModal({
   marketplaceData,
   setFilteredItemList,
   setFilterModalVisible,
+  categoryFilter,
+  setCategoryFilter,
+  conditionFilter,
+  setConditionFilter,
+  minPrice,
+  setMinPrice,
+  maxPrice,
+  setMaxPrice,
+  distance,
+  setDistance,
+  listingAmount,
+  setListingAmount,
 }) {
-  const [categoryFilter, setCategoryFilter] = useState("All");
-  const [conditionFilter, setConditionFilter] = useState("All");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [distance, setDistance] = useState("0");
-  const [listingAmount, setListingAmount] = useState("0");
   const { styleVariables, theme } = useTheme();
   const slideInOut = useRef(new Animated.Value(constants.width)).current;
 
