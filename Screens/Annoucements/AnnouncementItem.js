@@ -76,13 +76,6 @@ function AnnouncementItem({
       flex: 1,
       width: "100%",
     },
-    scrollViewContainer: {
-      margin: 16,
-      padding: 16,
-      borderRadius: 16,
-      backgroundColor: styleVariables.colors.white,
-      ...styleVariables.shadow,
-    },
     individualNameContainer: {
       flex: 1,
       flexDirection: "column",
@@ -112,8 +105,11 @@ function AnnouncementItem({
       updateItemInFirestore("Announcements", id, { wasSeen: wasSeen });
       setViewed(true);
       // update the announcements count in the app context
-      const newAnnouncementCount = announcements - 1;
-      setAnnouncements(newAnnouncementCount);
+      const newAnnouncementCount = announcements.count - 1;
+      setAnnouncements({
+        ...announcements,
+        count: newAnnouncementCount,
+      });
     }
   };
 
@@ -165,7 +161,7 @@ function AnnouncementItem({
             ellipsizeMode="tail"
             style={[styleVariables.fontSizes.body, styles.announcementContent]}
           >
-            {content}
+            {content.trim()}
           </Text>
         </View>
         {attachment != "" && (

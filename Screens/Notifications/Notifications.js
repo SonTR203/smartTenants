@@ -7,10 +7,7 @@ import { useTheme } from "../../ThemeContext";
 import NotificationItem from "./NotificationItem";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
-import {
-  getNoticeCount,
-  getAnnouncementCount,
-} from "../../utils/Notifications/notifications.services";
+import { getNoticeCount } from "../../utils/Notifications/notifications.services";
 import { wait } from "../../utils/wait";
 import _ from "lodash";
 import { refreshDelay } from "../../utils/constants";
@@ -18,8 +15,7 @@ import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 
 const Notifications = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
-  const { currentUser, notificationBadges, setNotices, setAnnouncements } =
-    useAppContext();
+  const { currentUser, notificationBadges, setNotices } = useAppContext();
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
   const [refreshing, setRefreshing] = useState(true);
@@ -44,7 +40,6 @@ const Notifications = ({ navigation, route }) => {
     wait(refreshDelay)
       .then(async () => {
         fetchNoticeCount();
-        fetchAnnouncementCount();
         setRefreshing(false);
       })
       .catch((err) => {
@@ -56,7 +51,6 @@ const Notifications = ({ navigation, route }) => {
   useEffect(async () => {
     if (currentUser) {
       await fetchNoticeCount();
-      await fetchAnnouncementCount();
       setRefreshing(false);
     }
   }, [currentUser]);
@@ -76,11 +70,6 @@ const Notifications = ({ navigation, route }) => {
     const count = await getNoticeCount(currentUser);
     console.log("notice count: ", count);
     setNotices(count);
-  }
-  async function fetchAnnouncementCount() {
-    const count = await getAnnouncementCount(currentUser);
-    console.log("announcement count: ", count);
-    setAnnouncements(count);
   }
 
   const callBackRender = useCallback(

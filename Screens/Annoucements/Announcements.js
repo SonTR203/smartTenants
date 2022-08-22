@@ -1,26 +1,23 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { FlatList, RefreshControl, View } from "react-native";
-import { db } from "../../firebase-config";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import React, { useState, useEffect, useRef } from "react";
+import { FlatList, View } from "react-native";
 import AnnouncementItem from "./AnnouncementItem";
 import { useTheme } from "../../ThemeContext";
-import { wait } from "../../utils/wait";
 import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../Context/AppContext";
-import FlatListRefreshControl from "../../components/FlatListRefreshControl";
-import _ from "lodash";
 
 function Announcements({ navigation, route }) {
-  const [announcements, setAnnouncements] = useState([]);
+  const [list, setList] = useState([]);
   const { theme, styleVariables } = useTheme();
-  const [refreshing, setRefreshing] = useState(false);
-  const { currentUser } = useAppContext();
+  const { announcements } = useAppContext();
   const listRef = useRef();
 
   useEffect(() => {
-    getAnnouncements();
-  }, []);
+    console.log("announcements", announcements);
+    if (announcements.list && announcements.list.length > 0) {
+      setList(announcements.list);
+    }
+  }, [announcements]);
 
   // execute function
   useEffect(() => {
@@ -40,34 +37,6 @@ function Announcements({ navigation, route }) {
       clearTimeout(timeout);
     };
   }, [route.params, announcements]);
-
-  async function getAnnouncements() {
-    const colReference = collection(db, "Announcements");
-    const q = query(
-      colReference,
-      where("recipients", "array-contains", currentUser.buildingName)
-    );
-
-    const data = await getDocs(q);
-
-    const formattedData = data.docs.map((doc) => {
-      return {
-        ...doc.data(),
-        id: doc.id,
-      };
-    });
-    const sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
-    setAnnouncements(sortedListOfPosts);
-  }
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-
-    wait(1000).then(async () => {
-      getAnnouncements();
-      setRefreshing(false);
-    });
-  }, []);
 
   const renderItem = ({ item }) => {
     return (
@@ -91,7 +60,6 @@ function Announcements({ navigation, route }) {
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
       <StatusBar style="light" />
-      <FlatListRefreshControl refreshing={refreshing} />
       <FlatList
         ref={listRef}
         getItemLayout={(data, index) => ({
@@ -99,18 +67,8 @@ function Announcements({ navigation, route }) {
           offset: data.length * index,
           index,
         })}
-        data={announcements}
+        data={list}
         renderItem={renderItem}
-        refreshControl={
-          <RefreshControl
-            progressBackgroundColor="white"
-            colors={[styleVariables.colors.primary]}
-            tintColor="transparent"
-            style={{ backgroundColor: "transparent", color: "transparent" }}
-            onRefresh={onRefresh}
-            refreshing={refreshing}
-          />
-        }
         ListFooterComponent={renderListFooter}
       />
     </View>

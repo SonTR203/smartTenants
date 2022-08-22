@@ -45,7 +45,7 @@ function ListHeader({ styleVariables, theme, navigation }) {
             Announcements
           </Text>
           <View id="counter" style={theme.counter}>
-            {announcements > 0 && (
+            {announcements.count > 0 && (
               <View style={theme.notificationCounter}>
                 <Text
                   id="notificationCounter"
@@ -54,7 +54,7 @@ function ListHeader({ styleVariables, theme, navigation }) {
                     { color: styleVariables.colors.white },
                   ]}
                 >
-                  {announcements}
+                  {announcements.count}
                 </Text>
               </View>
             )}

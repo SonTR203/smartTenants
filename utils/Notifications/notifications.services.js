@@ -49,30 +49,3 @@ export async function getNoticeCount(currentUser) {
   });
   return unseenNoticeCount;
 }
-
-export async function getAnnouncementCount(currentUser) {
-  let unseenAnnouncementCount = 0;
-  console.log("building Name: ", currentUser.buildingName);
-  const announcementCol = collection(db, "Announcements");
-  const newAnnouncementCol = query(
-    announcementCol,
-    where("recipients", "array-contains", currentUser.buildingName)
-  );
-  const data = await getDocs(newAnnouncementCol);
-  const formattedData = data.docs.map((doc) => {
-    return {
-      ...doc.data(),
-      id: doc.id,
-    };
-  });
-  console.log("formattedData: ", formattedData);
-  formattedData.forEach((announcement) => {
-    if (
-      !announcement.wasSeen.includes(currentUser.userID) ||
-      !announcement.wasSeen
-    ) {
-      unseenAnnouncementCount++;
-    }
-  });
-  return unseenAnnouncementCount;
-}

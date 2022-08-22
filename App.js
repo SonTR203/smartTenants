@@ -47,7 +47,10 @@ function App() {
   const [post, setPost] = useState({});
   const [currentMarketplacePost, setCurrentMarketplacePost] = useState({});
   const [updatedMarketplacePosts, setUpdatedMarketplacePosts] = useState([]);
-  const [announcements, setAnnouncements] = useState(0);
+  const [announcements, setAnnouncements] = useState({
+    list: [],
+    count: 0,
+  });
   const [notices, setNotices] = useState(0);
   const [currentUser, setCurrentUser] = useState({});
   const [notifications, setNotifications] = useState({});
@@ -159,6 +162,49 @@ function App() {
     return () => {
       if (unsubscribeNotifications) {
         unsubscribeNotifications();
+      }
+    };
+  }, [currentUser.userID]);
+
+  useEffect(() => {
+    let unsubscribeAnnouncements;
+    if (currentUser && currentUser.userID) {
+      const announcementRef = collection(db, `Announcements`);
+      const announcementQuery = query(
+        announcementRef,
+        where("recipients", "array-contains", currentUser.buildingName)
+      );
+
+      unsubscribeAnnouncements = onSnapshot(
+        announcementQuery,
+        (querySnapshot) => {
+          const unseenAnnouncements = [];
+          const list = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (!data.wasSeen.includes(currentUser.userID)) {
+              unseenAnnouncements.push(data.id);
+            }
+            list.push(data);
+          });
+          // update badge number in Notifications icon bottom navigations
+          setNotificationBadges({
+            unseen: [...notificationBadges.unseen, ...unseenAnnouncements],
+            list: notificationBadges.list,
+          });
+          // update announcements Context to use in announcements screen and
+          // announcements number list header
+          setAnnouncements({
+            list: list,
+            count: unseenAnnouncements.length,
+          });
+        }
+      );
+    }
+
+    return () => {
+      if (unsubscribeAnnouncements) {
+        unsubscribeAnnouncements();
       }
     };
   }, [currentUser.userID]);
