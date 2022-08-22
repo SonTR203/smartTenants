@@ -81,6 +81,7 @@ function FilterModal({
     setMaxPrice("");
     setMinPrice("");
     setDistance("0");
+    setFilteredItemList(marketplaceData);
   };
 
   const applyFilters = () => {
