@@ -94,7 +94,6 @@ function ListFooter({
       ).then(() => {
         setTextInputValue("");
         getComments();
-        addCommentCount();
         setUserCommentId("");
         setUserCommentName("");
         setRepliedTrue(post.id, userCommentId);
