@@ -393,7 +393,12 @@ function MarketplaceNewPostScreen({ navigation }) {
                 <Text
                   style={[
                     styleVariables.fontSizes.body,
-                    { color: styleVariables.colors.placeholderText },
+                    {
+                      color:
+                        category != "Choose category"
+                          ? styleVariables.colors.black
+                          : styleVariables.colors.placeholderText,
+                    },
                   ]}
                 >
                   {category}
@@ -428,7 +433,12 @@ function MarketplaceNewPostScreen({ navigation }) {
                 <Text
                   style={[
                     styleVariables.fontSizes.body,
-                    { color: styleVariables.colors.placeholderText },
+                    {
+                      color:
+                        condition != "Choose condition"
+                          ? styleVariables.colors.black
+                          : styleVariables.colors.placeholderText,
+                    },
                   ]}
                 >
                   {condition}
