@@ -8,7 +8,7 @@ function ErrorArea({ errorText }) {
   }
   return (
     <View style={styles.container}>
-      <Feather name="alert-circle" size={20} color="rgba(255, 66, 66, 1)" />
+      <Feather name="alert-circle" size={20} color="#AB0728" />
       <Text style={styles.errorText}>{errorText}</Text>
     </View>
   );
