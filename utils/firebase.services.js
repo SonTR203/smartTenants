@@ -217,8 +217,28 @@ export const handleSignIn = async (email, password) => {
         console.log("Signed in with email:", userCredentials.user.email);
         return userCredentials.user.uid;
       })
-      .catch(() => {
-        return undefined;
+      .catch((err) => {
+        let errorMessage = "Something went wrong. Please try again.";
+        switch (err.code) {
+          case "auth/user-not-found":
+            errorMessage = "User not found. Please try again.";
+            break;
+          case "auth/wrong-password":
+            errorMessage = "Wrong password. Please try again.";
+            break;
+          case "auth/invalid-email":
+            errorMessage = "Invalid email. Please try again.";
+            break;
+          case "auth/email-already-in-use":
+            errorMessage = "Email already in use. Please try again.";
+            break;
+          default:
+            break;
+        }
+        return {
+          error: true,
+          errorMessage,
+        };
       });
     return uid;
   } catch (error) {
