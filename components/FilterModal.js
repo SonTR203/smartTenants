@@ -222,6 +222,7 @@ function FilterModal({
               <Text
                 style={[
                   styleVariables.fontSizes.body,
+                  styles.primaryClr,
                   conditionFilter == "All" && styles.textWhite,
                 ]}
               >
@@ -241,6 +242,7 @@ function FilterModal({
               <Text
                 style={[
                   styleVariables.fontSizes.body,
+                  styles.primaryClr,
                   conditionFilter == "New" && styles.textWhite,
                 ]}
               >
@@ -259,6 +261,7 @@ function FilterModal({
               <Text
                 style={[
                   styleVariables.fontSizes.body,
+                  styles.primaryClr,
                   conditionFilter == "Used" && styles.textWhite,
                 ]}
               >
