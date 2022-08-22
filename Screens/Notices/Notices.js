@@ -5,6 +5,7 @@ import { useAppContext } from "../../Context/AppContext";
 import NoticeItem from "./NoticeItem";
 import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
+import _ from "lodash";
 
 function Notices({ navigation, route }) {
   const [list, setList] = useState(null);
@@ -73,7 +74,8 @@ function Notices({ navigation, route }) {
 
   useEffect(() => {
     if (notices.list && notices.list.length > 0) {
-      setList(notices.list);
+      const orderedList = _.sortBy(notices.list, "timestamp").reverse();
+      setList(orderedList);
     }
   }, []);
 
@@ -126,6 +128,7 @@ function Notices({ navigation, route }) {
           offset: data.length * index,
           index,
         })}
+        keyExtractor={({ index }) => index}
         ref={listRef}
         data={list}
         renderItem={renderItem}

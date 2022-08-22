@@ -5,6 +5,7 @@ import { useTheme } from "../../ThemeContext";
 import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../Context/AppContext";
+import _ from "lodash";
 
 function Announcements({ navigation, route }) {
   const [list, setList] = useState([]);
@@ -13,9 +14,9 @@ function Announcements({ navigation, route }) {
   const listRef = useRef();
 
   useEffect(() => {
-    console.log("announcements", announcements);
     if (announcements.list && announcements.list.length > 0) {
-      setList(announcements.list);
+      const orderedList = _.sortBy(announcements.list, "timestamp").reverse();
+      setList(orderedList);
     }
   }, [announcements]);
 
@@ -38,9 +39,10 @@ function Announcements({ navigation, route }) {
     };
   }, [route.params, announcements]);
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item, index }) => {
     return (
       <AnnouncementItem
+        key={index}
         content={item.content}
         attachment={item.attachment[0]}
         timestamp={item.timestamp}

@@ -197,6 +197,7 @@ function App() {
           });
           // update announcements Context to use in announcements screen and
           // announcements number list header
+
           setAnnouncements({
             list: list,
             count: unseenAnnouncements.length,
