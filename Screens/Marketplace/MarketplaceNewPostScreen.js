@@ -27,6 +27,7 @@ import {
 import { moderateImage, moderateText } from "../../utils/moderation.services";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import {
+  format,
   updateImages,
   uploadMarketplaceImages,
 } from "../../utils/Marketplace/marketplace.services";
@@ -239,17 +240,6 @@ function MarketplaceNewPostScreen({ navigation }) {
       return undefined;
     }
   }
-
-  // format price "0" -> "$0.00" after user finished entering
-  // will be moved to utils folder if used in multiple places
-  const format = (amount) => {
-    return (
-      "$" +
-      parseFloat(amount)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,")
-    );
-  };
 
   const handleEndEditing = (e) => {
     if (e.nativeEvent.text.length > 0) {
