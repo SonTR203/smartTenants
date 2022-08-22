@@ -7,7 +7,7 @@ import { StatusBar } from "expo-status-bar";
 
 function AnnouncementItem({
   content,
-  attatchment,
+  attachment,
   timestamp,
   wasSeen,
   theme,
@@ -76,13 +76,6 @@ function AnnouncementItem({
       flex: 1,
       width: "100%",
     },
-    scrollViewContainer: {
-      margin: 16,
-      padding: 16,
-      borderRadius: 16,
-      backgroundColor: styleVariables.colors.white,
-      ...styleVariables.shadow,
-    },
     individualNameContainer: {
       flex: 1,
       flexDirection: "column",
@@ -99,7 +92,7 @@ function AnnouncementItem({
   });
 
   useEffect(() => {
-    const time = setTime(timestamp);
+    const time = setTime(timestamp.seconds * 1000);
     setTimeSinceAnnouncement(time);
     if (wasSeen.includes(currentUser.userID)) {
       setViewed(true);
@@ -112,8 +105,11 @@ function AnnouncementItem({
       updateItemInFirestore("Announcements", id, { wasSeen: wasSeen });
       setViewed(true);
       // update the announcements count in the app context
-      const newAnnouncementCount = announcements - 1;
-      setAnnouncements(newAnnouncementCount);
+      const newAnnouncementCount = announcements.count - 1;
+      setAnnouncements({
+        ...announcements,
+        count: newAnnouncementCount,
+      });
     }
   };
 
@@ -121,7 +117,7 @@ function AnnouncementItem({
     navigation.navigate("IndividualAnnouncement", {
       content: content,
       timestamp: timeSinceAnnouncement,
-      attatchment: attatchment,
+      attachment: attachment,
       theme: theme,
       styleVariables: styleVariables,
       styles: styles,
@@ -165,13 +161,13 @@ function AnnouncementItem({
             ellipsizeMode="tail"
             style={[styleVariables.fontSizes.body, styles.announcementContent]}
           >
-            {content}
+            {content.trim()}
           </Text>
         </View>
-        {attatchment != "" && (
+        {attachment != "" && (
           <Image
             source={{
-              uri: `${attatchment}`,
+              uri: `${attachment}`,
             }}
             style={styles.announcementImage}
           />

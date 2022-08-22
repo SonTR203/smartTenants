@@ -40,31 +40,12 @@ export async function getNoticeCount(currentUser) {
     };
   });
   formattedData.forEach((notice) => {
-    if (!notice.wasSeen.includes(currentUser.userID)) {
+    if (
+      notice.wasSeen.filter((user) => user.userID === currentUser.userID)
+        .length === 0
+    ) {
       unseenNoticeCount++;
     }
   });
   return unseenNoticeCount;
-}
-
-export async function getAnnouncementCount(currentUser) {
-  let unseenAnnouncementCount = 0;
-  const announcementCol = collection(db, "Announcements");
-  const newAnnouncementCol = query(
-    announcementCol,
-    where("recipients", "array-contains", currentUser.userID)
-  );
-  const data = await getDocs(newAnnouncementCol);
-  const formattedData = data.docs.map((doc) => {
-    return {
-      ...doc.data(),
-      id: doc.id,
-    };
-  });
-  formattedData.forEach((announcement) => {
-    if (!announcement.wasSeen.includes(currentUser.userID)) {
-      unseenAnnouncementCount++;
-    }
-  });
-  return unseenAnnouncementCount;
 }

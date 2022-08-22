@@ -144,15 +144,16 @@ export const getMarketplaceItems = async () => {
   return formattedData;
 };
 
-export const uploadExpoPushToken = async (user) => {
+export const uploadExpoPushToken = async (id, buildingName = null) => {
   const expoPushToken = await registerForPushNotificationsAsync();
   try {
-    await setDoc(doc(db, "ExpoPushTokens", user.uid), {
-      id: user.uid,
+    await setDoc(doc(db, "ExpoPushTokens", id), {
+      id: id,
       expoPushToken: expoPushToken ? expoPushToken : "",
+      buildingName: buildingName ? buildingName : "",
     });
   } catch (error) {
-    console.log(error);
+    console.log("error uploading expo token: ", error);
   }
 };
 
@@ -216,8 +217,28 @@ export const handleSignIn = async (email, password) => {
         console.log("Signed in with email:", userCredentials.user.email);
         return userCredentials.user.uid;
       })
-      .catch(() => {
-        return undefined;
+      .catch((err) => {
+        let errorMessage = "Something went wrong. Please try again.";
+        switch (err.code) {
+          case "auth/user-not-found":
+            errorMessage = "User not found. Please try again.";
+            break;
+          case "auth/wrong-password":
+            errorMessage = "Wrong password. Please try again.";
+            break;
+          case "auth/invalid-email":
+            errorMessage = "Invalid email. Please try again.";
+            break;
+          case "auth/email-already-in-use":
+            errorMessage = "Email already in use. Please try again.";
+            break;
+          default:
+            break;
+        }
+        return {
+          error: true,
+          errorMessage,
+        };
       });
     return uid;
   } catch (error) {

@@ -21,11 +21,12 @@ let styleVariables = {
     primary: "#395E66",
     primary14: "#395E6624",
     white: "#FFF",
-    black: "#191919",
+    black: "#4d4d4d",
     placeholderText: "rgba(157, 157, 157, 1)",
     listFooterText: "rgba(176, 191, 194, 1)",
     notificationBadge: "#E84855",
     imageLoading: "#EDEDED",
+    popularOrange: "#F17300",
   },
   shadow: {
     shadowColor: "#4D4D4D", // color: #4D4D4D

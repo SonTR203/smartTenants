@@ -8,6 +8,7 @@ function FlatListRefreshControl({ refreshing }) {
   const styles = StyleSheet.create({
     loaderContainer: {
       display: refreshing ? "flex" : "none",
+      opacity: refreshing ? 1 : 0,
       width: "100%",
       height: 64,
       justifyContent: "center",

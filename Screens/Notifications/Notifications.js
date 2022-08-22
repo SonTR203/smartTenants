@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, FlatList, StyleSheet, RefreshControl } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../Context/AppContext";
@@ -7,40 +7,27 @@ import { useTheme } from "../../ThemeContext";
 import NotificationItem from "./NotificationItem";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
-import {
-  getNoticeCount,
-  getAnnouncementCount,
-} from "../../utils/Notifications/notifications.services";
-import { wait } from "../../utils/wait";
 import _ from "lodash";
-import { refreshDelay } from "../../utils/constants";
-import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 
-const Notifications = ({ navigation }) => {
+const Notifications = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
-  const { currentUser, notificationBadges, setNotices, setAnnouncements } =
-    useAppContext();
+  const { notificationBadges } = useAppContext();
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
-  const [refreshing, setRefreshing] = useState(true);
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-
-    wait(refreshDelay).then(async () => {
-      fetchNoticeCount();
-      fetchAnnouncementCount();
-      setRefreshing(false);
-    });
-  }, []);
-
-  useEffect(async () => {
-    if (currentUser) {
-      await fetchNoticeCount();
-      await fetchAnnouncementCount();
-      setRefreshing(false);
+  useEffect(() => {
+    if (route.params && route.params.announcementId) {
+      navigation.navigate("Announcements", {
+        announcementId: route.params.announcementId,
+      });
     }
-  }, [currentUser]);
+
+    if (route.params && route.params.noticeId) {
+      navigation.navigate("Notices", {
+        noticeId: route.params.noticeId,
+      });
+    }
+  }, [route.params]);
 
   useEffect(() => {
     // console.log("notifications screen list: ", notificationBadges.list.length);
@@ -52,15 +39,6 @@ const Notifications = ({ navigation }) => {
       setNotifications(sortedListOfNotifications);
     }
   }, [notificationBadges.list]);
-
-  async function fetchNoticeCount() {
-    const count = await getNoticeCount(currentUser);
-    setNotices(count);
-  }
-  async function fetchAnnouncementCount() {
-    const count = await getAnnouncementCount(currentUser);
-    setAnnouncements(count);
-  }
 
   const callBackRender = useCallback(
     ({ item, index }) => renderNotificationItem({ item, index }),
@@ -98,7 +76,6 @@ const Notifications = ({ navigation }) => {
     <SafeAreaView style={styles.safeareaview(styleVariables)} edges={["top"]}>
       <StatusBar style="light" />
       <View style={styles.container}>
-        <FlatListRefreshControl refreshing={refreshing} />
         <FlatList
           ListHeaderComponent={renderAnnouncementsAndNotices}
           style={styles.flatlist}
@@ -107,15 +84,6 @@ const Notifications = ({ navigation }) => {
           renderItem={callBackRender}
           keyExtractor={(item, index) => item.id + index}
           ListFooterComponent={renderListEnd}
-          refreshControl={
-            <RefreshControl
-              tintColor="transparent"
-              colors={["transparent"]}
-              style={{ backgroundColor: "transparent" }}
-              onRefresh={onRefresh}
-              refreshing={refreshing}
-            />
-          }
         />
       </View>
     </SafeAreaView>

@@ -92,11 +92,9 @@ function FilterModal({
 
   const styles = StyleSheet.create({
     modalContainer: {
-      flex: 0.7,
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,
       padding: 24,
-      paddingBottom: 34,
       backgroundColor: "#fff",
     },
     filterSection: {
@@ -156,9 +154,8 @@ function FilterModal({
       alignItems: "center",
     },
     listingButton: {
-      flex: 1,
+      paddingTop: 40,
       justifyContent: "flex-end",
-      marginBottom: 34,
     },
     categoryList: {
       position: "absolute",
@@ -178,7 +175,8 @@ function FilterModal({
       }}
     >
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? -100 : -300}
+        behavior={Platform.OS === "ios" ? "padding" : "position"}
         style={styles.modalContainer}
       >
         <View>
