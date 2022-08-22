@@ -9,6 +9,7 @@ import { wait } from "../../utils/wait";
 import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
+import _ from "lodash";
 
 function Notices({ navigation, route }) {
   const [notices, setNotices] = useState([]);
@@ -113,7 +114,8 @@ function Notices({ navigation, route }) {
         id: doc.id,
       };
     });
-    setNotices(formattedData);
+    const sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
+    setNotices(sortedListOfPosts);
   }
 
   const onRefresh = useCallback(() => {

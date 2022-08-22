@@ -9,6 +9,7 @@ import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../Context/AppContext";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
+import _ from "lodash";
 
 function Announcements({ navigation, route }) {
   const [announcements, setAnnouncements] = useState([]);
@@ -55,8 +56,8 @@ function Announcements({ navigation, route }) {
         id: doc.id,
       };
     });
-    console.log("formattedData: ", formattedData);
-    setAnnouncements(formattedData);
+    const sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
+    setAnnouncements(sortedListOfPosts);
   }
 
   const onRefresh = useCallback(() => {
