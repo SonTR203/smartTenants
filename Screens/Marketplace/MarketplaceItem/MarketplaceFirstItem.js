@@ -28,7 +28,7 @@ function MarketplaceFirstItem({
       resizeMode: "cover",
       marginBottom: 17,
       height: constants.height * 0.25,
-      backgroundColor: "black",
+      backgroundColor: "#4d4d4d",
       borderTopRightRadius: 17,
       borderTopLeftRadius: 17,
     },
