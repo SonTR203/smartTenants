@@ -99,6 +99,7 @@ function ModalCategoryPicker({
             height: 20,
             borderColor: styleVariables.colors.primary,
           }}
+          iconComponent={<View></View>}
           style={styles.subCategoryCheckbox}
           disableText={true}
           disableBuiltInState={true}
@@ -226,6 +227,7 @@ function ModalCategoryPicker({
                   height: 20,
                   borderColor: styleVariables.colors.primary,
                 }}
+                iconComponent={<View></View>}
                 disableText={true}
                 disableBuiltInState={true}
                 isChecked={categoryFilter == "All"}

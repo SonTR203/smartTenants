@@ -54,7 +54,7 @@ function ModalConditionPicker({
               color: styleVariables.colors.primary,
               borderColor: styleVariables.colors.primary,
             }}
-            innerIconStyle={{}}
+            iconComponent={<View></View>}
             disableText={true}
             disableBuiltInState={true}
             isChecked={newChecked}
@@ -77,10 +77,9 @@ function ModalConditionPicker({
             iconStyle={{
               width: 20,
               height: 20,
-
               borderColor: styleVariables.colors.primary,
             }}
-            innerIconStyle={{}}
+            iconComponent={<View></View>}
             disableText={true}
             disableBuiltInState={true}
             isChecked={usedChecked}
