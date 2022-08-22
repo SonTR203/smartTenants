@@ -1,5 +1,6 @@
 import { maxImages } from "../constants";
 import { uploadImageToStorage } from "../firebase.services";
+import _ from "lodash";
 
 export const updateImages = (response, selectedImages) => {
   let newImages = selectedImages;
@@ -62,4 +63,41 @@ export const getFilteredList = (
   });
 
   return filteredList;
+};
+
+export const getSortedList = (data, sortingBy) => {
+  let sortedList;
+  switch (sortingBy) {
+    case "Date(newest)":
+      sortedList = _.sortBy(data, "timestamp");
+      break;
+    case "Date(oldest)":
+      sortedList = _.sortBy(data, "timestamp").reverse();
+      break;
+    case "Price(lowest)":
+      sortedList = data.sort((a, b) => {
+        if (parseInt(a.price.substr(1)) < parseInt(b.price.substr(1))) {
+          return 1;
+        } else if (parseInt(a.price.substr(1)) > parseInt(b.price.substr(1))) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      break;
+    case "Price(highest)":
+      sortedList = data.sort((a, b) => {
+        if (parseInt(a.price.substr(1)) > parseInt(b.price.substr(1))) {
+          return 1;
+        } else if (parseInt(a.price.substr(1)) < parseInt(b.price.substr(1))) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      break;
+    case "Distance(closest)":
+      break;
+  }
+  return sortedList;
 };

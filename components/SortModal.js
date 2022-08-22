@@ -2,10 +2,27 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useTheme } from "../ThemeContext";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { getSortedList } from "../utils/Marketplace/marketplace.services";
 
-function SortModal() {
+function SortModal({
+  setSortModalVisible,
+  marketplaceData,
+  filteredItemList,
+  setFilteredItemList,
+}) {
   const [sortingBy, setSortingBy] = useState("Date(newest)");
   const { styleVariables, theme } = useTheme();
+
+  const applySort = () => {
+    if (filteredItemList) {
+      const sortedList = getSortedList(filteredItemList, sortingBy);
+      setFilteredItemList(sortedList);
+    } else {
+      const sortedList = getSortedList(marketplaceData, sortingBy);
+      setFilteredItemList(sortedList);
+    }
+    setSortModalVisible(false);
+  };
 
   const styles = StyleSheet.create({
     modalContainer: {
@@ -178,7 +195,10 @@ function SortModal() {
           }}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={[theme.primaryButton, styles.listingsButton]}>
+      <TouchableOpacity
+        onPress={applySort}
+        style={[theme.primaryButton, styles.listingsButton]}
+      >
         <Text
           style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}
         >
