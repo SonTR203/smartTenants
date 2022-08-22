@@ -4,6 +4,7 @@ import { setTime } from "../../utils/setTime";
 import { useAppContext } from "../../Context/AppContext";
 import { updateItemInFirestore } from "../../utils/firebase.services";
 import ChevronRightSVG from "../../components/Icons/ChevronRightSVG";
+import { Timestamp } from "@firebase/firestore";
 
 function NoticeItem({
   attachment,
@@ -20,32 +21,44 @@ function NoticeItem({
   const [timeSinceNotice, setTimeSinceNotice] = useState("");
   const [viewed, setViewed] = useState(false);
   const { currentUser, notices, setNotices } = useAppContext();
+  const userSeen =
+    wasSeen.filter((user) => user.userID === currentUser.userID).length > 0;
 
   useEffect(() => {
-    const time = setTime(timestamp);
+    const time = setTime(timestamp.seconds * 1000);
     setTimeSinceNotice(time);
-    if (wasSeen.includes(currentUser.userID)) {
+    if (userSeen) {
       setViewed(true);
     }
   }, []);
 
   const setWasSeenToTrue = async () => {
-    if (!wasSeen.includes(currentUser.userID)) {
-      wasSeen.push(currentUser.userID);
-      updateItemInFirestore("Notices", id, { wasSeen: wasSeen });
+    if (!userSeen) {
+      const updatedWasSeenArray = [
+        ...wasSeen,
+        {
+          userID: currentUser.userID,
+          timestamp: Timestamp.fromDate(new Date()),
+        },
+      ];
+
+      updateItemInFirestore("Notices", id, { wasSeen: updatedWasSeenArray });
       setViewed(true);
       // update notices in context
       const newNoticeCount = notices - 1;
-      setNotices(newNoticeCount);
+      setNotices({
+        ...notices,
+        count: newNoticeCount,
+      });
     }
   };
 
   const handlePressEvent = () => {
     navigation.navigate("IndividualNotice", {
-      attachment: attachment,
+      attachment: attachment[0] ? attachment[0] : null,
       subject: subject,
       content: content,
-      timestamp: timeSinceNotice,
+      timestamp: timestamp.seconds * 1000,
       theme: theme,
       styleVariables: styleVariables,
       styles: styles,

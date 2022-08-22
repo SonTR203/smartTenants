@@ -1,24 +1,24 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
-import { db } from "../../firebase-config";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import React, { useState, useEffect, useRef } from "react";
+import { FlatList, View } from "react-native";
 import AnnouncementItem from "./AnnouncementItem";
 import { useTheme } from "../../ThemeContext";
-import { wait } from "../../utils/wait";
 import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../Context/AppContext";
+import _ from "lodash";
 
 function Announcements({ navigation, route }) {
-  const [announcements, setAnnouncements] = useState([]);
+  const [list, setList] = useState([]);
   const { theme, styleVariables } = useTheme();
-  const [refreshing, setRefreshing] = useState(false);
-  const { currentUser } = useAppContext();
+  const { announcements } = useAppContext();
   const listRef = useRef();
 
   useEffect(() => {
-    getAnnouncements();
-  }, []);
+    if (announcements.list && announcements.list.length > 0) {
+      const orderedList = _.sortBy(announcements.list, "timestamp").reverse();
+      setList(orderedList);
+    }
+  }, [announcements]);
 
   // execute function
   useEffect(() => {
@@ -39,42 +39,12 @@ function Announcements({ navigation, route }) {
     };
   }, [route.params, announcements]);
 
-  const styles = StyleSheet.create({
-    refreshControl: { backgroundColor: "white" },
-  });
-
-  async function getAnnouncements() {
-    const colReference = collection(db, "Announcements");
-    const q = query(
-      colReference,
-      where("recipients", "array-contains", currentUser.userID)
-    );
-
-    const data = await getDocs(q);
-
-    const formattedData = data.docs.map((doc) => {
-      return {
-        ...doc.data(),
-        id: doc.id,
-      };
-    });
-    setAnnouncements(formattedData);
-  }
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-
-    wait(1000).then(async () => {
-      getAnnouncements();
-      setRefreshing(false);
-    });
-  }, []);
-
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item, index }) => {
     return (
       <AnnouncementItem
+        key={index}
         content={item.content}
-        attatchment={item.attatchment[0]}
+        attachment={item.attachment[0]}
         timestamp={item.timestamp}
         wasSeen={item.wasSeen}
         id={item.id}
@@ -92,19 +62,15 @@ function Announcements({ navigation, route }) {
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
       <StatusBar style="light" />
-
       <FlatList
         ref={listRef}
-        data={announcements}
+        getItemLayout={(data, index) => ({
+          length: data.length,
+          offset: data.length * index,
+          index,
+        })}
+        data={list}
         renderItem={renderItem}
-        refreshControl={
-          <RefreshControl
-            onRefresh={onRefresh}
-            refreshing={refreshing}
-            style={styles.refreshControl}
-            tintColor={styleVariables.colors.primary}
-          />
-        }
         ListFooterComponent={renderListFooter}
       />
     </View>

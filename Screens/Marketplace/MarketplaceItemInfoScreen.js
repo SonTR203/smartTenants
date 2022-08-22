@@ -92,7 +92,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
       marginBottom: 17,
     },
     imagesContainer: (index) => ({
-      backgroundColor: "black",
+      backgroundColor: "#4d4d4d",
       marginLeft: index === 0 ? 0 : 17,
       height: constants.height * 0.3,
       borderRadius: 24,
@@ -135,7 +135,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
       flexDirection: "row",
     },
     profileImage: {
-      backgroundColor: "black",
+      backgroundColor: "#4d4d4d",
       width: 43,
       height: 43,
       borderRadius: 12,

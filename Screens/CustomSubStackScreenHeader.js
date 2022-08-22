@@ -89,6 +89,11 @@ export default function CustomSubStackScreenHeader({ ...props }) {
     ]);
   };
 
+  const handleTurnOffNotifications = async () => {
+    setModalVisible(false);
+    alert("Notifications turned off. To be implemented.");
+  };
+
   const handleSetListingAsSold = async () => {
     const res = await updateItemInFirestore("Marketplace", props.item.id, {
       isSold: props.item.isSold ? false : true,
@@ -119,13 +124,15 @@ export default function CustomSubStackScreenHeader({ ...props }) {
 
     const options = [
       {
-        content: "Edit listing",
+        content: `Edit ${props.collection === "Newsfeed" ? "post" : "listing"}`,
         onPress: () => {},
         iconName: "pencil",
         iconColor: "#4D4D4D",
       },
       {
-        content: "Delete listing",
+        content: `Delete ${
+          props.collection === "Newsfeed" ? "post" : "listing"
+        }`,
         onPress: () => {},
         iconName: "trash-can-outline",
         iconColor: "#4D4D4D",
@@ -133,7 +140,9 @@ export default function CustomSubStackScreenHeader({ ...props }) {
           return (
             <ModalActionConfirm
               destructive={true}
-              title="Delete your listing?"
+              title={`Delete your ${
+                props.collection === "Newsfeed" ? "post" : "listing"
+              }?`}
               subtitle={"You won't be able to restore it"}
               confirmText="Delete"
               onConfirm={handleDeleteListing}
@@ -143,17 +152,35 @@ export default function CustomSubStackScreenHeader({ ...props }) {
         },
       },
       {
-        content: markListingText,
+        content:
+          props.collection === "Newsfeed"
+            ? "Turn off notifications"
+            : markListingText,
         onPress: () => {},
-        iconName: markListingIconName,
+        iconName:
+          props.collection === "Newsfeed"
+            ? "bell-off-outline"
+            : markListingIconName,
         iconColor: "#4D4D4D",
         renderSubscreen: () => {
           return (
             <ModalActionConfirm
-              title={markListingContent}
-              subtitle={markListingSubtitle}
+              title={
+                props.collection === "Newsfeed"
+                  ? "Turn off notifications for this post?"
+                  : markListingContent
+              }
+              subtitle={
+                props.collection === "Newsfeed"
+                  ? "You will be able to undo this action"
+                  : markListingSubtitle
+              }
               confirmText="Confirm"
-              onConfirm={handleSetListingAsSold}
+              onConfirm={
+                props.collection === "Newsfeed"
+                  ? handleTurnOffNotifications
+                  : handleSetListingAsSold
+              }
               onCancel={() => setModalVisible(false)}
             />
           );

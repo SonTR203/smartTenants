@@ -90,6 +90,9 @@ const MarketplaceScreen = ({ navigation, route }) => {
   }, [route.params]);
 
   const renderEmpty = () => {
+    if (itemList.length === 1) {
+      return null;
+    }
     return <EmptyListComponent screenName={"marketplace"} />;
   };
 
@@ -125,6 +128,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
         <MarketplaceFirstItem
+          isPopular={true}
           item={filteredItemList ? filteredItemList[0] : itemList[0]}
           navigation={navigation}
         />
@@ -241,7 +245,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
               refreshControl={
                 <RefreshControl
                   tintColor="transparent"
-                  colors={["transparent"]}
+                  progressBackgroundColor="white"
+                  colors={[styleVariables.colors.primary]}
                   style={{ backgroundColor: "transparent" }}
                   onRefresh={onRefresh}
                   refreshing={refreshing}

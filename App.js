@@ -47,8 +47,14 @@ function App() {
   const [post, setPost] = useState({});
   const [currentMarketplacePost, setCurrentMarketplacePost] = useState({});
   const [updatedMarketplacePosts, setUpdatedMarketplacePosts] = useState([]);
-  const [announcements, setAnnouncements] = useState(0);
-  const [notices, setNotices] = useState(0);
+  const [announcements, setAnnouncements] = useState({
+    list: [],
+    count: 0,
+  });
+  const [notices, setNotices] = useState({
+    list: [],
+    count: 0,
+  });
   const [currentUser, setCurrentUser] = useState({});
   const [notifications, setNotifications] = useState({});
   const [unauthorizedUsers, setUnauthorizedUsers] = useState({});
@@ -164,6 +170,93 @@ function App() {
   }, [currentUser.userID]);
 
   useEffect(() => {
+    let unsubscribeAnnouncements;
+    if (currentUser && currentUser.userID) {
+      const announcementRef = collection(db, `Announcements`);
+      const announcementQuery = query(
+        announcementRef,
+        where("recipients", "array-contains", currentUser.buildingName)
+      );
+
+      unsubscribeAnnouncements = onSnapshot(
+        announcementQuery,
+        (querySnapshot) => {
+          const unseenAnnouncements = [];
+          const list = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (!data.wasSeen.includes(currentUser.userID)) {
+              unseenAnnouncements.push(data.id);
+            }
+            list.push(data);
+          });
+          // update badge number in Notifications icon bottom navigations
+          setNotificationBadges({
+            unseen: [...notificationBadges.unseen, ...unseenAnnouncements],
+            list: notificationBadges.list,
+          });
+          // update announcements Context to use in announcements screen and
+          // announcements number list header
+
+          setAnnouncements({
+            list: list,
+            count: unseenAnnouncements.length,
+          });
+        }
+      );
+    }
+
+    return () => {
+      if (unsubscribeAnnouncements) {
+        unsubscribeAnnouncements();
+      }
+    };
+  }, [currentUser.userID]);
+
+  useEffect(() => {
+    let unsubscribeNotices;
+    if (currentUser && currentUser.userID) {
+      const noticesRef = collection(db, `Notices`);
+      const noticesQuery = query(
+        noticesRef,
+        where("recipients", "array-contains", currentUser.userID)
+      );
+
+      unsubscribeNotices = onSnapshot(noticesQuery, (querySnapshot) => {
+        const unseenNotices = [];
+        const list = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (
+            data.wasSeen.filter((user) => user.userID === currentUser.userID)
+              .length < 1
+          ) {
+            unseenNotices.push(data.id);
+          }
+          list.push(data);
+        });
+        // update badge number in Notifications icon bottom navigations
+        setNotificationBadges({
+          unseen: [...notificationBadges.unseen, ...unseenNotices],
+          list: notificationBadges.list,
+        });
+        // update notices Context to use in notices screen and
+        // notices number list header
+        setNotices({
+          list: list,
+          count: unseenNotices.length,
+        });
+      });
+    }
+
+    return () => {
+      if (unsubscribeNotices) {
+        unsubscribeNotices();
+      }
+    };
+  }, [currentUser.userID]);
+
+  useEffect(() => {
     responseListener.current =
       ExpoNotifications.addNotificationResponseReceivedListener(
         async (response) => {
@@ -216,7 +309,7 @@ function App() {
               }
               case "Notices":
                 navigationRef.navigate("NotificationsNavigator", {
-                  screen: "Notices",
+                  screen: "Notifications",
                   params: {
                     noticeId: data.noticeId,
                   },
@@ -225,7 +318,7 @@ function App() {
                 break;
               case "Announcements":
                 navigationRef.navigate("NotificationsNavigator", {
-                  screen: "Announcements",
+                  screen: "Notifications",
                   params: {
                     announcementId: data.announcementId,
                   },
