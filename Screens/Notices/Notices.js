@@ -1,21 +1,15 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import { FlatList, StyleSheet, RefreshControl, View } from "react-native";
-import { db } from "../../firebase-config";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import React, { useEffect, useState, useRef } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 import { useTheme } from "../../ThemeContext";
 import { useAppContext } from "../../Context/AppContext";
 import NoticeItem from "./NoticeItem";
-import { wait } from "../../utils/wait";
 import ListFooter from "./ListFooter";
 import { StatusBar } from "expo-status-bar";
-import FlatListRefreshControl from "../../components/FlatListRefreshControl";
-import _ from "lodash";
 
 function Notices({ navigation, route }) {
-  const [notices, setNotices] = useState([]);
+  const [list, setList] = useState(null);
   const { theme, styleVariables } = useTheme();
-  const [refreshing, setRefreshing] = useState(false);
-  const { currentUser } = useAppContext();
+  const { notices } = useAppContext();
   const listRef = useRef();
 
   const styles = StyleSheet.create({
@@ -78,14 +72,16 @@ function Notices({ navigation, route }) {
   });
 
   useEffect(() => {
-    getNotices();
+    if (notices.list && notices.list.length > 0) {
+      setList(notices.list);
+    }
   }, []);
 
   useEffect(() => {
     let timeout;
     // if there are comments, scroll to the the correct comment
-    if (route.params.noticeId && notices.length > 0) {
-      const index = notices
+    if (route.params.noticeId && list.length > 0) {
+      const index = list
         .map((announcement) => announcement.id)
         .indexOf(route.params.noticeId);
 
@@ -97,39 +93,12 @@ function Notices({ navigation, route }) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [route.params, notices]);
+  }, [route.params, list]);
 
-  async function getNotices() {
-    const colReference = collection(db, "Notices");
-    const q = query(
-      colReference,
-      where("recipients", "array-contains", currentUser.userID)
-    );
-
-    const data = await getDocs(q);
-
-    const formattedData = data.docs.map((doc) => {
-      return {
-        ...doc.data(),
-        id: doc.id,
-      };
-    });
-    const sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
-    setNotices(sortedListOfPosts);
-  }
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-
-    wait(1000).then(async () => {
-      getNotices();
-      setRefreshing(false);
-    });
-  }, []);
-
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item, index }) => {
     return (
       <NoticeItem
+        key={index}
         attachment={item.attachment}
         subject={item.subject}
         content={item.content}
@@ -151,7 +120,6 @@ function Notices({ navigation, route }) {
   return (
     <View style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
       <StatusBar style="light" />
-      <FlatListRefreshControl refreshing={refreshing} />
       <FlatList
         getItemLayout={(data, index) => ({
           length: data.length,
@@ -159,18 +127,8 @@ function Notices({ navigation, route }) {
           index,
         })}
         ref={listRef}
-        data={notices}
+        data={list}
         renderItem={renderItem}
-        refreshControl={
-          <RefreshControl
-            progressBackgroundColor="white"
-            colors={[styleVariables.colors.primary]}
-            tintColor="transparent"
-            style={{ backgroundColor: "transparent", color: "transparent" }}
-            onRefresh={onRefresh}
-            refreshing={refreshing}
-          />
-        }
         ListFooterComponent={renderFooter}
       />
     </View>

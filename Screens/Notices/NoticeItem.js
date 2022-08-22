@@ -46,7 +46,10 @@ function NoticeItem({
       setViewed(true);
       // update notices in context
       const newNoticeCount = notices - 1;
-      setNotices(newNoticeCount);
+      setNotices({
+        ...notices,
+        count: newNoticeCount,
+      });
     }
   };
 

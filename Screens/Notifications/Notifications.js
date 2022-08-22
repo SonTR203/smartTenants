@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, FlatList, StyleSheet, RefreshControl } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../Context/AppContext";
@@ -7,18 +7,13 @@ import { useTheme } from "../../ThemeContext";
 import NotificationItem from "./NotificationItem";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
-import { getNoticeCount } from "../../utils/Notifications/notifications.services";
-import { wait } from "../../utils/wait";
 import _ from "lodash";
-import { refreshDelay } from "../../utils/constants";
-import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 
 const Notifications = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
-  const { currentUser, notificationBadges, setNotices } = useAppContext();
+  const { notificationBadges } = useAppContext();
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
-  const [refreshing, setRefreshing] = useState(true);
 
   useEffect(() => {
     if (route.params && route.params.announcementId) {
@@ -34,27 +29,6 @@ const Notifications = ({ navigation, route }) => {
     }
   }, [route.params]);
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-
-    wait(refreshDelay)
-      .then(async () => {
-        fetchNoticeCount();
-        setRefreshing(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setRefreshing(false);
-      });
-  }, []);
-
-  useEffect(async () => {
-    if (currentUser) {
-      await fetchNoticeCount();
-      setRefreshing(false);
-    }
-  }, [currentUser]);
-
   useEffect(() => {
     // console.log("notifications screen list: ", notificationBadges.list.length);
     if (notificationBadges.list.length > 0) {
@@ -65,12 +39,6 @@ const Notifications = ({ navigation, route }) => {
       setNotifications(sortedListOfNotifications);
     }
   }, [notificationBadges.list]);
-
-  async function fetchNoticeCount() {
-    const count = await getNoticeCount(currentUser);
-    console.log("notice count: ", count);
-    setNotices(count);
-  }
 
   const callBackRender = useCallback(
     ({ item, index }) => renderNotificationItem({ item, index }),
@@ -108,7 +76,6 @@ const Notifications = ({ navigation, route }) => {
     <SafeAreaView style={styles.safeareaview(styleVariables)} edges={["top"]}>
       <StatusBar style="light" />
       <View style={styles.container}>
-        <FlatListRefreshControl refreshing={refreshing} />
         <FlatList
           ListHeaderComponent={renderAnnouncementsAndNotices}
           style={styles.flatlist}
@@ -117,16 +84,6 @@ const Notifications = ({ navigation, route }) => {
           renderItem={callBackRender}
           keyExtractor={(item, index) => item.id + index}
           ListFooterComponent={renderListEnd}
-          refreshControl={
-            <RefreshControl
-              tintColor="transparent"
-              progressBackgroundColor="white"
-              colors={[styleVariables.colors.primary]}
-              style={{ backgroundColor: "transparent" }}
-              onRefresh={onRefresh}
-              refreshing={refreshing}
-            />
-          }
         />
       </View>
     </SafeAreaView>

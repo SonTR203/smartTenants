@@ -51,7 +51,10 @@ function App() {
     list: [],
     count: 0,
   });
-  const [notices, setNotices] = useState(0);
+  const [notices, setNotices] = useState({
+    list: [],
+    count: 0,
+  });
   const [currentUser, setCurrentUser] = useState({});
   const [notifications, setNotifications] = useState({});
   const [unauthorizedUsers, setUnauthorizedUsers] = useState({});
@@ -205,6 +208,49 @@ function App() {
     return () => {
       if (unsubscribeAnnouncements) {
         unsubscribeAnnouncements();
+      }
+    };
+  }, [currentUser.userID]);
+
+  useEffect(() => {
+    let unsubscribeNotices;
+    if (currentUser && currentUser.userID) {
+      const noticesRef = collection(db, `Notices`);
+      const noticesQuery = query(
+        noticesRef,
+        where("recipients", "array-contains", currentUser.userID)
+      );
+
+      unsubscribeNotices = onSnapshot(noticesQuery, (querySnapshot) => {
+        const unseenNotices = [];
+        const list = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (
+            data.wasSeen.filter((user) => user.userID === currentUser.userID)
+              .length < 1
+          ) {
+            unseenNotices.push(data.id);
+          }
+          list.push(data);
+        });
+        // update badge number in Notifications icon bottom navigations
+        setNotificationBadges({
+          unseen: [...notificationBadges.unseen, ...unseenNotices],
+          list: notificationBadges.list,
+        });
+        // update notices Context to use in notices screen and
+        // notices number list header
+        setNotices({
+          list: list,
+          count: unseenNotices.length,
+        });
+      });
+    }
+
+    return () => {
+      if (unsubscribeNotices) {
+        unsubscribeNotices();
       }
     };
   }, [currentUser.userID]);
