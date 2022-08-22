@@ -267,7 +267,7 @@ function FilterModal({
               value={minPrice}
               keyboardType={"decimal-pad"}
               style={[styles.input, styles.marginRight]}
-              placeholder={"$0.00"}
+              placeholder={"$ Min"}
               placeholderTextColor={styleVariables.colors.primary}
             />
             <TextInput
@@ -275,7 +275,7 @@ function FilterModal({
               value={maxPrice}
               keyboardType={"decimal-pad"}
               style={[styles.input, styles.marginLeft]}
-              placeholder={"$0.00"}
+              placeholder={"$ Max"}
               placeholderTextColor={styleVariables.colors.primary}
             />
           </View>
