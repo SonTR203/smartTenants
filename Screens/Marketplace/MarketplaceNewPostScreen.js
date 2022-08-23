@@ -452,6 +452,7 @@ function MarketplaceNewPostScreen({ navigation }) {
                 styleVariables={styleVariables}
                 setConditionModalVisible={setConditionModalVisible}
                 setCondition={setCondition}
+                condition={condition}
               />
             </Modal>
             {/* DESCRIPTION */}
