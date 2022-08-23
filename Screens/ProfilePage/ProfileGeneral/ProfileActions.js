@@ -5,9 +5,11 @@ import * as WebBrowser from "expo-web-browser";
 import { useTheme } from "../../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { removeExpoPushToken } from "../../../utils/firebase.services";
+import { useAppContext } from "../../../Context/AppContext";
 
 function ProfileActions({ navigation }) {
   const { theme, styleVariables } = useTheme();
+  const { setNotificationBadges, setMarketplaceBadges } = useAppContext();
   const auth = getAuth();
 
   /*This function logs out the user of both the Firebase database cloud service and the user application
@@ -19,6 +21,14 @@ function ProfileActions({ navigation }) {
     await auth.signOut();
     navigation.navigate("Login", {
       reload: true,
+    });
+    setMarketplaceBadges({
+      unseen: [],
+      list: [],
+    });
+    setNotificationBadges({
+      unseen: [],
+      list: [],
     });
   };
 

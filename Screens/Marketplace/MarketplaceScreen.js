@@ -15,18 +15,23 @@ import Fab from "../../components/Fab";
 import ListFooter from "../Newsfeed/ListFooter";
 import { getMarketplaceItems } from "../../utils/firebase.services";
 import { useAppContext } from "../../Context/AppContext";
-import { Entypo } from "@expo/vector-icons";
 import EmptyListComponent from "../../components/EmptyListComponent";
 import { refreshDelay } from "../../utils/constants";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 import MarketplaceFirstItem from "./MarketplaceItem/MarketplaceFirstItem";
 import MarketplaceItem from "./MarketplaceItem/MarketplaceItem";
+import SortSVG from "../../components/Icons/SortSVG";
+import FilterSVG from "../../components/Icons/FilterSVG";
+import Modal from "react-native-modal";
+import FilterModal from "../../components/FilterModal";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [refreshing, setRefreshing] = useState(true);
   const [itemList, setItemList] = useState(null);
-  const { currentUser, updatedMarketplacePosts, setUpdatedMarketplacePosts } =
+  const [filteredItemList, setFilteredItemList] = useState(null);
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
+  const { updatedMarketplacePosts, setUpdatedMarketplacePosts } =
     useAppContext();
 
   const onRefresh = useCallback(() => {
@@ -82,30 +87,44 @@ const MarketplaceScreen = ({ navigation, route }) => {
     }
   }, [route.params]);
 
-  const handleNavigate = () => {
-    navigation.navigate("MessagesListScreen", {
-      userId: currentUser.userID,
-    });
-  };
-
   const renderEmpty = () => {
+    if (itemList.length === 1) {
+      return null;
+    }
     return <EmptyListComponent screenName={"marketplace"} />;
   };
 
   const renderListHeader = () => {
     return (
       <>
-        <TouchableOpacity
-          onPress={handleNavigate}
-          style={styles.messageContainer}
-        >
-          <View style={styles.messageView}>
-            <Text style={styles.messageText}>Messages</Text>
-          </View>
-
-          <Entypo name="chevron-small-right" size={40} color="#395E66" />
-        </TouchableOpacity>
-        <MarketplaceFirstItem item={itemList[0]} navigation={navigation} />
+        <View style={styles.filterSort}>
+          <TouchableOpacity style={[styles.headerBtn]}>
+            <Text
+              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
+            >
+              Sort
+            </Text>
+            <SortSVG />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setFilterModalVisible(true);
+            }}
+            style={[styles.filterBtn, styles.headerBtn]}
+          >
+            <Text
+              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
+            >
+              Filter
+            </Text>
+            <FilterSVG />
+          </TouchableOpacity>
+        </View>
+        <MarketplaceFirstItem
+          isPopular={true}
+          item={filteredItemList ? filteredItemList[0] : itemList[0]}
+          navigation={navigation}
+        />
       </>
     );
   };
@@ -144,35 +163,30 @@ const MarketplaceScreen = ({ navigation, route }) => {
       overflow: "hidden",
       backgroundColor: "white",
     },
-    messageContainer: {
-      margin: 16,
-      backgroundColor: "white",
-      padding: 16,
-      borderRadius: 24,
+    filterSort: {
+      display: "flex",
       flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 0.22,
-      shadowRadius: 2.22,
-
-      elevation: 3,
+      paddingTop: 16,
+      paddingHorizontal: 8,
     },
-    messageView: {
+    headerBtn: {
+      flex: 1,
       flexDirection: "row",
+      justifyContent: "center",
       alignItems: "center",
+      backgroundColor: "#ebeff0",
+      marginHorizontal: 8,
+      borderRadius: 8,
+      paddingVertical: 8,
     },
-    messageText: {
-      color: "#395E66",
-      fontSize: 22,
-      lineHeight: 28,
-      marginLeft: 6,
-      fontWeight: "500",
+    btnText: {
+      marginRight: 8,
+      color: styleVariables.colors.primary,
+    },
+    modal: {
+      display: "flex",
+      justifyContent: "flex-end",
+      margin: 0,
     },
   });
 
@@ -180,6 +194,18 @@ const MarketplaceScreen = ({ navigation, route }) => {
     // CONTAINER
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
+      <Modal
+        backdropOpacity={0.5}
+        isVisible={filterModalVisible}
+        style={styles.modal}
+        onBackdropPress={() => setFilterModalVisible(false)}
+      >
+        <FilterModal
+          marketplaceData={itemList}
+          setFilteredItemList={setFilteredItemList}
+          setFilterModalVisible={setFilterModalVisible}
+        />
+      </Modal>
 
       {/* ITEM LIST  */}
       <View style={styles.flatListContainer}>
@@ -191,7 +217,9 @@ const MarketplaceScreen = ({ navigation, route }) => {
               removeClippedSubviews={true}
               initialNumToRender={3}
               style={styles.flatlist}
-              data={itemList.slice(1)} // remove first item from list, put first item in Header
+              data={
+                filteredItemList ? filteredItemList.slice(1) : itemList.slice(1)
+              } // remove first item from list, put first item in Header
               numColumns={2}
               keyExtractor={(item, index) => item + index}
               ListHeaderComponent={renderListHeader}
@@ -200,7 +228,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
               refreshControl={
                 <RefreshControl
                   tintColor="transparent"
-                  colors={["transparent"]}
+                  progressBackgroundColor="white"
+                  colors={[styleVariables.colors.primary]}
                   style={{ backgroundColor: "transparent" }}
                   onRefresh={onRefresh}
                   refreshing={refreshing}

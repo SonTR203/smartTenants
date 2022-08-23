@@ -19,7 +19,7 @@ const Splashscreen = () => {
         alignItems: "center",
       }}
     >
-      <View style={{ backgroundColor: "black" }}></View>
+      <View style={{ backgroundColor: "#4d4d4d" }}></View>
       <View
         style={{
           display: "flex",
@@ -49,7 +49,7 @@ const Splashscreen = () => {
           resizeMode="contain"
         />
       </View>
-      <View style={{ backgroundColor: "black" }}></View>
+      <View style={{ backgroundColor: "#4d4d4d" }}></View>
     </View>
   );
 };

@@ -18,7 +18,7 @@ export const categories = [
       { id: "12", category: "Mens clothes & shoes" },
       { id: "13", category: "Womens accessories" },
       { id: "14", category: "Mens accessories" },
-      { id: "15", category: "Other" },
+      { id: "15", category: "Clothes (Other)" },
     ],
   },
   {
@@ -31,7 +31,7 @@ export const categories = [
       { id: "24", category: "Home audio" },
       { id: "25", category: "Audio accessories" },
       { id: "26", category: "Tablets & e-readers" },
-      { id: "27", category: "Other" },
+      { id: "27", category: "Electronics (Other)" },
     ],
   },
   { id: "3", category: "Free Goods" },
@@ -45,7 +45,7 @@ export const categories = [
       { id: "44", category: "Skincare" },
       { id: "45", category: "Tools" },
       { id: "46", category: "Bath & Body" },
-      { id: "47", category: "Other" },
+      { id: "47", category: "Health & Beaty (Other)" },
     ],
   },
   {
@@ -59,7 +59,7 @@ export const categories = [
       { id: "55", category: "Fitness equipment" },
       { id: "56", category: "Sports equipment" },
       { id: "57", category: "Outdoors recreation equipment" },
-      { id: "58", category: "Other" },
+      { id: "58", category: "Hobbies & sports (Other)" },
     ],
   },
   {
@@ -74,7 +74,7 @@ export const categories = [
       { id: "66", category: "Lighing" },
       { id: "67", category: "Kitchen & dining" },
       { id: "68", category: "Storage & organization" },
-      { id: "69", category: "Other" },
+      { id: "69", category: "Home (Other)" },
     ],
   },
   {
@@ -88,7 +88,7 @@ export const categories = [
       { id: "75", category: "Feeding supplies" },
       { id: "76", category: "Bathing supplies" },
       { id: "77", category: "Nursery" },
-      { id: "78", category: "Other" },
+      { id: "78", category: "Kids (Other)" },
     ],
   },
   {
@@ -97,7 +97,7 @@ export const categories = [
     subCategories: [
       { id: "81", category: "Stationery" },
       { id: "82", category: "Desk organizers" },
-      { id: "83", category: "Other" },
+      { id: "83", category: "Office goods (Other)" },
     ],
   },
   {
@@ -123,7 +123,7 @@ export const categories = [
       { id: "107", category: "Cat supplies" },
       { id: "108", category: "Bird supplies" },
       { id: "109", category: "Fish supplies" },
-      { id: "110", category: "Other" },
+      { id: "110", category: "Other pet supplies" },
     ],
   },
   {
@@ -133,7 +133,7 @@ export const categories = [
       { id: "112", category: "Indoor games" },
       { id: "113", category: "Outdoor games" },
       { id: "114", category: "Toys" },
-      { id: "115", category: "Other" },
+      { id: "115", category: "Toys & games (Other)" },
     ],
   },
   {
@@ -146,7 +146,7 @@ export const categories = [
       { id: "124", category: "Trucks" },
       { id: "125", category: "Boats" },
       { id: "126", category: "RV" },
-      { id: "127", category: "Other" },
+      { id: "127", category: "Vehicles (Other)" },
     ],
   },
 ];

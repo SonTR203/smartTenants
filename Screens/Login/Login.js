@@ -58,13 +58,14 @@ const Login = ({ navigation, route }) => {
    * outputs: return the undefined (the default for JS functions)
    */
   const handleLogin = async () => {
+    setErrorText("");
     setLoading(true);
     const userUID = await handleSignIn(email, password);
-    if (userUID) {
+    if (!userUID.error) {
       findUser(userUID);
     } else {
       setLoading(false);
-      setErrorText("Wrong email or password.");
+      setErrorText(userUID.errorMessage);
     }
   };
 
@@ -91,7 +92,8 @@ const Login = ({ navigation, route }) => {
         }
       }
     } else {
-      alert("User not found");
+      setLoading(false);
+      setErrorText("User not found");
     }
   };
 

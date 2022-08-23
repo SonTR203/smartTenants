@@ -17,7 +17,7 @@ function MarketplaceItem({ item, index, navigation }) {
       resizeMode: "cover",
       marginBottom: 17,
       height: constants.height * 0.2,
-      backgroundColor: "black",
+      backgroundColor: "#4d4d4d",
       borderTopRightRadius: 24,
       borderTopLeftRadius: 24,
     },

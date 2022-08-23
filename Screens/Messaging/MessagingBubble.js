@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     marginRight: isSender ? 10 : 50,
     padding: 10,
     borderRadius: 5,
-    shadowColor: "#000",
+    shadowColor: "#4d4d4d",
     shadowOffset: {
       width: 0,
       height: 2,

@@ -145,7 +145,7 @@ const Signup = ({ navigation }) => {
 
   function signUpSuccess(user) {
     createNewUser(user);
-    uploadExpoPushToken(user);
+    uploadExpoPushToken(user.uid);
     navigation.navigate("AccountApprovalPending");
   }
 

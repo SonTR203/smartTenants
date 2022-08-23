@@ -322,7 +322,7 @@ const EditProfile = ({ navigation }) => {
                   style={[
                     theme.textInput,
                     styleVariables.fontSizes.body,
-                    { color: "#00000080" },
+                    { color: "#4d4d4d" },
                   ]}
                 >
                   {buildingAddress}
