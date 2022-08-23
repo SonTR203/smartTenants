@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   View,
@@ -45,8 +45,8 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [price, setPrice] = useState(null);
-  const [condition, setCondition] = useState("Choose condition");
-  const [category, setCategory] = useState("Choose category");
+  const [condition, setCondition] = useState(null);
+  const [category, setCategory] = useState(null);
   const [conditionModalVisible, setConditionModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
@@ -69,6 +69,12 @@ function MarketplaceNewPostScreen({ navigation }) {
       uri: "",
     },
   ]);
+
+  useEffect(() => {
+    if (category === "Free Goods") {
+      setPrice("$0.00");
+    }
+  }, [category]);
 
   const openPicker = (multiple, index) => {
     try {
@@ -383,10 +389,14 @@ function MarketplaceNewPostScreen({ navigation }) {
                 <Text
                   style={[
                     styleVariables.fontSizes.body,
-                    { color: styleVariables.colors.placeholderText },
+                    {
+                      color: !category
+                        ? styleVariables.colors.placeholderText
+                        : styleVariables.colors.black,
+                    },
                   ]}
                 >
-                  {category}
+                  {category || "Choose category"}
                 </Text>
                 <ChevronDownSVG />
               </View>
@@ -418,10 +428,14 @@ function MarketplaceNewPostScreen({ navigation }) {
                 <Text
                   style={[
                     styleVariables.fontSizes.body,
-                    { color: styleVariables.colors.placeholderText },
+                    {
+                      color: !condition
+                        ? styleVariables.colors.placeholderText
+                        : styleVariables.colors.black,
+                    },
                   ]}
                 >
-                  {condition}
+                  {condition || "Choose condition"}
                 </Text>
                 <ChevronDownSVG />
               </View>
@@ -463,6 +477,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               Price
             </Text>
             <TextInput
+              editable={category !== "Free Goods"}
               keyboardType="numeric"
               value={price}
               placeholder="$0.00"
