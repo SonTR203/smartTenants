@@ -9,8 +9,9 @@ function SortModal({
   marketplaceData,
   filteredItemList,
   setFilteredItemList,
+  sortingBy,
+  setSortingBy,
 }) {
-  const [sortingBy, setSortingBy] = useState("Date(newest)");
   const { styleVariables, theme } = useTheme();
 
   const applySort = () => {

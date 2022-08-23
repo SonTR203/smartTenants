@@ -35,6 +35,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [conditionFilter, setConditionFilter] = useState("All");
+  const [sortingBy, setSortingBy] = useState("Date(newest)");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [distance, setDistance] = useState("0");
@@ -219,6 +220,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
           marketplaceData={itemList}
           filteredItemList={filteredItemList}
           setFilteredItemList={setFilteredItemList}
+          sortingBy={sortingBy}
+          setSortingBy={setSortingBy}
         />
       </Modal>
       {/* FILTER MODAL */}
