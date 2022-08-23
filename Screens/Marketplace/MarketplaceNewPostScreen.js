@@ -38,6 +38,7 @@ import ChevronDownSVG from "../../components/Icons/ChevronDownSVG";
 import Modal from "react-native-modal";
 import ModalConditionPicker from "../../components/ModalConditionPicker";
 import ModalCategoryPicker from "../../components/ModalCategoryPicker";
+import * as ImagePicker from "expo-image-picker";
 
 function MarketplaceNewPostScreen({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -101,60 +102,25 @@ function MarketplaceNewPostScreen({ navigation }) {
     }
   }, [category]);
 
-  const openPicker = (multiple, index) => {
+  const openPicker = async (multiple, index) => {
     try {
-      let ImagePicker = require("expo-image-picker");
-      let { launchImageLibraryAsync } = ImagePicker;
       let options = {
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
         aspect: [1, 1],
         quality: 1,
         base64: true,
+        presentationStyle: 0,
       };
-      launchImageLibraryAsync(options)
+      await ImagePicker.launchImageLibraryAsync(options)
         .then(async (image) => {
-          if (image) {
+          if (!image.cancelled) {
             handleSelectedImages(image, index, true);
           }
         })
         .catch((error) => {
           console.log("error expo image picker: ", error);
         });
-      // call const ImagePicker here so the app won't crash, only the feature is disabled
-      // let ImagePicker = require("react-native-image-crop-picker").default;
-      // ImagePicker.openPicker({
-      //   multiple: multiple,
-      //   compressImageQuality: 0.6,
-      //   sortOrder: "asc",
-      // })
-      //   .then((response) => {
-      //   setImageLoading(true);
-      //   let newImages = [...selectedImages];
-      //   if (response.length > 0) {
-      //     const takeAmount = updateImages(response, selectedImages);
-      //     for (let i = 0; i < takeAmount; i++) {
-      //       newImages[index + i] = {
-      //         uri: response[i].path,
-      //       };
-      //     }
-      //     if (newImages.length > maxImages) {
-      //       newImages = newImages.slice(0, maxImages);
-      //     }
-      //   } else {
-      //     newImages[index] = {
-      //       uri: response.path,
-      //     };
-      //   }
-      //   // artificially delay the image loading
-      //   wait(500).then(() => {
-      //     setImageLoading(false);
-      //     setSelectedImages(newImages);
-      //   });
-      // })
-      //   .catch((error) => {
-      //     console.log("error openPicker: ", error);
-      //   });
     } catch (err) {
       console.log("error: ", err);
       Alert.alert(
