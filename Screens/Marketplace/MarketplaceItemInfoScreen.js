@@ -16,12 +16,14 @@ import { useAppContext } from "../../Context/AppContext";
 import { doc, getDoc, Timestamp } from "@firebase/firestore";
 import { db } from "../../firebase-config";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
+import { useTheme } from "../../ThemeContext";
 
 function MarketplaceItemInfoScreen({ navigation }) {
   const [item, setItem] = useState(null);
   const [imageList, setImageList] = useState([]);
   const [hoursAgo, setHoursAgo] = useState(null);
   const { currentUser, currentMarketplacePost } = useAppContext();
+  const { styleVariables } = useTheme();
 
   // check for item passed from previous screen & display info
   useEffect(() => {
@@ -109,7 +111,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
       fontSize: 28,
       fontWeight: "600",
       lineHeight: 33,
-      color: "#191919",
+      color: styleVariables.colors.black,
     },
     price: {
       marginTop: 5,
@@ -123,8 +125,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
       marginTop: 11,
     },
     content: {
-      color: "#191919",
-      opacity: 0.66,
+      color: styleVariables.colors.black,
       fontSize: 17,
       fontWeight: "400",
       lineHeight: 20,
@@ -149,14 +150,13 @@ function MarketplaceItemInfoScreen({ navigation }) {
       fontWeight: "500",
       fontSize: 17,
       lineHeight: 24,
-      color: "#191919",
+      color: styleVariables.colors.black,
     },
     hoursAgo: {
       fontWeight: "400",
       fontSize: 15,
       lineHeight: 18,
-      color: "#191919",
-      opacity: 0.66,
+      color: styleVariables.colors.black,
     },
     messageButton: {
       marginLeft: 17,

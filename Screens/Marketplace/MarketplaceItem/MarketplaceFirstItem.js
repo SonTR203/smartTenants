@@ -46,7 +46,7 @@ function MarketplaceFirstItem({
       fontSize: 28,
       fontWeight: "600",
       lineHeight: 33,
-      color: "#191919",
+      color: styleVariables.colors.black,
     },
     price: {
       color: "#395E66",
@@ -61,8 +61,7 @@ function MarketplaceFirstItem({
       marginBottom: 16,
     },
     content: {
-      color: "#191919",
-      opacity: 0.66,
+      color: styleVariables.colors.black,
       fontSize: 17,
       fontWeight: "400",
       lineHeight: 20,
