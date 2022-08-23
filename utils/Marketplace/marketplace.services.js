@@ -85,22 +85,34 @@ export const getSortedList = (data, sortingBy) => {
     case "Date(oldest)":
       sortedList = _.sortBy(data, "timestamp");
       break;
-    case "Price(lowest)":
+    case "Price(highest)":
       sortedList = data.sort((a, b) => {
-        if (parseInt(a.price.substr(1)) < parseInt(b.price.substr(1))) {
+        if (
+          parseInt(a.price.substr(1).replace(",", "")) <
+          parseInt(b.price.substr(1).replace(",", ""))
+        ) {
           return 1;
-        } else if (parseInt(a.price.substr(1)) > parseInt(b.price.substr(1))) {
+        } else if (
+          parseInt(a.price.substr(1).replace(",", "")) >
+          parseInt(b.price.substr(1).replace(",", ""))
+        ) {
           return -1;
         } else {
           return 0;
         }
       });
       break;
-    case "Price(highest)":
+    case "Price(lowest)":
       sortedList = data.sort((a, b) => {
-        if (parseInt(a.price.substr(1)) > parseInt(b.price.substr(1))) {
+        if (
+          parseInt(a.price.substr(1).replace(",", "")) >
+          parseInt(b.price.substr(1).replace(",", ""))
+        ) {
           return 1;
-        } else if (parseInt(a.price.substr(1)) < parseInt(b.price.substr(1))) {
+        } else if (
+          parseInt(a.price.substr(1).replace(",", "")) <
+          parseInt(b.price.substr(1).replace(",", ""))
+        ) {
           return -1;
         } else {
           return 0;
