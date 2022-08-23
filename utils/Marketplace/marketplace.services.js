@@ -50,6 +50,10 @@ export const getFilteredList = (
   max
   // distance
 ) => {
+  // format min and max price $1,500.0 -> 1500
+  min = Number(min.replace(/[^0-9.-]+/g, ""));
+  max = Number(max.replace(/[^0-9.-]+/g, ""));
+
   const filteredList = data.filter((item) => {
     if (
       (item.category == category || category == "All") &&
@@ -66,4 +70,15 @@ export const getFilteredList = (
   });
 
   return filteredList;
+};
+
+// format price "0" -> "$0.00" after user finished entering
+// will be moved to utils folder if used in multiple places
+export const format = (amount) => {
+  return (
+    "$" +
+    parseFloat(amount)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d{3})+\.)/g, "$1,")
+  );
 };

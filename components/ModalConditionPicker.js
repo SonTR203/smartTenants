@@ -7,9 +7,10 @@ function ModalConditionPicker({
   setConditionModalVisible,
   styleVariables,
   theme,
+  condition,
 }) {
-  const [newChecked, setNewChecked] = useState(false);
-  const [usedChecked, setUsedChecked] = useState(false);
+  const [newChecked, setNewChecked] = useState(condition === "New");
+  const [usedChecked, setUsedChecked] = useState(condition === "Used");
 
   const styles = StyleSheet.create({
     modalContainer: {
@@ -66,6 +67,7 @@ function ModalConditionPicker({
                 setUsedChecked(false);
               }
               setCondition("New");
+              setConditionModalVisible(false);
             }}
           />
         </View>
@@ -92,6 +94,7 @@ function ModalConditionPicker({
                 setNewChecked(false);
               }
               setCondition("Used");
+              setConditionModalVisible(false);
             }}
           />
         </View>

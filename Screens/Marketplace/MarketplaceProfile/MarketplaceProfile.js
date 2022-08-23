@@ -80,7 +80,7 @@ function MarketplaceProfile({ navigation }) {
                 {marketplaceBadges.unseen.length > 0 && item.id === 1 ? (
                   <View style={styles.badgeView}>
                     <Text style={styles.badgeNumber}>
-                      {marketplaceBadges.unseen.length}123
+                      {marketplaceBadges.unseen.length}
                     </Text>
                   </View>
                 ) : null}
