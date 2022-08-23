@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   View,
@@ -27,6 +27,7 @@ import {
 import { moderateImage, moderateText } from "../../utils/moderation.services";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import {
+  format,
   updateImages,
   uploadMarketplaceImages,
 } from "../../utils/Marketplace/marketplace.services";
@@ -44,8 +45,8 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [price, setPrice] = useState(null);
-  const [condition, setCondition] = useState("Choose condition");
-  const [category, setCategory] = useState("Choose category");
+  const [condition, setCondition] = useState(null);
+  const [category, setCategory] = useState(null);
   const [conditionModalVisible, setConditionModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
@@ -68,6 +69,12 @@ function MarketplaceNewPostScreen({ navigation }) {
       uri: "",
     },
   ]);
+
+  useEffect(() => {
+    if (category === "Free Goods") {
+      setPrice("$0.00");
+    }
+  }, [category]);
 
   const openPicker = (multiple, index) => {
     try {
@@ -240,17 +247,6 @@ function MarketplaceNewPostScreen({ navigation }) {
     }
   }
 
-  // format price "0" -> "$0.00" after user finished entering
-  // will be moved to utils folder if used in multiple places
-  const format = (amount) => {
-    return (
-      "$" +
-      parseFloat(amount)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, "$1,")
-    );
-  };
-
   const handleEndEditing = (e) => {
     if (e.nativeEvent.text.length > 0) {
       const price = e.nativeEvent.text.replace(/[^0-9]/g, "");
@@ -394,14 +390,13 @@ function MarketplaceNewPostScreen({ navigation }) {
                   style={[
                     styleVariables.fontSizes.body,
                     {
-                      color:
-                        category != "Choose category"
-                          ? styleVariables.colors.black
-                          : styleVariables.colors.placeholderText,
+                      color: !category
+                        ? styleVariables.colors.placeholderText
+                        : styleVariables.colors.black,
                     },
                   ]}
                 >
-                  {category}
+                  {category || "Choose category"}
                 </Text>
                 <ChevronDownSVG />
               </View>
@@ -434,14 +429,13 @@ function MarketplaceNewPostScreen({ navigation }) {
                   style={[
                     styleVariables.fontSizes.body,
                     {
-                      color:
-                        condition != "Choose condition"
-                          ? styleVariables.colors.black
-                          : styleVariables.colors.placeholderText,
+                      color: !condition
+                        ? styleVariables.colors.placeholderText
+                        : styleVariables.colors.black,
                     },
                   ]}
                 >
-                  {condition}
+                  {condition || "Choose condition"}
                 </Text>
                 <ChevronDownSVG />
               </View>
@@ -458,6 +452,7 @@ function MarketplaceNewPostScreen({ navigation }) {
                 styleVariables={styleVariables}
                 setConditionModalVisible={setConditionModalVisible}
                 setCondition={setCondition}
+                condition={condition}
               />
             </Modal>
             {/* DESCRIPTION */}
@@ -483,6 +478,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               Price
             </Text>
             <TextInput
+              editable={category !== "Free Goods"}
               keyboardType="numeric"
               value={price}
               placeholder="$0.00"

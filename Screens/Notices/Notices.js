@@ -97,10 +97,10 @@ function Notices({ navigation, route }) {
     };
   }, [route.params, list]);
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({ item }) => {
     return (
       <NoticeItem
-        key={index}
+        key={item.id}
         attachment={item.attachment}
         subject={item.subject}
         content={item.content}
@@ -128,7 +128,7 @@ function Notices({ navigation, route }) {
           offset: data.length * index,
           index,
         })}
-        keyExtractor={({ index }) => index}
+        keyExtractor={(item) => item.id}
         ref={listRef}
         data={list}
         renderItem={renderItem}
