@@ -80,10 +80,10 @@ export const getSortedList = (data, sortingBy) => {
   let sortedList;
   switch (sortingBy) {
     case "Date(newest)":
-      sortedList = _.sortBy(data, "timestamp");
+      sortedList = _.sortBy(data, "timestamp").reverse();
       break;
     case "Date(oldest)":
-      sortedList = _.sortBy(data, "timestamp").reverse();
+      sortedList = _.sortBy(data, "timestamp");
       break;
     case "Price(lowest)":
       sortedList = data.sort((a, b) => {
