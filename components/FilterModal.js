@@ -25,13 +25,19 @@ function FilterModal({
   marketplaceData,
   setFilteredItemList,
   setFilterModalVisible,
+  categoryFilter,
+  setCategoryFilter,
+  conditionFilter,
+  setConditionFilter,
+  minPrice,
+  setMinPrice,
+  maxPrice,
+  setMaxPrice,
+  distance,
+  setDistance,
+  listingAmount,
+  setListingAmount,
 }) {
-  const [categoryFilter, setCategoryFilter] = useState("All");
-  const [conditionFilter, setConditionFilter] = useState("All");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [distance, setDistance] = useState("0");
-  const [listingAmount, setListingAmount] = useState("0");
   const [inputFocus, setInputFocus] = useState({
     min: false,
     max: false,
@@ -82,6 +88,7 @@ function FilterModal({
     setMaxPrice("");
     setMinPrice("");
     setDistance("0");
+    setFilteredItemList(marketplaceData);
   };
 
   const applyFilters = () => {
@@ -225,6 +232,7 @@ function FilterModal({
               <Text
                 style={[
                   styleVariables.fontSizes.body,
+                  styles.primaryClr,
                   conditionFilter == "All" && styles.textWhite,
                 ]}
               >
@@ -244,6 +252,7 @@ function FilterModal({
               <Text
                 style={[
                   styleVariables.fontSizes.body,
+                  styles.primaryClr,
                   conditionFilter == "New" && styles.textWhite,
                 ]}
               >
@@ -262,6 +271,7 @@ function FilterModal({
               <Text
                 style={[
                   styleVariables.fontSizes.body,
+                  styles.primaryClr,
                   conditionFilter == "Used" && styles.textWhite,
                 ]}
               >

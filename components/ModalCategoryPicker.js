@@ -77,12 +77,15 @@ function ModalCategoryPicker({
 
   const SubCategoryItem = ({ category }) => (
     <TouchableOpacity
-      style={styles.categoryItem}
+      style={[
+        styles.categoryItem,
+        !isFilterModal && category == "All" ? { display: "none" } : {},
+      ]}
       onPress={() => {
         if (isFilterModal) {
-          setCategoryFilter(category);
+          setCategoryFilter(`${categoryTitle} - ${category}`);
         } else {
-          setCategory(category);
+          setCategory(`${categoryTitle} - ${category}`);
         }
         if (!isFilterModal) {
           setCategoryModalVisible(false);
@@ -99,10 +102,11 @@ function ModalCategoryPicker({
             height: 20,
             borderColor: styleVariables.colors.primary,
           }}
+          iconComponent={<View></View>}
           style={styles.subCategoryCheckbox}
           disableText={true}
           disableBuiltInState={true}
-          isChecked={categoryFilter == category}
+          isChecked={categoryFilter == `${categoryTitle} - ${category}`}
           onPress={() => {
             setCategoryFilter(category);
           }}
@@ -226,6 +230,7 @@ function ModalCategoryPicker({
                   height: 20,
                   borderColor: styleVariables.colors.primary,
                 }}
+                iconComponent={<View></View>}
                 disableText={true}
                 disableBuiltInState={true}
                 isChecked={categoryFilter == "All"}
