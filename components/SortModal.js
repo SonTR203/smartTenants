@@ -150,7 +150,7 @@ function SortModal({
         }}
         style={[styles.flexApart, styles.sortCheckbox]}
       >
-        <Text style={styleVariables.fontSizes.body}>Date (highest first)</Text>
+        <Text style={styleVariables.fontSizes.body}>Price (highest first)</Text>
         <BouncyCheckbox
           size={28}
           fillColor={styleVariables.colors.primary}
