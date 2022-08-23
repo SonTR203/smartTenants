@@ -51,9 +51,16 @@ export const getFilteredList = (
   min = Number(min.replace(/[^0-9.-]+/g, ""));
   max = Number(max.replace(/[^0-9.-]+/g, ""));
 
+  let index = 1;
+
+  if (category.split(" - ")[1] == "All") {
+    index = 0;
+  }
+
   const filteredList = data.filter((item) => {
     if (
-      (item.category == category || category == "All") &&
+      (item.category.split(" - ")[index] == category.split(" - ")[index] ||
+        category == "All") &&
       (item.condition == condition || condition == "All") &&
       (parseFloat(item.price.substr(1).replace(",", "")) >= parseInt(min) ||
         min == "") &&
