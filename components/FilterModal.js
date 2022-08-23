@@ -16,7 +16,10 @@ import ChevronRightSVG from "./Icons/ChevronRightSVG";
 import { Slider } from "@miblanchard/react-native-slider";
 import { constants } from "../utils/constants";
 import ModalCategoryPicker from "./ModalCategoryPicker";
-import { getFilteredList } from "../utils/Marketplace/marketplace.services";
+import {
+  format,
+  getFilteredList,
+} from "../utils/Marketplace/marketplace.services";
 
 function FilterModal({
   marketplaceData,
@@ -29,6 +32,10 @@ function FilterModal({
   const [maxPrice, setMaxPrice] = useState("");
   const [distance, setDistance] = useState("0");
   const [listingAmount, setListingAmount] = useState("0");
+  const [inputFocus, setInputFocus] = useState({
+    min: false,
+    max: false,
+  });
   const { styleVariables, theme } = useTheme();
   const slideInOut = useRef(new Animated.Value(constants.width)).current;
 
@@ -134,8 +141,8 @@ function FilterModal({
     input: {
       flex: 1,
       textAlign: "center",
-      borderWidth: 1,
-      borderColor: styleVariables.colors.primary,
+      borderWidth: 1.5,
+      borderColor: "#CDD7D9",
       borderRadius: 8,
       paddingVertical: 12,
       marginTop: 8,
@@ -165,6 +172,9 @@ function FilterModal({
       bottom: 0,
       transform: [{ translateX: slideInOut }],
       backgroundColor: "#fff",
+    },
+    focusedInput: {
+      borderColor: styleVariables.colors.primary,
     },
   });
 
@@ -263,19 +273,63 @@ function FilterModal({
           <Text style={styleVariables.fontSizes.bodyBold}>Price</Text>
           <View style={styles.filterSection}>
             <TextInput
+              onFocus={() =>
+                setInputFocus({
+                  min: true,
+                  max: false,
+                })
+              }
+              onBlur={() =>
+                setInputFocus({
+                  min: false,
+                  max: false,
+                })
+              }
               onChangeText={setMinPrice}
+              onEndEditing={(e) => {
+                if (e.nativeEvent.text.length > 0) {
+                  const price = e.nativeEvent.text.replace(/[^0-9]/g, "");
+                  setMinPrice(format(price));
+                }
+              }}
               value={minPrice}
               keyboardType={"decimal-pad"}
-              style={[styles.input, styles.marginRight]}
-              placeholder={"$0.00"}
+              style={[
+                styles.input,
+                styles.marginRight,
+                inputFocus.min ? styles.focusedInput : {},
+              ]}
+              placeholder={"$ Min"}
               placeholderTextColor={styleVariables.colors.primary}
             />
             <TextInput
+              onFocus={() =>
+                setInputFocus({
+                  min: false,
+                  max: true,
+                })
+              }
+              onBlur={() =>
+                setInputFocus({
+                  min: false,
+                  max: false,
+                })
+              }
               onChangeText={setMaxPrice}
+              onEndEditing={(e) => {
+                if (e.nativeEvent.text.length > 0) {
+                  const price = e.nativeEvent.text.replace(/[^0-9]/g, "");
+                  setMaxPrice(format(price));
+                }
+              }}
               value={maxPrice}
               keyboardType={"decimal-pad"}
-              style={[styles.input, styles.marginLeft]}
-              placeholder={"$0.00"}
+              style={[
+                styles.input,
+                styles.marginLeft,
+                inputFocus.max ? styles.focusedInput : {},
+              ]}
+              placeholder={"$ Max"}
               placeholderTextColor={styleVariables.colors.primary}
             />
           </View>
