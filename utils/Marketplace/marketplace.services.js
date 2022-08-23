@@ -1,5 +1,6 @@
 import { maxImages } from "../constants";
 import { uploadImageToStorage } from "../firebase.services";
+import _ from "lodash";
 
 export const updateImages = (response, selectedImages) => {
   let newImages = selectedImages;
@@ -50,9 +51,16 @@ export const getFilteredList = (
   min = Number(min.replace(/[^0-9.-]+/g, ""));
   max = Number(max.replace(/[^0-9.-]+/g, ""));
 
+  let index = 1;
+
+  if (category.split(" - ")[1] == "All") {
+    index = 0;
+  }
+
   const filteredList = data.filter((item) => {
     if (
-      (item.category == category || category == "All") &&
+      (item.category.split(" - ")[index] == category.split(" - ")[index] ||
+        category == "All") &&
       (item.condition == condition || condition == "All") &&
       (parseFloat(item.price.substr(1).replace(",", "")) >= parseInt(min) ||
         min == "") &&
@@ -66,6 +74,55 @@ export const getFilteredList = (
   });
 
   return filteredList;
+};
+
+export const getSortedList = (data, sortingBy) => {
+  let sortedList;
+  switch (sortingBy) {
+    case "Date(newest)":
+      sortedList = _.sortBy(data, "timestamp").reverse();
+      break;
+    case "Date(oldest)":
+      sortedList = _.sortBy(data, "timestamp");
+      break;
+    case "Price(highest)":
+      sortedList = data.sort((a, b) => {
+        if (
+          parseInt(a.price.substr(1).replace(",", "")) <
+          parseInt(b.price.substr(1).replace(",", ""))
+        ) {
+          return 1;
+        } else if (
+          parseInt(a.price.substr(1).replace(",", "")) >
+          parseInt(b.price.substr(1).replace(",", ""))
+        ) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      break;
+    case "Price(lowest)":
+      sortedList = data.sort((a, b) => {
+        if (
+          parseInt(a.price.substr(1).replace(",", "")) >
+          parseInt(b.price.substr(1).replace(",", ""))
+        ) {
+          return 1;
+        } else if (
+          parseInt(a.price.substr(1).replace(",", "")) <
+          parseInt(b.price.substr(1).replace(",", ""))
+        ) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      break;
+    case "Distance(closest)":
+      break;
+  }
+  return sortedList;
 };
 
 // format price "0" -> "$0.00" after user finished entering
