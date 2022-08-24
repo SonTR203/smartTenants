@@ -159,20 +159,24 @@ function MarketplaceItemInfoScreen({ navigation }) {
       color: styleVariables.colors.black,
     },
     messageButton: {
+      position: "absolute",
       marginLeft: 17,
       marginRight: 17,
       backgroundColor: "#395E66",
       borderRadius: 18,
       marginBottom: 25,
       height: 60,
+      width: constants.width - 34,
       alignItems: "center",
       justifyContent: "center",
+      bottom: 1,
     },
     messageText: {
       fontWeight: "600",
       fontSize: 17,
       lineHeight: 20,
       color: "white",
+      backgroundColor: "#395E66",
     },
   });
 
