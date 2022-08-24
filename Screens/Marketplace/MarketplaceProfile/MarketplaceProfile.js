@@ -8,8 +8,10 @@ import {
 } from "react-native";
 import ChevronRightSVG from "../../../components/Icons/ChevronRightSVG";
 import { useTheme } from "../../../ThemeContext";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppContext } from "../../../Context/AppContext";
+import HeartSVG from "../../../components/Icons/HeartSVG";
+import ListingSVG from "../../../components/Icons/ListingSVG";
+import MessageSVG from "../../../components/Icons/MessageSVG";
 
 function MarketplaceProfile({ navigation }) {
   const { theme, styleVariables } = useTheme();
@@ -29,22 +31,25 @@ function MarketplaceProfile({ navigation }) {
     {
       id: 1,
       title: "Messages",
-      icon: "email-outline",
-      color: styleVariables.colors.primary,
+      icon: () => {
+        return <MessageSVG />;
+      },
       onPress: handleNavigateMessages,
     },
     {
       id: 2,
       title: "My listings",
-      icon: "view-list-outline",
-      color: styleVariables.colors.primary,
+      icon: () => {
+        return <ListingSVG />;
+      },
       onPress: handleNavigateMyListings,
     },
     {
       id: 3,
       title: "Saved listings",
-      icon: "heart-outline",
-      color: styleVariables.colors.primary,
+      icon: () => {
+        return <HeartSVG />;
+      },
       onPress: handleViewSavedListings,
     },
   ];
@@ -58,18 +63,11 @@ function MarketplaceProfile({ navigation }) {
           return (
             <TouchableOpacity onPress={item.onPress} style={theme.cardButton}>
               <View style={styles.buttonContainer}>
-                <MaterialCommunityIcons
-                  style={{
-                    marginRight: 20,
-                  }}
-                  name={item.icon}
-                  size={25}
-                  color={item.color}
-                />
+                {item.icon()}
                 <Text
                   style={[
                     styleVariables.fontSizes.title,
-                    { color: styleVariables.colors.primary },
+                    { color: styleVariables.colors.primary, marginLeft: 10 },
                   ]}
                 >
                   {item.title}

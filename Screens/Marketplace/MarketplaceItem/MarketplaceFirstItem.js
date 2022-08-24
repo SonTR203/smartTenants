@@ -46,7 +46,7 @@ function MarketplaceFirstItem({
       fontSize: 28,
       fontWeight: "600",
       lineHeight: 33,
-      color: "#191919",
+      color: styleVariables.colors.black,
     },
     price: {
       color: "#395E66",
@@ -61,8 +61,7 @@ function MarketplaceFirstItem({
       marginBottom: 16,
     },
     content: {
-      color: "#191919",
-      opacity: 0.66,
+      color: styleVariables.colors.black,
       fontSize: 17,
       fontWeight: "400",
       lineHeight: 20,
@@ -77,8 +76,6 @@ function MarketplaceFirstItem({
       ...styleVariables.shadow,
     },
     bottomButton: {
-      margin: 16,
-      marginTop: 8,
       padding: 8,
       borderRadius: 8,
       backgroundColor: styleVariables.colors.primary,
@@ -179,21 +176,21 @@ function MarketplaceFirstItem({
         <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
           {item.postContent}
         </Text>
-      </View>
-      {own || sold ? (
-        <TouchableOpacity
-          onPress={() => handleOpenSoldModal(item)}
-          style={styles.bottomButton}
-        >
-          <Text
-            style={styles.buttonText}
-            numberOfLines={2}
-            ellipsizeMode={"tail"}
+        {own || sold ? (
+          <TouchableOpacity
+            onPress={() => handleOpenSoldModal(item)}
+            style={styles.bottomButton}
           >
-            {sold ? "List again" : "Mark as sold"}
-          </Text>
-        </TouchableOpacity>
-      ) : null}
+            <Text
+              style={styles.buttonText}
+              numberOfLines={2}
+              ellipsizeMode={"tail"}
+            >
+              {sold ? "List again" : "Mark as sold"}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
     </TouchableOpacity>
   );
 }

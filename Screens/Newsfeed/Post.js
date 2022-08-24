@@ -203,7 +203,7 @@ function Post({ passedPost, windowWidth }) {
           {userLiked && (
             <MaterialCommunityIcons
               name="heart"
-              size={24}
+              size={20}
               color="#0AA74C"
               style={{ marginRight: 8 }}
             />
@@ -211,7 +211,7 @@ function Post({ passedPost, windowWidth }) {
           {!userLiked && (
             <MaterialCommunityIcons
               name="heart-outline"
-              size={24}
+              size={20}
               color={styleVariables.colors.black}
               style={{ marginRight: 8 }}
             />

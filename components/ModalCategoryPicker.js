@@ -108,7 +108,7 @@ function ModalCategoryPicker({
           disableBuiltInState={true}
           isChecked={categoryFilter == `${categoryTitle} - ${category}`}
           onPress={() => {
-            setCategoryFilter(category);
+            setCategoryFilter(`${categoryTitle} - ${category}`);
           }}
         />
       )}

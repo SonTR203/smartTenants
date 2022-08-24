@@ -183,6 +183,11 @@ function FilterModal({
     focusedInput: {
       borderColor: styleVariables.colors.primary,
     },
+    distanceText: {
+      color: "#395E66",
+      fontSize: 15,
+      lineHeight: 20,
+    },
   });
 
   return (
@@ -198,7 +203,14 @@ function FilterModal({
       >
         <View>
           <View style={styles.filterSection}>
-            <Text style={[styleVariables.fontSizes.title]}>Filters</Text>
+            <Text
+              style={[
+                styleVariables.fontSizes.title,
+                { color: styleVariables.colors.black },
+              ]}
+            >
+              Filters
+            </Text>
             <TouchableOpacity onPress={resetFilters}>
               <Text
                 style={[styleVariables.fontSizes.bodyBold, styles.primaryClr]}
@@ -210,7 +222,14 @@ function FilterModal({
           {/* CATEGORY SELECTION */}
           <TouchableOpacity onPress={slideIn} style={[styles.filterSection]}>
             <View>
-              <Text style={[styleVariables.fontSizes.bodyBold]}>Category</Text>
+              <Text
+                style={[
+                  styleVariables.fontSizes.bodyBold,
+                  { color: styleVariables.colors.black },
+                ]}
+              >
+                Category
+              </Text>
               <Text style={[styleVariables.fontSizes.body, styles.primaryClr]}>
                 {categoryFilter}
               </Text>
@@ -218,7 +237,14 @@ function FilterModal({
             <ChevronRightSVG />
           </TouchableOpacity>
           {/* CONDITION SELECTION */}
-          <Text style={styleVariables.fontSizes.bodyBold}>Condition</Text>
+          <Text
+            style={[
+              styleVariables.fontSizes.bodyBold,
+              { color: styleVariables.colors.black },
+            ]}
+          >
+            Condition
+          </Text>
           <View style={[styles.conditions]}>
             <TouchableOpacity
               onPress={() => {
@@ -280,7 +306,14 @@ function FilterModal({
             </TouchableOpacity>
           </View>
           {/* PRICE FILTER */}
-          <Text style={styleVariables.fontSizes.bodyBold}>Price</Text>
+          <Text
+            style={[
+              styleVariables.fontSizes.bodyBold,
+              { color: styleVariables.colors.black },
+            ]}
+          >
+            Price
+          </Text>
           <View style={styles.filterSection}>
             <TextInput
               onFocus={() =>
@@ -344,8 +377,15 @@ function FilterModal({
             />
           </View>
           <View style={styles.sectionTitle}>
-            <Text style={styleVariables.fontSizes.bodyBold}>Distance</Text>
-            <Text>{distance + "km"}</Text>
+            <Text
+              style={[
+                styleVariables.fontSizes.bodyBold,
+                { color: styleVariables.colors.black },
+              ]}
+            >
+              Distance
+            </Text>
+            <Text style={styles.distanceText}>{distance + "km"}</Text>
           </View>
           <Slider
             value={distance}
