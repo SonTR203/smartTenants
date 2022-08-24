@@ -3,7 +3,8 @@ import { View, Text } from "react-native";
 import { useAppContext } from "../Context/AppContext";
 
 function NotificationBadge({ screen }) {
-  const { notificationBadges, marketplaceBadges } = useAppContext();
+  const { notificationBadges, marketplaceBadges, announcements, notices } =
+    useAppContext();
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -13,11 +14,15 @@ function NotificationBadge({ screen }) {
           setCount(marketplaceBadges.unseen.length);
           break;
         case "NotificationsNavigator":
-          setCount(notificationBadges.unseen.length);
+          setCount(
+            notificationBadges.unseen.length +
+              announcements.count +
+              notices.count
+          );
           break;
       }
     }
-  }, [notificationBadges, marketplaceBadges]);
+  }, [notificationBadges, marketplaceBadges, announcements, notices]);
 
   if (count < 1) {
     return null;

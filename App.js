@@ -190,11 +190,6 @@ function App() {
             }
             list.push(data);
           });
-          // update badge number in Notifications icon bottom navigations
-          setNotificationBadges({
-            unseen: [...notificationBadges.unseen, ...unseenAnnouncements],
-            list: notificationBadges.list,
-          });
           // update announcements Context to use in announcements screen and
           // announcements number list header
 
@@ -234,11 +229,6 @@ function App() {
             unseenNotices.push(data.id);
           }
           list.push(data);
-        });
-        // update badge number in Notifications icon bottom navigations
-        setNotificationBadges({
-          unseen: [...notificationBadges.unseen, ...unseenNotices],
-          list: notificationBadges.list,
         });
         // update notices Context to use in notices screen and
         // notices number list header
