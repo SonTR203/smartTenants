@@ -76,8 +76,6 @@ function MarketplaceFirstItem({
       ...styleVariables.shadow,
     },
     bottomButton: {
-      margin: 16,
-      marginTop: 8,
       padding: 8,
       borderRadius: 8,
       backgroundColor: styleVariables.colors.primary,
@@ -178,21 +176,21 @@ function MarketplaceFirstItem({
         <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
           {item.postContent}
         </Text>
-      </View>
-      {own || sold ? (
-        <TouchableOpacity
-          onPress={() => handleOpenSoldModal(item)}
-          style={styles.bottomButton}
-        >
-          <Text
-            style={styles.buttonText}
-            numberOfLines={2}
-            ellipsizeMode={"tail"}
+        {own || sold ? (
+          <TouchableOpacity
+            onPress={() => handleOpenSoldModal(item)}
+            style={styles.bottomButton}
           >
-            {sold ? "List again" : "Mark as sold"}
-          </Text>
-        </TouchableOpacity>
-      ) : null}
+            <Text
+              style={styles.buttonText}
+              numberOfLines={2}
+              ellipsizeMode={"tail"}
+            >
+              {sold ? "List again" : "Mark as sold"}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
     </TouchableOpacity>
   );
 }
