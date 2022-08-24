@@ -13,7 +13,7 @@ function ScreenHeader({ title, navigation }) {
     marketplaceProfile: {
       position: "absolute",
       right: 16,
-      top: 48,
+      top: 55,
 
       padding: 10,
       margin: -10,

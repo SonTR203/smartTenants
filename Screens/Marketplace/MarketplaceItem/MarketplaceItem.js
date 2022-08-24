@@ -5,7 +5,7 @@ import { useTheme } from "../../../ThemeContext";
 import { constants } from "../../../utils/constants";
 
 function MarketplaceItem({ item, index, navigation }) {
-  const { theme } = useTheme();
+  const { theme, styleVariables } = useTheme();
   const { setCurrentMarketplacePost } = useAppContext();
   const styles = StyleSheet.create({
     container: {
@@ -35,7 +35,7 @@ function MarketplaceItem({ item, index, navigation }) {
       fontSize: 17,
       fontWeight: "600",
       lineHeight: 20,
-      color: "#191919",
+      color: styleVariables.colors.black,
     },
     price: {
       color: "#395E66",
@@ -50,8 +50,7 @@ function MarketplaceItem({ item, index, navigation }) {
       marginBottom: 22,
     },
     content: {
-      color: "#191919",
-      opacity: 0.66,
+      color: styleVariables.colors.black,
       fontSize: 15,
       fontWeight: "400",
       lineHeight: 18,

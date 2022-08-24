@@ -229,7 +229,14 @@ export default function CustomSubStackScreenHeader({ ...props }) {
             color={styleVariables.colors.black}
           />
         </Pressable>
-        <Text style={styleVariables.fontSizes.title}>
+        <Text
+          style={[
+            styleVariables.fontSizes.title,
+            {
+              color: styleVariables.colors.black,
+            },
+          ]}
+        >
           {props.title && props.title}
         </Text>
         <View style={styles.headerRight}>
@@ -244,7 +251,7 @@ export default function CustomSubStackScreenHeader({ ...props }) {
           ) : props.item && props.item.isSavedBy ? (
             <SaveIcon
               isSaved={isSaved}
-              size={36}
+              size={30}
               onPress={handleSaveMarketplaceItem}
             />
           ) : null}

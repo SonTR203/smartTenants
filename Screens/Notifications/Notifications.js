@@ -30,7 +30,6 @@ const Notifications = ({ navigation, route }) => {
   }, [route.params]);
 
   useEffect(() => {
-    // console.log("notifications screen list: ", notificationBadges.list.length);
     if (notificationBadges.list.length > 0) {
       const sortedListOfNotifications = _.sortBy(
         notificationBadges.list,

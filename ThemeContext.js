@@ -105,7 +105,7 @@ const theme = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: styleVariables.colors.primary,
     paddingHorizontal: 16,
-    paddingTop: 40,
+    paddingTop: 50,
     marginBottom: -10,
   },
   card: {
