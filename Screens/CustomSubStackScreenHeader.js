@@ -105,7 +105,8 @@ export default function CustomSubStackScreenHeader({ ...props }) {
     navigation.navigate(props.previousScreen, {
       reload: true,
     });
-    alert("Successfully re-listed item.");
+    let msg = props.item.isSold ? "re-listed" : "sold";
+    alert(`Successfully ${msg} item.`);
   };
 
   const setModalOptions = () => {
