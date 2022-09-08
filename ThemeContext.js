@@ -80,6 +80,12 @@ let styleVariables = {
 			fontFamily: "Roboto_500Medium",
 			lineHeight: 20, //added line height
 		},
+		cardUserName: {
+			fontSize: 15,
+			fontFamily: "Roboto_500Medium",
+			lineHeight: 20, //added line height
+			color: "#4d4d4d",
+		},
 	},
 };
 
