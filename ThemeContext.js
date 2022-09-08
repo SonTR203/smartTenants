@@ -111,7 +111,7 @@ const theme = StyleSheet.create({
 		backgroundColor: styleVariables.colors.primary,
 		paddingHorizontal: 16,
 		marginBottom: -24,
-		paddingTop: 44,
+		paddingTop: 52,
 	},
 	card: {
 		display: "flex",
