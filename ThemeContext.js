@@ -108,11 +108,10 @@ const theme = StyleSheet.create({
 	header: {
 		display: "flex",
 		flexDirection: "row",
-		justifyContent: "space-between",
 		backgroundColor: styleVariables.colors.primary,
 		paddingHorizontal: 16,
-		paddingTop: 50,
-		marginBottom: -10,
+		marginBottom: -24,
+		paddingTop: 44,
 	},
 	card: {
 		display: "flex",
