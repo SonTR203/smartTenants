@@ -81,7 +81,7 @@ let styleVariables = {
 			lineHeight: 20, //added line height
 		},
 		cardUserName: {
-			fontSize: 15,
+			fontSize: 17,
 			fontFamily: "Roboto_500Medium",
 			lineHeight: 20, //added line height
 			color: "#4d4d4d",
