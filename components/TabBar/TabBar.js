@@ -22,7 +22,8 @@ export const TabBar = ({ state, descriptors, navigation }) => {
       routeName?.includes("Signup") ||
       routeName?.includes("AccountApprovalPending") ||
       routeName?.includes("ForgotPassword") ||
-      routeName?.includes("TermsAndConditions")
+      routeName?.includes("TermsAndConditions") ||
+      routeName?.includes("IndividualPosts")
     ) {
       return "none";
     } else if (routeName == undefined) {
