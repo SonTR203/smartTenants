@@ -1,4 +1,5 @@
-import { View, FlatList } from "react-native";
+import { View, FlatList, KeyboardAvoidingView, StyleSheet } from "react-native";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAppContext } from "../../Context/AppContext";
@@ -134,10 +135,20 @@ const IndividualPosts = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+      }}
+    >
       <StatusBar style="auto" />
-      <View style={theme.pageContainer}>
-        <FlatList
+      <KeyboardAvoidingView
+        // keyboardVerticalOffset={200}
+        // behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={"position"}
+        style={theme.pageContainer}
+      >
+        <KeyboardAwareFlatList
           getItemLayout={getItemLayout}
           ref={commentListRef}
           removeClippedSubviews={true}
@@ -147,7 +158,7 @@ const IndividualPosts = ({ navigation, route }) => {
           renderItem={callBackRenderItem}
           ListFooterComponent={renderListFooter}
         />
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };
