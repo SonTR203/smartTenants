@@ -21,11 +21,15 @@ export const uploadMarketplaceImages = async (images, id) => {
         return image.uri;
       });
 
+    console.log("there are : ", urls.length, " images to upload");
+
     for await (const url of urls) {
       const imageName = url.split("/").pop();
       console.log("uploading image: ", imageName);
       const imagePath = `Images/Posts/Marketplace/${id}/${imageName}.jpeg`; // 1, 2, 3, 4, 5
+      console.log("imagePath: ", imagePath);
       const imageUrl = await uploadImageToStorage(imagePath, url);
+      console.log("imageUrl: ", imageUrl);
       if (imageUrl) {
         publicLinks.push(imageUrl);
         console.log("uploaded");
