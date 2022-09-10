@@ -143,7 +143,7 @@ const IndividualPosts = ({ navigation, route }) => {
     >
       <StatusBar style="auto" />
       <KeyboardAvoidingView
-        // keyboardVerticalOffset={200}
+        keyboardVerticalOffset={-100}
         // behavior={Platform.OS === "ios" ? "padding" : "height"}
         behavior={"position"}
         style={theme.pageContainer}

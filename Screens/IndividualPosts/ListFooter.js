@@ -9,6 +9,7 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
+import ArrowUpSVG from "../../components/Icons/ArrowUpSVG.js";
 import { db } from "../../firebase-config";
 import { updateDoc, doc, setDoc } from "@firebase/firestore";
 import { Timestamp } from "@firebase/firestore";
@@ -198,12 +199,8 @@ function ListFooter({
       </View>
 
       {/* disable button class if no text input for comments */}
-      <TouchableOpacity onPress={postComment} style={theme.primaryButton}>
-        <Text
-          style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}
-        >
-          Send reply
-        </Text>
+      <TouchableOpacity onPress={postComment} style={theme.postButton}>
+        <ArrowUpSVG></ArrowUpSVG>
       </TouchableOpacity>
     </View>
   );
