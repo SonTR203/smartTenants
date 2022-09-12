@@ -6,6 +6,11 @@ import { useTheme } from "../../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { removeExpoPushToken } from "../../../utils/firebase.services";
 import { useAppContext } from "../../../Context/AppContext";
+import CoinStackSVG from "../../../components/Icons/CoinStackSVG";
+import ResidentPortalSVG from "../../../components/Icons/ResidentPortalSVG";
+import MyPostsSVG from "../../../components/Icons/MyPostsSVG";
+import LogoutSVG from "../../../components/Icons/LogoutSVG";
+import EditProfileSVG from "../../../components/Icons/EditProfileSVG";
 
 function ProfileActions({ navigation }) {
 	const { theme, styleVariables } = useTheme();
