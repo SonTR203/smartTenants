@@ -153,7 +153,7 @@ const styles = (styleVariables) =>
 			backgroundColor: styleVariables.colors.primary,
 		},
 		scrollContainer: {
-			marginTop: 20,
+			marginTop: 44,
 			backgroundColor: styleVariables.colors.white,
 			borderTopLeftRadius: 27,
 			borderTopRightRadius: 27,
