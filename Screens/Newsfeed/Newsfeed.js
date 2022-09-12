@@ -33,13 +33,13 @@ const Newsfeed = ({ navigation, route }) => {
 		},
 		flatlist: {
 			flex: 1,
-
 			borderTopLeftRadius: 27,
 			borderTopRightRadius: 27,
 			backgroundColor: "transparent",
 		},
 		flatListContainer: {
 			flex: 1,
+			overflow: "hidden",
 			borderTopLeftRadius: 27,
 			borderTopRightRadius: 27,
 			backgroundColor: "white",
