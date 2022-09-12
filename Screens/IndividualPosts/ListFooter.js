@@ -179,29 +179,31 @@ function ListFooter({
           </TouchableOpacity>
         </View>
       )}
-      <View>
-        <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
-          Reply
-        </Text>
-        <TextInput
-          placeholderTextColor={styleVariables.colors.placeholderText}
-          onChangeText={(text) => setTextInputValue(text)}
-          value={textInputValue}
-          placeholder="280 characters maximum"
-          multiline={true}
-          maxLength={280}
-          style={[
-            theme.textInput,
-            styleVariables.fontSizes.body,
-            styles.inputArea,
-          ]}
-        />
-      </View>
+      <View style={theme.replyContainer}>
+        <View>
+          <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+            Reply
+          </Text>
+          <TextInput
+            placeholderTextColor={styleVariables.colors.placeholderText}
+            onChangeText={(text) => setTextInputValue(text)}
+            value={textInputValue}
+            placeholder="280 characters maximum"
+            multiline={true}
+            maxLength={280}
+            style={[
+              theme.textInput,
+              styleVariables.fontSizes.body,
+              styles.inputArea,
+            ]}
+          />
+        </View>
 
-      {/* disable button class if no text input for comments */}
-      <TouchableOpacity onPress={postComment} style={theme.postButton}>
-        <ArrowUpSVG></ArrowUpSVG>
-      </TouchableOpacity>
+        {/* disable button class if no text input for comments */}
+        <TouchableOpacity onPress={postComment} style={theme.postButton}>
+          <ArrowUpSVG></ArrowUpSVG>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

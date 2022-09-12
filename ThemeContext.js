@@ -280,8 +280,10 @@ const theme = StyleSheet.create({
   },
   postButton: {
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "flex-end",
     width: 32,
     height: 32,
     backgroundColor: styleVariables.colors.primary,
@@ -296,7 +298,10 @@ const theme = StyleSheet.create({
     shadowRadius: 34,
     elevation: 20,
   },
-  postButtonIcon: {},
+  replyContainer: {
+    display: "flex",
+    flexDirection: "row",
+  },
   counter: {
     display: "flex",
     alignItems: "center",
