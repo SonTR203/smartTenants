@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import { createContext, useContext } from "react";
 import { Dimensions } from "react-native";
+import { black } from "react-native-paper/lib/typescript/styles/colors";
 
 const ThemeContext = createContext();
 const windowHeight = Dimensions.get("window").height;
@@ -97,6 +98,7 @@ const theme = StyleSheet.create({
     color: styleVariables.colors.black,
   },
   pageContainer: {
+    display: "flex",
     backgroundColor: styleVariables.colors.white,
   },
   fullHeight: {
@@ -110,7 +112,7 @@ const theme = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: styleVariables.colors.primary,
     paddingHorizontal: 16,
-    marginBottom: -24,
+    marginBottom: -24, // -4 if android -24 if ios
     paddingTop: 52,
   },
   card: {
@@ -279,11 +281,10 @@ const theme = StyleSheet.create({
     ...styleVariables.shadow,
   },
   postButton: {
-    display: "flex",
-    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "flex-end",
+    alignSelf: "center",
+    margin: 16,
     width: 32,
     height: 32,
     backgroundColor: styleVariables.colors.primary,
@@ -301,6 +302,17 @@ const theme = StyleSheet.create({
   replyContainer: {
     display: "flex",
     flexDirection: "row",
+    backgroundColor: "white",
+
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    width: windowWidth,
+  },
+  listFooterStyle: {
+    height: "18%",
+    bottom: 0,
+    position: "absolute",
+    zIndex: 1,
   },
   counter: {
     display: "flex",

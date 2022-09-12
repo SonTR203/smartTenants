@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   StyleSheet,
+  Dimensions,
 } from "react-native";
 import ArrowUpSVG from "../../components/Icons/ArrowUpSVG.js";
 import { db } from "../../firebase-config";
@@ -140,13 +141,23 @@ function ListFooter({
 
   const styles = StyleSheet.create({
     container: { paddingTop: 34, paddingBottom: 136 },
-    inputArea: { minHeight: 68 + 44, paddingTop: 22 },
+    inputAreaContainer: {
+      marginTop: 16,
+      marginBottom: 34,
+    },
+    inputArea: {
+      minHeight: 36,
+      width: Dimensions.get("window").width - 100,
+      justifyContent: "center",
+    },
     replyView: {
       display: "flex",
-      flexDirection: "row",
+      flex: 1,
+      flexDirection: "column",
       alignItems: "center",
       justifyContent: "space-between",
       marginVertical: 20,
+      marginHorizontal: 160,
     },
     replyName: { color: styleVariables.colors.primary },
     cancelReply: {
@@ -180,7 +191,7 @@ function ListFooter({
         </View>
       )}
       <View style={theme.replyContainer}>
-        <View>
+        <View style={styles.inputAreaContainer}>
           <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
             Reply
           </Text>

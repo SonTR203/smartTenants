@@ -22,8 +22,7 @@ export const TabBar = ({ state, descriptors, navigation }) => {
       routeName?.includes("Signup") ||
       routeName?.includes("AccountApprovalPending") ||
       routeName?.includes("ForgotPassword") ||
-      routeName?.includes("TermsAndConditions") ||
-      routeName?.includes("IndividualPosts")
+      routeName?.includes("TermsAndConditions")
     ) {
       return "none";
     } else if (routeName == undefined) {
@@ -55,12 +54,19 @@ export const TabBar = ({ state, descriptors, navigation }) => {
     .onStart(() => {
       console.log("Yay, double tap!");
     });
-
+  console.log(getFocusedRouteNameFromRoute(state.routes[0]));
   return (
     <View
       style={[
         style.tabContainer,
-        { width: totalWidth, display: getRouteName(state.routes[0]) },
+        {
+          width: totalWidth,
+          height:
+            getFocusedRouteNameFromRoute(state.routes[0]) == "IndividualPosts"
+              ? 0
+              : "10%",
+          display: getRouteName(state.routes[0]),
+        },
       ]}
     >
       <View style={{ flexDirection: "row" }}>
@@ -118,9 +124,9 @@ export const TabBar = ({ state, descriptors, navigation }) => {
     </View>
   );
 };
+
 const style = StyleSheet.create({
   tabContainer: {
-    height: "10%", // change to percentage of window height
     backgroundColor: "white",
     shadowColor: "#4D4D4D", // color: #4D4D4D
     shadowOffset: {

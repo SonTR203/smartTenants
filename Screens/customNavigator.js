@@ -339,23 +339,25 @@ const ProfileNavigator = () => {
           ),
         }}
       />
-      <Stack.Screen
-        name="IndividualPosts"
-        component={IndividualPosts}
-        options={({ route }) => ({
-          header: (props) => (
-            <CustomSubStackScreenHeader
-              {...props}
-              title={`${post.userFirstName}'s Post`}
-              currentUserId={currentUser.userID}
-              itemUserId={route.params.item.userID}
-              item={route.params.item}
-              collection={"Newsfeed"}
-              previousScreen={"MyPosts"}
-            />
-          ),
-        })}
-      />
+      {
+        <Stack.Screen
+          name="IndividualPosts"
+          component={IndividualPosts}
+          options={({ route }) => ({
+            header: (props) => (
+              <CustomSubStackScreenHeader
+                {...props}
+                title={`${post.userFirstName}'s Post`}
+                currentUserId={currentUser.userID}
+                itemUserId={route.params.item.userID}
+                item={route.params.item}
+                collection={"Newsfeed"}
+                previousScreen={"MyPosts"}
+              />
+            ),
+          })}
+        />
+      }
       <Stack.Screen
         name="BuildingInfo"
         component={BuildingInfo}
@@ -382,18 +384,20 @@ const NotificationNavigator = () => {
           header: () => <ScreenHeader title={"Notifications"} />,
         }}
       />
-      <Stack.Screen
-        name="IndividualPosts"
-        component={IndividualPosts}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader
-              {...props}
-              title={`${post.userFirstName}'s Post`}
-            />
-          ),
-        }}
-      />
+      {
+        <Stack.Screen
+          name="IndividualPosts"
+          component={IndividualPosts}
+          options={{
+            header: (props) => (
+              <CustomSubStackScreenHeader
+                {...props}
+                title={`${post.userFirstName}'s Post`}
+              />
+            ),
+          }}
+        />
+      }
       <Stack.Screen
         name="BuildingInfo"
         component={BuildingInfo}
