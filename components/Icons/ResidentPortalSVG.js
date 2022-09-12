@@ -2,7 +2,12 @@ import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 
 const ResidentPortalSVG = (props) => (
-	<Svg width={32} height={32} fill="none" xmlns="http://www.w3.org/2000/svg">
+	<Svg
+		width={32}
+		height={32}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}>
 		<Path
 			d="m16.001 7.587 6.667 6V24H9.335V13.587l6.666-6Zm0-3.587L2.668 16h4v10.667h18.667V16h4L16 4Z"
 			fill="#395E66"

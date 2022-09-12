@@ -2,7 +2,12 @@ import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 
 const LogoutSVG = (props) => (
-	<Svg width={32} height={32} fill="none" xmlns="http://www.w3.org/2000/svg">
+	<Svg
+		width={32}
+		height={32}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}>
 		<Path
 			d="M7.999 2.667h12a2.667 2.667 0 0 1 2.666 2.667V8H20V5.334h-12v21.333h12V24h2.666v2.667A2.667 2.667 0 0 1 20 29.334h-12a2.667 2.667 0 0 1-2.667-2.667V5.334a2.667 2.667 0 0 1 2.667-2.667Z"
 			fill="#395E66"
