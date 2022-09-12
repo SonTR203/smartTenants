@@ -51,7 +51,9 @@ function ScreenHeader({ title, navigation }) {
 	const handleNavigate = () => {
 		navigation.navigate("MarketplaceProfile");
 	};
-
+	const handleNavigateBuildings = () => {
+		navigation.navigate("BuildingInfo");
+	};
 	return (
 		<View style={theme.header}>
 			<View>
@@ -61,7 +63,9 @@ function ScreenHeader({ title, navigation }) {
 				</Text>
 				{title === "Profile" ? (
 					<>
-						<TouchableOpacity style={[styles.userBuildingButton]}>
+						<TouchableOpacity
+							onPress={handleNavigateBuildings}
+							style={[styles.userBuildingButton]}>
 							<Text style={[styles.userBuilding]}>
 								{currentUser?.buildingAddress}
 							</Text>
@@ -73,21 +77,21 @@ function ScreenHeader({ title, navigation }) {
 						</TouchableOpacity>
 					</>
 				) : null}
-				{title === "Marketplace" ? (
-					<>
-						<TouchableOpacity
-							style={styles.marketplaceProfile}
-							onPress={handleNavigate}>
-							<View style={styles.profileContainer}>
-								<Ionicons name="person" size={20} color="#395E66" />
-							</View>
-						</TouchableOpacity>
-						<View style={styles.badgeContainer}>
-							<NotificationBadge screen={`${title}Navigator`} />
-						</View>
-					</>
-				) : null}
 			</View>
+			{title === "Marketplace" ? (
+				<>
+					<TouchableOpacity
+						style={styles.marketplaceProfile}
+						onPress={handleNavigate}>
+						<View style={styles.profileContainer}>
+							<Ionicons name="person" size={20} color="#395E66" />
+						</View>
+					</TouchableOpacity>
+					<View style={styles.badgeContainer}>
+						<NotificationBadge screen={`${title}Navigator`} />
+					</View>
+				</>
+			) : null}
 		</View>
 	);
 }
