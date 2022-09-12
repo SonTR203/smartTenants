@@ -6,7 +6,6 @@ import { useTheme } from "../../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { removeExpoPushToken } from "../../../utils/firebase.services";
 import { useAppContext } from "../../../Context/AppContext";
-import CoinStackSVG from "../../../components/Icons/CoinStackSVG";
 import ResidentPortalSVG from "../../../components/Icons/ResidentPortalSVG";
 import MyPostsSVG from "../../../components/Icons/MyPostsSVG";
 import LogoutSVG from "../../../components/Icons/LogoutSVG";
@@ -48,12 +47,7 @@ function ProfileActions({ navigation }) {
 				}}
 				style={[theme.cardButton, { marginTop: 34 }]}>
 				<View style={styles.iconHolderView}>
-					<MaterialCommunityIcons
-						name="account-edit"
-						color={styleVariables.colors.primary}
-						size={36}
-						style={styles.materialIconRight}
-					/>
+					<EditProfileSVG style={styles.materialIconRight} />
 					<Text style={[styleVariables.fontSizes.title, styles.colorPrimary]}>
 						Edit profile Info
 					</Text>
@@ -71,12 +65,7 @@ function ProfileActions({ navigation }) {
 				onPress={() => navigation.navigate("MyPosts")}
 				style={theme.cardButton}>
 				<View style={styles.iconHolderView}>
-					<MaterialCommunityIcons
-						name="view-list"
-						color={styleVariables.colors.primary}
-						size={36}
-						style={styles.materialIconRight}
-					/>
+					<MyPostsSVG style={styles.materialIconRight} />
 					<Text style={[styleVariables.fontSizes.title, styles.colorPrimary]}>
 						My Posts
 					</Text>
@@ -98,12 +87,7 @@ function ProfileActions({ navigation }) {
 				}}
 				style={theme.cardButton}>
 				<View style={styles.iconHolderView}>
-					<MaterialCommunityIcons
-						name="home-account"
-						color={styleVariables.colors.primary}
-						size={36}
-						style={styles.materialIconRight}
-					/>
+					<ResidentPortalSVG style={styles.materialIconRight} />
 					<Text style={[styleVariables.fontSizes.title, styles.colorPrimary]}>
 						Resident Portal
 					</Text>
@@ -122,12 +106,7 @@ function ProfileActions({ navigation }) {
 				onPress={logUserOut}
 				style={theme.cardButton}>
 				<View style={styles.iconHolderView}>
-					<MaterialCommunityIcons
-						name="logout"
-						color={styleVariables.colors.primary}
-						size={36}
-						style={styles.materialIconRight}
-					/>
+					<LogoutSVG style={styles.materialIconRight} />
 					<Text style={[styleVariables.fontSizes.title, styles.colorPrimary]}>
 						Log Out
 					</Text>

@@ -16,6 +16,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import * as WebBrowser from "expo-web-browser";
 import ProfileActions from "./ProfileActions";
 import DynamicProfilePicture from "../../../components/ProfilePicture/DynamicProfilePicture";
+import CoinStackSVG from "../../../components/Icons/CoinStackSVG";
 
 /* This is the profile/my info screen for the logged-in user. It *allows the user to navigate to various screens to edit his profile, *see his posts, visit Smart Living residential portal, navigate to *building info screen, admin panel screen if the user is an admin, *as well as logout of the application if the user wishes to
  */
@@ -92,12 +93,7 @@ const ProfileGeneral = ({ navigation }) => {
 										alert("navigate to rewards (not yet implemented)");
 									}}
 									style={styles(styleVariables).rewardsButton}>
-									<FontAwesome5
-										name="coins"
-										size={17}
-										color={styleVariables.colors.primary}
-										style={{ marginRight: 13 }}
-									/>
+									<CoinStackSVG style={{ marginRight: 14 }} />
 									<Text
 										style={[
 											styleVariables.fontSizes.bodyBold,
