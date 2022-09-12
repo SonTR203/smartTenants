@@ -140,19 +140,17 @@ function ListFooter({
   };
 
   const styles = StyleSheet.create({
-    container: { paddingTop: 34, paddingBottom: 136 },
+    container: { paddingTop: 34 },
     inputAreaContainer: {
       marginTop: 16,
       marginBottom: 34,
     },
     inputArea: {
-      minHeight: 36,
       width: Dimensions.get("window").width - 100,
-      justifyContent: "center",
     },
     replyView: {
+      position: "absolute",
       display: "flex",
-      flex: 1,
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "space-between",
@@ -192,14 +190,11 @@ function ListFooter({
       )}
       <View style={theme.replyContainer}>
         <View style={styles.inputAreaContainer}>
-          <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
-            Reply
-          </Text>
           <TextInput
             placeholderTextColor={styleVariables.colors.placeholderText}
             onChangeText={(text) => setTextInputValue(text)}
             value={textInputValue}
-            placeholder="280 characters maximum"
+            placeholder="Post a comment"
             multiline={true}
             maxLength={280}
             style={[

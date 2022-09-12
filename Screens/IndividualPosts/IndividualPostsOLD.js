@@ -5,8 +5,6 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
-  Text,
-  Dimensions,
 } from "react-native";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { StatusBar } from "expo-status-bar";
@@ -145,31 +143,23 @@ const IndividualPosts = ({ navigation, route }) => {
 
   return (
     <View>
-      <KeyboardAwareFlatList
-        style={styles.itemWrapper}
-        getItemLayout={getItemLayout}
-        ref={commentListRef}
-        removeClippedSubviews={true}
-        ListHeaderComponent={callBackRenderListHeader}
-        data={comments}
-        keyExtractor={(item) => item.id}
-        renderItem={callBackRenderItem}
-      ></KeyboardAwareFlatList>
-      <KeyboardAwareFlatList
-        ListFooterComponent={renderListFooter}
-      ></KeyboardAwareFlatList>
+      <StatusBar style="auto" />
+
+      <KeyboardAvoidingView>
+        <KeyboardAwareFlatList
+          getItemLayout={getItemLayout}
+          ref={commentListRef}
+          removeClippedSubviews={true}
+          ListHeaderComponent={callBackRenderListHeader}
+          data={comments}
+          keyExtractor={(item) => item.id}
+          renderItem={callBackRenderItem}
+          ListFooterComponent={renderListFooter}
+        ></KeyboardAwareFlatList>
+        <KeyboardAwareFlatList></KeyboardAwareFlatList>
+      </KeyboardAvoidingView>
     </View>
   );
 };
-
-const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height - 240;
-
-const styles = StyleSheet.create({
-  itemWrapper: {
-    width,
-    height,
-  },
-});
 
 export default IndividualPosts;

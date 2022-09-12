@@ -283,8 +283,7 @@ const theme = StyleSheet.create({
   postButton: {
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "center",
-    margin: 16,
+    marginLeft: 16,
     width: 32,
     height: 32,
     backgroundColor: styleVariables.colors.primary,
@@ -302,17 +301,18 @@ const theme = StyleSheet.create({
   replyContainer: {
     display: "flex",
     flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    justifyContent: "center",
     backgroundColor: "white",
-
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderTopLeftRadius: 26,
+    borderTopRightRadius: 26,
     width: windowWidth,
+    marginTop: -15,
   },
   listFooterStyle: {
-    height: "18%",
-    bottom: 0,
-    position: "absolute",
-    zIndex: 1,
+    display: "flex",
+    flexDirection: "row",
   },
   counter: {
     display: "flex",

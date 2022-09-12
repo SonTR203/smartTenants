@@ -54,7 +54,6 @@ export const TabBar = ({ state, descriptors, navigation }) => {
     .onStart(() => {
       console.log("Yay, double tap!");
     });
-  console.log(getFocusedRouteNameFromRoute(state.routes[0]));
   return (
     <View
       style={[
@@ -63,7 +62,7 @@ export const TabBar = ({ state, descriptors, navigation }) => {
           width: totalWidth,
           height:
             getFocusedRouteNameFromRoute(state.routes[0]) == "IndividualPosts"
-              ? 0
+              ? "0%"
               : "10%",
           display: getRouteName(state.routes[0]),
         },
