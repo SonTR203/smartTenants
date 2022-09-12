@@ -46,7 +46,7 @@ const ProfileGeneral = ({ navigation }) => {
 									colors: currentUser.colors,
 								}}
 								size={85}
-								borderRadius={42.5}
+								borderRadius={8}
 							/>
 						</View>
 
