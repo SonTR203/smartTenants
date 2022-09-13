@@ -148,7 +148,6 @@ const IndividualPosts = ({ navigation, route }) => {
       behavior={Platform.OS === "ios" ? "position" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
       style={styles.container}
-      //   behavior="position"
     >
       <FlatList
         style={styles.itemWrapper}
@@ -162,6 +161,7 @@ const IndividualPosts = ({ navigation, route }) => {
       ></FlatList>
 
       <FlatList
+        style={styles.commentWrapper}
         scrollEnabled={false}
         ListFooterComponent={renderListFooter}
       ></FlatList>
@@ -170,7 +170,7 @@ const IndividualPosts = ({ navigation, route }) => {
 };
 
 const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height - 240;
+const height = Dimensions.get("window").height - 210; // Make this a constant for dynamic change in height.
 
 const styles = StyleSheet.create({
   itemWrapper: {
@@ -179,6 +179,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  commentWrapper: {
+    marginTop: -25,
   },
 });
 
