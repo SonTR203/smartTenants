@@ -146,7 +146,7 @@ const IndividualPosts = ({ navigation, route }) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "position" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
+      // keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
       style={styles.container}
     >
       <FlatList
@@ -169,8 +169,11 @@ const IndividualPosts = ({ navigation, route }) => {
   );
 };
 
+let postListHeight = 210;
 const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height - 210; // Make this a constant for dynamic change in height.
+const height = Dimensions.get("window").height - postListHeight;
+// Make this a constant for dynamic change in height.
+// Make dynamic sizing for flatList when keyboard pops up
 
 const styles = StyleSheet.create({
   itemWrapper: {

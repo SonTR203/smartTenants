@@ -1,24 +1,22 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 
-function ArrowUpSVG() {
-  return (
-    <Svg
-      width="16"
-      height="16"
-      // viewBox="0 0 16 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <Path
-        d="M7.8335 12.3333V4M7.8335 4L3.8335 8M7.8335 4L11.8335 8"
-        stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </Svg>
-  );
-}
+const ArrowUpSVG = (props) => (
+  <Svg
+    width={14}
+    height={14}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <Path
+      d="M6.833 11.333V3m0 0-4 4m4-4 4 4"
+      stroke="#fff"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
 
 export default ArrowUpSVG;
