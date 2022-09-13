@@ -284,12 +284,13 @@ const theme = StyleSheet.create({
   postButton: {
     justifyContent: "center",
     alignItems: "center",
+    marginRight: 0,
     marginLeft: 16,
+    marginBottom: 17,
     width: 32,
     height: 32,
     backgroundColor: styleVariables.colors.primary,
     borderRadius: 8,
-    marginBottom: 17,
     shadowColor: styleVariables.colors.primary,
     shadowOffset: {
       width: 0,

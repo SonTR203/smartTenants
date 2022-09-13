@@ -144,28 +144,31 @@ const IndividualPosts = ({ navigation, route }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "position" : "height"}
-      // keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
-      style={styles.container}
-    >
-      <FlatList
-        style={styles.itemWrapper}
-        getItemLayout={getItemLayout}
-        ref={commentListRef}
-        removeClippedSubviews={true}
-        ListHeaderComponent={callBackRenderListHeader}
-        data={comments}
-        keyExtractor={(item) => item.id}
-        renderItem={callBackRenderItem}
-      ></FlatList>
+    <View style={styles.container}>
+      <View>
+        <FlatList
+          style={styles.itemWrapper}
+          getItemLayout={getItemLayout}
+          ref={commentListRef}
+          removeClippedSubviews={true}
+          ListHeaderComponent={callBackRenderListHeader}
+          data={comments}
+          keyExtractor={(item) => item.id}
+          renderItem={callBackRenderItem}
+        ></FlatList>
+      </View>
 
-      <FlatList
-        style={styles.commentWrapper}
-        scrollEnabled={false}
-        ListFooterComponent={renderListFooter}
-      ></FlatList>
-    </KeyboardAvoidingView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "position" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
+      >
+        <FlatList
+          style={styles.commentWrapper}
+          scrollEnabled={false}
+          ListFooterComponent={renderListFooter}
+        ></FlatList>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 
