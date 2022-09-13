@@ -308,7 +308,7 @@ const theme = StyleSheet.create({
     borderTopLeftRadius: 26,
     borderTopRightRadius: 26,
     width: windowWidth,
-    marginTop: -15,
+    marginTop: -10,
   },
   listFooterStyle: {
     display: "flex",

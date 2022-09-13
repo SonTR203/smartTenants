@@ -144,8 +144,13 @@ const IndividualPosts = ({ navigation, route }) => {
   };
 
   return (
-    <View>
-      <KeyboardAwareFlatList
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "position" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
+      style={styles.container}
+      //   behavior="position"
+    >
+      <FlatList
         style={styles.itemWrapper}
         getItemLayout={getItemLayout}
         ref={commentListRef}
@@ -154,11 +159,13 @@ const IndividualPosts = ({ navigation, route }) => {
         data={comments}
         keyExtractor={(item) => item.id}
         renderItem={callBackRenderItem}
-      ></KeyboardAwareFlatList>
-      <KeyboardAwareFlatList
+      ></FlatList>
+
+      <FlatList
+        scrollEnabled={false}
         ListFooterComponent={renderListFooter}
-      ></KeyboardAwareFlatList>
-    </View>
+      ></FlatList>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -169,6 +176,9 @@ const styles = StyleSheet.create({
   itemWrapper: {
     width,
     height,
+  },
+  container: {
+    flex: 1,
   },
 });
 
