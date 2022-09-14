@@ -89,12 +89,12 @@ const styles = StyleSheet.create({
 	materialIcon: { marginLeft: 8 },
 	materialIconRight: { marginRight: 8 },
 	actionButton: {
-		marginTop: 20,
+		marginTop: 16,
 	},
 	iconHolderView: {
 		flexDirection: "row",
 		alignItems: "center",
-		paddingVertical: 6,
+		paddingVertical: 4,
 	},
 });
 
