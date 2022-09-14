@@ -16,6 +16,9 @@ import { updateDoc, doc, setDoc } from "@firebase/firestore";
 import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
 import { useTheme } from "../../ThemeContext";
+import { connectStorageEmulator } from "firebase/storage";
+// let newHeight = -10;
+// let newColor = "black";
 
 function ListFooter({
   getComments,
@@ -139,6 +142,22 @@ function ListFooter({
     });
   };
 
+  // const dynamicHeight = (prop) => {
+  //   // let postListHeight = 0;
+  //   // let textInputHeight = 0;
+  //   console.log(prop.length);
+  //   if (prop.length >= 0 && prop.length <= 52) {
+  //     newHeight = 100;
+  //   } else if (prop.length > 53) {
+  //     console.log(newColor);
+  //     newColor = "red";
+  //     newHeight = 1000000;
+  //   } else if (prop.length == 103) {
+  //     // postListHeight = 170;
+  //   }
+  //   // return Dimensions.get("window").height - prop.height;
+  // };
+
   const styles = StyleSheet.create({
     container: { paddingTop: 34 },
     inputAreaContainer: {
@@ -147,6 +166,8 @@ function ListFooter({
     },
     inputArea: {
       width: Dimensions.get("window").width - 100,
+      // height: newHeight,
+      // backgroundColor: newColor,
     },
     replyView: {
       position: "absolute",
@@ -188,11 +209,15 @@ function ListFooter({
           </TouchableOpacity>
         </View>
       )}
+
       <View style={theme.replyContainer}>
         <View style={styles.inputAreaContainer}>
           <TextInput
             placeholderTextColor={styleVariables.colors.placeholderText}
-            onChangeText={(text) => setTextInputValue(text)}
+            onChangeText={(text) => {
+              // dynamicHeight(text);
+              setTextInputValue(text);
+            }}
             value={textInputValue}
             placeholder="Post a comment"
             multiline={true}

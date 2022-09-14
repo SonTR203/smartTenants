@@ -2,13 +2,10 @@ import {
   View,
   FlatList,
   KeyboardAvoidingView,
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
-  Text,
   Dimensions,
 } from "react-native";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAppContext } from "../../Context/AppContext";
