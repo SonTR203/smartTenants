@@ -66,7 +66,7 @@ function MessagesListScreen({ navigation }) {
       }
     }
     return (
-      <View style={styles.itemContainer}>
+      <View style={[styles.itemContainer]}>
         {marketplaceBadges.unseen.includes(item.id) ? (
           <MaterialCommunityIcons name="new-box" size={30} color={"red"} />
         ) : null}
@@ -115,6 +115,7 @@ function MessagesListScreen({ navigation }) {
   const styles = StyleSheet.create({
     flatlist: {
       height: "100%",
+      paddingTop: 24,
     },
     noItemText: {
       textAlign: "center",
@@ -122,9 +123,12 @@ function MessagesListScreen({ navigation }) {
     itemContainer: {
       flex: 1,
       padding: 10,
-      borderBottomWidth: 1,
-      borderColor: "#4d4d4d",
+      backgroundColor: "white",
       flexDirection: "row-reverse",
+      marginHorizontal: 16,
+      marginBottom: 8,
+      borderRadius: 16,
+      ...styleVariables.shadow,
     },
     itemTouchable: {
       flex: 1,
@@ -133,11 +137,9 @@ function MessagesListScreen({ navigation }) {
       alignItems: "center",
     },
     itemImage: {
-      width: 50,
-      height: 50,
-      borderRadius: 50,
-      borderWidth: 1,
-      borderColor: "#4d4d4d",
+      width: 83.2,
+      height: 64,
+      borderRadius: 8,
     },
     itemTextContainer: {
       flex: 1,
