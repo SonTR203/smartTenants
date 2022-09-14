@@ -12,11 +12,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppContext } from "../../Context/AppContext";
 import { setTime } from "../../utils/setTime";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "../../ThemeContext";
 import _ from "lodash";
 
 function MessagesListScreen({ navigation }) {
   const [messagesList, setMessagesList] = useState([]);
+  const [messageListFilter, setMessageListFilter] = useState("Buying");
   const { currentUser, marketplaceBadges } = useAppContext();
+  const { theme, styleVariables } = useTheme();
 
   useEffect(() => {
     // console.log("marketplace screen list: ", marketplaceBadges.list.length);
@@ -109,10 +112,123 @@ function MessagesListScreen({ navigation }) {
     );
   };
 
+  const styles = StyleSheet.create({
+    flatlist: {
+      height: "100%",
+    },
+    noItemText: {
+      textAlign: "center",
+    },
+    itemContainer: {
+      flex: 1,
+      padding: 10,
+      borderBottomWidth: 1,
+      borderColor: "#4d4d4d",
+      flexDirection: "row-reverse",
+    },
+    itemTouchable: {
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: "flex-start",
+      alignItems: "center",
+    },
+    itemImage: {
+      width: 50,
+      height: 50,
+      borderRadius: 50,
+      borderWidth: 1,
+      borderColor: "#4d4d4d",
+    },
+    itemTextContainer: {
+      flex: 1,
+      marginLeft: 20,
+    },
+    itemTitle: {
+      fontSize: 20,
+      marginBottom: 5,
+    },
+    itemPersonName: {
+      fontSize: 17,
+      marginBottom: 5,
+      opacity: 0.8,
+    },
+    itemContent: {
+      fontSize: 15,
+      opacity: 0.5,
+      width: "95%",
+    },
+    itemTimestamp: {
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      opacity: 0.5,
+    },
+    primaryClr: {
+      color: styleVariables.colors.primary,
+    },
+    messageFilter: {
+      width: "100%",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-around",
+      paddingHorizontal: 32,
+    },
+    bottomBar: {
+      height: 4,
+      width: 150,
+      backgroundColor: styleVariables.colors.primary,
+      marginTop: 8,
+      borderTopLeftRadius: 2,
+      borderTopRightRadius: 2,
+    },
+    filterTitle: {
+      display: "flex",
+      alignItems: "center",
+    },
+    hidden: {
+      backgroundColor: "white",
+    },
+  });
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: "white" }}>
       <StatusBar style="dark" />
       <View>
+        <View style={styles.messageFilter}>
+          <TouchableOpacity
+            onPress={() => {
+              setMessageListFilter("Buying");
+            }}
+            style={styles.filterTitle}
+          >
+            <Text style={[styleVariables.fontSizes.title, styles.primaryClr]}>
+              Buying
+            </Text>
+            <View
+              style={[
+                styles.bottomBar,
+                messageListFilter != "Buying" ? styles.hidden : "",
+              ]}
+            ></View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setMessageListFilter("Selling");
+            }}
+            style={styles.filterTitle}
+          >
+            <Text style={[styleVariables.fontSizes.title, styles.primaryClr]}>
+              Selling
+            </Text>
+            <View
+              style={[
+                styles.bottomBar,
+                messageListFilter != "Selling" ? styles.hidden : "",
+              ]}
+            ></View>
+          </TouchableOpacity>
+        </View>
         <FlatList
           ListEmptyComponent={() => {
             return <Text style={styles.noItemText}>You have no messages.</Text>;
@@ -126,59 +242,4 @@ function MessagesListScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  flatlist: {
-    height: "100%",
-  },
-  noItemText: {
-    textAlign: "center",
-  },
-  itemContainer: {
-    flex: 1,
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: "#4d4d4d",
-    flexDirection: "row-reverse",
-  },
-  itemTouchable: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  itemImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: "#4d4d4d",
-  },
-  itemTextContainer: {
-    flex: 1,
-    marginLeft: 20,
-  },
-  itemTitle: {
-    fontSize: 20,
-    marginBottom: 5,
-  },
-  itemPersonName: {
-    fontSize: 17,
-    marginBottom: 5,
-    opacity: 0.8,
-  },
-  itemContent: {
-    fontSize: 15,
-    opacity: 0.5,
-    width: "95%",
-  },
-  itemTimestamp: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    opacity: 0.5,
-  },
-});
-
 export default MessagesListScreen;
