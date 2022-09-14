@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
 	iconHolderView: {
 		flexDirection: "row",
 		alignItems: "center",
-		paddingVertical: 4,
+		paddingVertical: 10,
 	},
 });
 
