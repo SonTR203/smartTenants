@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import * as WebBrowser from "expo-web-browser";
 import { useTheme } from "../../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { removeExpoPushToken } from "../../../utils/firebase.services";
@@ -10,15 +9,16 @@ import MyPostsSVG from "../../../components/Icons/MyPostsSVG";
 import LogoutSVG from "../../../components/Icons/LogoutSVG";
 import EditProfileSVG from "../../../components/Icons/EditProfileSVG";
 
-const EditActions = () => {
+const EditActions = ({ navigation }) => {
+	const { theme, styleVariables } = useTheme();
 	return (
 		<View style={{ backgroundColor: "white", flex: 1 }}>
 			<TouchableOpacity
 				id="editInfo"
 				onPress={() => {
-					// navigation.navigate("EditProfile");
+					navigation.navigate("EditPersonalInfo");
 				}}
-				style={[theme.cardButton, { marginTop: 34 }]}>
+				style={[theme.cardButton, styles.actionButton]}>
 				<View style={styles.iconHolderView}>
 					<EditProfileSVG style={styles.materialIconRight} />
 					<Text style={[styleVariables.fontSizes.title, styles.colorPrimary]}>
@@ -36,7 +36,7 @@ const EditActions = () => {
 				onPress={() => {
 					// navigation.navigate("EditProfile");
 				}}
-				style={[theme.cardButton, { marginTop: 34 }]}>
+				style={[theme.cardButton, styles.actionButton]}>
 				<View style={styles.iconHolderView}>
 					<EditProfileSVG style={styles.materialIconRight} />
 					<Text style={[styleVariables.fontSizes.title, styles.colorPrimary]}>
@@ -54,7 +54,7 @@ const EditActions = () => {
 				onPress={() => {
 					// navigation.navigate("EditProfile");
 				}}
-				style={[theme.cardButton, { marginTop: 34 }]}>
+				style={[theme.cardButton, styles.actionButton]}>
 				<View style={styles.iconHolderView}>
 					<EditProfileSVG style={styles.materialIconRight} />
 					<Text style={[styleVariables.fontSizes.title, styles.colorPrimary]}>
@@ -72,7 +72,7 @@ const EditActions = () => {
 				onPress={() => {
 					// navigation.navigate("EditProfile");
 				}}
-				style={[theme.cardButton, { marginTop: 34 }]}>
+				style={[theme.cardButton, styles.actionButton]}>
 				<View style={styles.iconHolderView}>
 					<EditProfileSVG style={styles.materialIconRight} />
 					<Text style={[styleVariables.fontSizes.title, styles.colorPrimary]}>
@@ -88,5 +88,19 @@ const EditActions = () => {
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	colorPrimary: { color: "#395E66" },
+	materialIcon: { marginLeft: 8 },
+	materialIconRight: { marginRight: 8 },
+	actionButton: {
+		marginTop: 20,
+	},
+	iconHolderView: {
+		flexDirection: "row",
+		alignItems: "center",
+		paddingVertical: 6,
+	},
+});
 
 export default EditActions;
