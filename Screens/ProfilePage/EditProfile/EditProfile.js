@@ -191,6 +191,7 @@ const EditProfile = ({ navigation }) => {
 				elevation: Platform.OS === "android" ? 0 : 20,
 				borderTopLeftRadius: 27,
 				borderTopRightRadius: 27,
+				marginBottom: 16,
 			},
 			headerSection: {
 				flex: 1,
