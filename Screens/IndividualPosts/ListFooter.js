@@ -17,8 +17,8 @@ import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
 import { useTheme } from "../../ThemeContext";
 import { connectStorageEmulator } from "firebase/storage";
-// let newHeight = -10;
-// let newColor = "black";
+let newHeight = -10;
+let newContainerHeight = 34;
 
 function ListFooter({
   getComments,
@@ -142,32 +142,29 @@ function ListFooter({
     });
   };
 
-  // const dynamicHeight = (prop) => {
-  //   // let postListHeight = 0;
-  //   // let textInputHeight = 0;
-  //   console.log(prop.length);
-  //   if (prop.length >= 0 && prop.length <= 52) {
-  //     newHeight = 100;
-  //   } else if (prop.length > 53) {
-  //     console.log(newColor);
-  //     newColor = "red";
-  //     newHeight = 1000000;
-  //   } else if (prop.length == 103) {
-  //     // postListHeight = 170;
-  //   }
-  //   // return Dimensions.get("window").height - prop.height;
-  // };
+  const dynamicHeight = (prop) => {
+    console.log(prop.length);
+
+    if (prop.length <= 33) {
+      newHeight = -10;
+      newContainerHeight = 34;
+    } else if (prop.length >= 34) {
+      newHeight = 100;
+      newContainerHeight = 40;
+    } else if (prop.length == 103) {
+      postListHeight = 170;
+    }
+  };
 
   const styles = StyleSheet.create({
     container: { paddingTop: 34 },
     inputAreaContainer: {
       marginTop: 16,
-      marginBottom: 34,
+      marginBottom: newContainerHeight,
     },
     inputArea: {
       width: Dimensions.get("window").width - 100,
-      // height: newHeight,
-      // backgroundColor: newColor,
+      height: newHeight,
     },
     replyView: {
       position: "absolute",
@@ -215,13 +212,14 @@ function ListFooter({
           <TextInput
             placeholderTextColor={styleVariables.colors.placeholderText}
             onChangeText={(text) => {
-              // dynamicHeight(text);
+              dynamicHeight(text);
               setTextInputValue(text);
             }}
             value={textInputValue}
             placeholder="Post a comment"
-            multiline={true}
             maxLength={280}
+            multiline={true}
+            numberOfLines={6}
             style={[
               theme.textInput,
               styleVariables.fontSizes.body,

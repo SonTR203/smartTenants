@@ -168,6 +168,7 @@ const IndividualPosts = ({ navigation, route }) => {
     </View>
   );
 };
+let test = ListFooter.dynamicHeight;
 
 let postListHeight = 210;
 const width = Dimensions.get("window").width;
