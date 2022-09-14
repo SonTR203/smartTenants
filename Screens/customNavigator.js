@@ -33,6 +33,7 @@ import Splashscreen from "./Splashscreen/Splashscreen";
 import MarketplaceProfile from "./Marketplace/MarketplaceProfile/MarketplaceProfile";
 import SavedListingsScreen from "./Marketplace/SavedListings/SavedListingsScreen";
 import MyListingsScreen from "./Marketplace/MyListings/MyListingsScreen";
+import EditPersonalInfo from "./ProfilePage/EditProfile/EditPersonalInfo/EditPersonalInfo";
 
 const Stack = createStackNavigator();
 
@@ -329,6 +330,18 @@ const ProfileNavigator = ({ navigation }) => {
 				options={{
 					header: (props) => (
 						<CustomSubStackScreenHeader {...props} title={"Edit profile"} />
+					),
+				}}
+			/>
+			<Stack.Screen
+				name="EditPersonalInfo"
+				component={EditPersonalInfo}
+				options={{
+					header: (props) => (
+						<CustomSubStackScreenHeader
+							{...props}
+							title={"Edit personal info"}
+						/>
 					),
 				}}
 			/>
