@@ -82,7 +82,7 @@ const BuildingInfo = () => {
 						</Text>
 						<MaterialCommunityIcons
 							name="arrow-top-right"
-							size={24}
+							size={32}
 							color={styleVariables.colors.primary}
 						/>
 					</View>
@@ -90,7 +90,7 @@ const BuildingInfo = () => {
 						id="buildingInfoLocation"
 						style={{
 							display: "flex",
-							alignContent: "center",
+							alignItems: "center",
 							flexDirection: "row",
 							width: "100%",
 							marginTop: 6,
@@ -100,7 +100,7 @@ const BuildingInfo = () => {
 							name="map-marker-outline"
 							size={18}
 							color={styleVariables.colors.primary}
-							style={{ marginRight: 8 }}
+							style={{ marginRight: 8, height: 18 }}
 						/>
 						<Text
 							style={[
@@ -111,7 +111,6 @@ const BuildingInfo = () => {
 						</Text>
 					</View>
 				</View>
-
 				<View id="contacts" style={{ marginTop: 17, padding: 17 }}>
 					<Text
 						style={[
@@ -120,8 +119,8 @@ const BuildingInfo = () => {
 						]}>
 						Contacts
 					</Text>
-
-					<View>
+					{/* TODO: build the list dynamically using admin data */}
+					<View style={{ display: "none" }}>
 						<Text
 							style={[styleVariables.fontSizes.title, { marginBottom: 10 }]}>
 							{building.fullName}
