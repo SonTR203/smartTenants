@@ -1,8 +1,13 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 
-const EmailIconSVG = () => (
-	<Svg width={32} height={32} fill="none" xmlns="http://www.w3.org/2000/svg">
+const EmailIconSVG = (props) => (
+	<Svg
+		width={32}
+		height={32}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}>
 		<Path
 			d="m9.332 12 6.667 4.667L22.665 12"
 			stroke="#395E66"
