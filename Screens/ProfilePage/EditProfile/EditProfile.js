@@ -28,6 +28,7 @@ import {
 } from "../../../utils/Profile/profile.services";
 import DynamicProfilePicture from "../../../components/ProfilePicture/DynamicProfilePicture";
 import { uploadImageToStorage } from "../../../utils/firebase.services";
+import EditActions from "./EditActions";
 
 const EditProfile = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
