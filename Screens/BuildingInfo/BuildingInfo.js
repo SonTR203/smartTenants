@@ -7,6 +7,7 @@ import {
 	ScrollView,
 	Image,
 	Linking,
+	StyleSheet,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
@@ -76,18 +77,24 @@ const BuildingInfo = () => {
 						id="buildingInfoAddress"
 						style={{
 							display: "flex",
-							alignContent: "center",
-							justifyContent: "space-between",
+							alignItems: "center",
+							justifyContent: "flex-start",
 							flexDirection: "row",
 							width: "100%",
 							marginTop: 17,
 						}}>
-						<Text style={styleVariables.fontSizes.header}>
-							{building.buildingAddress}
+						<Text
+							style={[
+								styleVariables.fontSizes.header,
+								styles.buildingName,
+								{ color: styleVariables.colors.black },
+							]}>
+							{building.buildingName}
 						</Text>
 						<MaterialCommunityIcons
 							name="arrow-top-right"
 							size={32}
+							style={{ height: 32 }}
 							color={styleVariables.colors.primary}
 						/>
 					</View>
@@ -120,7 +127,7 @@ const BuildingInfo = () => {
 					<Text
 						style={[
 							styleVariables.fontSizes.secondaryHeader,
-							{ marginBottom: 14 },
+							{ marginBottom: 14, color: styleVariables.colors.black },
 						]}>
 						Contacts
 					</Text>
@@ -189,5 +196,12 @@ const BuildingInfo = () => {
 		</ScrollView>
 	);
 };
+
+const styles = StyleSheet.create({
+	buildingName: {
+		// maxWidth: "80%",
+		width: "auto",
+	},
+});
 
 export default BuildingInfo;
