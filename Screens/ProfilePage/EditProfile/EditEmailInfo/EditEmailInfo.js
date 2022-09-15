@@ -22,6 +22,7 @@ import {
 import { useTheme } from "../../../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../../../Context/AppContext";
+import { changeEmail } from "../../../../utils/firebase.services";
 
 const EditEmailInfo = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
@@ -46,7 +47,10 @@ const EditEmailInfo = ({ navigation }) => {
 	};
 	const verifyPassword = async () => {
 		const auth = getAuth();
-		const creds = EmailAuthProvider.credential(currentUser.email, password);
+		const creds = EmailAuthProvider.credential(
+			auth.currentUser.email,
+			password
+		);
 		try {
 			await reauthenticateWithCredential(auth.currentUser, creds).then(
 				(res) => {
@@ -54,7 +58,7 @@ const EditEmailInfo = ({ navigation }) => {
 				}
 			);
 		} catch (error) {
-			console.log(error);
+			console.log(error + "`112312312312");
 		}
 	};
 
@@ -64,6 +68,8 @@ const EditEmailInfo = ({ navigation }) => {
 			try {
 				await updateDoc(userDocRef, {
 					email,
+				}).then(() => {
+					changeEmail({ email: currentUser.email, newEmail: email });
 				});
 				setCurrentUser({
 					...currentUser,
