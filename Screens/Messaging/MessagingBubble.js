@@ -95,7 +95,7 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
       <View
         style={[
           styles.itemContainer(isSender),
-          isSender ? styles.sender : receiver,
+          isSender ? styles.sender : styles.receiver,
         ]}
       >
         <View style={styles.itemContentContainer}>

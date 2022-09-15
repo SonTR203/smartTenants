@@ -37,14 +37,17 @@ function MessagesListScreen({ navigation }) {
     otherPersonId,
     channelId,
     messageImage,
-    itemTitle
+    itemTitle,
+    sellerId
   ) => {
+    const isSeller = currentUser.userID == sellerId;
     navigation.navigate("PrivateMessagingScreen", {
       otherPersonName: otherPersonName,
       otherPersonId: otherPersonId,
       channelId: channelId,
       messageImage: messageImage,
       itemTitle: itemTitle,
+      isSeller: isSeller,
     });
   };
 
@@ -81,7 +84,8 @@ function MessagesListScreen({ navigation }) {
               otherPersonId,
               item.id,
               item.messageImage,
-              item.title
+              item.title,
+              item.sellerId
             );
           }}
           style={styles.itemTouchable}
@@ -101,7 +105,7 @@ function MessagesListScreen({ navigation }) {
             {item.lastMessage ? (
               <View style={styles.itemTimestamp}>
                 <Text>
-                  {setTime(item.lastMessage.timestamp.seconds * 1000)}
+                  {/* {setTime(item.lastMessage.timestamp.seconds * 1000)} */}
                 </Text>
                 {item.lastMessage.seen ? (
                   <MaterialCommunityIcons

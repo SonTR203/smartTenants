@@ -15,6 +15,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
 import { db } from "../../firebase-config";
@@ -25,6 +26,8 @@ import { constants } from "../../utils/constants";
 import MessagingBubble from "./MessagingBubble";
 import { useTheme } from "../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
+import ArrowRightSVG from "../../components/ArrowRightSVG";
+import CircleCheckSVG from "../../components/CircleCheckSVG";
 
 function PrivateMessagingScreen({ route }) {
   const { styleVariables } = useTheme();
@@ -106,6 +109,91 @@ function PrivateMessagingScreen({ route }) {
     );
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    flatlist: {
+      flex: 1,
+    },
+    noItemText: {
+      fontSize: 13,
+      textAlign: "center",
+      marginTop: 10,
+      opacity: 0.5,
+    },
+    textDisplayContainer: {
+      flex: 1,
+    },
+    loadingText: {
+      textAlign: "center",
+    },
+    messageContainer: {
+      flex: 0.2,
+      flexDirection: "row",
+      justifyContent: "flex-start",
+      alignItems: "center",
+    },
+    messageInput: {
+      flex: 0.8,
+      borderWidth: 1,
+      borderColor: "gray",
+      borderRadius: 5,
+      padding: 10,
+      marginLeft: 10,
+      marginRight: 10,
+      fontSize: 20,
+      backgroundColor: "white",
+    },
+    sendButton: {
+      flex: 0.2,
+      backgroundColor: "#4286f4",
+      borderRadius: 5,
+      padding: 10,
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 10,
+    },
+    sendButtonText: {
+      fontSize: 20,
+      color: "white",
+    },
+    itemImage: {
+      width: 52,
+      height: 40,
+      borderRadius: 8,
+      borderWidth: 1,
+    },
+    messageHeader: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      borderColor: "#EBEFF0",
+    },
+    imageAndTitle: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    itemTitle: {
+      color: styleVariables.colors.black,
+      marginLeft: 8,
+    },
+    priceText: {
+      color: styleVariables.colors.primary,
+      marginLeft: 8,
+    },
+    arrowAndMarkSold: {
+      display: "flex",
+      flexDirection: "row",
+    },
+  });
+
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={constants.height * 0.15}
@@ -113,6 +201,26 @@ function PrivateMessagingScreen({ route }) {
       style={styles.container}
     >
       <StatusBar style="dark" />
+      <View style={styles.messageHeader}>
+        <View style={styles.imageAndTitle}>
+          <Image
+            style={styles.itemImage}
+            source={{ uri: route.params.messageImage }}
+          />
+          <View>
+            <Text style={[styles.itemTitle, styleVariables.fontSizes.bodyBold]}>
+              {route.params.itemTitle}
+            </Text>
+            <Text style={[styles.priceText, styleVariables.fontSizes.body]}>
+              $350
+            </Text>
+          </View>
+        </View>
+        <View style={styles.arrowAndMarkSold}>
+          {route.params.isSeller ? <CircleCheckSVG /> : <View></View>}
+          <ArrowRightSVG />
+        </View>
+      </View>
       <View style={styles.textDisplayContainer}>
         {loading ? (
           <Text style={styles.loadingText}>Loading your messages...</Text>
@@ -158,56 +266,5 @@ function PrivateMessagingScreen({ route }) {
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  flatlist: {
-    flex: 1,
-  },
-  noItemText: {
-    fontSize: 13,
-    textAlign: "center",
-    marginTop: 10,
-    opacity: 0.5,
-  },
-  textDisplayContainer: {
-    flex: 1,
-  },
-  loadingText: {
-    textAlign: "center",
-  },
-  messageContainer: {
-    flex: 0.2,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  messageInput: {
-    flex: 0.8,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 5,
-    padding: 10,
-    marginLeft: 10,
-    marginRight: 10,
-    fontSize: 20,
-    backgroundColor: "white",
-  },
-  sendButton: {
-    flex: 0.2,
-    backgroundColor: "#4286f4",
-    borderRadius: 5,
-    padding: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 10,
-  },
-  sendButtonText: {
-    fontSize: 20,
-    color: "white",
-  },
-});
 
 export default PrivateMessagingScreen;
