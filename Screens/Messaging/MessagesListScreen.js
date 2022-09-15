@@ -35,12 +35,16 @@ function MessagesListScreen({ navigation }) {
   const handleNavigateToPrivateMessagingScreen = async (
     otherPersonName,
     otherPersonId,
-    channelId
+    channelId,
+    messageImage,
+    itemTitle
   ) => {
     navigation.navigate("PrivateMessagingScreen", {
       otherPersonName: otherPersonName,
       otherPersonId: otherPersonId,
       channelId: channelId,
+      messageImage: messageImage,
+      itemTitle: itemTitle,
     });
   };
 
@@ -75,7 +79,9 @@ function MessagesListScreen({ navigation }) {
             handleNavigateToPrivateMessagingScreen(
               otherPersonName,
               otherPersonId,
-              item.id
+              item.id,
+              item.messageImage,
+              item.title
             );
           }}
           style={styles.itemTouchable}
