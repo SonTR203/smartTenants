@@ -51,7 +51,7 @@ const EditActions = ({ navigation }) => {
 			<TouchableOpacity
 				id="editInfo"
 				onPress={() => {
-					// navigation.navigate("EditProfile");
+					navigation.navigate("EditPasswordInfo");
 				}}
 				style={[theme.cardButton, styles.actionButton]}>
 				<View style={styles.iconHolderView}>

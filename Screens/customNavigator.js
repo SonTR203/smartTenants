@@ -35,6 +35,7 @@ import SavedListingsScreen from "./Marketplace/SavedListings/SavedListingsScreen
 import MyListingsScreen from "./Marketplace/MyListings/MyListingsScreen";
 import EditPersonalInfo from "./ProfilePage/EditProfile/EditPersonalInfo/EditPersonalInfo";
 import EditEmailInfo from "./ProfilePage/EditProfile/EditEmailInfo/EditEmailInfo";
+import EditPasswordInfo from "./ProfilePage/EditProfile/EditPasswordInfo/EditPasswordInfo";
 
 const Stack = createStackNavigator();
 
@@ -352,6 +353,15 @@ const ProfileNavigator = ({ navigation }) => {
 				options={{
 					header: (props) => (
 						<CustomSubStackScreenHeader {...props} title={"Email address"} />
+					),
+				}}
+			/>
+			<Stack.Screen
+				name="EditPasswordlInfo"
+				component={EditEPasswordInfo}
+				options={{
+					header: (props) => (
+						<CustomSubStackScreenHeader {...props} title={"Password"} />
 					),
 				}}
 			/>
