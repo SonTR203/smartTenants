@@ -34,6 +34,7 @@ import MarketplaceProfile from "./Marketplace/MarketplaceProfile/MarketplaceProf
 import SavedListingsScreen from "./Marketplace/SavedListings/SavedListingsScreen";
 import MyListingsScreen from "./Marketplace/MyListings/MyListingsScreen";
 import EditPersonalInfo from "./ProfilePage/EditProfile/EditPersonalInfo/EditPersonalInfo";
+import EditEmailInfo from "./ProfilePage/EditProfile/EditEmailInfo/EditEmailInfo";
 
 const Stack = createStackNavigator();
 
@@ -342,6 +343,15 @@ const ProfileNavigator = ({ navigation }) => {
 							{...props}
 							title={"Edit personal info"}
 						/>
+					),
+				}}
+			/>
+			<Stack.Screen
+				name="EditEmailInfo"
+				component={EditEmailInfo}
+				options={{
+					header: (props) => (
+						<CustomSubStackScreenHeader {...props} title={"Email address"} />
 					),
 				}}
 			/>
