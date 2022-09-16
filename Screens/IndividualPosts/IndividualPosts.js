@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Dimensions,
+  Text,
 } from "react-native";
 
 import { StatusBar } from "expo-status-bar";
@@ -17,6 +18,7 @@ import Comment from "./Comment";
 import { constants } from "../../utils/constants";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
+import { tapGestureHandlerProps } from "react-native-gesture-handler/lib/typescript/handlers/TapGestureHandler";
 
 const IndividualPosts = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -29,6 +31,8 @@ const IndividualPosts = ({ navigation, route }) => {
   const [userCommentId, setUserCommentId] = useState("");
 
   const commentListRef = useRef();
+
+  const [dynamicMarginBottom, setDynamicMarginBottom] = useState();
 
   // Get all Comments
   const getComments = () => {
@@ -104,6 +108,10 @@ const IndividualPosts = ({ navigation, route }) => {
     [comments]
   );
 
+  const dynamicVerticalOffset = () => {
+    console.log(dynamicMarginBottom);
+  };
+
   const renderPostItem = ({ item }) => (
     <Comment
       item={item}
@@ -123,6 +131,7 @@ const IndividualPosts = ({ navigation, route }) => {
   };
 
   const renderListFooter = () => {
+    console.log("render");
     return (
       <ListFooter
         currentUser={currentUser}
@@ -136,12 +145,20 @@ const IndividualPosts = ({ navigation, route }) => {
         setUserCommentName={setUserCommentName}
         userCommentId={userCommentId}
         setUserCommentId={setUserCommentId}
+        /* Passing the state to the child component. */
+        dynamicVerticalOffset={dynamicVerticalOffset}
+        setDynamicMarginBottom={setDynamicMarginBottom}
       />
     );
   };
 
+  let NUM = 100;
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
+    >
       <View>
         <FlatList
           style={styles.itemWrapper}
@@ -160,15 +177,14 @@ const IndividualPosts = ({ navigation, route }) => {
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
       >
         <FlatList
-          style={styles.commentWrapper}
+          style={{ marginBottom: dynamicMarginBottom }}
           scrollEnabled={false}
           ListFooterComponent={renderListFooter}
         ></FlatList>
       </KeyboardAvoidingView>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
-let test = ListFooter.dynamicHeight;
 
 let postListHeight = 210;
 const width = Dimensions.get("window").width;
@@ -185,7 +201,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   commentWrapper: {
-    marginTop: -25,
+    // marginTop: -25,
   },
 });
 

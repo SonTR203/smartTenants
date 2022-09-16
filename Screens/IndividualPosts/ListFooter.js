@@ -17,6 +17,7 @@ import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
 import { useTheme } from "../../ThemeContext";
 import { connectStorageEmulator } from "firebase/storage";
+
 let newHeight = -10;
 let newContainerHeight = 34;
 
@@ -28,8 +29,11 @@ function ListFooter({
   setUserCommentName,
   setUserCommentId,
   userCommentId,
+  dynamicMarginBottom,
+  dynamicVerticalOffset,
 }) {
   const [textInputValue, setTextInputValue] = useState("");
+  const [marginBottomValue, setMarginBottomValue] = useState();
   const { setPost, post, currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
 
@@ -143,14 +147,16 @@ function ListFooter({
   };
 
   const dynamicHeight = (prop) => {
-    console.log(prop.length);
-
+    // setInputTextLength(prop.length);
+    dynamicVerticalOffset();
     if (prop.length <= 33) {
       newHeight = -10;
       newContainerHeight = 34;
+      console.log;
     } else if (prop.length >= 34) {
       newHeight = 100;
-      newContainerHeight = 40;
+      dynamicMarginBottom = 1000;
+      newContainerHeight = 400;
     } else if (prop.length == 103) {
       postListHeight = 170;
     }
@@ -161,10 +167,12 @@ function ListFooter({
     inputAreaContainer: {
       marginTop: 16,
       marginBottom: newContainerHeight,
+      marginBottom: 0,
     },
     inputArea: {
       width: Dimensions.get("window").width - 100,
       height: newHeight,
+      alignSelf: "flex-start",
     },
     replyView: {
       position: "absolute",
@@ -208,7 +216,7 @@ function ListFooter({
       )}
 
       <View style={theme.replyContainer}>
-        <View style={styles.inputAreaContainer}>
+        <View style={[styles.inputAreaContainer, { alignItems: "flex-end" }]}>
           <TextInput
             placeholderTextColor={styleVariables.colors.placeholderText}
             onChangeText={(text) => {
