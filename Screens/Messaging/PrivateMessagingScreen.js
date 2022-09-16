@@ -212,7 +212,7 @@ function PrivateMessagingScreen({ route }) {
               {route.params.itemTitle}
             </Text>
             <Text style={[styles.priceText, styleVariables.fontSizes.body]}>
-              $350
+              {route.params.price}
             </Text>
           </View>
         </View>

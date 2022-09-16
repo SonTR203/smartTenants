@@ -61,6 +61,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
         messageImage: item.images[0],
         timestamp: Timestamp.fromDate(new Date()),
         hasPeople: [currentUser.userID, item.userID],
+        price: item.price,
         isNew: true,
       });
     }

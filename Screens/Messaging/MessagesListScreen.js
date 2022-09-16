@@ -38,7 +38,8 @@ function MessagesListScreen({ navigation }) {
     channelId,
     messageImage,
     itemTitle,
-    sellerId
+    sellerId,
+    price
   ) => {
     const isSeller = currentUser.userID == sellerId;
     navigation.navigate("PrivateMessagingScreen", {
@@ -48,6 +49,7 @@ function MessagesListScreen({ navigation }) {
       messageImage: messageImage,
       itemTitle: itemTitle,
       isSeller: isSeller,
+      price: price,
     });
   };
 
@@ -85,7 +87,8 @@ function MessagesListScreen({ navigation }) {
               item.id,
               item.messageImage,
               item.title,
-              item.sellerId
+              item.sellerId,
+              item.price
             );
           }}
           style={styles.itemTouchable}
