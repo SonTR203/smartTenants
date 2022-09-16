@@ -357,8 +357,8 @@ const ProfileNavigator = ({ navigation }) => {
 				}}
 			/>
 			<Stack.Screen
-				name="EditPasswordlInfo"
-				component={EditEPasswordInfo}
+				name="EditPasswordInfo"
+				component={EditPasswordInfo}
 				options={{
 					header: (props) => (
 						<CustomSubStackScreenHeader {...props} title={"Password"} />

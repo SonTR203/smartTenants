@@ -58,7 +58,7 @@ const EditEmailInfo = ({ navigation }) => {
 				}
 			);
 		} catch (error) {
-			console.log(error + "`112312312312");
+			console.log(error);
 		}
 	};
 
