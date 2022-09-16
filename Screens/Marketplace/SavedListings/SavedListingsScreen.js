@@ -39,13 +39,16 @@ function SavedListingsScreen({ navigation }) {
     }
   }, [updatedMarketplacePosts]);
 
-  useEffect(async () => {
-    const list = await getMarketplaceItems();
-    const mySavedListings = list.filter((item) =>
-      item.isSavedBy.includes(currentUser.userID)
-    );
+  useEffect(() => {
+    async function setSavedListings() {
+      const list = await getMarketplaceItems();
+      const mySavedListings = list.filter((item) =>
+        item.isSavedBy.includes(currentUser.userID)
+      );
 
-    mySavedListings ? setData(mySavedListings) : setData([]);
+      mySavedListings ? setData(mySavedListings) : setData([]);
+    }
+    setSavedListings();
   }, []);
 
   const renderSavedItems = ({ item }) => {

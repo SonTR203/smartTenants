@@ -27,11 +27,14 @@ function Comment({
     setTimeSincePost(time);
   }, []);
 
-  useEffect(async () => {
-    if (item.replied == true) {
-      let replyList = await getCommentReplies(item.id);
-      setReplies(replyList);
+  useEffect(() => {
+    async function setCommentReplies() {
+      if (item.replied == true) {
+        let replyList = await getCommentReplies(item.id);
+        setReplies(replyList);
+      }
     }
+    setCommentReplies();
   }, [comments]);
 
   const callbackRenderItem = useCallback(
