@@ -190,30 +190,24 @@ const EditEmailInfo = ({ navigation }) => {
 						</View>
 					</View>
 					{/* save button */}
-					<KeyboardAvoidingView
-						behavior="position"
-						keyboardVerticalOffset={Dimensions.get("window").height * 0.13}>
-						<TouchableOpacity
-							id="save"
-							onPress={() => {
-								// saveProfileInfo();
-								verifyPassword();
-							}}>
-							<View
+
+					<TouchableOpacity
+						id="save"
+						onPress={() => {
+							// saveProfileInfo();
+							verifyPassword();
+						}}>
+						<View
+							style={[theme.primaryButton, { margin: 0, shadowColor: "#fff" }]}>
+							<Text
 								style={[
-									theme.primaryButton,
-									{ margin: 0, shadowColor: "#fff" },
+									theme.primaryButtonText,
+									styleVariables.fontSizes.bodyBold,
 								]}>
-								<Text
-									style={[
-										theme.primaryButtonText,
-										styleVariables.fontSizes.bodyBold,
-									]}>
-									Save
-								</Text>
-							</View>
-						</TouchableOpacity>
-					</KeyboardAvoidingView>
+								Save
+							</Text>
+						</View>
+					</TouchableOpacity>
 				</ScrollView>
 			</View>
 		</SafeAreaView>
