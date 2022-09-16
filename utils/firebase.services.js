@@ -26,6 +26,8 @@ import {
 	getAuth,
 	signInWithEmailAndPassword,
 	updatePassword,
+	EmailAuthProvider,
+	reauthenticateWithCredential,
 } from "firebase/auth";
 import { Alert, Linking } from "react-native";
 
@@ -290,5 +292,20 @@ export const updateUserPassword = async (newPassword) => {
 		return "success";
 	} catch (error) {
 		return error.message;
+	}
+};
+
+export const verifyPassword = async (password, cb, setErrorText) => {
+	console.log(setErrorText);
+	const creds = EmailAuthProvider.credential(auth.currentUser.email, password);
+	try {
+		await reauthenticateWithCredential(auth.currentUser, creds).then((res) => {
+			if (cb) cb();
+		});
+	} catch (error) {
+		console.log(error);
+		if (error.message.includes("wrong-password"))
+			return setErrorText("Incorrect password");
+		return setErrorText("Something went wrong, please try again");
 	}
 };
