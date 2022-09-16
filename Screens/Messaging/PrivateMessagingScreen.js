@@ -28,6 +28,8 @@ import { useTheme } from "../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import ArrowRightSVG from "../../components/ArrowRightSVG";
 import CircleCheckSVG from "../../components/CircleCheckSVG";
+import UploadImageSVG from "../../components/UploadImageSVG";
+import SendMessageSVG from "../../components/SendMessageSVG";
 
 function PrivateMessagingScreen({ route }) {
   const { styleVariables } = useTheme();
@@ -129,24 +131,29 @@ function PrivateMessagingScreen({ route }) {
       textAlign: "center",
     },
     messageContainer: {
-      flex: 0.2,
+      display: "flex",
       flexDirection: "row",
-      justifyContent: "flex-start",
       alignItems: "center",
+      backgroundColor: "white",
+      height: 86,
+      borderTopLeftRadius: 16,
+      borderTopRightRadius: 16,
+      paddingHorizontal: 16,
     },
     messageInput: {
-      flex: 0.8,
+      flex: 1,
       borderWidth: 1,
-      borderColor: "gray",
-      borderRadius: 5,
+      borderColor: "#EBEFF0",
+      borderRadius: 18,
+      height: 36,
       padding: 10,
       marginLeft: 10,
       marginRight: 10,
-      fontSize: 20,
+      fontSize: 15,
       backgroundColor: "white",
+      color: styleVariables.colors.black,
     },
     sendButton: {
-      flex: 0.2,
       backgroundColor: "#4286f4",
       borderRadius: 5,
       padding: 10,
@@ -191,6 +198,15 @@ function PrivateMessagingScreen({ route }) {
     arrowAndMarkSold: {
       display: "flex",
       flexDirection: "row",
+    },
+    sendMessageBtn: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 8,
+      width: 32,
+      height: 32,
+      backgroundColor: styleVariables.colors.primary,
     },
   });
 
@@ -248,7 +264,7 @@ function PrivateMessagingScreen({ route }) {
           />
         )}
       </View>
-      <View style={styles.messageContainer}>
+      {/* <View style={styles.messageContainer}>
         <TextInput
           placeholderTextColor={styleVariables.colors.placeholderText}
           style={styles.messageInput}
@@ -261,6 +277,21 @@ function PrivateMessagingScreen({ route }) {
           onPress={() => handleSendMessage(messages)}
         >
           <Text style={styles.sendButtonText}>Send</Text>
+        </TouchableOpacity>
+      </View> */}
+      <View style={styles.messageContainer}>
+        <UploadImageSVG />
+        <TextInput
+          placeholderTextColor={styleVariables.colors.placeholderText}
+          style={styles.messageInput}
+          onChangeText={setMessages}
+          value={messages}
+          placeholder="Type in your message"
+        />
+        <TouchableOpacity onPress={() => handleSendMessage(messages)}>
+          <View style={styles.sendMessageBtn}>
+            <SendMessageSVG />
+          </View>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
