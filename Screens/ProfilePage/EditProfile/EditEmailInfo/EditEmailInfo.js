@@ -15,15 +15,13 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { doc, updateDoc } from "@firebase/firestore";
 import { db } from "../../../../firebase-config";
-import {
-	reauthenticateWithCredential,
-	EmailAuthProvider,
-	getAuth,
-} from "firebase/auth";
 import { useTheme } from "../../../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../../../Context/AppContext";
-import { changeEmail } from "../../../../utils/firebase.services";
+import {
+	changeEmail,
+	verifyPassword,
+} from "../../../../utils/firebase.services";
 import ErrorArea from "../../../../components/SignUp/ErrorArea";
 
 const EditEmailInfo = ({ navigation }) => {
@@ -46,24 +44,6 @@ const EditEmailInfo = ({ navigation }) => {
 			}
 		} catch (error) {
 			console.log("ERROR Edit profile: ", error);
-		}
-	};
-	const verifyPassword = async () => {
-		const auth = getAuth();
-		const creds = EmailAuthProvider.credential(
-			auth.currentUser.email,
-			password
-		);
-		try {
-			await reauthenticateWithCredential(auth.currentUser, creds).then(
-				(res) => {
-					saveProfileInfo();
-				}
-			);
-		} catch (error) {
-			if (error.message.includes("wrong-password"))
-				return setErrorText("Incorrect password");
-			return setErrorText("Something went wrong, please try again");
 		}
 	};
 
@@ -182,7 +162,7 @@ const EditEmailInfo = ({ navigation }) => {
 					<TouchableOpacity
 						id="save"
 						onPress={() => {
-							verifyPassword();
+							verifyPassword(password, saveProfileInfo, setErrorText);
 						}}>
 						<View
 							style={[theme.primaryButton, { margin: 0, shadowColor: "#fff" }]}>
