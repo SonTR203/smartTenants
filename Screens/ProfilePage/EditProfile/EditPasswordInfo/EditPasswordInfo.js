@@ -96,9 +96,7 @@ const EditEmailInfo = ({ navigation }) => {
 
 	return (
 		<SafeAreaView edges={["top"]}>
-			<KeyboardAvoidingView
-				behavior={Platform.OS === "ios" ? "position" : "height"}
-				keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}>
+			<View>
 				<ScrollView
 					contentContainerStyle={{
 						flex: 1,
@@ -140,73 +138,82 @@ const EditEmailInfo = ({ navigation }) => {
 						</View>
 					</Modal>
 					<View>
-						<View id="passwordCurrentInput">
-							<Text
-								style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
-								Current password
-							</Text>
-							<TextInput
-								onChangeText={(text) => setPassword(text)}
-								placeholderTextColor={styleVariables.colors.placeholderText}
-								placeholder="*******"
-								secureTextEntry={true}
-								//================================= will need to research how to do this SAFELY ==========================
-								style={[theme.textInput, styleVariables.fontSizes.body]}
-							/>
+						<View>
+							<View id="passwordCurrentInput">
+								<Text
+									style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+									Current password
+								</Text>
+								<TextInput
+									onChangeText={(text) => setPassword(text)}
+									placeholderTextColor={styleVariables.colors.placeholderText}
+									placeholder="*******"
+									secureTextEntry={true}
+									//================================= will need to research how to do this SAFELY ==========================
+									style={[theme.textInput, styleVariables.fontSizes.body]}
+								/>
+							</View>
 						</View>
-					</View>
-					<View>
-						<View id="passwordNewInput">
-							<Text
-								style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
-								New password
-							</Text>
-							<TextInput
-								onChangeText={(text) => setNewPassword(text)}
-								placeholderTextColor={styleVariables.colors.placeholderText}
-								placeholder="*******"
-								secureTextEntry={true}
-								//================================= will need to research how to do this SAFELY ==========================
-								style={[theme.textInput, styleVariables.fontSizes.body]}
-							/>
+						<View>
+							<View id="passwordNewInput">
+								<Text
+									style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+									New password
+								</Text>
+								<TextInput
+									onChangeText={(text) => setNewPassword(text)}
+									placeholderTextColor={styleVariables.colors.placeholderText}
+									placeholder="*******"
+									secureTextEntry={true}
+									//================================= will need to research how to do this SAFELY ==========================
+									style={[theme.textInput, styleVariables.fontSizes.body]}
+								/>
+							</View>
 						</View>
-					</View>
-					<View>
-						<View id="passwordConfirmInput">
-							<Text
-								style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
-								Confirm password
-							</Text>
-							<TextInput
-								onChangeText={(text) => setConfirmPassword(text)}
-								placeholderTextColor={styleVariables.colors.placeholderText}
-								placeholder="*******"
-								secureTextEntry={true}
-								//================================= will need to research how to do this SAFELY ==========================
-								style={[theme.textInput, styleVariables.fontSizes.body]}
-							/>
+						<View>
+							<View id="passwordConfirmInput">
+								<Text
+									style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+									Confirm password
+								</Text>
+								<TextInput
+									onChangeText={(text) => setConfirmPassword(text)}
+									placeholderTextColor={styleVariables.colors.placeholderText}
+									placeholder="*******"
+									secureTextEntry={true}
+									//================================= will need to research how to do this SAFELY ==========================
+									style={[theme.textInput, styleVariables.fontSizes.body]}
+								/>
+							</View>
 						</View>
 					</View>
 					{/* save button */}
-					<TouchableOpacity
-						id="save"
-						onPress={() => {
-							// saveProfileInfo();
-							verifyPassword();
-						}}>
-						<View
-							style={[theme.primaryButton, { margin: 0, shadowColor: "#fff" }]}>
-							<Text
+					<KeyboardAvoidingView
+						behavior={Platform.OS === "ios" ? "position" : "height"}
+						keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}>
+						<TouchableOpacity
+							id="save"
+							onPress={() => {
+								// saveProfileInfo();
+								verifyPassword();
+							}}>
+							<View
 								style={[
-									theme.primaryButtonText,
-									styleVariables.fontSizes.bodyBold,
+									theme.primaryButton,
+									{ margin: 0, shadowColor: "#fff" },
 								]}>
-								Save
-							</Text>
-						</View>
-					</TouchableOpacity>
+								<Text
+									style={[
+										theme.primaryButtonText,
+										styleVariables.fontSizes.bodyBold,
+									]}>
+									Save
+								</Text>
+							</View>
+						</TouchableOpacity>
+					</KeyboardAvoidingView>
 				</ScrollView>
-			</KeyboardAvoidingView>
+			</View>
 		</SafeAreaView>
 	);
 };
