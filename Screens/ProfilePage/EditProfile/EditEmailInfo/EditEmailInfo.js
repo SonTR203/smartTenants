@@ -95,10 +95,9 @@ const EditEmailInfo = ({ navigation }) => {
 
 	return (
 		<SafeAreaView edges={["top"]}>
-			<KeyboardAvoidingView
-				behavior={Platform.OS === "ios" ? "position" : "height"}
-				keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}>
+			<View>
 				<ScrollView
+					keyboardShouldPersistTaps="handled"
 					contentContainerStyle={{
 						flex: 1,
 						justifyContent: "space-between",
@@ -170,25 +169,31 @@ const EditEmailInfo = ({ navigation }) => {
 						</View>
 					</View>
 					{/* save button */}
-					<TouchableOpacity
-						id="save"
-						onPress={() => {
-							// saveProfileInfo();
-							verifyPassword();
-						}}>
-						<View
-							style={[theme.primaryButton, { margin: 0, shadowColor: "#fff" }]}>
-							<Text
+					<KeyboardAvoidingView
+						behavior="position"
+						keyboardVerticalOffset={100}>
+						<TouchableOpacity
+							id="save"
+							onPress={() => {
+								verifyPassword();
+							}}>
+							<View
 								style={[
-									theme.primaryButtonText,
-									styleVariables.fontSizes.bodyBold,
+									theme.primaryButton,
+									{ margin: 0, shadowColor: "#fff" },
 								]}>
-								Save
-							</Text>
-						</View>
-					</TouchableOpacity>
+								<Text
+									style={[
+										theme.primaryButtonText,
+										styleVariables.fontSizes.bodyBold,
+									]}>
+									Save
+								</Text>
+							</View>
+						</TouchableOpacity>
+					</KeyboardAvoidingView>
 				</ScrollView>
-			</KeyboardAvoidingView>
+			</View>
 		</SafeAreaView>
 	);
 };

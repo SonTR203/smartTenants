@@ -10,6 +10,7 @@ import {
 	Modal,
 	Alert,
 	StyleSheet,
+	Dimensions,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { doc, updateDoc } from "@firebase/firestore";
@@ -98,6 +99,7 @@ const EditEmailInfo = ({ navigation }) => {
 		<SafeAreaView edges={["top"]}>
 			<View>
 				<ScrollView
+					keyboardShouldPersistTaps="handled"
 					contentContainerStyle={{
 						flex: 1,
 						justifyContent: "space-between",
@@ -189,8 +191,8 @@ const EditEmailInfo = ({ navigation }) => {
 					</View>
 					{/* save button */}
 					<KeyboardAvoidingView
-						behavior={Platform.OS === "ios" ? "position" : "height"}
-						keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}>
+						behavior="position"
+						keyboardVerticalOffset={Dimensions.get("window").height * 0.13}>
 						<TouchableOpacity
 							id="save"
 							onPress={() => {
