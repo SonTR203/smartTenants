@@ -148,9 +148,7 @@ const EditPersonalInfo = ({ navigation }) => {
 
 	return (
 		<SafeAreaView edges={["top"]}>
-			<KeyboardAvoidingView
-				behavior={Platform.OS === "ios" ? "position" : "height"}
-				keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}>
+			<View>
 				<ScrollView
 					contentContainerStyle={{
 						flex: 1,
@@ -288,7 +286,7 @@ const EditPersonalInfo = ({ navigation }) => {
 						</View>
 					</TouchableOpacity>
 				</ScrollView>
-			</KeyboardAvoidingView>
+			</View>
 		</SafeAreaView>
 	);
 };
