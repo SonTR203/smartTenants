@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	View,
 	Text,
@@ -24,6 +24,7 @@ import { useTheme } from "../../../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../../../Context/AppContext";
 import { changeEmail } from "../../../../utils/firebase.services";
+import ErrorArea from "../../../../components/SignUp/ErrorArea";
 
 const EditEmailInfo = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
@@ -33,13 +34,14 @@ const EditEmailInfo = ({ navigation }) => {
 
 	const [saveModal, setSaveModal] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [errorText, setErrorText] = useState("");
 
 	const checkTextInputs = () => {
 		try {
 			if (email.length) {
 				return true;
 			} else {
-				Alert.alert("ERROR", "Your email cannot be empty");
+				setErrorText("Your email cannot be empty !");
 				return false;
 			}
 		} catch (error) {
@@ -59,7 +61,9 @@ const EditEmailInfo = ({ navigation }) => {
 				}
 			);
 		} catch (error) {
-			console.log(error);
+			if (error.message.includes("wrong-password"))
+				return setErrorText("Incorrect password");
+			return setErrorText("Something went wrong, please try again");
 		}
 	};
 
@@ -94,6 +98,10 @@ const EditEmailInfo = ({ navigation }) => {
 		},
 	});
 
+	// Reset error message whenever the user starts typing the password again
+	useEffect(() => {
+		setErrorText("");
+	}, [password]);
 	return (
 		<SafeAreaView edges={["top"]}>
 			<View>
@@ -139,7 +147,8 @@ const EditEmailInfo = ({ navigation }) => {
 						</View>
 					</Modal>
 					<View>
-						<View id="emailInput" style={{ marginTop: 16 }}>
+						<ErrorArea errorText={errorText} />
+						<View id="emailInput" style={{ marginTop: 7 }}>
 							<Text
 								style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
 								Email
