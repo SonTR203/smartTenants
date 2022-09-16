@@ -40,6 +40,7 @@ function PrivateMessagingScreen({ route }) {
   const [sendingText, setSendingText] = useState(false);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAppContext();
+  const [inputHeight, setInputHeight] = useState(36);
 
   useEffect(() => {
     if (route.params && route.params.channelId) {
@@ -135,7 +136,8 @@ function PrivateMessagingScreen({ route }) {
       flexDirection: "row",
       alignItems: "center",
       backgroundColor: "white",
-      height: 86,
+      paddingTop: 16,
+      paddingBottom: 34,
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,
       paddingHorizontal: 16,
@@ -145,25 +147,16 @@ function PrivateMessagingScreen({ route }) {
       borderWidth: 1,
       borderColor: "#EBEFF0",
       borderRadius: 18,
-      height: 36,
-      padding: 10,
+      height: inputHeight,
+      minHeight: 36,
+      maxHeight: 76,
+      paddingTop: 8,
+      paddingHorizontal: 10,
       marginLeft: 10,
       marginRight: 10,
       fontSize: 15,
       backgroundColor: "white",
       color: styleVariables.colors.black,
-    },
-    sendButton: {
-      backgroundColor: "#4286f4",
-      borderRadius: 5,
-      padding: 10,
-      justifyContent: "center",
-      alignItems: "center",
-      marginRight: 10,
-    },
-    sendButtonText: {
-      fontSize: 20,
-      color: "white",
     },
     itemImage: {
       width: 52,
@@ -264,21 +257,6 @@ function PrivateMessagingScreen({ route }) {
           />
         )}
       </View>
-      {/* <View style={styles.messageContainer}>
-        <TextInput
-          placeholderTextColor={styleVariables.colors.placeholderText}
-          style={styles.messageInput}
-          onChangeText={setMessages}
-          value={messages}
-          placeholder="Type in your message"
-        />
-        <TouchableOpacity
-          style={styles.sendButton}
-          onPress={() => handleSendMessage(messages)}
-        >
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
-      </View> */}
       <View style={styles.messageContainer}>
         <UploadImageSVG />
         <TextInput
@@ -287,6 +265,10 @@ function PrivateMessagingScreen({ route }) {
           onChangeText={setMessages}
           value={messages}
           placeholder="Type in your message"
+          multiline
+          onContentSizeChange={(event) => {
+            setInputHeight(event.nativeEvent.contentSize.height);
+          }}
         />
         <TouchableOpacity onPress={() => handleSendMessage(messages)}>
           <View style={styles.sendMessageBtn}>
