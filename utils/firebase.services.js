@@ -296,7 +296,6 @@ export const updateUserPassword = async (newPassword) => {
 };
 
 export const verifyPassword = async (password, cb, setErrorText) => {
-	console.log(setErrorText);
 	const creds = EmailAuthProvider.credential(auth.currentUser.email, password);
 	try {
 		await reauthenticateWithCredential(auth.currentUser, creds).then((res) => {
