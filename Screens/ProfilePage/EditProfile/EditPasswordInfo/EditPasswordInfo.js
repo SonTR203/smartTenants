@@ -48,8 +48,12 @@ const EditEmailInfo = ({ navigation }) => {
 	};
 
 	// Check if passwords matches
-	const checkPasswords = async () => {
-		return newPassword === confirmPassword;
+	const checkPasswords = () => {
+		return (
+			newPassword === confirmPassword &&
+			newPassword !== "" &&
+			confirmPassword !== ""
+		);
 	};
 	// async function saveProfileInfo() {
 	// 	const userDocRef = doc(db, "Tenants", currentUser.userID);
@@ -93,6 +97,11 @@ const EditEmailInfo = ({ navigation }) => {
 	useEffect(() => {
 		setErrorText("");
 	}, [password]);
+
+	useEffect(() => {
+		if (checkPasswords() === true) return setButtonDisabled(false);
+		setButtonDisabled(true);
+	}, [newPassword, confirmPassword]);
 	return (
 		<SafeAreaView edges={["top"]}>
 			<View>
@@ -198,7 +207,7 @@ const EditEmailInfo = ({ navigation }) => {
 							style={[
 								theme.primaryButton,
 								{ margin: 0, shadowColor: "#fff" },
-								buttonDisabled ? styles.buttonDisabled : null,
+								buttonDisabled === true ? styles.buttonDisabled : null,
 							]}>
 							<Text
 								style={[
