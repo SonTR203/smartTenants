@@ -22,7 +22,11 @@ import { httpsCallable } from "firebase/functions";
 
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+	getAuth,
+	signInWithEmailAndPassword,
+	updatePassword,
+} from "firebase/auth";
 import { Alert, Linking } from "react-native";
 
 const auth = getAuth();
@@ -278,3 +282,13 @@ export const handleFirebaseAuthenticationError = (error) => {
 };
 
 export const changeEmail = httpsCallable(functions, "changeEmail");
+
+export const updateUserPassword = async (newPassword) => {
+	const user = auth.currentUser;
+	try {
+		updatePassword(user, newPassword);
+		return "success";
+	} catch (error) {
+		return error.message;
+	}
+};
