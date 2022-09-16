@@ -1,29 +1,24 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	View,
 	Text,
 	SafeAreaView,
-	KeyboardAvoidingView,
 	TextInput,
 	TouchableOpacity,
 	Modal,
 	Alert,
 	StyleSheet,
-	Dimensions,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { doc, updateDoc } from "@firebase/firestore";
-import { db } from "../../../../firebase-config";
-import {
-	reauthenticateWithCredential,
-	EmailAuthProvider,
-	getAuth,
-} from "firebase/auth";
 import { useTheme } from "../../../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../../../Context/AppContext";
-import { changeEmail } from "../../../../utils/firebase.services";
+import {
+	verifyPassword,
+	updateUserPassword,
+} from "../../../../utils/firebase.services";
+import ErrorArea from "../../../../components/SignUp/ErrorArea";
 
 const EditEmailInfo = ({ navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
@@ -34,6 +29,10 @@ const EditEmailInfo = ({ navigation }) => {
 
 	const [saveModal, setSaveModal] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+
+	const [errorText, setErrorText] = useState("");
+
+	const [buttonDisabled, setButtonDisabled] = useState(true);
 
 	const checkTextInputs = () => {
 		try {
@@ -47,42 +46,34 @@ const EditEmailInfo = ({ navigation }) => {
 			console.log("ERROR Edit profile: ", error);
 		}
 	};
-	const verifyPassword = async () => {
-		const auth = getAuth();
-		const creds = EmailAuthProvider.credential(
-			auth.currentUser.email,
-			password
-		);
-		try {
-			await reauthenticateWithCredential(auth.currentUser, creds).then(
-				(res) => {
-					saveProfileInfo();
-				}
-			);
-		} catch (error) {
-			console.log(error);
-		}
-	};
 
-	async function saveProfileInfo() {
-		const userDocRef = doc(db, "Tenants", currentUser.userID);
-		if (checkTextInputs()) {
-			try {
-				await updateDoc(userDocRef, {
-					email,
-				}).then(() => {
-					changeEmail({ email: currentUser.email, newEmail: email });
-				});
-				setCurrentUser({
-					...currentUser,
-					email,
-				});
-				setSaveModal(true);
-			} catch (error) {
-				console.log(error);
-			}
-		}
-	}
+	// Check if passwords matches
+	const checkPasswords = async () => {
+		return newPassword === confirmPassword;
+	};
+	// async function saveProfileInfo() {
+	// 	const userDocRef = doc(db, "Tenants", currentUser.userID);
+	// 	if (checkTextInputs()) {
+	// 		try {
+	// 			await updateDoc(userDocRef, {
+	// 				email,
+	// 			}).then(() => {
+	// 				changeEmail({ email: currentUser.email, newEmail: email });
+	// 			});
+	// 			setCurrentUser({
+	// 				...currentUser,
+	// 				email,
+	// 			});
+	// 			setSaveModal(true);
+	// 		} catch (error) {
+	// 			console.log(error);
+	// 		}
+	// 	}
+	// }
+
+	const updatePassword = () => {
+		updateUserPassword(newPassword);
+	};
 
 	const styles = StyleSheet.create({
 		profileLoading: {
@@ -93,8 +84,15 @@ const EditEmailInfo = ({ navigation }) => {
 			width: 85,
 			borderRadius: 18,
 		},
+		buttonDisabled: {
+			backgroundColor: "#748E94",
+		},
 	});
 
+	// Reset error message whenever the user starts typing the password again
+	useEffect(() => {
+		setErrorText("");
+	}, [password]);
 	return (
 		<SafeAreaView edges={["top"]}>
 			<View>
@@ -190,15 +188,18 @@ const EditEmailInfo = ({ navigation }) => {
 						</View>
 					</View>
 					{/* save button */}
-
 					<TouchableOpacity
 						id="save"
+						disabled={buttonDisabled}
 						onPress={() => {
-							// saveProfileInfo();
-							verifyPassword();
+							verifyPassword(password, updatePassword, setErrorText);
 						}}>
 						<View
-							style={[theme.primaryButton, { margin: 0, shadowColor: "#fff" }]}>
+							style={[
+								theme.primaryButton,
+								{ margin: 0, shadowColor: "#fff" },
+								buttonDisabled ? styles.buttonDisabled : null,
+							]}>
 							<Text
 								style={[
 									theme.primaryButtonText,
