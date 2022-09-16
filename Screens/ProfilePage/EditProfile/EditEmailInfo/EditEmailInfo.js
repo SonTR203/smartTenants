@@ -10,6 +10,7 @@ import {
 	Modal,
 	Alert,
 	StyleSheet,
+	Dimensions,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { doc, updateDoc } from "@firebase/firestore";
@@ -171,7 +172,7 @@ const EditEmailInfo = ({ navigation }) => {
 					{/* save button */}
 					<KeyboardAvoidingView
 						behavior="position"
-						keyboardVerticalOffset={100}>
+						keyboardVerticalOffset={Dimensions.get("window").height * 0.13}>
 						<TouchableOpacity
 							id="save"
 							onPress={() => {
