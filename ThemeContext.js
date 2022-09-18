@@ -330,7 +330,6 @@ const theme = StyleSheet.create({
     borderTopLeftRadius: 26,
     borderTopRightRadius: 26,
     width: windowWidth,
-    // marginTop: -10,
   },
 });
 

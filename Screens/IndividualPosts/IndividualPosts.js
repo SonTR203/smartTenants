@@ -4,8 +4,6 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Dimensions,
-  Text,
-  ScrollView,
 } from "react-native";
 
 import { StatusBar } from "expo-status-bar";
@@ -31,12 +29,10 @@ const IndividualPosts = ({ navigation, route }) => {
 
   const [userCommentName, setUserCommentName] = useState("");
   const [userCommentId, setUserCommentId] = useState("");
+
   const [textInputHeight, setTextInputHeight] = useState(0);
 
   const commentListRef = useRef();
-
-  const [dynamicMarginBottom, setDynamicMarginBottom] = useState();
-  const [height, setHeight] = useState();
 
   // Get all Comments
   const getComments = () => {
@@ -112,14 +108,6 @@ const IndividualPosts = ({ navigation, route }) => {
     [comments]
   );
 
-  // const dynamicVerticalOffset = () => {
-  //   console.log(`HELLO ${height}`);
-  // };
-
-  // useEffect(() => {
-  //   dynamicVerticalOffset();
-  // }, [height]);
-
   const renderPostItem = ({ item }) => (
     <Comment
       item={item}
@@ -153,8 +141,6 @@ const IndividualPosts = ({ navigation, route }) => {
         setUserCommentName={setUserCommentName}
         userCommentId={userCommentId}
         setUserCommentId={setUserCommentId}
-        /* Passing the state to the child component. */
-        setHeight={setHeight}
       />
     );
   };
@@ -179,8 +165,6 @@ const IndividualPosts = ({ navigation, route }) => {
         behavior={Platform.OS === "ios" ? "position" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
         style={styles.textInputWrapper}
-
-        // style={{ zIndex: 1 }}
       >
         <FlatList
           scrollEnabled={false}
@@ -208,8 +192,6 @@ const styles = StyleSheet.create({
     height: contentViewHeight,
   },
   textInputWrapper: {
-    // topHeight: height,
-    // bottomHeight: 0,
     flexGrow: 1,
     marginTop: "auto",
   },

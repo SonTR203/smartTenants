@@ -18,9 +18,6 @@ import uuid from "react-native-uuid";
 import { useTheme } from "../../ThemeContext";
 import { connectStorageEmulator } from "firebase/storage";
 
-let newHeight = -10;
-let newContainerHeight = 34;
-
 function ListFooter({
   getComments,
   commentCount,
@@ -144,33 +141,16 @@ function ListFooter({
     });
   };
 
-  // const dynamicHeight = (prop) => {
-  //   // setInputTextLength(prop.length);
-  //   dynamicVerticalOffset();
-  //   if (prop.length <= 33) {
-  //     newHeight = -10;
-  //     newContainerHeight = 34;
-  //     console.log;
-  //   } else if (prop.length >= 34) {
-  //     newHeight = 100;
-  //     dynamicMarginBottom = 1000;
-  //     newContainerHeight = 400;
-  //   } else if (prop.length == 103) {
-  //     postListHeight = 170;
-  //   }
-  // };
-
   const styles = StyleSheet.create({
     container: { paddingTop: 0 },
     inputAreaContainer: {
       marginTop: 16,
-      marginBottom: newContainerHeight,
+      marginBottom: 34,
       marginBottom: 0,
       height: height + 53,
     },
     inputArea: {
-      width: Dimensions.get("window").width - 100,
-      height: newHeight,
+      maxWidth: Dimensions.get("window").width - 100,
       alignSelf: "flex-start",
     },
     replyView: {
@@ -222,7 +202,6 @@ function ListFooter({
               setTextInputValue(text);
             }}
             onContentSizeChange={(event) => {
-              console.log(event.nativeEvent.contentSize.height);
               setHeight(event.nativeEvent.contentSize.height);
             }}
             value={textInputValue}
