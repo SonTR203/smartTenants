@@ -150,7 +150,7 @@ function ListFooter({
       height: height + 53,
     },
     inputArea: {
-      maxWidth: Dimensions.get("window").width - 100,
+      width: Dimensions.get("window").width - 100,
       alignSelf: "flex-start",
     },
     replyView: {

@@ -303,9 +303,10 @@ const theme = StyleSheet.create({
   postButton: {
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "flex-end",
     marginRight: 0,
     marginLeft: 16,
-    marginBottom: 17,
+    marginBottom: 26,
     width: 32,
     height: 32,
     backgroundColor: styleVariables.colors.primary,
