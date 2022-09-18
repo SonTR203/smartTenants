@@ -145,32 +145,38 @@ function ListFooter({
     container: { paddingTop: 0 },
     inputAreaContainer: {
       marginTop: 16,
-      marginBottom: 34,
-      marginBottom: 0,
-      height: height + 53,
+      height: height + 50,
+      maxHeight: 160,
+      justifyContent: "flex-end",
     },
     inputArea: {
       width: Dimensions.get("window").width - 100,
-      alignSelf: "flex-start",
     },
     replyView: {
       position: "absolute",
       display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
+      flexDirection: "row",
+      alignItems: "flex-start",
       justifyContent: "space-between",
-      marginVertical: 20,
-      marginHorizontal: 160,
+      maxHeight: 30,
+      marginHorizontal: 30,
+      marginBottom: 100,
+      zIndex: 1,
+    },
+    cancelButton: {
+      fontSize: 25,
+      textAlign: "center",
+      marginTop: -7,
+      marginLeft: -10,
     },
     replyName: { color: styleVariables.colors.primary },
     cancelReply: {
       color: styleVariables.colors.primary,
-      padding: 10,
     },
   });
 
   return (
-    <View style={[theme.globalMargins, styles.container, height]}>
+    <View style={[theme.globalMargins, styles.container]}>
       {userCommentName != "" && (
         <View style={styles.replyView}>
           <Text style={styleVariables.fontSizes.callout}>
@@ -189,7 +195,7 @@ function ListFooter({
               setUserCommentId("");
             }}
           >
-            <Text style={[styleVariables.fontSizes.header]}>x</Text>
+            <Text style={styles.cancelButton}>x</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -212,7 +218,6 @@ function ListFooter({
               theme.textInput,
               styleVariables.fontSizes.body,
               styles.inputArea,
-              height,
             ]}
           />
         </View>

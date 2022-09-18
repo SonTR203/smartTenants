@@ -127,7 +127,6 @@ const IndividualPosts = ({ navigation, route }) => {
   };
 
   const renderListFooter = () => {
-    console.log("render");
     return (
       <ListFooter
         currentUser={currentUser}
@@ -181,15 +180,13 @@ const IndividualPosts = ({ navigation, route }) => {
   );
 };
 
-const contentViewWidth = Dimensions.get("window").width;
-const contentViewHeight = Dimensions.get("window").height - 210;
 // Make this a constant for dynamic change in height.
 // Make dynamic sizing for flatList when keyboard pops up
 
 const styles = StyleSheet.create({
   itemWrapper: {
-    width: contentViewWidth,
-    height: contentViewHeight,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height - 210,
   },
   textInputWrapper: {
     flexGrow: 1,
