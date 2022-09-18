@@ -29,13 +29,11 @@ function ListFooter({
   setUserCommentName,
   setUserCommentId,
   userCommentId,
-  dynamicMarginBottom,
-  dynamicVerticalOffset,
 }) {
   const [textInputValue, setTextInputValue] = useState("");
-  const [marginBottomValue, setMarginBottomValue] = useState();
   const { setPost, post, currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
+  const [height, setHeight] = useState(0);
 
   // Post Comments
   const postComment = async () => {
@@ -146,28 +144,29 @@ function ListFooter({
     });
   };
 
-  const dynamicHeight = (prop) => {
-    // setInputTextLength(prop.length);
-    dynamicVerticalOffset();
-    if (prop.length <= 33) {
-      newHeight = -10;
-      newContainerHeight = 34;
-      console.log;
-    } else if (prop.length >= 34) {
-      newHeight = 100;
-      dynamicMarginBottom = 1000;
-      newContainerHeight = 400;
-    } else if (prop.length == 103) {
-      postListHeight = 170;
-    }
-  };
+  // const dynamicHeight = (prop) => {
+  //   // setInputTextLength(prop.length);
+  //   dynamicVerticalOffset();
+  //   if (prop.length <= 33) {
+  //     newHeight = -10;
+  //     newContainerHeight = 34;
+  //     console.log;
+  //   } else if (prop.length >= 34) {
+  //     newHeight = 100;
+  //     dynamicMarginBottom = 1000;
+  //     newContainerHeight = 400;
+  //   } else if (prop.length == 103) {
+  //     postListHeight = 170;
+  //   }
+  // };
 
   const styles = StyleSheet.create({
-    container: { paddingTop: 34 },
+    container: { paddingTop: 0 },
     inputAreaContainer: {
       marginTop: 16,
       marginBottom: newContainerHeight,
       marginBottom: 0,
+      height: height + 53,
     },
     inputArea: {
       width: Dimensions.get("window").width - 100,
@@ -191,7 +190,7 @@ function ListFooter({
   });
 
   return (
-    <View style={[theme.globalMargins, styles.container]}>
+    <View style={[theme.globalMargins, styles.container, height]}>
       {userCommentName != "" && (
         <View style={styles.replyView}>
           <Text style={styleVariables.fontSizes.callout}>
@@ -216,22 +215,25 @@ function ListFooter({
       )}
 
       <View style={theme.replyContainer}>
-        <View style={[styles.inputAreaContainer, { alignItems: "flex-end" }]}>
+        <View style={[styles.inputAreaContainer]}>
           <TextInput
             placeholderTextColor={styleVariables.colors.placeholderText}
             onChangeText={(text) => {
-              dynamicHeight(text);
               setTextInputValue(text);
+            }}
+            onContentSizeChange={(event) => {
+              console.log(event.nativeEvent.contentSize.height);
+              setHeight(event.nativeEvent.contentSize.height);
             }}
             value={textInputValue}
             placeholder="Post a comment"
             maxLength={280}
-            multiline={true}
-            numberOfLines={6}
+            multiline
             style={[
               theme.textInput,
               styleVariables.fontSizes.body,
               styles.inputArea,
+              height,
             ]}
           />
         </View>

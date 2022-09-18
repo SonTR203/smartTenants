@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import { createContext, useContext } from "react";
 import { Dimensions } from "react-native";
-import { black } from "react-native-paper/lib/typescript/styles/colors";
 
 const ThemeContext = createContext();
 const windowHeight = Dimensions.get("window").height;
@@ -98,7 +97,6 @@ const theme = StyleSheet.create({
     color: styleVariables.colors.black,
   },
   pageContainer: {
-    display: "flex",
     backgroundColor: styleVariables.colors.white,
   },
   fullHeight: {
@@ -112,7 +110,7 @@ const theme = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: styleVariables.colors.primary,
     paddingHorizontal: 16,
-    marginBottom: -24, // -4 if android -24 if ios
+    marginBottom: -24,
     paddingTop: 52,
   },
   card: {
@@ -219,12 +217,11 @@ const theme = StyleSheet.create({
     color: "#4D4D4D",
     width: "100%",
     borderColor: styleVariables.colors.primary14,
-    borderWidth: 1,
+    borderWidth: 2,
     backgroundColor: styleVariables.colors.white,
     borderRadius: 18,
-    paddingHorizontal: 10,
-    minHeight: 40,
-    maxHeight: 100,
+    padding: 18,
+    marginBottom: 17,
     zIndex: 1,
   },
   primaryButton: {
@@ -281,6 +278,28 @@ const theme = StyleSheet.create({
 
     ...styleVariables.shadow,
   },
+  counter: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  notificationCounter: {
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    backgroundColor: styleVariables.colors.primary,
+    borderRadius: 20,
+    marginRight: 14,
+  },
+  stackHeader: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: styleVariables.colors.white,
+    padding: 17,
+  },
+
   postButton: {
     justifyContent: "center",
     alignItems: "center",
@@ -302,6 +321,7 @@ const theme = StyleSheet.create({
   },
   replyContainer: {
     display: "flex",
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "center",
@@ -310,32 +330,7 @@ const theme = StyleSheet.create({
     borderTopLeftRadius: 26,
     borderTopRightRadius: 26,
     width: windowWidth,
-    marginTop: -10,
-  },
-  listFooterStyle: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  counter: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-  },
-  notificationCounter: {
-    paddingVertical: 2,
-    paddingHorizontal: 8,
-    backgroundColor: styleVariables.colors.primary,
-    borderRadius: 20,
-    marginRight: 14,
-  },
-  stackHeader: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: styleVariables.colors.white,
-    padding: 17,
+    // marginTop: -10,
   },
 });
 

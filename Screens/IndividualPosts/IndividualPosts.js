@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   Text,
+  ScrollView,
 } from "react-native";
 
 import { StatusBar } from "expo-status-bar";
@@ -19,6 +20,7 @@ import { constants } from "../../utils/constants";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
 import { tapGestureHandlerProps } from "react-native-gesture-handler/lib/typescript/handlers/TapGestureHandler";
+import { ScreenStackHeaderRightView } from "react-native-screens";
 
 const IndividualPosts = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -29,10 +31,12 @@ const IndividualPosts = ({ navigation, route }) => {
 
   const [userCommentName, setUserCommentName] = useState("");
   const [userCommentId, setUserCommentId] = useState("");
+  const [textInputHeight, setTextInputHeight] = useState(0);
 
   const commentListRef = useRef();
 
   const [dynamicMarginBottom, setDynamicMarginBottom] = useState();
+  const [height, setHeight] = useState();
 
   // Get all Comments
   const getComments = () => {
@@ -108,9 +112,13 @@ const IndividualPosts = ({ navigation, route }) => {
     [comments]
   );
 
-  const dynamicVerticalOffset = () => {
-    console.log(dynamicMarginBottom);
-  };
+  // const dynamicVerticalOffset = () => {
+  //   console.log(`HELLO ${height}`);
+  // };
+
+  // useEffect(() => {
+  //   dynamicVerticalOffset();
+  // }, [height]);
 
   const renderPostItem = ({ item }) => (
     <Comment
@@ -146,22 +154,17 @@ const IndividualPosts = ({ navigation, route }) => {
         userCommentId={userCommentId}
         setUserCommentId={setUserCommentId}
         /* Passing the state to the child component. */
-        dynamicVerticalOffset={dynamicVerticalOffset}
-        setDynamicMarginBottom={setDynamicMarginBottom}
+        setHeight={setHeight}
       />
     );
   };
 
   let NUM = 100;
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
-    >
+    <View>
       <View>
         <FlatList
-          style={styles.itemWrapper}
+          style={[styles.itemWrapper, styles.container]}
           getItemLayout={getItemLayout}
           ref={commentListRef}
           removeClippedSubviews={true}
@@ -174,34 +177,47 @@ const IndividualPosts = ({ navigation, route }) => {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "position" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        style={styles.textInputWrapper}
+
+        // style={{ zIndex: 1 }}
       >
         <FlatList
-          style={{ marginBottom: dynamicMarginBottom }}
           scrollEnabled={false}
           ListFooterComponent={renderListFooter}
+          style={[styles.textInputWrapper]}
+          onLayout={(event) => {
+            if (textInputHeight === 0) {
+              setTextInputHeight(event.nativeEvent.layout.height);
+            }
+          }}
         ></FlatList>
       </KeyboardAvoidingView>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
-let postListHeight = 210;
-const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height - postListHeight;
+const contentViewWidth = Dimensions.get("window").width;
+const contentViewHeight = Dimensions.get("window").height - 210;
 // Make this a constant for dynamic change in height.
 // Make dynamic sizing for flatList when keyboard pops up
 
 const styles = StyleSheet.create({
   itemWrapper: {
-    width,
-    height,
+    width: contentViewWidth,
+    height: contentViewHeight,
+  },
+  textInputWrapper: {
+    // topHeight: height,
+    // bottomHeight: 0,
+    flexGrow: 1,
+    marginTop: "auto",
   },
   container: {
-    flex: 1,
+    // flex: 1,
   },
   commentWrapper: {
-    // marginTop: -25,
+    marginTop: -25,
   },
 });
 
