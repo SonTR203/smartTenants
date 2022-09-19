@@ -20,6 +20,7 @@ const MyPosts = () => {
 	const { currentUser } = useAppContext();
 	const { theme, styleVariables } = useTheme();
 	const [userPosts, setUserPosts] = useState([]);
+	const [postsType, setPostsType] = useState("Newsfeed");
 	const [refreshing, setRefreshing] = useState(false);
 
 	useEffect(() => {
@@ -53,17 +54,18 @@ const MyPosts = () => {
 		postsOptions: {
 			position: "absolute",
 			width: "100%",
-			top: -12,
+			top: -10,
 			paddingHorizontal: 17,
 		},
 		slider: {
 			height: 4,
-			marginTop: 8,
+			marginTop: 7,
 			backgroundColor: "#395E66",
 			borderTopRightRadius: 2,
 			borderTopLeftRadius: 2,
 		},
 		postOptionButton: {
+			paddingHorizontal: 7,
 			flex: 1,
 		},
 		postOptionButtonText: {
@@ -76,25 +78,49 @@ const MyPosts = () => {
 			style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
 			<StatusBar style="auto" />
 			<View style={[theme.stackHeader, styles.postsOptions]}>
-				<TouchableOpacity style={[styles.postOptionButton]}>
+				<TouchableOpacity
+					style={[styles.postOptionButton]}
+					onPress={() => setPostsType("Newsfeed")}>
 					<Text
 						style={[
 							styleVariables.fontSizes.title,
 							styles.postOptionButtonText,
+							{
+								fontFamily:
+									postsType === "Newsfeed"
+										? "Roboto_500Medium"
+										: "Roboto_400Regular",
+							},
 						]}>
 						Newsfeed
 					</Text>
-					<View style={[styles.slider]}></View>
+					<View
+						style={[
+							styles.slider,
+							{ opacity: postsType === "Newsfeed" ? 1 : 0 },
+						]}></View>
 				</TouchableOpacity>
-				<TouchableOpacity style={[styles.postOptionButton]}>
+				<TouchableOpacity
+					style={[styles.postOptionButton]}
+					onPress={() => setPostsType("Marketplace")}>
 					<Text
 						style={[
 							styleVariables.fontSizes.title,
 							styles.postOptionButtonText,
+							{
+								fontFamily:
+									postsType === "Marketplace"
+										? "Roboto_500Medium"
+										: "Roboto_400Regular",
+							},
 						]}>
 						Marketplace
 					</Text>
-					<View style={[styles.slider]}></View>
+					<View
+						style={[
+							styles.slider,
+							{ opacity: postsType === "Marketplace" ? 1 : 0 },
+						]}></View>
 				</TouchableOpacity>
 			</View>
 			{userPosts.length > 0 && (
