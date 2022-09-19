@@ -69,6 +69,7 @@ const EditActions = ({ navigation }) => {
 			<TouchableOpacity
 				id="editInfo"
 				onPress={() => {
+					alert("Notifications edit not yet implemented");
 					// navigation.navigate("EditProfile");
 				}}
 				style={[theme.cardButton, styles.actionButton]}>
