@@ -1,17 +1,5 @@
 import * as React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Animated,
-  Platform,
-} from "react-native";
-import Modal from "react-native-modal";
+import { Text, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({});
 

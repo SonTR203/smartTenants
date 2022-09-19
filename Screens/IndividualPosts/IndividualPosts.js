@@ -4,11 +4,9 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Dimensions,
-  SafeAreaView,
   Platform,
 } from "react-native";
 
-import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAppContext } from "../../Context/AppContext";
 import { db } from "../../firebase-config";
@@ -19,8 +17,6 @@ import Comment from "./Comment";
 import { constants } from "../../utils/constants";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
-import { tapGestureHandlerProps } from "react-native-gesture-handler/lib/typescript/handlers/TapGestureHandler";
-import { ScreenStackHeaderRightView } from "react-native-screens";
 
 const IndividualPosts = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -145,8 +141,6 @@ const IndividualPosts = ({ navigation, route }) => {
       />
     );
   };
-
-  let NUM = 100;
 
   return (
     <View>
