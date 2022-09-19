@@ -6,7 +6,6 @@ import {
 	SafeAreaView,
 	TextInput,
 	TouchableOpacity,
-	Modal,
 	Alert,
 	StyleSheet,
 } from "react-native";
@@ -27,7 +26,6 @@ const EditEmailInfo = ({ navigation }) => {
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 
-	const [saveModal, setSaveModal] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [errorText, setErrorText] = useState("");
@@ -111,32 +109,6 @@ const EditEmailInfo = ({ navigation }) => {
 						},
 					]}>
 					<StatusBar style="dark" />
-					<Modal
-						animationType="slide"
-						transparent={true}
-						statusBarTranslucent={true}
-						visible={saveModal}
-						onRequestClose={() => {
-							setSaveModal(!saveModal);
-						}}
-						onShow={() => {
-							setTimeout(() => {
-								setSaveModal(!saveModal);
-							}, 4000);
-						}}>
-						<View style={theme.container}>
-							<View style={theme.modalView}>
-								<Text
-									style={{
-										fontSize: 17,
-										fontFamily: "Roboto_400Regular",
-										color: "#191919",
-									}}>
-									{"Changes Saved"}
-								</Text>
-							</View>
-						</View>
-					</Modal>
 					<View>
 						<View>
 							<ErrorArea errorText={errorText} />

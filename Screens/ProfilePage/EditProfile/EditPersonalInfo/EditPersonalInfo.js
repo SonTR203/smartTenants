@@ -7,7 +7,6 @@ import {
 	KeyboardAvoidingView,
 	TextInput,
 	TouchableOpacity,
-	Modal,
 	Alert,
 	ActivityIndicator,
 	StyleSheet,
@@ -37,7 +36,6 @@ const EditPersonalInfo = ({ navigation }) => {
 	const [userProfileImage, setUserProfileImage] = useState(
 		currentUser.userProfileImage
 	);
-	const [saveModal, setSaveModal] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const checkTextInputs = () => {
@@ -66,7 +64,7 @@ const EditPersonalInfo = ({ navigation }) => {
 					firstName,
 					lastName,
 				});
-				setSaveModal(true);
+				navigation.navigate("EditProfile", { saveModal: true });
 			} catch (error) {
 				console.log(error);
 			}
@@ -162,33 +160,6 @@ const EditPersonalInfo = ({ navigation }) => {
 						},
 					]}>
 					<StatusBar style="dark" />
-					<Modal
-						animationType="slide"
-						transparent={false}
-						statusBarTranslucent={true}
-						visible={saveModal}
-						onRequestClose={() => {
-							setSaveModal(!saveModal);
-						}}
-						onShow={() => {
-							setTimeout(() => {
-								setSaveModal(!saveModal);
-								navigation.navigate("ProfileGeneral");
-							}, 2000);
-						}}>
-						<View style={theme.container}>
-							<View style={theme.modalView}>
-								<Text
-									style={{
-										fontSize: 17,
-										fontFamily: "Roboto_400Regular",
-										color: "#191919",
-									}}>
-									{"Changes Saved"}
-								</Text>
-							</View>
-						</View>
-					</Modal>
 					<View>
 						{/* userHeader */}
 						<View

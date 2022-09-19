@@ -7,7 +7,6 @@ import {
 	KeyboardAvoidingView,
 	TextInput,
 	TouchableOpacity,
-	Modal,
 	Alert,
 	StyleSheet,
 	Dimensions,
@@ -30,7 +29,6 @@ const EditEmailInfo = ({ navigation }) => {
 	const [email, setEmail] = useState(currentUser.email);
 	const [password, setPassword] = useState("");
 
-	const [saveModal, setSaveModal] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [errorText, setErrorText] = useState("");
 
@@ -60,7 +58,7 @@ const EditEmailInfo = ({ navigation }) => {
 					...currentUser,
 					email,
 				});
-				setSaveModal(true);
+				navigation.navigate("EditProfile", { saveModal: true });
 			} catch (error) {
 				console.log(error);
 			}
@@ -99,33 +97,6 @@ const EditEmailInfo = ({ navigation }) => {
 						},
 					]}>
 					<StatusBar style="dark" />
-					<Modal
-						animationType="slide"
-						transparent={false}
-						statusBarTranslucent={true}
-						visible={saveModal}
-						onRequestClose={() => {
-							setSaveModal(!saveModal);
-						}}
-						onShow={() => {
-							setTimeout(() => {
-								setSaveModal(!saveModal);
-								navigation.navigate("ProfileGeneral");
-							}, 2000);
-						}}>
-						<View style={theme.container}>
-							<View style={theme.modalView}>
-								<Text
-									style={{
-										fontSize: 17,
-										fontFamily: "Roboto_400Regular",
-										color: "#191919",
-									}}>
-									{"Changes Saved"}
-								</Text>
-							</View>
-						</View>
-					</Modal>
 					<View>
 						<ErrorArea errorText={errorText} />
 						<View id="emailInput" style={{ marginTop: 7 }}>
