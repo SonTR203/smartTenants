@@ -21,6 +21,7 @@ import {
 	changeEmail,
 	verifyPassword,
 } from "../../../../utils/firebase.services";
+import LoadingIndicator from "../../../../components/LoadingIndicator";
 import ErrorArea from "../../../../components/SignUp/ErrorArea";
 
 const EditEmailInfo = ({ navigation }) => {
@@ -49,10 +50,12 @@ const EditEmailInfo = ({ navigation }) => {
 		const userDocRef = doc(db, "Tenants", currentUser.userID);
 		if (checkTextInputs()) {
 			try {
+				setIsLoading(true);
 				await updateDoc(userDocRef, {
 					email,
-				}).then(() => {
-					changeEmail({ email: currentUser.email, newEmail: email });
+				}).then(async () => {
+					await changeEmail({ email: currentUser.email, newEmail: email });
+					setIsLoading(false);
 				});
 				setCurrentUser({
 					...currentUser,
@@ -82,6 +85,7 @@ const EditEmailInfo = ({ navigation }) => {
 	}, [password]);
 	return (
 		<SafeAreaView edges={["top"]}>
+			<LoadingIndicator visible={isLoading} />
 			<View>
 				<ScrollView
 					keyboardShouldPersistTaps="handled"
