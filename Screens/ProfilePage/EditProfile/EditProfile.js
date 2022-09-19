@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTheme } from "../../../ThemeContext";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../../Context/AppContext";
 import DynamicProfilePicture from "../../../components/ProfilePicture/DynamicProfilePicture";
@@ -19,11 +18,6 @@ import EditActions from "./EditActions";
 const EditProfile = ({ route, navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
 	const { theme, styleVariables } = useTheme();
-	const [isLoading, setIsLoading] = useState(false);
-
-	const changeModalVisibility = (bool) => {
-		setModalVisible(bool);
-	};
 
 	const styles = (styleVariables) =>
 		StyleSheet.create({
