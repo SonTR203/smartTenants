@@ -52,7 +52,7 @@ const BuildingInfo = () => {
 		// Get collections data
 		getDocs(colRef).then((snapshot) => {
 			snapshot.docs.forEach((doc) => {
-				if (doc.id == currentUser.buildingID) {
+				if (doc.data().buildingName == currentUser.buildingName) {
 					setBuildingLocation(doc.data().buildingAddress.slice(-19, -1));
 					return setBuilding({ ...doc.data(), id: doc.id });
 				}
