@@ -61,7 +61,7 @@ const MyPosts = ({ navigation }) => {
 		postsOptions: {
 			position: "absolute",
 			width: "100%",
-			top: -10,
+			top: -12,
 			paddingHorizontal: 17,
 		},
 		slider: {
