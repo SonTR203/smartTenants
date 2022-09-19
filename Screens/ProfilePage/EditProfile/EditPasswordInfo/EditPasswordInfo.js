@@ -17,6 +17,7 @@ import {
 	verifyPassword,
 	updateUserPassword,
 } from "../../../../utils/firebase.services";
+import LoadingIndicator from "../../../../components/LoadingIndicator";
 import ErrorArea from "../../../../components/SignUp/ErrorArea";
 
 const EditEmailInfo = ({ navigation }) => {
@@ -55,10 +56,12 @@ const EditEmailInfo = ({ navigation }) => {
 	};
 
 	const handleSaveSuccess = () => {
+		setIsLoading(false);
 		navigation.navigate("EditProfile", { saveModal: true });
 	};
 
 	const updatePassword = async () => {
+		setIsLoading(true);
 		const message = await updateUserPassword(newPassword);
 		switch (message) {
 			case "Firebase: Password should be at least 6 characters (auth/weak-password).":
@@ -94,6 +97,7 @@ const EditEmailInfo = ({ navigation }) => {
 	}, [newPassword, confirmPassword]);
 	return (
 		<SafeAreaView edges={["top"]}>
+			<LoadingIndicator visible={isLoading} />
 			<View>
 				<ScrollView
 					keyboardShouldPersistTaps="handled"
