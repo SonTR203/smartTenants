@@ -26,6 +26,7 @@ import {
 	getFileInfo,
 } from "../../../../utils/Profile/profile.services";
 import DynamicProfilePicture from "../../../../components/ProfilePicture/DynamicProfilePicture";
+import LoadingIndicator from "../../../../components/LoadingIndicator";
 import { uploadImageToStorage } from "../../../../utils/firebase.services";
 
 const EditPersonalInfo = ({ navigation }) => {
@@ -55,6 +56,7 @@ const EditPersonalInfo = ({ navigation }) => {
 		const userDocRef = doc(db, "Tenants", currentUser.userID);
 		if (checkTextInputs()) {
 			try {
+				setIsLoading(true);
 				await updateDoc(userDocRef, {
 					firstName,
 					lastName,
@@ -64,6 +66,7 @@ const EditPersonalInfo = ({ navigation }) => {
 					firstName,
 					lastName,
 				});
+				setIsLoading(false);
 				navigation.navigate("EditProfile", { saveModal: true });
 			} catch (error) {
 				console.log(error);
@@ -146,6 +149,7 @@ const EditPersonalInfo = ({ navigation }) => {
 
 	return (
 		<SafeAreaView edges={["top"]}>
+			<LoadingIndicator visible={isLoading} />
 			<View>
 				<ScrollView
 					contentContainerStyle={{
