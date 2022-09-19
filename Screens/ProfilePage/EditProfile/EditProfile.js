@@ -113,7 +113,7 @@ const EditProfile = ({ route, navigation }) => {
 								navigation.setParams({
 									saveModal: false,
 								});
-							}, 2123456000);
+							}, 2000);
 						}}>
 						<View style={theme.container}>
 							<View style={theme.modalView}>
