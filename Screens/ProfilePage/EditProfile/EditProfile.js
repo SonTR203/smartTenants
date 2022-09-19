@@ -107,17 +107,19 @@ const EditProfile = ({ route, navigation }) => {
 					<Modal
 						animationType="slide"
 						transparent={true}
-						statusBarTranslucent={true}
+						// statusBarTranslucent={true}
 						visible={route.params?.saveModal === true ? true : false}
 						onRequestClose={() => {
-							setSaveModal(!saveModal);
+							navigation.setParams({
+								saveModal: false,
+							});
 						}}
-						onShow={(e) => {
+						onShow={() => {
 							setTimeout(() => {
 								navigation.setParams({
 									saveModal: false,
 								});
-							}, 2000);
+							}, 2123456000);
 						}}>
 						<View style={theme.container}>
 							<View style={theme.modalView}>
