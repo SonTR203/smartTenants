@@ -11,25 +11,29 @@ import { useAppContext } from "../../../Context/AppContext";
 import { useTheme } from "../../../ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { getMyPosts } from "../../../utils/Profile/profile.services";
+import {
+	getMyPosts,
+	getMyMarketplacePosts,
+} from "../../../utils/Profile/profile.services";
 import Post from "../../Newsfeed/Post";
+import MarketplaceFirstItem from "../../Marketplace/MarketplaceItem/MarketplaceFirstItem";
 import { constants } from "../../../utils/constants";
 import { wait } from "../../../utils/wait";
 
-const MyPosts = () => {
+const MyPosts = ({ navigation }) => {
 	const { currentUser } = useAppContext();
 	const { theme, styleVariables } = useTheme();
-	const [userPosts, setUserPosts] = useState([]);
+	const [userNewsfeedPosts, setUserNewsfeedPosts] = useState([]);
+	const [userMarketplacePosts, setUserMarketplacePosts] = useState([]);
+	const [displayedPosts, setDisplayedPosts] = useState([]);
 	const [postsType, setPostsType] = useState("Newsfeed");
 	const [refreshing, setRefreshing] = useState(false);
 
-	useEffect(() => {
-		fetchMyPosts();
-	}, []);
-
 	async function fetchMyPosts() {
-		const list = await getMyPosts(currentUser);
-		setUserPosts(list);
+		const newsfeedList = await getMyPosts(currentUser);
+		const marketplaceList = await getMyMarketplacePosts(currentUser);
+		setUserNewsfeedPosts(newsfeedList);
+		setUserMarketplacePosts(marketplaceList);
 		setRefreshing(false);
 	}
 
@@ -43,12 +47,15 @@ const MyPosts = () => {
 
 	const callBackRender = useCallback(
 		({ item, index }) => renderPostItem({ item, index }),
-		[[userPosts]]
+		[[displayedPosts]]
 	);
 
-	const renderPostItem = ({ item }) => (
-		<Post passedPost={item} windowWidth={constants.width} />
-	);
+	const renderPostItem = ({ item }) => {
+		if (postsType === "Newsfeed")
+			return <Post passedPost={item} windowWidth={constants.width} />;
+		if (postsType === "Marketplace")
+			return <MarketplaceFirstItem item={item} navigation={navigation} />;
+	};
 
 	const styles = StyleSheet.create({
 		postsOptions: {
@@ -73,6 +80,15 @@ const MyPosts = () => {
 			textAlign: "center",
 		},
 	});
+
+	useEffect(() => {
+		fetchMyPosts();
+	}, []);
+	useEffect(() => {
+		setDisplayedPosts(userNewsfeedPosts);
+		if (postsType === "Marketplace")
+			return setDisplayedPosts(userMarketplacePosts);
+	}, [postsType, userNewsfeedPosts, userMarketplacePosts]);
 	return (
 		<SafeAreaView
 			style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
@@ -123,9 +139,9 @@ const MyPosts = () => {
 						]}></View>
 				</TouchableOpacity>
 			</View>
-			{userPosts.length > 0 && (
+			{displayedPosts.length > 0 && (
 				<FlatList
-					data={userPosts}
+					data={displayedPosts}
 					renderItem={callBackRender}
 					keyExtractor={(item) => item.id}
 					refreshControl={
