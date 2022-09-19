@@ -392,6 +392,24 @@ const ProfileNavigator = ({ navigation }) => {
 				})}
 			/>
 			<Stack.Screen
+				name="MarketplaceItemInfo"
+				component={MarketplaceItemInfoScreen}
+				options={({ route }) => ({
+					header: (props) => (
+						<CustomSubStackScreenHeader
+							{...props}
+							title={route.params.title + "'s Post"}
+							currentUserId={currentUser.userID}
+							itemUserId={route.params.itemUserId}
+							item={route.params.item}
+							previousScreen={"MarketplaceScreen"}
+							collection={"Marketplace"}
+							openModal={route.params.openModal}
+						/>
+					),
+				})}
+			/>
+			<Stack.Screen
 				name="BuildingInfo"
 				component={BuildingInfo}
 				options={{
