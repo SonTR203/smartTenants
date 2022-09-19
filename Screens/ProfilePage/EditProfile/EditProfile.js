@@ -108,7 +108,7 @@ const EditProfile = ({ route, navigation }) => {
 						animationType="slide"
 						transparent={true}
 						statusBarTranslucent={true}
-						visible={route.params?.saveModal}
+						visible={route.params?.saveModal === true ? true : false}
 						onRequestClose={() => {
 							setSaveModal(!saveModal);
 						}}
