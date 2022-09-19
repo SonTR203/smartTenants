@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     // flex: 1,
   },
   commentWrapper: {
-    marginTop: -25,
+    // marginTop: -25,
   },
 });
 

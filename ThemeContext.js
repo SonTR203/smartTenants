@@ -325,8 +325,7 @@ const theme = StyleSheet.create({
   },
   replyContainer: {
     display: "flex",
-    flex: 1,
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     alignSelf: "center",
     justifyContent: "center",
@@ -334,6 +333,7 @@ const theme = StyleSheet.create({
     borderTopLeftRadius: 26,
     borderTopRightRadius: 26,
     paddingBottom: 16,
+    minHeight: 90,
     width: windowWidth,
   },
 });

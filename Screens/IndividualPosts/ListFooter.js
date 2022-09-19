@@ -142,32 +142,31 @@ function ListFooter({
   };
 
   const styles = StyleSheet.create({
-    container: { paddingTop: 0 },
+    container: {},
     inputAreaContainer: {
-      marginTop: 16,
-      height: height + 50,
+      marginTop: 8,
       maxHeight: 160,
+      display: "flex",
+      flexDirection: "row",
       justifyContent: "flex-end",
     },
     inputArea: {
       width: Dimensions.get("window").width - 100,
     },
     replyView: {
-      position: "absolute",
       display: "flex",
       flexDirection: "row",
-      alignItems: "flex-start",
       justifyContent: "space-between",
-      maxHeight: 30,
-      marginHorizontal: 30,
-      marginBottom: 100,
-      zIndex: 1,
+      alignItems: "center",
+      marginTop: 19,
+      paddingHorizontal: 32,
+      width: "100%",
     },
     cancelButton: {
       fontSize: 25,
       textAlign: "center",
       marginTop: -7,
-      marginLeft: -10,
+      color: "#9D9D9D",
     },
     replyName: { color: styleVariables.colors.primary },
     cancelReply: {
@@ -176,7 +175,7 @@ function ListFooter({
   });
 
   return (
-    <View style={[theme.globalMargins, styles.container]}>
+    <View style={theme.replyContainer}>
       {userCommentName != "" && (
         <View style={styles.replyView}>
           <Text style={styleVariables.fontSizes.callout}>
@@ -199,29 +198,25 @@ function ListFooter({
           </TouchableOpacity>
         </View>
       )}
-
-      <View style={theme.replyContainer}>
-        <View style={[styles.inputAreaContainer]}>
-          <TextInput
-            placeholderTextColor={styleVariables.colors.placeholderText}
-            onChangeText={(text) => {
-              setTextInputValue(text);
-            }}
-            onContentSizeChange={(event) => {
-              setHeight(event.nativeEvent.contentSize.height);
-            }}
-            value={textInputValue}
-            placeholder="Post a comment"
-            maxLength={280}
-            multiline
-            style={[
-              theme.textInput,
-              styleVariables.fontSizes.body,
-              styles.inputArea,
-            ]}
-          />
-        </View>
-
+      <View style={[styles.inputAreaContainer]}>
+        <TextInput
+          placeholderTextColor={styleVariables.colors.placeholderText}
+          onChangeText={(text) => {
+            setTextInputValue(text);
+          }}
+          onContentSizeChange={(event) => {
+            setHeight(event.nativeEvent.contentSize.height);
+          }}
+          value={textInputValue}
+          placeholder="Post a comment"
+          maxLength={280}
+          multiline
+          style={[
+            theme.textInput,
+            styleVariables.fontSizes.body,
+            styles.inputArea,
+          ]}
+        />
         {/* disable button class if no text input for comments */}
         <TouchableOpacity onPress={postComment} style={theme.postButton}>
           <ArrowUpSVG></ArrowUpSVG>
