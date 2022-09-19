@@ -30,7 +30,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "softwareKeyboardLayoutMode": "adjustPan",
+      "softwareKeyboardLayoutMode": "resize",
       "package": "com.smarttenants.smartTenant",
       "permissions": [
         "android.permission.CAMERA",
