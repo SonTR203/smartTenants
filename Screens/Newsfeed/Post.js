@@ -21,9 +21,9 @@ function Post({ passedPost, windowWidth }) {
 
 	useEffect(() => {
 		if (currentPost) {
-			if (currentPost.peopleWhoLiked.length > 0) {
+			if (currentPost.peopleWhoLiked?.length > 0) {
 				setHeartsToGreen(currentPost.peopleWhoLiked);
-				setNumberOfLikes(currentPost.peopleWhoLiked.length);
+				setNumberOfLikes(currentPost.peopleWhoLiked?.length);
 			}
 
 			const time = setTime(currentPost.timestamp.seconds * 1000);
