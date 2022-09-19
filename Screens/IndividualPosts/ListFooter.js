@@ -16,7 +16,6 @@ import { updateDoc, doc, setDoc } from "@firebase/firestore";
 import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
 import { useTheme } from "../../ThemeContext";
-import { connectStorageEmulator } from "firebase/storage";
 
 function ListFooter({
   getComments,
@@ -30,7 +29,6 @@ function ListFooter({
   const [textInputValue, setTextInputValue] = useState("");
   const { setPost, post, currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
-  const [height, setHeight] = useState(0);
 
   // Post Comments
   const postComment = async () => {
@@ -203,9 +201,6 @@ function ListFooter({
           placeholderTextColor={styleVariables.colors.placeholderText}
           onChangeText={(text) => {
             setTextInputValue(text);
-          }}
-          onContentSizeChange={(event) => {
-            setHeight(event.nativeEvent.contentSize.height);
           }}
           value={textInputValue}
           placeholder="Post a comment"
