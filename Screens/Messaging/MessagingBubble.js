@@ -2,9 +2,9 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
 import { updateItemInFirestore } from "../../utils/firebase.services";
-import { setTime } from "../../utils/setTime";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../ThemeContext";
+import { constants } from "../../utils/constants";
 
 function MessagingBubble({ item, index, length, sendingText, channelId }) {
   const { theme, styleVariables } = useTheme();
@@ -29,13 +29,27 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
     }
   };
 
+  function configureItemTime(time) {
+    let timestamp = time * 1000;
+    let date = new Date(timestamp).toTimeString().split(":");
+    if (date[0] > 12) {
+      return `${date[0] - 12}:${date[1]}pm`;
+    } else {
+      return `${date[0]}:${date[1]}am`;
+    }
+  }
+
   const styles = StyleSheet.create({
     itemContainer: (isSender) => ({
-      flex: 1,
+      // maxWidth: constants.width * 0.8,
+      display: "flex",
+      flexDirection: "row",
+      // alignItems: "flex-start",
+      // flex: 1,
       backgroundColor: "white",
-      margin: 10,
-      marginLeft: isSender ? 50 : 10,
-      marginRight: isSender ? 10 : 50,
+      marginVertical: 10,
+      marginLeft: isSender ? "auto" : 10,
+      marginRight: isSender ? 10 : "auto",
       padding: 10,
       shadowColor: "#4d4d4d",
       shadowOffset: {
@@ -50,11 +64,12 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
       flex: 1,
       flexDirection: "row",
       justifyContent: "space-between",
-      alignItems: "flex-end",
+      alignItems: "flex-start",
     },
     itemContent: {
+      maxWidth: constants.width * 0.7,
       fontSize: 15,
-      maxWidth: "75%",
+      marginRight: 8,
     },
     itemTimestamp: {
       fontSize: 11,
@@ -63,10 +78,6 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
       justifyContent: "flex-end",
       alignItems: "flex-end",
       marginRight: 10,
-    },
-    sendingText: {
-      fontSize: 13,
-      opacity: 0.5,
     },
     sender: {
       backgroundColor: styleVariables.colors.primary,
@@ -98,27 +109,27 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
           isSender ? styles.sender : styles.receiver,
         ]}
       >
-        <View style={styles.itemContentContainer}>
-          <Text
-            onLayout={() => {
-              handleSetSeen(item, index);
-            }}
-            style={[
-              styles.itemContent,
-              isSender ? styles.senderText : styles.receiverText,
-            ]}
-          >
-            {item.content}
-          </Text>
-          <Text
-            style={[
-              styles.itemTimestamp,
-              isSender ? styles.senderText : styles.receiverText,
-            ]}
-          >
-            {setTime(item.created.seconds * 1000)}
-          </Text>
-        </View>
+        {/* <View style={styles.itemContentContainer}> */}
+        <Text
+          onLayout={() => {
+            handleSetSeen(item, index);
+          }}
+          style={[
+            styles.itemContent,
+            isSender ? styles.senderText : styles.receiverText,
+          ]}
+        >
+          {item.content}
+        </Text>
+        <Text
+          style={[
+            styles.itemTimestamp,
+            isSender ? styles.senderText : styles.receiverText,
+          ]}
+        >
+          {configureItemTime(item.created.seconds)}
+        </Text>
+        {/* </View> */}
       </View>
       <View style={styles.itemStatusContainer}>
         {index === length && isSender ? (
