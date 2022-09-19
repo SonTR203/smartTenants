@@ -55,28 +55,20 @@ const EditEmailInfo = ({ navigation }) => {
 			confirmPassword !== ""
 		);
 	};
-	// async function saveProfileInfo() {
-	// 	const userDocRef = doc(db, "Tenants", currentUser.userID);
-	// 	if (checkTextInputs()) {
-	// 		try {
-	// 			await updateDoc(userDocRef, {
-	// 				email,
-	// 			}).then(() => {
-	// 				changeEmail({ email: currentUser.email, newEmail: email });
-	// 			});
-	// 			setCurrentUser({
-	// 				...currentUser,
-	// 				email,
-	// 			});
-	// 			setSaveModal(true);
-	// 		} catch (error) {
-	// 			console.log(error);
-	// 		}
-	// 	}
-	// }
 
-	const updatePassword = () => {
-		updateUserPassword(newPassword);
+	const handleSaveSuccess = () => {
+		navigation.navigate("EditProfile", { saveModal: true });
+	};
+
+	const updatePassword = async () => {
+		const message = await updateUserPassword(newPassword);
+		switch (message) {
+			case "Firebase: Password should be at least 6 characters (auth/weak-password).":
+				setErrorText("Password must be at least 6 characters");
+				break;
+			default:
+				handleSaveSuccess();
+		}
 	};
 
 	const styles = StyleSheet.create({
@@ -121,7 +113,7 @@ const EditEmailInfo = ({ navigation }) => {
 					<StatusBar style="dark" />
 					<Modal
 						animationType="slide"
-						transparent={false}
+						transparent={true}
 						statusBarTranslucent={true}
 						visible={saveModal}
 						onRequestClose={() => {
@@ -130,8 +122,7 @@ const EditEmailInfo = ({ navigation }) => {
 						onShow={() => {
 							setTimeout(() => {
 								setSaveModal(!saveModal);
-								navigation.navigate("ProfileGeneral");
-							}, 2000);
+							}, 4000);
 						}}>
 						<View style={theme.container}>
 							<View style={theme.modalView}>
@@ -148,6 +139,7 @@ const EditEmailInfo = ({ navigation }) => {
 					</Modal>
 					<View>
 						<View>
+							<ErrorArea errorText={errorText} />
 							<View id="passwordCurrentInput">
 								<Text
 									style={[theme.textInputLabel, styleVariables.fontSizes.body]}>

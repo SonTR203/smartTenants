@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	View,
 	Text,
@@ -16,10 +16,9 @@ import { useAppContext } from "../../../Context/AppContext";
 import DynamicProfilePicture from "../../../components/ProfilePicture/DynamicProfilePicture";
 import EditActions from "./EditActions";
 
-const EditProfile = ({ navigation }) => {
+const EditProfile = ({ route, navigation }) => {
 	const { currentUser, setCurrentUser } = useAppContext();
 	const { theme, styleVariables } = useTheme();
-	const [saveModal, setSaveModal] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const changeModalVisibility = (bool) => {
@@ -99,7 +98,6 @@ const EditProfile = ({ navigation }) => {
 				borderRadius: 18,
 			},
 		});
-
 	return (
 		<SafeAreaView edges={["top"]}>
 			<KeyboardAvoidingView behavior="padding">
@@ -108,16 +106,17 @@ const EditProfile = ({ navigation }) => {
 					<StatusBar style="dark" />
 					<Modal
 						animationType="slide"
-						transparent={false}
+						transparent={true}
 						statusBarTranslucent={true}
-						visible={saveModal}
+						visible={route.params?.saveModal}
 						onRequestClose={() => {
 							setSaveModal(!saveModal);
 						}}
-						onShow={() => {
+						onShow={(e) => {
 							setTimeout(() => {
-								setSaveModal(!saveModal);
-								navigation.navigate("ProfileGeneral");
+								navigation.setParams({
+									saveModal: false,
+								});
 							}, 2000);
 						}}>
 						<View style={theme.container}>
