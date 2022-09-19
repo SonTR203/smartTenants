@@ -16,7 +16,8 @@ import { useTheme } from "../../ThemeContext";
 import _ from "lodash";
 
 function MessagesListScreen({ navigation }) {
-  const [messagesList, setMessagesList] = useState([]);
+  const [buyingList, setBuyingList] = useState([]);
+  const [sellingList, setSellingList] = useState([]);
   const [messageListFilter, setMessageListFilter] = useState("Buying");
   const { currentUser, marketplaceBadges } = useAppContext();
   const { theme, styleVariables } = useTheme();
@@ -28,7 +29,16 @@ function MessagesListScreen({ navigation }) {
         marketplaceBadges.list,
         "timestamp"
       ).reverse();
-      setMessagesList(sortedListOfNotifications);
+      const buyerList = sortedListOfNotifications.filter(
+        (item) => currentUser.userID == item.buyerId
+      );
+      const sellerList = sortedListOfNotifications.filter(
+        (item) => currentUser.userID == item.sellerId
+      );
+      console.log("Buyers:", buyerList);
+      console.log("Sellers:", sellerList);
+      setSellingList(sellerList);
+      setBuyingList(buyerList);
     }
   }, [marketplaceBadges.list]);
 
@@ -250,7 +260,8 @@ function MessagesListScreen({ navigation }) {
           }}
           style={styles.flatlist}
           keyExtractor={(item) => item.id}
-          data={messagesList}
+          // data={messagesList}
+          data={messageListFilter == "Buying" ? buyingList : sellingList}
           renderItem={renderItem}
         />
       </View>
