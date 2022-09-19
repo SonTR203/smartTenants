@@ -52,9 +52,17 @@ const MyPosts = ({ navigation }) => {
 
 	const renderPostItem = ({ item }) => {
 		if (postsType === "Newsfeed")
-			return <Post passedPost={item} windowWidth={constants.width} />;
+			return (
+				<Post passedPost={item} windowWidth={constants.width} isMyPost={true} />
+			);
 		if (postsType === "Marketplace")
-			return <MarketplaceFirstItem item={item} navigation={navigation} />;
+			return (
+				<MarketplaceFirstItem
+					item={item}
+					navigation={navigation}
+					isMyPost={true}
+				/>
+			);
 	};
 
 	const styles = StyleSheet.create({
