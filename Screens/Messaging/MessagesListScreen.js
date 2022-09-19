@@ -35,8 +35,8 @@ function MessagesListScreen({ navigation }) {
       const sellerList = sortedListOfNotifications.filter(
         (item) => currentUser.userID == item.sellerId
       );
-      console.log("Buyers:", buyerList);
-      console.log("Sellers:", sellerList);
+      // console.log("Buyers:", buyerList);
+      // console.log("Sellers:", sellerList);
       setSellingList(sellerList);
       setBuyingList(buyerList);
     }
@@ -62,6 +62,16 @@ function MessagesListScreen({ navigation }) {
       price: price,
     });
   };
+
+  function configureItemTime(time) {
+    let timestamp = time * 1000;
+    let date = new Date(timestamp).toTimeString().split(":");
+    if (date[0] > 12) {
+      return `${date[0] - 12}:${date[1]}pm`;
+    } else {
+      return `${date[0]}:${date[1]}am`;
+    }
+  }
 
   const renderItem = ({ item }) => {
     const otherPersonName =
@@ -106,29 +116,33 @@ function MessagesListScreen({ navigation }) {
           <Image style={styles.itemImage} source={{ uri: item.messageImage }} />
 
           <View style={styles.itemTextContainer}>
-            <Text style={styles.itemTitle}>{item.title}</Text>
+            <View style={styles.flexApart}>
+              <Text style={styles.itemTitle}>{item.title}</Text>
+              <Text style={styles.itemTimestamp}>
+                {configureItemTime(item.lastMessage.timestamp.seconds)}
+              </Text>
+            </View>
             <Text style={styles.itemPersonName}>{otherPersonName}</Text>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.itemContent}
-            >
-              {isNew ? "New Inquiry" : lastMessage}
-            </Text>
-            {item.lastMessage ? (
-              <View style={styles.itemTimestamp}>
-                <Text>
-                  {/* {setTime(item.lastMessage.timestamp.seconds * 1000)} */}
-                </Text>
-                {item.lastMessage.seen ? (
-                  <MaterialCommunityIcons
-                    name={"check-all"}
-                    size={25}
-                    color={"green"}
-                  />
-                ) : null}
-              </View>
-            ) : null}
+            <View style={styles.flexApart}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.itemContent}
+              >
+                {isNew ? "New Inquiry" : lastMessage}
+              </Text>
+              {item.lastMessage ? (
+                <View>
+                  {item.lastMessage.seen ? (
+                    <MaterialCommunityIcons
+                      name={"check-all"}
+                      size={16}
+                      color={styleVariables.colors.primary}
+                    />
+                  ) : null}
+                </View>
+              ) : null}
+            </View>
           </View>
         </TouchableOpacity>
       </View>
@@ -145,7 +159,7 @@ function MessagesListScreen({ navigation }) {
     },
     itemContainer: {
       flex: 1,
-      padding: 10,
+      padding: 8,
       backgroundColor: "white",
       flexDirection: "row-reverse",
       marginHorizontal: 16,
@@ -169,25 +183,24 @@ function MessagesListScreen({ navigation }) {
       marginLeft: 20,
     },
     itemTitle: {
-      fontSize: 20,
-      marginBottom: 5,
+      fontSize: 15,
+      marginBottom: 2,
+      color: styleVariables.colors.black,
     },
     itemPersonName: {
-      fontSize: 17,
-      marginBottom: 5,
-      opacity: 0.8,
+      fontSize: 13,
+      marginBottom: 4,
+      color: styleVariables.colors.black,
     },
     itemContent: {
-      fontSize: 15,
+      fontSize: 13,
       opacity: 0.5,
-      width: "95%",
+      // width: "95%",
     },
     itemTimestamp: {
-      flex: 1,
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
+      fontSize: 11,
       opacity: 0.5,
+      color: styleVariables.colors.black,
     },
     primaryClr: {
       color: styleVariables.colors.primary,
@@ -213,6 +226,11 @@ function MessagesListScreen({ navigation }) {
     },
     hidden: {
       backgroundColor: "white",
+    },
+    flexApart: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
     },
   });
 
@@ -260,7 +278,6 @@ function MessagesListScreen({ navigation }) {
           }}
           style={styles.flatlist}
           keyExtractor={(item) => item.id}
-          // data={messagesList}
           data={messageListFilter == "Buying" ? buyingList : sellingList}
           renderItem={renderItem}
         />
