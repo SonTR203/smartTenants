@@ -7,11 +7,11 @@ function CommentReply({ item, theme, styleVariables, styles }) {
   const [timeSincePost, setTimeSincePost] = useState("");
 
   useEffect(() => {
-    async function setTime() {
+    async function convertTime() {
       let time = setTime(item.timestamp.seconds * 1000);
       setTimeSincePost(time);
     }
-    setTime();
+    convertTime();
   }, []);
 
   return (

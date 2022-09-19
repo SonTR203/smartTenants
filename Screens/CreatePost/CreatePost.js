@@ -99,7 +99,7 @@ const CreatePost = ({ navigation }) => {
 
     if (permissionResult !== false) {
       let result = await ImagePicker.launchImageLibraryAsync({
-        presentationStyle: 0,
+        // presentationStyle: 0,
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
