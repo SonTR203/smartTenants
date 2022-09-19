@@ -4,6 +4,8 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Dimensions,
+  SafeAreaView,
+  Platform,
 } from "react-native";
 
 import { StatusBar } from "expo-status-bar";
@@ -145,11 +147,13 @@ const IndividualPosts = ({ navigation, route }) => {
   };
 
   let NUM = 100;
+
   return (
     <View>
       <View>
         <FlatList
-          style={[styles.itemWrapper, styles.container]}
+          scrollEnabled={true}
+          style={[styles.itemWrapper]}
           getItemLayout={getItemLayout}
           ref={commentListRef}
           removeClippedSubviews={true}
@@ -161,9 +165,9 @@ const IndividualPosts = ({ navigation, route }) => {
       </View>
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "position" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
-        style={styles.textInputWrapper}
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        keyboardVerticalOffset={Dimensions.get("window").height * 0.12}
+        style={[styles.textInputWrapper]}
       >
         <FlatList
           scrollEnabled={false}
@@ -184,19 +188,18 @@ const IndividualPosts = ({ navigation, route }) => {
 // Make dynamic sizing for flatList when keyboard pops up
 
 const styles = StyleSheet.create({
+  // Styling for the posts/comments
   itemWrapper: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 210,
+    height:
+      Dimensions.get("window").height - Dimensions.get("window").height * 0.12,
   },
+  // styling for the text input
   textInputWrapper: {
-    flexGrow: 1,
     marginTop: "auto",
   },
   container: {
-    // flex: 1,
-  },
-  commentWrapper: {
-    // marginTop: -25,
+    justifyContent: "flex-end",
   },
 });
 

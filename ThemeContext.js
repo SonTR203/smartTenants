@@ -328,7 +328,7 @@ const theme = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     alignSelf: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     backgroundColor: "white",
     borderTopLeftRadius: 26,
     borderTopRightRadius: 26,
