@@ -288,7 +288,7 @@ export const changeEmail = httpsCallable(functions, "changeEmail");
 export const updateUserPassword = async (newPassword) => {
 	const user = auth.currentUser;
 	try {
-		updatePassword(user, newPassword);
+		await updatePassword(user, newPassword);
 		return "success";
 	} catch (error) {
 		return error.message;
