@@ -1,5 +1,12 @@
-import { View, FlatList } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import {
+  View,
+  FlatList,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Dimensions,
+  Platform,
+} from "react-native";
+
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAppContext } from "../../Context/AppContext";
 import { db } from "../../firebase-config";
@@ -20,6 +27,8 @@ const IndividualPosts = ({ navigation, route }) => {
 
   const [userCommentName, setUserCommentName] = useState("");
   const [userCommentId, setUserCommentId] = useState("");
+
+  const [textInputHeight, setTextInputHeight] = useState(0);
 
   const commentListRef = useRef();
 
@@ -134,10 +143,11 @@ const IndividualPosts = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <StatusBar style="auto" />
-      <View style={theme.pageContainer}>
+    <View>
+      <View>
         <FlatList
+          scrollEnabled={true}
+          style={[styles.itemWrapper]}
           getItemLayout={getItemLayout}
           ref={commentListRef}
           removeClippedSubviews={true}
@@ -145,11 +155,46 @@ const IndividualPosts = ({ navigation, route }) => {
           data={comments}
           keyExtractor={(item) => item.id}
           renderItem={callBackRenderItem}
-          ListFooterComponent={renderListFooter}
-        />
+        ></FlatList>
       </View>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        keyboardVerticalOffset={Dimensions.get("window").height * 0.12}
+        style={[styles.textInputWrapper, styleVariables.shadow]}
+      >
+        <FlatList
+          scrollEnabled={false}
+          ListFooterComponent={renderListFooter}
+          style={[styles.textInputWrapper]}
+          onLayout={(event) => {
+            if (textInputHeight === 0) {
+              setTextInputHeight(event.nativeEvent.layout.height);
+            }
+          }}
+        ></FlatList>
+      </KeyboardAvoidingView>
     </View>
   );
 };
+
+// Make this a constant for dynamic change in height.
+// Make dynamic sizing for flatList when keyboard pops up
+
+const styles = StyleSheet.create({
+  // Styling for the posts/comments
+  itemWrapper: {
+    width: Dimensions.get("window").width,
+    height:
+      Dimensions.get("window").height - Dimensions.get("window").height * 0.12,
+  },
+  // styling for the text input
+  textInputWrapper: {
+    marginTop: "auto",
+  },
+  container: {
+    justifyContent: "flex-end",
+  },
+});
 
 export default IndividualPosts;
