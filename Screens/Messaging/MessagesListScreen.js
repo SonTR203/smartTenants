@@ -86,9 +86,6 @@ function MessagesListScreen({ navigation }) {
     }
     return (
       <View style={[styles.itemContainer]}>
-        {marketplaceBadges.unseen.includes(item.id) ? (
-          <MaterialCommunityIcons name="new-box" size={30} color={"red"} />
-        ) : null}
         <TouchableOpacity
           onPress={() => {
             handleNavigateToPrivateMessagingScreen(
@@ -121,7 +118,11 @@ function MessagesListScreen({ navigation }) {
               >
                 {isNew ? "New Inquiry" : lastMessage}
               </Text>
-              {item.lastMessage ? (
+              {marketplaceBadges.unseen.includes(item.id) ? (
+                <View style={styles.newMessageIcon}>
+                  <Text style={styles.newMessageText}>New</Text>
+                </View>
+              ) : item.lastMessage ? (
                 <View>
                   {item.lastMessage.seen ? (
                     <MaterialCommunityIcons
@@ -221,6 +222,15 @@ function MessagesListScreen({ navigation }) {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
+    },
+    newMessageIcon: {
+      backgroundColor: styleVariables.colors.primary,
+      borderRadius: 50,
+      padding: 5,
+    },
+    newMessageText: {
+      fontSize: 11,
+      color: styleVariables.colors.white,
     },
   });
 
