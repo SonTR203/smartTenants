@@ -5,6 +5,7 @@ import {
 	RefreshControl,
 	TouchableOpacity,
 	StyleSheet,
+	Dimensions,
 } from "react-native";
 import { React, useEffect, useState, useCallback } from "react";
 import { useAppContext } from "../../../Context/AppContext";
@@ -57,11 +58,7 @@ const MyPosts = ({ navigation }) => {
 			);
 		if (postsType === "Marketplace")
 			return (
-				<MarketplaceFirstItem
-					item={item}
-					navigation={navigation}
-					isMyPost={true}
-				/>
+				<MarketplaceFirstItem item={item} navigation={navigation} isMyPost={true} />
 			);
 	};
 
@@ -71,6 +68,8 @@ const MyPosts = ({ navigation }) => {
 			width: "100%",
 			top: -12,
 			paddingHorizontal: 17,
+			paddingBottom: 0,
+			zIndex: 11111,
 		},
 		slider: {
 			height: 4,
@@ -99,7 +98,10 @@ const MyPosts = ({ navigation }) => {
 	}, [postsType, userNewsfeedPosts, userMarketplacePosts]);
 	return (
 		<SafeAreaView
-			style={{ flex: 1, backgroundColor: styleVariables.colors.white }}>
+			style={{
+				flex: 1,
+				backgroundColor: styleVariables.colors.white,
+			}}>
 			<StatusBar style="auto" />
 			<View style={[theme.stackHeader, styles.postsOptions]}>
 				<TouchableOpacity
@@ -111,9 +113,7 @@ const MyPosts = ({ navigation }) => {
 							styles.postOptionButtonText,
 							{
 								fontFamily:
-									postsType === "Newsfeed"
-										? "Roboto_500Medium"
-										: "Roboto_400Regular",
+									postsType === "Newsfeed" ? "Roboto_500Medium" : "Roboto_400Regular",
 							},
 						]}>
 						Newsfeed
@@ -133,9 +133,7 @@ const MyPosts = ({ navigation }) => {
 							styles.postOptionButtonText,
 							{
 								fontFamily:
-									postsType === "Marketplace"
-										? "Roboto_500Medium"
-										: "Roboto_400Regular",
+									postsType === "Marketplace" ? "Roboto_500Medium" : "Roboto_400Regular",
 							},
 						]}>
 						Marketplace
@@ -149,6 +147,11 @@ const MyPosts = ({ navigation }) => {
 			</View>
 			{displayedPosts.length > 0 && (
 				<FlatList
+					style={{
+						height:
+							Dimensions.get("window").height - Dimensions.get("window").height * 0.12,
+						marginBottom: -Dimensions.get("window").height * 0.12,
+					}}
 					data={displayedPosts}
 					renderItem={callBackRender}
 					keyExtractor={(item) => item.id}
