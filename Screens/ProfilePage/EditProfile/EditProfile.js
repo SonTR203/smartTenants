@@ -25,12 +25,6 @@ const EditProfile = ({ route, navigation }) => {
 				flex: 1,
 				backgroundColor: styleVariables.colors.primary,
 			},
-			scrollContainer: {
-				marginTop: 44,
-				backgroundColor: styleVariables.colors.white,
-				borderTopLeftRadius: 27,
-				borderTopRightRadius: 27,
-			},
 			colorPrimary: {
 				color: styleVariables.colors.primary,
 			},
@@ -59,38 +53,6 @@ const EditProfile = ({ route, navigation }) => {
 				backgroundColor: "white",
 			},
 			fullNameText: { paddingTop: 17, paddingBottom: 8 },
-			adminButton: {
-				flexDirection: "row",
-				justifyContent: "center",
-				alignItems: "center",
-			},
-			materialIcon: { marginLeft: 8 },
-			rewardsButton: {
-				flexDirection: "row",
-				justifyContent: "center",
-				alignItems: "center",
-			},
-			calloutText: {
-				color: styleVariables.colors.black,
-				opacity: 0.66,
-			},
-			footer: {
-				paddingVertical: 17,
-				paddingBottom: 68,
-				paddingHorizontal: 34,
-				display: "flex",
-				alignItems: "center",
-				justifyContent: "center",
-				flexDirection: "row",
-			},
-			profileLoading: {
-				display: "flex",
-				alignItems: "center",
-				justifyContent: "center",
-				height: 85,
-				width: 85,
-				borderRadius: 18,
-			},
 		});
 	return (
 		<SafeAreaView edges={["top"]}>
