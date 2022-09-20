@@ -188,8 +188,8 @@ const EditPersonalInfo = ({ navigation }) => {
 										lastName: currentUser.lastName,
 										colors: currentUser.colors,
 									}}
-									size={85}
-									borderRadius={18}
+									size={88}
+									borderRadius={16}
 								/>
 							)}
 							<View style={{ paddingLeft: 17 }}>

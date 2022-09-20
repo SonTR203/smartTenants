@@ -102,8 +102,8 @@ const EditProfile = ({ route, navigation }) => {
 										lastName: currentUser.lastName,
 										colors: currentUser.colors,
 									}}
-									size={85}
-									borderRadius={8}
+									size={88}
+									borderRadius={16}
 								/>
 							</View>
 							{/* userFullName */}
