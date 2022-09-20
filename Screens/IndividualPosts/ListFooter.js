@@ -11,6 +11,7 @@ import {
   Dimensions,
 } from "react-native";
 import ArrowUpSVG from "../../components/Icons/ArrowUpSVG.js";
+import X from "../../components/Icons/X.js";
 import { db } from "../../firebase-config";
 import { updateDoc, doc, setDoc } from "@firebase/firestore";
 import { Timestamp } from "@firebase/firestore";
@@ -200,7 +201,8 @@ function ListFooter({
               setUserCommentId("");
             }}
           >
-            <Text style={styles.cancelButton}>x</Text>
+            <X></X>
+            {/* <Text style={styles.cancelButton}>x</Text> */}
           </TouchableOpacity>
         </View>
       )}
