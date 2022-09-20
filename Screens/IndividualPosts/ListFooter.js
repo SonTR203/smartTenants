@@ -173,7 +173,13 @@ function ListFooter({
   });
 
   return (
-    <View style={theme.replyContainer}>
+    <View
+      style={[
+        theme.replyContainer,
+
+        { shadowColor: styleVariables.colors.primary },
+      ]}
+    >
       {userCommentName != "" && (
         <View style={styles.replyView}>
           <Text style={styleVariables.fontSizes.callout}>
@@ -207,7 +213,7 @@ function ListFooter({
           maxLength={280}
           multiline
           style={[
-            theme.textInput,
+            theme.individualPostsTextInput,
             styleVariables.fontSizes.body,
             styles.inputArea,
           ]}
