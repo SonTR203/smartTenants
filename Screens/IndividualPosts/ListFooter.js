@@ -30,6 +30,9 @@ function ListFooter({
   const { setPost, post, currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
 
+  const dynamicWidth =
+    Dimensions.get("window").width - Dimensions.get("window").width * 0.18;
+
   // Post Comments
   const postComment = async () => {
     if (textInputValue != "") {
@@ -154,17 +157,16 @@ function ListFooter({
       justifyContent: "flex-end",
     },
     inputArea: {
-      width:
-        Dimensions.get("window").width - Dimensions.get("window").width * 0.18,
+      width: dynamicWidth,
     },
     replyView: {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      marginTop: 19,
-      paddingHorizontal: 32,
-      width: "100%",
+      marginTop: 16,
+      width:
+        Dimensions.get("window").width - Dimensions.get("window").width * 0.09,
     },
     cancelButton: {
       fontSize: 25,
