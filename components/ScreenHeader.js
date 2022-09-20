@@ -18,7 +18,7 @@ function ScreenHeader({ title, navigation }) {
 			fontSize: 15,
 			fontFamily: "Roboto_400Regular",
 			color: "#cdd7d9",
-			marginRight: 13,
+			marginRight: 8,
 		},
 		userBuildingButton: {
 			marginTop: 8,
@@ -66,9 +66,7 @@ function ScreenHeader({ title, navigation }) {
 						<TouchableOpacity
 							onPress={handleNavigateBuildings}
 							style={[styles.userBuildingButton]}>
-							<Text style={[styles.userBuilding]}>
-								{currentUser?.buildingAddress}
-							</Text>
+							<Text style={[styles.userBuilding]}>{currentUser?.buildingAddress}</Text>
 							<MaterialCommunityIcons
 								name="chevron-right"
 								size={16}
