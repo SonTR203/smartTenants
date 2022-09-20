@@ -92,11 +92,10 @@ const styles = StyleSheet.create({
 	colorPrimary: { color: "#395E66" },
 	materialIcon: { marginLeft: 8 },
 	materialIconRight: { marginRight: 10 },
-	actionButton: { marginVertical: 8 },
+	actionButton: { marginLeft: 0, marginRight: 0 },
 	iconHolderView: {
 		flexDirection: "row",
 		alignItems: "center",
-		paddingVertical: 10,
 	},
 });
 

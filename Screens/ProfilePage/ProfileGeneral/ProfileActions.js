@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
 	iconHolderView: {
 		flexDirection: "row",
 		alignItems: "center",
-		paddingVertical: 6,
 	},
 });
 
