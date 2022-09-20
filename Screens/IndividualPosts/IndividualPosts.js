@@ -161,7 +161,7 @@ const IndividualPosts = ({ navigation, route }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={Dimensions.get("window").height * 0.12}
-        style={[styles.textInputWrapper]}
+        style={[styles.textInputWrapper, styleVariables.shadow]}
       >
         <FlatList
           scrollEnabled={false}

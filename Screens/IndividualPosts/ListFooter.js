@@ -179,13 +179,7 @@ function ListFooter({
   });
 
   return (
-    <View
-      style={[
-        theme.replyContainer,
-
-        { shadowColor: styleVariables.colors.primary },
-      ]}
-    >
+    <View style={[theme.replyContainer]}>
       {userCommentName != "" && (
         <View style={styles.replyView}>
           <Text style={styleVariables.fontSizes.callout}>
