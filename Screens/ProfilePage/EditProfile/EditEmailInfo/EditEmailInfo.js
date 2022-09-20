@@ -28,6 +28,7 @@ const EditEmailInfo = ({ navigation }) => {
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [errorText, setErrorText] = useState("");
+	const [buttonDisabled, setButtonDisabled] = useState(true);
 
 	const checkTextInputs = () => {
 		try {
@@ -68,6 +69,11 @@ const EditEmailInfo = ({ navigation }) => {
 	useEffect(() => {
 		setErrorText("");
 	}, [password]);
+
+	useEffect(() => {
+		if (email !== currentUser.email) return setButtonDisabled(false);
+		setButtonDisabled(true);
+	}, [email]);
 	return (
 		<SafeAreaView edges={["top"]}>
 			<LoadingIndicator visible={isLoading} />
@@ -119,10 +125,16 @@ const EditEmailInfo = ({ navigation }) => {
 					{/* save button */}
 					<TouchableOpacity
 						id="save"
+						disabled={buttonDisabled}
 						onPress={() => {
 							verifyPassword(password, saveProfileInfo, setErrorText);
 						}}>
-						<View style={[theme.primaryButton, { margin: 0, shadowColor: "#fff" }]}>
+						<View
+							style={[
+								theme.primaryButton,
+								{ margin: 0, shadowColor: "#fff" },
+								buttonDisabled === true ? { backgroundColor: "#748E94" } : null,
+							]}>
 							<Text
 								style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}>
 								Save
