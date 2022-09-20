@@ -193,6 +193,16 @@ const NewsfeedNavigator = () => {
 
 	return (
 		<Stack.Navigator>
+			<Stack.Screen
+				name="Newsfeed"
+				component={Newsfeed}
+				options={{
+					title: "Newsfeed",
+					headerLeft: null,
+					headerShown: true,
+					header: () => <ScreenHeader title={"Newsfeed"} />,
+				}}
+			/>
 			{!loginStatus || splashscreenVisible ? (
 				<Stack.Screen
 					name="Splashscreen"
@@ -201,16 +211,6 @@ const NewsfeedNavigator = () => {
 				/>
 			) : currentUser && currentUser.tenantAuthorized ? (
 				<>
-					<Stack.Screen
-						name="Newsfeed"
-						component={Newsfeed}
-						options={{
-							title: "Newsfeed",
-							headerLeft: null,
-							headerShown: true,
-							header: () => <ScreenHeader title={"Newsfeed"} />,
-						}}
-					/>
 					<Stack.Screen
 						name="BuildingInfo"
 						component={BuildingInfo}
