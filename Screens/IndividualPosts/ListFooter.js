@@ -154,7 +154,8 @@ function ListFooter({
       justifyContent: "flex-end",
     },
     inputArea: {
-      width: Dimensions.get("window").width - 100,
+      width:
+        Dimensions.get("window").width - Dimensions.get("window").width * 0.18,
     },
     replyView: {
       display: "flex",
