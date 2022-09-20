@@ -63,6 +63,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
         hasPeople: [currentUser.userID, item.userID],
         price: item.price,
         isNew: true,
+        isSold: false,
       });
     }
 
