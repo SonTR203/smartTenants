@@ -53,6 +53,9 @@ const ProfileGeneral = ({ navigation }) => {
 							style={[
 								styleVariables.fontSizes.header,
 								styles(styleVariables).fullNameText,
+								{
+									color: styleVariables.colors.black,
+								},
 							]}>
 							{`${currentUser.firstName} ${currentUser.lastName}`}
 						</Text>
