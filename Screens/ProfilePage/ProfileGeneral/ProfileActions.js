@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { getAuth } from "firebase/auth";
 import * as WebBrowser from "expo-web-browser";
 import { useTheme } from "../../../ThemeContext";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { removeExpoPushToken } from "../../../utils/firebase.services";
 import { useAppContext } from "../../../Context/AppContext";
 import ResidentPortalSVG from "../../../components/Icons/ResidentPortalSVG";
