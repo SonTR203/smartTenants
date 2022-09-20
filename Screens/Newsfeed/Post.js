@@ -133,7 +133,7 @@ function Post({ passedPost, windowWidth, isMyPost }) {
 				style={{
 					display: "flex",
 					flexDirection: "row",
-					alignItems: isMyPost === true ? "flex-end" : "center",
+					alignItems: isMyPost === true ? "flex-start" : "center",
 					justifyContent: "space-between",
 					width: "100%",
 					marginBottom: 12,
@@ -214,7 +214,7 @@ function Post({ passedPost, windowWidth, isMyPost }) {
 			<View
 				className="likeAndComment"
 				style={{
-					display: "flex",
+					display: isMyPost === true ? "none" : "flex",
 					alignItems: "center",
 					flexDirection: "row",
 					marginBottom: 5,
