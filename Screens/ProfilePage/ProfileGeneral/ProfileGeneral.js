@@ -93,13 +93,13 @@ const ProfileGeneral = ({ navigation }) => {
 										alert("navigate to rewards (not yet implemented)");
 									}}
 									style={styles(styleVariables).rewardsButton}>
-									<CoinStackSVG style={{ marginRight: 14 }} />
+									<CoinStackSVG />
 									<Text
 										style={[
 											styleVariables.fontSizes.bodyBold,
 											styles(styleVariables).colorPrimary,
 										]}>
-										0
+										500
 									</Text>
 									<MaterialCommunityIcons
 										name="chevron-right"
