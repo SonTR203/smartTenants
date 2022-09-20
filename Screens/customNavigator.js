@@ -68,10 +68,7 @@ const MarketplaceNavigator = ({ navigation }) => {
 				component={MarketplaceProfile}
 				options={{
 					header: (props) => (
-						<CustomSubStackScreenHeader
-							{...props}
-							title={"Marketplace profile"}
-						/>
+						<CustomSubStackScreenHeader {...props} title={"Marketplace profile"} />
 					),
 				}}
 			/>
@@ -193,16 +190,6 @@ const NewsfeedNavigator = () => {
 
 	return (
 		<Stack.Navigator>
-			<Stack.Screen
-				name="Newsfeed"
-				component={Newsfeed}
-				options={{
-					title: "Newsfeed",
-					headerLeft: null,
-					headerShown: true,
-					header: () => <ScreenHeader title={"Newsfeed"} />,
-				}}
-			/>
 			{!loginStatus || splashscreenVisible ? (
 				<Stack.Screen
 					name="Splashscreen"
@@ -212,14 +199,21 @@ const NewsfeedNavigator = () => {
 			) : currentUser && currentUser.tenantAuthorized ? (
 				<>
 					<Stack.Screen
+						name="Newsfeed"
+						component={Newsfeed}
+						options={{
+							title: "Newsfeed",
+							headerLeft: null,
+							headerShown: true,
+							header: () => <ScreenHeader title={"Newsfeed"} />,
+						}}
+					/>
+					<Stack.Screen
 						name="BuildingInfo"
 						component={BuildingInfo}
 						options={{
 							header: (props) => (
-								<CustomSubStackScreenHeader
-									{...props}
-									title={"Building Info"}
-								/>
+								<CustomSubStackScreenHeader {...props} title={"Building Info"} />
 							),
 						}}
 					/>
@@ -275,9 +269,7 @@ const NewsfeedNavigator = () => {
 						name="AccountApprovalPending"
 						component={AccountApprovalPending}
 						options={{
-							header: (props) => (
-								<CustomSubStackScreenHeader {...props} title={" "} />
-							),
+							header: (props) => <CustomSubStackScreenHeader {...props} title={" "} />,
 						}}
 					/>
 					<Stack.Screen
@@ -285,10 +277,7 @@ const NewsfeedNavigator = () => {
 						component={ForgotPassword}
 						options={{
 							header: (props) => (
-								<CustomSubStackScreenHeader
-									{...props}
-									title={"Reset password"}
-								/>
+								<CustomSubStackScreenHeader {...props} title={"Reset password"} />
 							),
 						}}
 					/>
@@ -297,10 +286,7 @@ const NewsfeedNavigator = () => {
 						component={TermsAndConditions}
 						options={{
 							header: (props) => (
-								<CustomSubStackScreenHeader
-									{...props}
-									title={"Terms & Conditions"}
-								/>
+								<CustomSubStackScreenHeader {...props} title={"Terms & Conditions"} />
 							),
 						}}
 					/>
@@ -313,7 +299,6 @@ const NewsfeedNavigator = () => {
 const ProfileNavigator = ({ navigation }) => {
 	const { post, currentUser } = useAppContext();
 
-
 	return (
 		<Stack.Navigator>
 			<Stack.Screen
@@ -322,9 +307,7 @@ const ProfileNavigator = ({ navigation }) => {
 				options={{
 					title: "Profile",
 					headerShown: true,
-					header: () => (
-						<ScreenHeader title={"Profile"} navigation={navigation} />
-					),
+					header: () => <ScreenHeader title={"Profile"} navigation={navigation} />,
 				}}
 			/>
 			<Stack.Screen
@@ -341,10 +324,7 @@ const ProfileNavigator = ({ navigation }) => {
 				component={EditPersonalInfo}
 				options={{
 					header: (props) => (
-						<CustomSubStackScreenHeader
-							{...props}
-							title={"Edit personal info"}
-						/>
+						<CustomSubStackScreenHeader {...props} title={"Edit personal info"} />
 					),
 				}}
 			/>
@@ -426,78 +406,77 @@ const ProfileNavigator = ({ navigation }) => {
 const NotificationNavigator = () => {
 	const { post } = useAppContext();
 
-
-  return (
-    <Stack.Navigator initialRouteName="Notifications">
-      <Stack.Screen
-        name="Notifications"
-        component={Notifications}
-        options={{
-          headerShown: true,
-          header: () => <ScreenHeader title={"Notifications"} />,
-        }}
-      />
-      {
-        <Stack.Screen
-          name="IndividualPosts"
-          component={IndividualPosts}
-          options={{
-            header: (props) => (
-              <CustomSubStackScreenHeader
-                {...props}
-                title={`${post.userFirstName}'s Post`}
-              />
-            ),
-          }}
-        />
-      }
-      <Stack.Screen
-        name="BuildingInfo"
-        component={BuildingInfo}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Building Info"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="Announcements"
-        component={Announcements}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Announcements"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="Notices"
-        component={Notices}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Notices"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="IndividualNotice"
-        component={IndividualNotice}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Notice"} />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="IndividualAnnouncement"
-        component={IndividualAnnouncement}
-        options={{
-          header: (props) => (
-            <CustomSubStackScreenHeader {...props} title={"Announcement"} />
-          ),
-        }}
-      />
-    </Stack.Navigator>
-  );
+	return (
+		<Stack.Navigator initialRouteName="Notifications">
+			<Stack.Screen
+				name="Notifications"
+				component={Notifications}
+				options={{
+					headerShown: true,
+					header: () => <ScreenHeader title={"Notifications"} />,
+				}}
+			/>
+			{
+				<Stack.Screen
+					name="IndividualPosts"
+					component={IndividualPosts}
+					options={{
+						header: (props) => (
+							<CustomSubStackScreenHeader
+								{...props}
+								title={`${post.userFirstName}'s Post`}
+							/>
+						),
+					}}
+				/>
+			}
+			<Stack.Screen
+				name="BuildingInfo"
+				component={BuildingInfo}
+				options={{
+					header: (props) => (
+						<CustomSubStackScreenHeader {...props} title={"Building Info"} />
+					),
+				}}
+			/>
+			<Stack.Screen
+				name="Announcements"
+				component={Announcements}
+				options={{
+					header: (props) => (
+						<CustomSubStackScreenHeader {...props} title={"Announcements"} />
+					),
+				}}
+			/>
+			<Stack.Screen
+				name="Notices"
+				component={Notices}
+				options={{
+					header: (props) => (
+						<CustomSubStackScreenHeader {...props} title={"Notices"} />
+					),
+				}}
+			/>
+			<Stack.Screen
+				name="IndividualNotice"
+				component={IndividualNotice}
+				options={{
+					header: (props) => (
+						<CustomSubStackScreenHeader {...props} title={"Notice"} />
+					),
+				}}
+			/>
+			<Stack.Screen
+				name="IndividualAnnouncement"
+				component={IndividualAnnouncement}
+				options={{
+					header: (props) => (
+						<CustomSubStackScreenHeader {...props} title={"Announcement"} />
+					),
+				}}
+			/>
+		</Stack.Navigator>
+	);
 };
 
 export {
@@ -506,4 +485,3 @@ export {
 	ProfileNavigator,
 	NotificationNavigator,
 };
-
