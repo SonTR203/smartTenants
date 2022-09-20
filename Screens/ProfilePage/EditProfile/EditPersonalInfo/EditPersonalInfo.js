@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	View,
 	Text,
@@ -37,6 +37,7 @@ const EditPersonalInfo = ({ navigation }) => {
 		currentUser.userProfileImage
 	);
 	const [isLoading, setIsLoading] = useState(false);
+	const [buttonDisabled, setButtonDisabled] = useState(true);
 
 	const checkTextInputs = () => {
 		try {
@@ -144,8 +145,16 @@ const EditPersonalInfo = ({ navigation }) => {
 			width: 85,
 			borderRadius: 18,
 		},
+		buttonDisabled: {
+			backgroundColor: "#748E94",
+		},
 	});
 
+	useEffect(() => {
+		if (firstName !== currentUser.firstName || lastName !== currentUser.lastName)
+			return setButtonDisabled(false);
+		setButtonDisabled(true);
+	}, [firstName, lastName]);
 	return (
 		<SafeAreaView edges={["top"]}>
 			<LoadingIndicator visible={isLoading} />
@@ -244,8 +253,16 @@ const EditPersonalInfo = ({ navigation }) => {
 						</View>
 					</View>
 					{/* save button */}
-					<TouchableOpacity id="save" onPress={saveProfileInfo}>
-						<View style={[theme.primaryButton, { margin: 0, shadowColor: "#fff" }]}>
+					<TouchableOpacity
+						id="save"
+						onPress={saveProfileInfo}
+						disabled={buttonDisabled}>
+						<View
+							style={[
+								theme.primaryButton,
+								{ margin: 0, shadowColor: "#fff" },
+								buttonDisabled === true ? styles.buttonDisabled : {},
+							]}>
 							<Text
 								style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}>
 								Save
