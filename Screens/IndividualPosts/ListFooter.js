@@ -151,7 +151,7 @@ function ListFooter({
   const styles = StyleSheet.create({
     container: {},
     inputAreaContainer: {
-      marginTop: 8,
+      marginTop: 16,
       maxHeight: 160,
       display: "flex",
       flexDirection: "row",
