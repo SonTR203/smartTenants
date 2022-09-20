@@ -139,6 +139,11 @@ function ListFooter({
     });
   };
 
+  // This function will make the postButton active when the user has typed something in the textInput.
+  const handlePostButton = (event) => {
+    setTextInputValue(event.target.value);
+  };
+
   const styles = StyleSheet.create({
     container: {},
     inputAreaContainer: {
@@ -205,6 +210,7 @@ function ListFooter({
       <View style={[styles.inputAreaContainer]}>
         <TextInput
           placeholderTextColor={styleVariables.colors.placeholderText}
+          onChange={handlePostButton}
           onChangeText={(text) => {
             setTextInputValue(text);
           }}
@@ -219,7 +225,14 @@ function ListFooter({
           ]}
         />
         {/* disable button class if no text input for comments */}
-        <TouchableOpacity onPress={postComment} style={theme.postButton}>
+        <TouchableOpacity
+          onPress={postComment}
+          style={[
+            theme.postButton,
+            { backgroundColor: !textInputValue ? "#748E94" : "#395E66" },
+          ]}
+          disabled={!textInputValue}
+        >
           <ArrowUpSVG></ArrowUpSVG>
         </TouchableOpacity>
       </View>
