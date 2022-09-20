@@ -11,7 +11,6 @@ import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../../ThemeContext";
 import { useAppContext } from "../../../Context/AppContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons/";
 import { ScrollView } from "react-native-gesture-handler";
 import * as WebBrowser from "expo-web-browser";
 import ProfileActions from "./ProfileActions";
@@ -35,9 +34,7 @@ const ProfileGeneral = ({ navigation }) => {
 					<View style={styles(styleVariables).headerSection}>
 						{/* userImage */}
 
-						<View
-							id="userImage"
-							style={styles(styleVariables).userImageContainer}>
+						<View id="userImage" style={styles(styleVariables).userImageContainer}>
 							<DynamicProfilePicture
 								user={{
 									userProfileImage: currentUser.userProfileImage,

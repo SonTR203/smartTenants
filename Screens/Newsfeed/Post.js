@@ -94,7 +94,7 @@ function Post({ passedPost, windowWidth, isMyPost }) {
 	if (!currentPost) {
 		return null;
 	}
-
+	//prettier-ignore
 	const styles = StyleSheet.create({
 		postStatus:
 			currentPost.isNSFW === true
@@ -108,7 +108,7 @@ function Post({ passedPost, windowWidth, isMyPost }) {
 						borderRadius: 8,
 						overflow: "hidden",
 						alignSelf: "flex-start",
-				  }
+				}
 				: {
 						paddingHorizontal: 16,
 						paddingVertical: 4,
@@ -119,7 +119,7 @@ function Post({ passedPost, windowWidth, isMyPost }) {
 						borderRadius: 8,
 						overflow: "hidden",
 						alignSelf: "flex-start",
-				  },
+				},
 	});
 
 	return (

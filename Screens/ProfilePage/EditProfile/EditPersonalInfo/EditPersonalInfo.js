@@ -4,7 +4,6 @@ import {
 	View,
 	Text,
 	SafeAreaView,
-	KeyboardAvoidingView,
 	TextInput,
 	TouchableOpacity,
 	Alert,
@@ -194,8 +193,7 @@ const EditPersonalInfo = ({ navigation }) => {
 								/>
 							)}
 							<View style={{ paddingLeft: 17 }}>
-								<Text
-									style={[styleVariables.fontSizes.title, { marginBottom: 4 }]}>
+								<Text style={[styleVariables.fontSizes.title, { marginBottom: 4 }]}>
 									{currentUser.firstName} {currentUser.lastName}
 								</Text>
 								<TouchableOpacity
@@ -220,8 +218,7 @@ const EditPersonalInfo = ({ navigation }) => {
 						{/* signupInputs */}
 						<View id="signupInputs">
 							<View id="firstNameInput">
-								<Text
-									style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+								<Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
 									First Name
 								</Text>
 								<TextInput
@@ -233,8 +230,7 @@ const EditPersonalInfo = ({ navigation }) => {
 								/>
 							</View>
 							<View id="lastNameInput">
-								<Text
-									style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+								<Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
 									Last name
 								</Text>
 								<TextInput
@@ -249,13 +245,9 @@ const EditPersonalInfo = ({ navigation }) => {
 					</View>
 					{/* save button */}
 					<TouchableOpacity id="save" onPress={saveProfileInfo}>
-						<View
-							style={[theme.primaryButton, { margin: 0, shadowColor: "#fff" }]}>
+						<View style={[theme.primaryButton, { margin: 0, shadowColor: "#fff" }]}>
 							<Text
-								style={[
-									theme.primaryButtonText,
-									styleVariables.fontSizes.bodyBold,
-								]}>
+								style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}>
 								Save
 							</Text>
 						</View>

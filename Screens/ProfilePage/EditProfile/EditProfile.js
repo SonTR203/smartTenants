@@ -1,11 +1,12 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
 	View,
 	Text,
 	SafeAreaView,
 	KeyboardAvoidingView,
 	Modal,
+	Platform,
 	StyleSheet,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -16,7 +17,7 @@ import DynamicProfilePicture from "../../../components/ProfilePicture/DynamicPro
 import EditActions from "./EditActions";
 
 const EditProfile = ({ route, navigation }) => {
-	const { currentUser, setCurrentUser } = useAppContext();
+	const { currentUser } = useAppContext();
 	const { theme, styleVariables } = useTheme();
 
 	const styles = (styleVariables) =>
@@ -93,9 +94,7 @@ const EditProfile = ({ route, navigation }) => {
 					<View style={[theme.topCard, styles(styleVariables).topCard]}>
 						<View style={styles(styleVariables).headerSection}>
 							{/* userImage */}
-							<View
-								id="userImage"
-								style={styles(styleVariables).userImageContainer}>
+							<View id="userImage" style={styles(styleVariables).userImageContainer}>
 								<DynamicProfilePicture
 									user={{
 										userProfileImage: currentUser.userProfileImage,

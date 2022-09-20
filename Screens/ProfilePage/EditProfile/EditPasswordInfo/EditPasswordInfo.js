@@ -6,13 +6,11 @@ import {
 	SafeAreaView,
 	TextInput,
 	TouchableOpacity,
-	Alert,
 	StyleSheet,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTheme } from "../../../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
-import { useAppContext } from "../../../../Context/AppContext";
 import {
 	verifyPassword,
 	updateUserPassword,
@@ -21,7 +19,6 @@ import LoadingIndicator from "../../../../components/LoadingIndicator";
 import ErrorArea from "../../../../components/SignUp/ErrorArea";
 
 const EditEmailInfo = ({ navigation }) => {
-	const { currentUser, setCurrentUser } = useAppContext();
 	const { theme, styleVariables } = useTheme();
 	const [password, setPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
@@ -32,19 +29,6 @@ const EditEmailInfo = ({ navigation }) => {
 	const [errorText, setErrorText] = useState("");
 
 	const [buttonDisabled, setButtonDisabled] = useState(true);
-
-	const checkTextInputs = () => {
-		try {
-			if (email.length) {
-				return true;
-			} else {
-				Alert.alert("ERROR", "Your email cannot be empty");
-				return false;
-			}
-		} catch (error) {
-			console.log("ERROR Edit profile: ", error);
-		}
-	};
 
 	// Check if passwords matches
 	const checkPasswords = () => {
@@ -117,8 +101,7 @@ const EditEmailInfo = ({ navigation }) => {
 						<View>
 							<ErrorArea errorText={errorText} />
 							<View id="passwordCurrentInput">
-								<Text
-									style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+								<Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
 									Current password
 								</Text>
 								<TextInput
@@ -133,8 +116,7 @@ const EditEmailInfo = ({ navigation }) => {
 						</View>
 						<View>
 							<View id="passwordNewInput">
-								<Text
-									style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+								<Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
 									New password
 								</Text>
 								<TextInput
@@ -149,8 +131,7 @@ const EditEmailInfo = ({ navigation }) => {
 						</View>
 						<View>
 							<View id="passwordConfirmInput">
-								<Text
-									style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+								<Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
 									Confirm password
 								</Text>
 								<TextInput
@@ -178,10 +159,7 @@ const EditEmailInfo = ({ navigation }) => {
 								buttonDisabled === true ? styles.buttonDisabled : null,
 							]}>
 							<Text
-								style={[
-									theme.primaryButtonText,
-									styleVariables.fontSizes.bodyBold,
-								]}>
+								style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}>
 								Save
 							</Text>
 						</View>

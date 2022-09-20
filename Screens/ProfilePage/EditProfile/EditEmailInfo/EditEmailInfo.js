@@ -4,12 +4,8 @@ import {
 	View,
 	Text,
 	SafeAreaView,
-	KeyboardAvoidingView,
 	TextInput,
 	TouchableOpacity,
-	Alert,
-	StyleSheet,
-	Dimensions,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { doc, updateDoc } from "@firebase/firestore";
@@ -68,17 +64,6 @@ const EditEmailInfo = ({ navigation }) => {
 		}
 	}
 
-	const styles = StyleSheet.create({
-		profileLoading: {
-			display: "flex",
-			alignItems: "center",
-			justifyContent: "center",
-			height: 85,
-			width: 85,
-			borderRadius: 18,
-		},
-	});
-
 	// Reset error message whenever the user starts typing the password again
 	useEffect(() => {
 		setErrorText("");
@@ -104,8 +89,7 @@ const EditEmailInfo = ({ navigation }) => {
 					<View>
 						<ErrorArea errorText={errorText} />
 						<View id="emailInput" style={{ marginTop: 7 }}>
-							<Text
-								style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+							<Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
 								Email
 							</Text>
 							<TextInput
@@ -119,8 +103,7 @@ const EditEmailInfo = ({ navigation }) => {
 							/>
 						</View>
 						<View id="passwordInput">
-							<Text
-								style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+							<Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
 								Password
 							</Text>
 							<TextInput
@@ -139,13 +122,9 @@ const EditEmailInfo = ({ navigation }) => {
 						onPress={() => {
 							verifyPassword(password, saveProfileInfo, setErrorText);
 						}}>
-						<View
-							style={[theme.primaryButton, { margin: 0, shadowColor: "#fff" }]}>
+						<View style={[theme.primaryButton, { margin: 0, shadowColor: "#fff" }]}>
 							<Text
-								style={[
-									theme.primaryButtonText,
-									styleVariables.fontSizes.bodyBold,
-								]}>
+								style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}>
 								Save
 							</Text>
 						</View>

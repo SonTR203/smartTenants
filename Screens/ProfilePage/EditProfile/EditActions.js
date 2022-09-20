@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useTheme } from "../../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import EditProfileSVG from "../../../components/Icons/EditProfileSVG";
 import PersonalProfileSVG from "../../../components/Icons/PersonalInfoSVG";
 import EmailIconSVG from "../../../components/Icons/EmailIconSVG";
 import LockIconSVG from "../../../components/Icons/LockIconSVG";

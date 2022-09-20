@@ -21,6 +21,7 @@ function MarketplaceFirstItem({
 	const { theme, styleVariables } = useTheme();
 	const { setCurrentMarketplacePost } = useAppContext();
 	const [timeSincePost, setTimeSincePost] = useState("");
+	//prettier-ignore
 	const styles = StyleSheet.create({
 		container: {
 			marginTop: 17,
@@ -106,7 +107,7 @@ function MarketplaceFirstItem({
 						borderRadius: 8,
 						overflow: "hidden",
 						alignSelf: "flex-start",
-				  }
+				}
 				: {
 						paddingHorizontal: 16,
 						paddingVertical: 4,
@@ -115,7 +116,7 @@ function MarketplaceFirstItem({
 						borderRadius: 8,
 						overflow: "hidden",
 						alignSelf: "flex-start",
-				  },
+				},
 	});
 
 	useEffect(() => {
@@ -198,14 +199,11 @@ function MarketplaceFirstItem({
 					<Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
 						{item.postTitle}
 					</Text>
-					<Text style={styles.price}>
-						{item.price === 0 ? "Free" : item.price}
-					</Text>
+					<Text style={styles.price}>{item.price === 0 ? "Free" : item.price}</Text>
 				</View>
 				{isMyPost === true ? (
 					<View style={styles.postStatusContainer}>
-						<Text
-							style={[styleVariables.fontSizes.callout, { marginRight: 8 }]}>
+						<Text style={[styleVariables.fontSizes.callout, { marginRight: 8 }]}>
 							{timeSincePost}
 						</Text>
 						<Text style={styles.postStatus}>
@@ -225,10 +223,7 @@ function MarketplaceFirstItem({
 					<TouchableOpacity
 						onPress={() => handleOpenSoldModal(item)}
 						style={styles.bottomButton}>
-						<Text
-							style={styles.buttonText}
-							numberOfLines={2}
-							ellipsizeMode={"tail"}>
+						<Text style={styles.buttonText} numberOfLines={2} ellipsizeMode={"tail"}>
 							{sold ? "List again" : "Mark as sold"}
 						</Text>
 					</TouchableOpacity>

@@ -180,8 +180,7 @@ export const removeExpoPushToken = async (uid) => {
 export async function registerForPushNotificationsAsync() {
 	let token;
 	if (Device.isDevice) {
-		const { status: existingStatus } =
-			await Notifications.getPermissionsAsync();
+		const { status: existingStatus } = await Notifications.getPermissionsAsync();
 		let finalStatus = existingStatus;
 		if (existingStatus !== "granted") {
 			const { status } = await Notifications.requestPermissionsAsync();
@@ -298,7 +297,7 @@ export const updateUserPassword = async (newPassword) => {
 export const verifyPassword = async (password, cb, setErrorText) => {
 	const creds = EmailAuthProvider.credential(auth.currentUser.email, password);
 	try {
-		await reauthenticateWithCredential(auth.currentUser, creds).then((res) => {
+		await reauthenticateWithCredential(auth.currentUser, creds).then(() => {
 			if (cb) cb();
 		});
 	} catch (error) {

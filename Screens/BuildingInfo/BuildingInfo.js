@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-	Alert,
-	Platform,
-	View,
-	Text,
-	ScrollView,
-	Image,
-	Linking,
-	StyleSheet,
-} from "react-native";
+import { View, Text, ScrollView, Image, StyleSheet } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -19,7 +10,6 @@ import { db } from "../../firebase-config";
 
 // Import required functions
 import { collection, getDocs } from "@firebase/firestore";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 // Create collection Reference
 const colRef = collection(db, "Buildings");
@@ -31,23 +21,23 @@ const BuildingInfo = () => {
 	const [building, setBuilding] = useState({});
 	const [buildingLocation, setBuildingLocation] = useState("");
 
-	const makePhoneCall = () => {
-		let phoneNumber = "";
-		if (Platform.OS !== "android") {
-			phoneNumber = `telprompt:${phone}`;
-		} else {
-			phoneNumber = `tel:${phone}`;
-		}
-		Linking.canOpenURL(phoneNumber)
-			.then((supported) => {
-				if (!supported) {
-					Alert.alert("Phone number is not available");
-				} else {
-					return Linking.openURL(phoneNumber);
-				}
-			})
-			.catch((err) => console.log(err));
-	};
+	// const makePhoneCall = () => {
+	// 	let phoneNumber = "";
+	// 	if (Platform.OS !== "android") {
+	// 		phoneNumber = `telprompt:${phone}`;
+	// 	} else {
+	// 		phoneNumber = `tel:${phone}`;
+	// 	}
+	// 	Linking.canOpenURL(phoneNumber)
+	// 		.then((supported) => {
+	// 			if (!supported) {
+	// 				Alert.alert("Phone number is not available");
+	// 			} else {
+	// 				return Linking.openURL(phoneNumber);
+	// 			}
+	// 		})
+	// 		.catch((err) => console.log(err));
+	// };
 	useEffect(() => {
 		// Get collections data
 		getDocs(colRef).then((snapshot) => {
@@ -132,7 +122,7 @@ const BuildingInfo = () => {
 						Contacts
 					</Text>
 					{/* TODO: build the list dynamically using admin data */}
-					<View style={{ display: "none" }}>
+					{/* <View style={{ display: "none" }}>
 						<Text
 							style={[styleVariables.fontSizes.title, { marginBottom: 10 }]}>
 							{building.fullName}
@@ -190,7 +180,7 @@ const BuildingInfo = () => {
 								</Text>
 							</TouchableOpacity>
 						</View>
-					</View>
+					</View> */}
 				</View>
 			</View>
 		</ScrollView>
