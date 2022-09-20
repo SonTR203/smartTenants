@@ -6,6 +6,7 @@ import PersonalProfileSVG from "../../../components/Icons/PersonalInfoSVG";
 import EmailIconSVG from "../../../components/Icons/EmailIconSVG";
 import LockIconSVG from "../../../components/Icons/LockIconSVG";
 import BellIconSVG from "../../../components/Icons/BellIconSVG";
+import ChevronRightSVG from "../../../components/Icons/ChevronRightSVG";
 
 const EditActions = ({ navigation }) => {
 	const { theme, styleVariables } = useTheme();
@@ -23,7 +24,7 @@ const EditActions = ({ navigation }) => {
 						Personal info
 					</Text>
 				</View>
-				<MaterialCommunityIcons
+				<ChevronRightSVG
 					name="chevron-right"
 					size={24}
 					color={styleVariables.colors.primary}
@@ -41,7 +42,7 @@ const EditActions = ({ navigation }) => {
 						Email address
 					</Text>
 				</View>
-				<MaterialCommunityIcons
+				<ChevronRightSVG
 					name="chevron-right"
 					size={24}
 					color={styleVariables.colors.primary}
@@ -59,7 +60,7 @@ const EditActions = ({ navigation }) => {
 						Password
 					</Text>
 				</View>
-				<MaterialCommunityIcons
+				<ChevronRightSVG
 					name="chevron-right"
 					size={24}
 					color={styleVariables.colors.primary}
@@ -78,7 +79,7 @@ const EditActions = ({ navigation }) => {
 						Notifications
 					</Text>
 				</View>
-				<MaterialCommunityIcons
+				<ChevronRightSVG
 					name="chevron-right"
 					size={24}
 					color={styleVariables.colors.primary}

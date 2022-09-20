@@ -10,6 +10,7 @@ import ResidentPortalSVG from "../../../components/Icons/ResidentPortalSVG";
 import MyPostsSVG from "../../../components/Icons/MyPostsSVG";
 import LogoutSVG from "../../../components/Icons/LogoutSVG";
 import EditProfileSVG from "../../../components/Icons/EditProfileSVG";
+import ChevronRightSVG from "../../../components/Icons/ChevronRightSVG";
 
 function ProfileActions({ navigation }) {
 	const { theme, styleVariables } = useTheme();
@@ -52,7 +53,7 @@ function ProfileActions({ navigation }) {
 						Edit profile Info
 					</Text>
 				</View>
-				<MaterialCommunityIcons
+				<ChevronRightSVG
 					name="chevron-right"
 					size={24}
 					color={styleVariables.colors.primary}
@@ -70,7 +71,7 @@ function ProfileActions({ navigation }) {
 						My Posts
 					</Text>
 				</View>
-				<MaterialCommunityIcons
+				<ChevronRightSVG
 					name="chevron-right"
 					size={24}
 					color={styleVariables.colors.primary}
@@ -92,7 +93,7 @@ function ProfileActions({ navigation }) {
 						Resident Portal
 					</Text>
 				</View>
-				<MaterialCommunityIcons
+				<ChevronRightSVG
 					name="chevron-right"
 					size={24}
 					color={styleVariables.colors.primary}
@@ -111,7 +112,7 @@ function ProfileActions({ navigation }) {
 						Log Out
 					</Text>
 				</View>
-				<MaterialCommunityIcons
+				<ChevronRightSVG
 					name="chevron-right"
 					size={24}
 					color={styleVariables.colors.primary}
