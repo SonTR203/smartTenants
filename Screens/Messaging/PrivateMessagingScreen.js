@@ -150,7 +150,6 @@ function PrivateMessagingScreen({ route }) {
       height: inputHeight,
       minHeight: 36,
       maxHeight: 76,
-      paddingTop: 8,
       paddingHorizontal: 10,
       marginLeft: 10,
       marginRight: 10,
@@ -206,7 +205,7 @@ function PrivateMessagingScreen({ route }) {
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={constants.height * 0.15}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : null}
       style={styles.container}
     >
       <StatusBar style="dark" />
