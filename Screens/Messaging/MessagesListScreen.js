@@ -82,17 +82,7 @@ function MessagesListScreen({ navigation }) {
     const isNew = item.isNew;
     let lastMessage = "";
     if (!isNew) {
-      // if you sent the last message
-      if (item.lastMessage.senderId === currentUser.userID) {
-        lastMessage = `${
-          item.lastMessage.senderId === currentUser.userID
-            ? "You"
-            : item.lastMessage.senderFirstName
-        }: ${item.lastMessage.content}`;
-      } else {
-        // if you received the last message
-        lastMessage = `${item.lastMessage.senderFirstName}: ${item.lastMessage.content}`;
-      }
+      lastMessage = `${item.lastMessage.content}`;
     }
     return (
       <View style={[styles.itemContainer]}>
