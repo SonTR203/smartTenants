@@ -8,7 +8,10 @@ import {
   TouchableOpacity,
   Alert,
   StyleSheet,
+  Dimensions,
 } from "react-native";
+import ArrowUpSVG from "../../components/Icons/ArrowUpSVG.js";
+import X from "../../components/Icons/X.js";
 import { db } from "../../firebase-config";
 import { updateDoc, doc, setDoc } from "@firebase/firestore";
 import { Timestamp } from "@firebase/firestore";
@@ -27,6 +30,9 @@ function ListFooter({
   const [textInputValue, setTextInputValue] = useState("");
   const { setPost, post, currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
+
+  const dynamicWidth =
+    Dimensions.get("window").width - Dimensions.get("window").width * 0.18;
 
   // Post Comments
   const postComment = async () => {
@@ -137,25 +143,46 @@ function ListFooter({
     });
   };
 
+  // This function will make the postButton active when the user has typed something in the textInput.
+  const handlePostButton = (event) => {
+    setTextInputValue(event.target.value);
+  };
+
   const styles = StyleSheet.create({
-    container: { paddingTop: 34, paddingBottom: 136 },
-    inputArea: { minHeight: 68 + 44, paddingTop: 22 },
+    container: {},
+    inputAreaContainer: {
+      marginTop: 16,
+      maxHeight: 160,
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "flex-end",
+    },
+    inputArea: {
+      width: dynamicWidth,
+    },
     replyView: {
       display: "flex",
       flexDirection: "row",
-      alignItems: "center",
       justifyContent: "space-between",
-      marginVertical: 20,
+      alignItems: "center",
+      marginTop: 16,
+      width:
+        Dimensions.get("window").width - Dimensions.get("window").width * 0.09,
+    },
+    cancelButton: {
+      fontSize: 25,
+      textAlign: "center",
+      marginTop: -7,
+      color: "#9D9D9D",
     },
     replyName: { color: styleVariables.colors.primary },
     cancelReply: {
       color: styleVariables.colors.primary,
-      padding: 10,
     },
   });
 
   return (
-    <View style={[theme.globalMargins, styles.container]}>
+    <View style={[theme.replyContainer]}>
       {userCommentName != "" && (
         <View style={styles.replyView}>
           <Text style={styleVariables.fontSizes.callout}>
@@ -174,37 +201,40 @@ function ListFooter({
               setUserCommentId("");
             }}
           >
-            <Text style={[styleVariables.fontSizes.header]}>x</Text>
+            <X></X>
+            {/* <Text style={styles.cancelButton}>x</Text> */}
           </TouchableOpacity>
         </View>
       )}
-      <View>
-        <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
-          Reply
-        </Text>
+      <View style={[styles.inputAreaContainer]}>
         <TextInput
           placeholderTextColor={styleVariables.colors.placeholderText}
-          onChangeText={(text) => setTextInputValue(text)}
+          onChange={handlePostButton}
+          onChangeText={(text) => {
+            setTextInputValue(text);
+          }}
           value={textInputValue}
-          placeholder="280 characters maximum"
-          multiline={true}
+          placeholder="Post a comment"
           maxLength={280}
+          multiline
           style={[
-            theme.textInput,
+            theme.individualPostsTextInput,
             styleVariables.fontSizes.body,
             styles.inputArea,
           ]}
         />
-      </View>
-
-      {/* disable button class if no text input for comments */}
-      <TouchableOpacity onPress={postComment} style={theme.primaryButton}>
-        <Text
-          style={[theme.primaryButtonText, styleVariables.fontSizes.bodyBold]}
+        {/* disable button class if no text input for comments */}
+        <TouchableOpacity
+          onPress={postComment}
+          style={[
+            theme.postButton,
+            { backgroundColor: !textInputValue ? "#748E94" : "#395E66" },
+          ]}
+          disabled={!textInputValue}
         >
-          Send reply
-        </Text>
-      </TouchableOpacity>
+          <ArrowUpSVG></ArrowUpSVG>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
