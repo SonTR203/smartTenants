@@ -25,6 +25,7 @@ import {
   updateItemInFirestore,
 } from "../../utils/firebase.services";
 import { constants } from "../../utils/constants";
+import Modal from "react-native-modal";
 
 import MessagingBubble from "./MessagingBubble";
 import { useTheme } from "../../ThemeContext";
@@ -33,6 +34,7 @@ import ArrowRightSVG from "../../components/ArrowRightSVG";
 import CircleCheckSVG from "../../components/CircleCheckSVG";
 import UploadImageSVG from "../../components/UploadImageSVG";
 import SendMessageSVG from "../../components/SendMessageSVG";
+import MarkAsSoldModal from "../../components/Modals/MarkAsSoldModal";
 
 function PrivateMessagingScreen({ route }) {
   const { styleVariables } = useTheme();
@@ -45,6 +47,7 @@ function PrivateMessagingScreen({ route }) {
   const { currentUser } = useAppContext();
   const [inputHeight, setInputHeight] = useState(36);
   const [isSold, setIsSold] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (route.params && route.params.channelId) {
@@ -117,11 +120,11 @@ function PrivateMessagingScreen({ route }) {
     );
   };
 
-  const handleToggleSold = () => {
+  const handleMarkSold = () => {
     updateItemInFirestore("MessagingList", channelId, {
-      isSold: !isSold,
+      isSold: true,
     });
-    setIsSold(!isSold);
+    setIsSold(true);
   };
 
   const styles = StyleSheet.create({
@@ -212,6 +215,11 @@ function PrivateMessagingScreen({ route }) {
       height: 32,
       backgroundColor: styleVariables.colors.primary,
     },
+    modal: {
+      display: "flex",
+      justifyContent: "flex-end",
+      margin: 0,
+    },
   });
 
   return (
@@ -221,6 +229,17 @@ function PrivateMessagingScreen({ route }) {
       style={styles.container}
     >
       <StatusBar style="dark" />
+      <Modal
+        isVisible={modalVisible}
+        backdropOpacity={0.5}
+        onBackdropPress={() => setModalVisible(false)}
+        style={styles.modal}
+      >
+        <MarkAsSoldModal
+          handleMarkSold={handleMarkSold}
+          setModalVisible={setModalVisible}
+        />
+      </Modal>
       <View style={styles.messageHeader}>
         <View style={styles.imageAndTitle}>
           <Image
@@ -237,8 +256,12 @@ function PrivateMessagingScreen({ route }) {
           </View>
         </View>
         <View style={styles.arrowAndMarkSold}>
-          {route.params.isSeller ? (
-            <TouchableOpacity onPress={handleToggleSold}>
+          {route.params.isSeller && !isSold ? (
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible(true);
+              }}
+            >
               <CircleCheckSVG />
             </TouchableOpacity>
           ) : null}
