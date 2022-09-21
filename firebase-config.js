@@ -6,5 +6,7 @@ import firebaseConfig from "./config/env";
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+//Export reference to firebase app
+export { app };
 //Export Access to DB
 export const db = getFirestore(app);

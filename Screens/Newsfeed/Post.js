@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../ThemeContext";
 import { useAppContext } from "../../Context/AppContext";
@@ -9,7 +9,7 @@ import { likePost } from "../../utils/Newsfeed/newsfeed.services";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 
 //============================== Individual Post Cards ==========================
-function Post({ passedPost, windowWidth }) {
+function Post({ passedPost, windowWidth, isMyPost }) {
 	const navigation = useNavigation();
 	const { theme, styleVariables } = useTheme();
 	const [numberOfLikes, setNumberOfLikes] = useState(0);
@@ -21,9 +21,9 @@ function Post({ passedPost, windowWidth }) {
 
 	useEffect(() => {
 		if (currentPost) {
-			if (currentPost.peopleWhoLiked.length > 0) {
+			if (currentPost.peopleWhoLiked?.length > 0) {
 				setHeartsToGreen(currentPost.peopleWhoLiked);
-				setNumberOfLikes(currentPost.peopleWhoLiked.length);
+				setNumberOfLikes(currentPost.peopleWhoLiked?.length);
 			}
 
 			const time = setTime(currentPost.timestamp.seconds * 1000);
@@ -94,6 +94,33 @@ function Post({ passedPost, windowWidth }) {
 	if (!currentPost) {
 		return null;
 	}
+	//prettier-ignore
+	const styles = StyleSheet.create({
+		postStatus:
+			currentPost.isNSFW === true
+				? {
+						paddingHorizontal: 16,
+						paddingVertical: 4,
+						backgroundColor: "#FEF0E8",
+						color: "#F26419",
+						marginLeft: 8,
+						marginTop: 4,
+						borderRadius: 8,
+						overflow: "hidden",
+						alignSelf: "flex-start",
+				}
+				: {
+						paddingHorizontal: 16,
+						paddingVertical: 4,
+						backgroundColor: "#E9FAF0",
+						color: "#23CE6B",
+						marginLeft: 8,
+						marginTop: 4,
+						borderRadius: 8,
+						overflow: "hidden",
+						alignSelf: "flex-start",
+				},
+	});
 
 	return (
 		<TouchableOpacity
@@ -106,7 +133,7 @@ function Post({ passedPost, windowWidth }) {
 				style={{
 					display: "flex",
 					flexDirection: "row",
-					alignItems: "center",
+					alignItems: isMyPost === true ? "flex-start" : "center",
 					justifyContent: "space-between",
 					width: "100%",
 					marginBottom: 12,
@@ -125,16 +152,25 @@ function Post({ passedPost, windowWidth }) {
 							userProfileImage: currentPost.userProfileImage,
 							colors: currentPost.userColors,
 						}}
-						size={43}
+						size={48}
 						borderRadius={12}
 					/>
-					<Text
-						style={[
-							styleVariables.fontSizes.cardUserName,
-							{ color: styleVariables.colors.black, marginLeft: 8 },
-						]}>
-						{currentPost.userFirstName} {currentPost.userLastName}
-					</Text>
+					<View>
+						<Text
+							style={[
+								styleVariables.fontSizes.cardUserName,
+								{ color: styleVariables.colors.black, marginLeft: 8 },
+							]}>
+							{currentPost.userFirstName} {currentPost.userLastName}
+						</Text>
+						{isMyPost === true ? (
+							<Text style={styles.postStatus}>
+								{currentPost.isNSFW === false ? "Posted" : "Pending approval"}
+							</Text>
+						) : (
+							""
+						)}
+					</View>
 				</View>
 				<Text
 					id="timePosted"
@@ -178,7 +214,7 @@ function Post({ passedPost, windowWidth }) {
 			<View
 				className="likeAndComment"
 				style={{
-					display: "flex",
+					display: isMyPost === true ? "none" : "flex",
 					alignItems: "center",
 					flexDirection: "row",
 					marginBottom: 5,
