@@ -1,21 +1,21 @@
 import React from "react";
 import Svg, { Path } from "react-native-svg";
 
-function ArrowRightSVG() {
+function ArrowRightSVG(props) {
   return (
     <Svg
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
+      width={33}
+      height={32}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <Path
-        d="M7.33333 16.3335H24M24 16.3335L16 24.3335M24 16.3335L16 8.3335"
+        d="M7.341 16.334h16.667m0 0-8 8m8-8-8-8"
         stroke="#395E66"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </Svg>
   );
