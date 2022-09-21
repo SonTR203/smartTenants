@@ -6,6 +6,7 @@ import { constants } from "../../../utils/constants";
 import SaveIcon from "../../../components/SaveIcon/SaveIcon";
 import { LinearGradient } from "expo-linear-gradient";
 import { setTime } from "../../../utils/setTime";
+import { incrementItemCLicks } from "../../../utils/Marketplace/marketplace.services.js";
 
 function MarketplaceFirstItem({
 	item,
@@ -134,6 +135,7 @@ function MarketplaceFirstItem({
 		<TouchableOpacity
 			onPress={() => {
 				setCurrentMarketplacePost(item);
+				incrementItemCLicks(item);
 				navigation.navigate("MarketplaceItemInfo", {
 					title: item.userFirstName,
 					itemUserId: item.userID,
