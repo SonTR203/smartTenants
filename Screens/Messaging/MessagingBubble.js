@@ -51,14 +51,6 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
       marginLeft: isSender ? "auto" : 10,
       marginRight: isSender ? 10 : "auto",
       padding: 10,
-      shadowColor: "#4d4d4d",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
     }),
     itemContentContainer: {
       flex: 1,
