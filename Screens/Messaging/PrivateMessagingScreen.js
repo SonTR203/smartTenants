@@ -20,7 +20,10 @@ import {
 import { useAppContext } from "../../Context/AppContext";
 import { db } from "../../firebase-config";
 import uuid from "react-native-uuid";
-import { createItemInFirestore } from "../../utils/firebase.services";
+import {
+  createItemInFirestore,
+  updateItemInFirestore,
+} from "../../utils/firebase.services";
 import { constants } from "../../utils/constants";
 
 import MessagingBubble from "./MessagingBubble";
@@ -41,10 +44,12 @@ function PrivateMessagingScreen({ route }) {
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAppContext();
   const [inputHeight, setInputHeight] = useState(36);
+  const [isSold, setIsSold] = useState(null);
 
   useEffect(() => {
     if (route.params && route.params.channelId) {
       setChannelId(route.params.channelId);
+      setIsSold(route.params.isSold);
     }
   }, [route.params]);
 
@@ -110,6 +115,13 @@ function PrivateMessagingScreen({ route }) {
         sendingText={sendingText}
       />
     );
+  };
+
+  const handleToggleSold = () => {
+    updateItemInFirestore("MessagingList", channelId, {
+      isSold: !isSold,
+    });
+    setIsSold(!isSold);
   };
 
   const styles = StyleSheet.create({
@@ -225,7 +237,11 @@ function PrivateMessagingScreen({ route }) {
           </View>
         </View>
         <View style={styles.arrowAndMarkSold}>
-          {route.params.isSeller ? <CircleCheckSVG /> : <View></View>}
+          {route.params.isSeller ? (
+            <TouchableOpacity onPress={handleToggleSold}>
+              <CircleCheckSVG />
+            </TouchableOpacity>
+          ) : null}
           <ArrowRightSVG />
         </View>
       </View>
