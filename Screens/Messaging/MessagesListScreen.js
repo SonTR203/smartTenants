@@ -213,6 +213,7 @@ function MessagesListScreen({ navigation }) {
       flexDirection: "row",
       justifyContent: "space-around",
       paddingHorizontal: 32,
+      paddingTop: 7,
     },
     bottomBar: {
       height: 4,
@@ -259,54 +260,52 @@ function MessagesListScreen({ navigation }) {
   });
 
   return (
-    <SafeAreaView style={{ backgroundColor: "white" }}>
+    <View style={{ backgroundColor: "white" }}>
       <StatusBar style="dark" />
-      <View>
-        <View style={styles.messageFilter}>
-          <TouchableOpacity
-            onPress={() => {
-              setMessageListFilter("Buying");
-            }}
-            style={styles.filterTitle}
-          >
-            <Text style={[styleVariables.fontSizes.title, styles.primaryClr]}>
-              Buying
-            </Text>
-            <View
-              style={[
-                styles.bottomBar,
-                messageListFilter != "Buying" ? styles.hidden : "",
-              ]}
-            ></View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setMessageListFilter("Selling");
-            }}
-            style={styles.filterTitle}
-          >
-            <Text style={[styleVariables.fontSizes.title, styles.primaryClr]}>
-              Selling
-            </Text>
-            <View
-              style={[
-                styles.bottomBar,
-                messageListFilter != "Selling" ? styles.hidden : "",
-              ]}
-            ></View>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          ListEmptyComponent={() => {
-            return <Text style={styles.noItemText}>You have no messages.</Text>;
+      <View style={styles.messageFilter}>
+        <TouchableOpacity
+          onPress={() => {
+            setMessageListFilter("Buying");
           }}
-          style={styles.flatlist}
-          keyExtractor={(item) => item.id}
-          data={messageListFilter == "Buying" ? buyingList : sellingList}
-          renderItem={renderItem}
-        />
+          style={styles.filterTitle}
+        >
+          <Text style={[styleVariables.fontSizes.title, styles.primaryClr]}>
+            Buying
+          </Text>
+          <View
+            style={[
+              styles.bottomBar,
+              messageListFilter != "Buying" ? styles.hidden : "",
+            ]}
+          ></View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setMessageListFilter("Selling");
+          }}
+          style={styles.filterTitle}
+        >
+          <Text style={[styleVariables.fontSizes.title, styles.primaryClr]}>
+            Selling
+          </Text>
+          <View
+            style={[
+              styles.bottomBar,
+              messageListFilter != "Selling" ? styles.hidden : "",
+            ]}
+          ></View>
+        </TouchableOpacity>
       </View>
-    </SafeAreaView>
+      <FlatList
+        ListEmptyComponent={() => {
+          return <Text style={styles.noItemText}>You have no messages.</Text>;
+        }}
+        style={styles.flatlist}
+        keyExtractor={(item) => item.id}
+        data={messageListFilter == "Buying" ? buyingList : sellingList}
+        renderItem={renderItem}
+      />
+    </View>
   );
 }
 export default MessagesListScreen;
