@@ -52,9 +52,14 @@ function PrivateMessagingScreen({ route }) {
   useEffect(() => {
     if (route.params && route.params.channelId) {
       setChannelId(route.params.channelId);
-      setIsSold(route.params.isSold);
     }
   }, [route.params]);
+
+  useEffect(() => {
+    if (isSold == null) {
+      setIsSold(route.params.isSold);
+    }
+  }, []);
 
   useEffect(() => {
     let unsubscribe;
@@ -129,6 +134,7 @@ function PrivateMessagingScreen({ route }) {
 
   const styles = StyleSheet.create({
     container: {
+      backgroundColor: styleVariables.colors.white,
       flex: 1,
     },
     flatlist: {
@@ -219,6 +225,22 @@ function PrivateMessagingScreen({ route }) {
       justifyContent: "flex-end",
       margin: 0,
     },
+    soldFooter: {
+      alignSelf: "center",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: 1,
+      marginBottom: 20,
+      width: "90%",
+      backgroundColor: "#92A6AB",
+    },
+    soldFooterText: {
+      position: "absolute",
+      backgroundColor: styleVariables.colors.white,
+      color: "#92A6AB",
+      paddingHorizontal: 16,
+    },
   });
 
   return (
@@ -291,6 +313,7 @@ function PrivateMessagingScreen({ route }) {
               listRef.current.scrollToEnd({ animated: true })
             }
             onLayout={() => listRef.current.scrollToEnd({ animated: true })}
+            ListFooterComponent={isSold ? <ListFooter styles={styles} /> : null}
           />
         )}
       </View>
@@ -314,6 +337,14 @@ function PrivateMessagingScreen({ route }) {
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
+  );
+}
+
+function ListFooter({ styles }) {
+  return (
+    <View style={styles.soldFooter}>
+      <Text style={styles.soldFooterText}>Item sold</Text>
+    </View>
   );
 }
 
