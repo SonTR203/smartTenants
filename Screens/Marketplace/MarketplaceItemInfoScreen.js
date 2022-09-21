@@ -76,6 +76,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
         itemTitle: item.postTitle,
         isSeller: false,
         price: item.price,
+        isSold: false,
       });
     }
   };

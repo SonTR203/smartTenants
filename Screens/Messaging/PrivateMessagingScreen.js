@@ -52,14 +52,9 @@ function PrivateMessagingScreen({ route }) {
   useEffect(() => {
     if (route.params && route.params.channelId) {
       setChannelId(route.params.channelId);
-    }
-  }, [route.params]);
-
-  useEffect(() => {
-    if (isSold == null) {
       setIsSold(route.params.isSold);
     }
-  }, []);
+  }, [route.params]);
 
   useEffect(() => {
     let unsubscribe;
@@ -231,7 +226,7 @@ function PrivateMessagingScreen({ route }) {
       justifyContent: "center",
       alignItems: "center",
       height: 1,
-      marginBottom: 20,
+      marginVertical: 20,
       width: "90%",
       backgroundColor: "#92A6AB",
     },

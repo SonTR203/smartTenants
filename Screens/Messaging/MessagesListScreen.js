@@ -49,7 +49,8 @@ function MessagesListScreen({ navigation }) {
     messageImage,
     itemTitle,
     sellerId,
-    price
+    price,
+    isSold
   ) => {
     const isSeller = currentUser.userID == sellerId;
     navigation.navigate("PrivateMessagingScreen", {
@@ -60,6 +61,7 @@ function MessagesListScreen({ navigation }) {
       itemTitle: itemTitle,
       isSeller: isSeller,
       price: price,
+      isSold: isSold,
     });
   };
 
@@ -95,7 +97,8 @@ function MessagesListScreen({ navigation }) {
               item.messageImage,
               item.title,
               item.sellerId,
-              item.price
+              item.price,
+              item.isSold
             );
           }}
           style={styles.itemTouchable}
@@ -112,9 +115,11 @@ function MessagesListScreen({ navigation }) {
                   </View>
                 ) : null}
               </View>
-              <Text style={styles.itemTimestamp}>
-                {configureItemTime(item.lastMessage.timestamp.seconds)}
-              </Text>
+              {item.lastMessage ? (
+                <Text style={styles.itemTimestamp}>
+                  {configureItemTime(item.lastMessage.timestamp.seconds)}
+                </Text>
+              ) : null}
             </View>
             <Text style={styles.itemPersonName}>{otherPersonName}</Text>
             <View style={styles.flexApart}>
