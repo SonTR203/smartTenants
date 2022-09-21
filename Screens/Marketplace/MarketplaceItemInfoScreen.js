@@ -72,6 +72,10 @@ function MarketplaceItemInfoScreen({ navigation }) {
         otherPersonName: item.userFirstName + " " + item.userLastName,
         otherPersonId: item.userID,
         channelId: id,
+        messageImage: item.images[0],
+        itemTitle: item.postTitle,
+        isSeller: false,
+        price: item.price,
       });
     }
   };
