@@ -176,7 +176,6 @@ function PrivateMessagingScreen({ route }) {
       width: 52,
       height: 40,
       borderRadius: 8,
-      borderWidth: 1,
     },
     messageHeader: {
       display: "flex",
