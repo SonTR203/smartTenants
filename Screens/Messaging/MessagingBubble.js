@@ -7,7 +7,7 @@ import { useTheme } from "../../ThemeContext";
 import { constants } from "../../utils/constants";
 
 function MessagingBubble({ item, index, length, sendingText, channelId }) {
-  const { theme, styleVariables } = useTheme();
+  const { styleVariables } = useTheme();
   const { currentUser } = useAppContext();
   const isSender = item.senderId === currentUser.userID;
 

@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppContext } from "../../Context/AppContext";
-import { setTime } from "../../utils/setTime";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../ThemeContext";
 import _ from "lodash";
@@ -20,7 +19,7 @@ function MessagesListScreen({ navigation }) {
   const [sellingList, setSellingList] = useState([]);
   const [messageListFilter, setMessageListFilter] = useState("Buying");
   const { currentUser, marketplaceBadges } = useAppContext();
-  const { theme, styleVariables } = useTheme();
+  const { styleVariables } = useTheme();
 
   useEffect(() => {
     // console.log("marketplace screen list: ", marketplaceBadges.list.length);
