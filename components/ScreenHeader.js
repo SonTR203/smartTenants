@@ -1,20 +1,34 @@
 import React from "react";
 import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
+import { useAppContext } from "../Context/AppContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import { useTheme } from "../ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import NotificationBadge from "./NotificationBadge";
 
 function ScreenHeader({ title, navigation }) {
+	const { currentUser } = useAppContext();
 	const { theme, styleVariables } = useTheme();
 	const styles = StyleSheet.create({
 		headerPageTitle: {
 			color: styleVariables.colors.white,
 		},
+		userBuilding: {
+			fontSize: 15,
+			fontFamily: "Roboto_400Regular",
+			color: "#cdd7d9",
+			marginRight: 8,
+		},
+		userBuildingButton: {
+			marginTop: 8,
+			alignItems: "center",
+			flexDirection: "row",
+		},
 		marketplaceProfile: {
 			position: "absolute",
 			right: 16,
 			top: 55,
-
 			padding: 10,
 			margin: -10,
 		},
@@ -37,13 +51,31 @@ function ScreenHeader({ title, navigation }) {
 	const handleNavigate = () => {
 		navigation.navigate("MarketplaceProfile");
 	};
-
+	const handleNavigateBuildings = () => {
+		navigation.navigate("BuildingInfo");
+	};
 	return (
 		<View style={theme.header}>
-			{/* headerPageTitle */}
-			<Text style={[styleVariables.fontSizes.header, styles.headerPageTitle]}>
-				{title}
-			</Text>
+			<View>
+				{/* headerPageTitle */}
+				<Text style={[styleVariables.fontSizes.header, styles.headerPageTitle]}>
+					{title}
+				</Text>
+				{title === "Profile" ? (
+					<>
+						<TouchableOpacity
+							onPress={handleNavigateBuildings}
+							style={[styles.userBuildingButton]}>
+							<Text style={[styles.userBuilding]}>{currentUser?.buildingAddress}</Text>
+							<MaterialCommunityIcons
+								name="chevron-right"
+								size={16}
+								color={styleVariables.colors.white}
+							/>
+						</TouchableOpacity>
+					</>
+				) : null}
+			</View>
 			{title === "Marketplace" ? (
 				<>
 					<TouchableOpacity
