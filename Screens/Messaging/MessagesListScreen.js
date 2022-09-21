@@ -104,7 +104,14 @@ function MessagesListScreen({ navigation }) {
 
           <View style={styles.itemTextContainer}>
             <View style={styles.flexApart}>
-              <Text style={styles.itemTitle}>{item.title}</Text>
+              <View style={styles.flexApart}>
+                <Text style={styles.itemTitle}>{item.title}</Text>
+                {item.isSold == true ? (
+                  <View style={styles.isSoldView}>
+                    <Text style={styles.isSoldText}>Sold</Text>
+                  </View>
+                ) : null}
+              </View>
               <Text style={styles.itemTimestamp}>
                 {configureItemTime(item.lastMessage.timestamp.seconds)}
               </Text>
@@ -231,6 +238,19 @@ function MessagesListScreen({ navigation }) {
     newMessageText: {
       fontSize: 11,
       color: styleVariables.colors.white,
+    },
+    isSoldView: {
+      display: "flex",
+      justifyContent: "center",
+      backgroundColor: "#EBEFF0",
+      paddingVertical: 2,
+      paddingHorizontal: 8,
+      marginLeft: 4,
+      borderRadius: 50,
+    },
+    isSoldText: {
+      fontSize: 11,
+      color: styleVariables.colors.primary,
     },
   });
 
