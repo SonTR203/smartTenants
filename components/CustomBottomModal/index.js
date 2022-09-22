@@ -12,6 +12,8 @@ const styles = StyleSheet.create({
 	optionContainer: {
 		flexDirection: "row",
 		justifyContent: "flex-start",
+		alignItems: "center",
+		marginBottom: 34,
 	},
 	modalOptionText: {
 		fontSize: 17,
@@ -19,15 +21,14 @@ const styles = StyleSheet.create({
 		color: "#4D4D4D",
 		fontFamily: "Roboto_400Regular",
 
-		marginBottom: 25,
-		marginLeft: 20,
+		marginLeft: 21,
 	},
 	container: {
 		height: "auto",
 		backgroundColor: "white",
 		borderTopLeftRadius: 16,
 		borderTopRightRadius: 16,
-		padding: 24,
+		padding: 25,
 		paddingBottom: 34,
 	},
 	closeButton: (styleVariables) => ({
