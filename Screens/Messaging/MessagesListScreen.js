@@ -80,12 +80,6 @@ function MessagesListScreen({ navigation }) {
       item.sellerId === currentUser.userID ? item.buyerName : item.sellerName;
     const otherPersonId =
       item.sellerId === currentUser.userID ? item.buyerId : item.sellerId;
-
-    const isNew = item.isNew;
-    let lastMessage = "";
-    if (!isNew) {
-      lastMessage = `${item.lastMessage.content}`;
-    }
     return (
       <View
         style={[
@@ -134,7 +128,7 @@ function MessagesListScreen({ navigation }) {
                 ellipsizeMode="tail"
                 style={styles.itemContent}
               >
-                {isNew ? "New Inquiry" : lastMessage}
+                {item.lastMessage.content}
               </Text>
               {marketplaceBadges.unseen.includes(item.id) ? (
                 <View style={styles.newMessageIcon}>
