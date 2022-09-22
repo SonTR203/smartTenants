@@ -50,11 +50,21 @@ function PrivateMessagingScreen({ route, navigation }) {
   const [inputHeight, setInputHeight] = useState(36);
   const [isSold, setIsSold] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const {
+    otherPersonName,
+    otherPersonId,
+    messageImage,
+    itemTitle,
+    sellerId,
+    isSeller,
+    price,
+    marketplacePostId,
+  } = route.params;
 
   useEffect(() => {
     if (route.params && route.params.channelId) {
       setChannelId(route.params.channelId);
-      setIsSold(route.params.isSold);
+      setIsSold(isSold);
     }
   }, [route.params]);
 
@@ -93,7 +103,7 @@ function PrivateMessagingScreen({ route, navigation }) {
         senderId: currentUser.userID,
         senderName: `${currentUser.firstName} ${currentUser.lastName}`,
         created: Timestamp.fromDate(new Date()),
-        otherPersonId: route.params.otherPersonId,
+        otherPersonId: otherPersonId,
         seen: false,
       };
       const res = await createItemInFirestore(
@@ -110,8 +120,8 @@ function PrivateMessagingScreen({ route, navigation }) {
     }
   };
 
-  const handleNavToPost = async (id, isSeller, otherPersonName, sellerId) => {
-    const post = await getItemById("Marketplace", id);
+  const handleNavToPost = async () => {
+    const post = await getItemById("Marketplace", marketplacePostId);
 
     setCurrentMarketplacePost(post);
     navigation.navigate("MarketplaceItemInfo", {
@@ -274,33 +284,25 @@ function PrivateMessagingScreen({ route, navigation }) {
       <View style={styles.messageHeader}>
         <TouchableOpacity
           onPress={() => {
-            handleNavToPost(
-              route.params.marketplacePostId,
-              route.params.isSeller,
-              route.params.otherPersonName,
-              route.params.sellerId
-            );
+            handleNavToPost();
           }}
         >
           <View style={styles.imageAndTitle}>
-            <Image
-              style={styles.itemImage}
-              source={{ uri: route.params.messageImage }}
-            />
+            <Image style={styles.itemImage} source={{ uri: messageImage }} />
             <View>
               <Text
                 style={[styles.itemTitle, styleVariables.fontSizes.bodyBold]}
               >
-                {route.params.itemTitle}
+                {itemTitle}
               </Text>
               <Text style={[styles.priceText, styleVariables.fontSizes.body]}>
-                {route.params.price}
+                {price}
               </Text>
             </View>
           </View>
         </TouchableOpacity>
         <View style={styles.arrowAndMarkSold}>
-          {route.params.isSeller && !isSold ? (
+          {isSeller && !isSold ? (
             <TouchableOpacity
               onPress={() => {
                 setModalVisible(true);
@@ -311,12 +313,7 @@ function PrivateMessagingScreen({ route, navigation }) {
           ) : null}
           <TouchableOpacity
             onPress={() => {
-              handleNavToPost(
-                route.params.marketplacePostId,
-                route.params.isSeller,
-                route.params.otherPersonName,
-                route.params.sellerId
-              );
+              handleNavToPost();
             }}
           >
             <ArrowRightSVG />
@@ -333,8 +330,7 @@ function PrivateMessagingScreen({ route, navigation }) {
             ListEmptyComponent={() => {
               return (
                 <Text style={styles.noItemText}>
-                  Your conversation with {route.params.otherPersonName} starts
-                  here
+                  Your conversation with {otherPersonName} starts here
                 </Text>
               );
             }}
