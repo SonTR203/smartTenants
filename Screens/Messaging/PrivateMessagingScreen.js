@@ -23,6 +23,7 @@ import uuid from "react-native-uuid";
 import {
   createItemInFirestore,
   updateItemInFirestore,
+  getItemById,
 } from "../../utils/firebase.services";
 import { constants } from "../../utils/constants";
 import Modal from "react-native-modal";
@@ -36,7 +37,8 @@ import UploadImageSVG from "../../components/UploadImageSVG";
 import SendMessageSVG from "../../components/SendMessageSVG";
 import MarkAsSoldModal from "../../components/Modals/MarkAsSoldModal";
 
-function PrivateMessagingScreen({ route }) {
+function PrivateMessagingScreen({ route, navigation }) {
+  const { setCurrentMarketplacePost } = useAppContext();
   const { styleVariables } = useTheme();
   const [channelId, setChannelId] = useState(null);
   const [messagesList, setMessagesList] = useState([]);
@@ -106,6 +108,19 @@ function PrivateMessagingScreen({ route }) {
         alert("Somethign went wrong");
       }
     }
+  };
+
+  const handleNavToPost = async (id, isSeller, otherPersonName, sellerId) => {
+    const post = await getItemById("Marketplace", id);
+
+    setCurrentMarketplacePost(post);
+    navigation.navigate("MarketplaceItemInfo", {
+      title: isSeller
+        ? `${currentUser.firstName} ${currentUser.lastName}`
+        : otherPersonName,
+      itemUserId: sellerId,
+      item: post,
+    });
   };
 
   const renderItem = ({ item, index }) => {
@@ -257,20 +272,33 @@ function PrivateMessagingScreen({ route }) {
         />
       </Modal>
       <View style={styles.messageHeader}>
-        <View style={styles.imageAndTitle}>
-          <Image
-            style={styles.itemImage}
-            source={{ uri: route.params.messageImage }}
-          />
-          <View>
-            <Text style={[styles.itemTitle, styleVariables.fontSizes.bodyBold]}>
-              {route.params.itemTitle}
-            </Text>
-            <Text style={[styles.priceText, styleVariables.fontSizes.body]}>
-              {route.params.price}
-            </Text>
+        <TouchableOpacity
+          onPress={() => {
+            handleNavToPost(
+              route.params.marketplacePostId,
+              route.params.isSeller,
+              route.params.otherPersonName,
+              route.params.sellerId
+            );
+          }}
+        >
+          <View style={styles.imageAndTitle}>
+            <Image
+              style={styles.itemImage}
+              source={{ uri: route.params.messageImage }}
+            />
+            <View>
+              <Text
+                style={[styles.itemTitle, styleVariables.fontSizes.bodyBold]}
+              >
+                {route.params.itemTitle}
+              </Text>
+              <Text style={[styles.priceText, styleVariables.fontSizes.body]}>
+                {route.params.price}
+              </Text>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
         <View style={styles.arrowAndMarkSold}>
           {route.params.isSeller && !isSold ? (
             <TouchableOpacity
@@ -281,7 +309,18 @@ function PrivateMessagingScreen({ route }) {
               <CircleCheckSVG />
             </TouchableOpacity>
           ) : null}
-          <ArrowRightSVG />
+          <TouchableOpacity
+            onPress={() => {
+              handleNavToPost(
+                route.params.marketplacePostId,
+                route.params.isSeller,
+                route.params.otherPersonName,
+                route.params.sellerId
+              );
+            }}
+          >
+            <ArrowRightSVG />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.textDisplayContainer}>

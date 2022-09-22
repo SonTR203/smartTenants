@@ -49,7 +49,8 @@ function MessagesListScreen({ navigation }) {
     itemTitle,
     sellerId,
     price,
-    isSold
+    isSold,
+    marketplacePostId
   ) => {
     const isSeller = currentUser.userID == sellerId;
     navigation.navigate("PrivateMessagingScreen", {
@@ -61,6 +62,7 @@ function MessagesListScreen({ navigation }) {
       isSeller: isSeller,
       price: price,
       isSold: isSold,
+      marketplacePostId: marketplacePostId,
     });
   };
 
@@ -97,7 +99,8 @@ function MessagesListScreen({ navigation }) {
               item.title,
               item.sellerId,
               item.price,
-              item.isSold
+              item.isSold,
+              item.marketplacePostId
             );
           }}
           style={styles.itemTouchable}

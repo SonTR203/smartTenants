@@ -64,6 +64,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
         price: item.price,
         isNew: true,
         isSold: false,
+        marketplacePostId: currentMarketplacePost.id,
       });
     }
 
@@ -77,6 +78,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
         isSeller: false,
         price: item.price,
         isSold: false,
+        marketplacePostId: currentMarketplacePost.id,
       });
     }
   };
