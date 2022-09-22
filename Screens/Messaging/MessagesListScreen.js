@@ -8,7 +8,6 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppContext } from "../../Context/AppContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../ThemeContext";
@@ -34,7 +33,7 @@ function MessagesListScreen({ navigation }) {
       const sellerList = sortedListOfNotifications.filter(
         (item) => currentUser.userID == item.sellerId
       );
-      // console.log("Buyers:", buyerList);
+      console.log("Buyers:", buyerList);
       // console.log("Sellers:", sellerList);
       setSellingList(sellerList);
       setBuyingList(buyerList);
@@ -88,7 +87,12 @@ function MessagesListScreen({ navigation }) {
       lastMessage = `${item.lastMessage.content}`;
     }
     return (
-      <View style={[styles.itemContainer]}>
+      <View
+        style={[
+          styles.itemContainer,
+          item.lastMessage ? { display: "flex" } : { display: "none" },
+        ]}
+      >
         <TouchableOpacity
           onPress={() => {
             handleNavigateToPrivateMessagingScreen(
