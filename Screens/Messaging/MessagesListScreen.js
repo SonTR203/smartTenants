@@ -152,6 +152,7 @@ function MessagesListScreen({ navigation }) {
     },
     noItemText: {
       textAlign: "center",
+      color: "#9D9D9D",
     },
     itemContainer: {
       flex: 1,
