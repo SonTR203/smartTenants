@@ -33,13 +33,13 @@ import { useTheme } from "../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import ArrowRightSVG from "../../components/Icons/ArrowRightSVG";
 import CircleCheckSVG from "../../components/Icons/CircleCheckSVG";
-import UploadImageSVG from "../../components/UploadImageSVG";
-import SendMessageSVG from "../../components/SendMessageSVG";
+import ArrowUpSVG from "../../components/Icons/ArrowUpSVG";
+import UploadImageSVG from "../../components/Icons/UploadImageSVG";
 import MarkAsSoldModal from "../../components/Modals/MarkAsSoldModal";
 
 function PrivateMessagingScreen({ route, navigation }) {
   const { setCurrentMarketplacePost } = useAppContext();
-  const { styleVariables } = useTheme();
+  const { theme, styleVariables } = useTheme();
   const [channelId, setChannelId] = useState(null);
   const [messagesList, setMessagesList] = useState([]);
   const [messages, setMessages] = useState("");
@@ -47,7 +47,6 @@ function PrivateMessagingScreen({ route, navigation }) {
   const [sendingText, setSendingText] = useState(false);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAppContext();
-  const [inputHeight, setInputHeight] = useState(36);
   const [isSold, setIsSold] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const {
@@ -172,32 +171,6 @@ function PrivateMessagingScreen({ route, navigation }) {
     loadingText: {
       textAlign: "center",
     },
-    messageContainer: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      backgroundColor: "white",
-      paddingTop: 16,
-      paddingBottom: 34,
-      borderTopLeftRadius: 16,
-      borderTopRightRadius: 16,
-      paddingHorizontal: 16,
-    },
-    messageInput: {
-      flex: 1,
-      borderWidth: 1,
-      borderColor: "#EBEFF0",
-      borderRadius: 18,
-      height: inputHeight,
-      minHeight: 36,
-      maxHeight: 76,
-      paddingHorizontal: 10,
-      marginLeft: 10,
-      marginRight: 10,
-      fontSize: 15,
-      backgroundColor: "white",
-      color: styleVariables.colors.black,
-    },
     itemImage: {
       width: 52,
       height: 40,
@@ -227,19 +200,6 @@ function PrivateMessagingScreen({ route, navigation }) {
       color: styleVariables.colors.primary,
       marginLeft: 8,
     },
-    arrowAndMarkSold: {
-      display: "flex",
-      flexDirection: "row",
-    },
-    sendMessageBtn: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 8,
-      width: 32,
-      height: 32,
-      backgroundColor: styleVariables.colors.primary,
-    },
     modal: {
       display: "flex",
       justifyContent: "flex-end",
@@ -260,6 +220,22 @@ function PrivateMessagingScreen({ route, navigation }) {
       backgroundColor: styleVariables.colors.white,
       color: "#92A6AB",
       paddingHorizontal: 16,
+    },
+    inputAreaContainer: {
+      marginHorizontal: 16,
+      marginTop: 16,
+      maxHeight: 160,
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "flex-end",
+    },
+    inputArea: {
+      flex: 1,
+    },
+    uploadButton: {
+      marginRight: 8,
+      marginBottom: 16,
+      alignSelf: "flex-end",
     },
   });
 
@@ -347,23 +323,31 @@ function PrivateMessagingScreen({ route, navigation }) {
           />
         )}
       </View>
-      <View style={styles.messageContainer}>
-        <UploadImageSVG />
+      <View style={[styles.inputAreaContainer]}>
+        <UploadImageSVG style={styles.uploadButton} />
         <TextInput
           placeholderTextColor={styleVariables.colors.placeholderText}
-          style={styles.messageInput}
           onChangeText={setMessages}
           value={messages}
-          placeholder="Type in your message"
+          placeholder="Send a Message"
+          maxLength={280}
           multiline
-          onContentSizeChange={(event) => {
-            setInputHeight(event.nativeEvent.contentSize.height);
-          }}
+          style={[
+            theme.individualPostsTextInput,
+            styleVariables.fontSizes.body,
+            styles.inputArea,
+          ]}
         />
-        <TouchableOpacity onPress={() => handleSendMessage(messages)}>
-          <View style={styles.sendMessageBtn}>
-            <SendMessageSVG />
-          </View>
+        {/* disable button class if no text input for comments */}
+        <TouchableOpacity
+          onPress={() => handleSendMessage(messages)}
+          style={[
+            theme.postButton,
+            { backgroundColor: !messages ? "#748E94" : "#395E66" },
+          ]}
+          disabled={!messages}
+        >
+          <ArrowUpSVG />
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
