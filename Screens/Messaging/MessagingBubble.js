@@ -65,11 +65,7 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
     },
     itemTimestamp: {
       fontSize: 11,
-    },
-    itemStatusContainer: {
-      justifyContent: "flex-end",
-      alignItems: "flex-end",
-      marginRight: 10,
+      marginBottom: 8,
     },
     sender: {
       backgroundColor: styleVariables.colors.primary,
@@ -91,6 +87,11 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
     senderText: {
       color: styleVariables.colors.white,
     },
+    timeContainer: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-end",
+    },
   });
 
   return (
@@ -101,7 +102,6 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
           isSender ? styles.sender : styles.receiver,
         ]}
       >
-        {/* <View style={styles.itemContentContainer}> */}
         <Text
           onLayout={() => {
             handleSetSeen(item, index);
@@ -113,17 +113,33 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
         >
           {item.content}
         </Text>
-        <Text
-          style={[
-            styles.itemTimestamp,
-            isSender ? styles.senderText : styles.receiverText,
-          ]}
-        >
-          {configureItemTime(item.created.seconds)}
-        </Text>
-        {/* </View> */}
+        <View style={styles.timeContainer}>
+          <Text
+            style={[
+              styles.itemTimestamp,
+              isSender ? styles.senderText : styles.receiverText,
+            ]}
+          >
+            {configureItemTime(item.created.seconds)}
+          </Text>
+          {isSender ? (
+            item.seen ? (
+              <MaterialCommunityIcons
+                name={"check-all"}
+                size={18}
+                color={"white"}
+              />
+            ) : (
+              <MaterialCommunityIcons
+                name={"check"}
+                size={18}
+                color={"white"}
+              />
+            )
+          ) : null}
+        </View>
       </View>
-      <View style={styles.itemStatusContainer}>
+      {/* <View style={styles.itemStatusContainer}>
         {index === length && isSender ? (
           item.seen ? (
             <MaterialCommunityIcons
@@ -137,7 +153,7 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
             </Text>
           )
         ) : null}
-      </View>
+      </View> */}
     </View>
   );
 }
