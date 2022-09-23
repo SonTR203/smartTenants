@@ -80,13 +80,8 @@ function MessagesListScreen({ navigation }) {
       item.sellerId === currentUser.userID ? item.buyerName : item.sellerName;
     const otherPersonId =
       item.sellerId === currentUser.userID ? item.buyerId : item.sellerId;
-    return (
-      <View
-        style={[
-          styles.itemContainer,
-          item.lastMessage ? { display: "flex" } : { display: "none" },
-        ]}
-      >
+    return item.lastMessage ? (
+      <View style={[styles.itemContainer]}>
         <TouchableOpacity
           onPress={() => {
             handleNavigateToPrivateMessagingScreen(
@@ -149,7 +144,7 @@ function MessagesListScreen({ navigation }) {
           </View>
         </TouchableOpacity>
       </View>
-    );
+    ) : null;
   };
 
   const styles = StyleSheet.create({
