@@ -193,7 +193,7 @@ function MessagesListScreen({ navigation }) {
     itemContent: {
       fontSize: 13,
       opacity: 0.5,
-      // width: "95%",
+      flex: 1,
     },
     itemTimestamp: {
       fontSize: 11,
