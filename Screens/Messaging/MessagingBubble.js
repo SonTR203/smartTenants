@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../ThemeContext";
 import { constants } from "../../utils/constants";
 
-function MessagingBubble({ item, index, length, sendingText, channelId }) {
+function MessagingBubble({ item, index, length, channelId }) {
   const { styleVariables } = useTheme();
   const { currentUser } = useAppContext();
   const isSender = item.senderId === currentUser.userID;
