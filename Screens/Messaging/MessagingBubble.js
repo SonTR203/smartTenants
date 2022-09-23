@@ -44,7 +44,7 @@ function MessagingBubble({ item, index, length, channelId }) {
       display: "flex",
       flexDirection: "row",
       backgroundColor: "white",
-      marginVertical: 10,
+      marginTop: 8,
       marginLeft: isSender ? "auto" : 10,
       marginRight: isSender ? 10 : "auto",
       padding: 10,
