@@ -252,6 +252,14 @@ function MessagesListScreen({ navigation }) {
       fontSize: 11,
       color: styleVariables.colors.primary,
     },
+    titleActive: {
+      fontSize: 22,
+      fontFamily: "Roboto_500Medium",
+    },
+    titleInactive: {
+      fontSize: 22,
+      fontFamily: "Roboto_400Regular",
+    },
   });
 
   return (
@@ -264,7 +272,14 @@ function MessagesListScreen({ navigation }) {
           }}
           style={styles.filterTitle}
         >
-          <Text style={[styleVariables.fontSizes.title, styles.primaryClr]}>
+          <Text
+            style={[
+              messageListFilter == "Buying"
+                ? styles.titleActive
+                : styles.titleInactive,
+              styles.primaryClr,
+            ]}
+          >
             Buying
           </Text>
           <View
@@ -280,7 +295,14 @@ function MessagesListScreen({ navigation }) {
           }}
           style={styles.filterTitle}
         >
-          <Text style={[styleVariables.fontSizes.title, styles.primaryClr]}>
+          <Text
+            style={[
+              messageListFilter == "Selling"
+                ? styles.titleActive
+                : styles.titleInactive,
+              styles.primaryClr,
+            ]}
+          >
             Selling
           </Text>
           <View
