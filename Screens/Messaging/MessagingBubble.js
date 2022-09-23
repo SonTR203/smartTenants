@@ -41,11 +41,8 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
 
   const styles = StyleSheet.create({
     itemContainer: (isSender) => ({
-      // maxWidth: constants.width * 0.8,
       display: "flex",
       flexDirection: "row",
-      // alignItems: "flex-start",
-      // flex: 1,
       backgroundColor: "white",
       marginVertical: 10,
       marginLeft: isSender ? "auto" : 10,
@@ -139,21 +136,6 @@ function MessagingBubble({ item, index, length, sendingText, channelId }) {
           ) : null}
         </View>
       </View>
-      {/* <View style={styles.itemStatusContainer}>
-        {index === length && isSender ? (
-          item.seen ? (
-            <MaterialCommunityIcons
-              name={"check-all"}
-              size={18}
-              color={"green"}
-            />
-          ) : (
-            <Text style={styles.sendingText}>
-              {sendingText ? "Sending" : "Sent"}
-            </Text>
-          )
-        ) : null}
-      </View> */}
     </View>
   );
 }

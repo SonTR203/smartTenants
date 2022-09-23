@@ -33,8 +33,6 @@ function MessagesListScreen({ navigation }) {
       const sellerList = sortedListOfNotifications.filter(
         (item) => currentUser.userID == item.sellerId
       );
-      console.log("Buyers:", buyerList);
-      // console.log("Sellers:", sellerList);
       setSellingList(sellerList);
       setBuyingList(buyerList);
     }
