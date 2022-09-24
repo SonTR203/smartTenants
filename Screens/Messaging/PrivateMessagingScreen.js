@@ -222,12 +222,16 @@ function PrivateMessagingScreen({ route, navigation }) {
       paddingHorizontal: 16,
     },
     inputAreaContainer: {
-      marginHorizontal: 16,
-      marginTop: 16,
+      backgroundColor: styleVariables.colors.white,
+      borderTopLeftRadius: 16,
+      borderTopRightRadius: 16,
+      paddingHorizontal: 16,
+      paddingTop: 16,
       maxHeight: 160,
       display: "flex",
       flexDirection: "row",
       justifyContent: "flex-end",
+      ...styleVariables.shadow,
     },
     inputArea: {
       flex: 1,
