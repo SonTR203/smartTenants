@@ -241,6 +241,13 @@ function PrivateMessagingScreen({ route, navigation }) {
       marginBottom: 16,
       alignSelf: "flex-end",
     },
+    arrowAndMarkSold: {
+      display: "flex",
+      flexDirection: "row",
+    },
+    markSoldIcon: {
+      marginRight: 8,
+    },
   });
 
   return (
@@ -288,7 +295,7 @@ function PrivateMessagingScreen({ route, navigation }) {
                 setModalVisible(true);
               }}
             >
-              <CircleCheckSVG />
+              <CircleCheckSVG style={styles.markSoldIcon} />
             </TouchableOpacity>
           ) : null}
           <TouchableOpacity
