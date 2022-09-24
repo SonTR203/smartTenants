@@ -135,7 +135,13 @@ function MessagesListScreen({ navigation }) {
                       size={16}
                       color={styleVariables.colors.primary}
                     />
-                  ) : null}
+                  ) : (
+                    <MaterialCommunityIcons
+                      name={"check"}
+                      size={16}
+                      color={styleVariables.colors.primary}
+                    />
+                  )}
                 </View>
               ) : null}
             </View>
