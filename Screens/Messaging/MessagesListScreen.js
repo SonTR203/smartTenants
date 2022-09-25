@@ -125,7 +125,7 @@ function MessagesListScreen({ navigation }) {
               </Text>
               {marketplaceBadges.unseen.includes(item.id) ? (
                 <View style={styles.newMessageIcon}>
-                  <Text style={styles.newMessageText}>New</Text>
+                  <Text style={styles.newMessageText}>{item.unseenCount}</Text>
                 </View>
               ) : item.lastMessage ? (
                 <View>
@@ -239,7 +239,8 @@ function MessagesListScreen({ navigation }) {
     newMessageIcon: {
       backgroundColor: styleVariables.colors.primary,
       borderRadius: 50,
-      padding: 5,
+      paddingVertical: 2,
+      paddingHorizontal: 8,
     },
     newMessageText: {
       fontSize: 11,

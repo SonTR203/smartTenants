@@ -65,6 +65,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
         isNew: true,
         isSold: false,
         marketplacePostId: currentMarketplacePost.id,
+        unseenCount: 0,
       });
     }
 
