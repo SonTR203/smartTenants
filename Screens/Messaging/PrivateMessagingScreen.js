@@ -4,6 +4,7 @@ import {
   orderBy,
   onSnapshot,
   Timestamp,
+  increment,
 } from "@firebase/firestore";
 import React, { useRef, useState, useEffect } from "react";
 import {
@@ -113,6 +114,9 @@ function PrivateMessagingScreen({ route, navigation }) {
       if (res) {
         setMessages("");
         setSendingText(false);
+        if (isSeller == false) {
+          incrementUnseenCount();
+        }
       } else {
         alert("Somethign went wrong");
       }
@@ -149,6 +153,12 @@ function PrivateMessagingScreen({ route, navigation }) {
       isSold: true,
     });
     setIsSold(true);
+  };
+
+  const incrementUnseenCount = () => {
+    updateItemInFirestore("MessagingList", channelId, {
+      unseenCount: increment(1),
+    });
   };
 
   const styles = StyleSheet.create({
