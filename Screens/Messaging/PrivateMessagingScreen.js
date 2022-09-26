@@ -38,7 +38,7 @@ import ArrowUpSVG from "../../components/Icons/ArrowUpSVG";
 import UploadImageSVG from "../../components/Icons/UploadImageSVG";
 import MarkAsSoldModal from "../../components/Modals/MarkAsSoldModal";
 
-function PrivateMessagingScreen({ route, navigation, props }) {
+function PrivateMessagingScreen({ route, navigation }) {
   const { setCurrentMarketplacePost } = useAppContext();
   const { theme, styleVariables } = useTheme();
   const [channelId, setChannelId] = useState(null);
