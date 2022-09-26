@@ -23,10 +23,33 @@ const PopupModal = ({ modalType, message }) => {
       mainIcon = <WarningIcon />;
       break;
   }
+  const styles = StyleSheet.create({
+    mainContainer: {
+      backgroundColor: primaryColor,
+      width: "90%",
+      borderRadius: 8,
+      flex: 0.05,
+      marginTop: "auto",
+      marginBottom: 100,
+      marginLeft: "auto",
+      marginRight: "auto",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-end",
+      shadowRadius: "16, 16, 0, 0",
+    },
+    subContainer: {
+      width: "99%",
+      backgroundColor: "#fff",
+      borderRadius: 8,
+    },
+  });
   return (
-    <View>
-      {mainIcon}
-      <Text>{message}</Text>
+    <View style={styles.mainContainer}>
+      <View style={styles.subContainer}>
+        {mainIcon}
+        <Text>{message}</Text>
+      </View>
     </View>
   );
 };
