@@ -17,7 +17,7 @@ import {
 import { useTheme } from "../../ThemeContext";
 import _ from "lodash";
 
-function MessagesListScreen({ navigation }) {
+function MessagesListScreen({ navigation, route }) {
   const [buyingList, setBuyingList] = useState([]);
   const [sellingList, setSellingList] = useState([]);
   const [messageListFilter, setMessageListFilter] = useState("Buying");
@@ -96,17 +96,25 @@ function MessagesListScreen({ navigation }) {
       item.sellerId === currentUser.userID ? item.buyerName : item.sellerName;
     const otherPersonId =
       item.sellerId === currentUser.userID ? item.buyerId : item.sellerId;
+    async function getIsSold(id) {
+      let post = await getItemById("Marketplace", id);
+      setIsSold(post.isSold);
+    }
     useEffect(() => {
-      async function getIsSold(id) {
-        let post = await getItemById("Marketplace", id);
-        setIsSold(post.isSold);
-      }
       getIsSold(item.marketplacePostId);
-    });
+    }, []);
     useEffect(() => {
       const time = configureItemTime(item.lastMessage.timestamp.seconds);
       setTime(time);
     }, []);
+    useEffect(() => {
+      if (
+        route.params &&
+        route.params.marketplacePostId == item.marketplacePostId
+      ) {
+        getIsSold(item.marketplacePostId);
+      }
+    }, [route.params]);
 
     return (
       <View style={[styles.itemContainer]}>

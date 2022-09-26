@@ -157,6 +157,9 @@ function PrivateMessagingScreen({ route, navigation, props }) {
       isSold: true,
     });
     setItemSold(true);
+    navigation.navigate("MessagesListScreen", {
+      marketplacePostId: marketplacePostId,
+    });
   };
 
   const incrementUnseenCount = () => {
