@@ -14,21 +14,24 @@ function MyListingsScreen() {
   const [soldListings, setSoldListings] = useState(undefined);
   const { currentUser } = useAppContext();
 
-  useEffect(async () => {
-    const list = await getMarketplaceItems();
-    const myListingList = list.filter(
-      (item) => item.userID === currentUser.userID && !item.isSold
-    );
-    const mySoldListingList = list.filter(
-      (item) => item.userID === currentUser.userID && item.isSold
-    );
+  useEffect(() => {
+    async function setMarketplaceListings() {
+      const list = await getMarketplaceItems();
+      const myListingList = list.filter(
+        (item) => item.userID === currentUser.userID && !item.isSold
+      );
+      const mySoldListingList = list.filter(
+        (item) => item.userID === currentUser.userID && item.isSold
+      );
 
-    myListingList
-      ? setAvailableListings(myListingList)
-      : setAvailableListings([]);
-    mySoldListingList
-      ? setSoldListings(mySoldListingList)
-      : setSoldListings([]);
+      myListingList
+        ? setAvailableListings(myListingList)
+        : setAvailableListings([]);
+      mySoldListingList
+        ? setSoldListings(mySoldListingList)
+        : setSoldListings([]);
+    }
+    setMarketplaceListings();
   }, []);
 
   const handleSetListingSold = async (selectedItem) => {

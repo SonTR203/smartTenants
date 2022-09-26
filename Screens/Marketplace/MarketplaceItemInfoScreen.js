@@ -39,7 +39,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
   }, [currentMarketplacePost]);
 
   const handleSendMessage = async () => {
-    const id = `${currentUser.userID}-${item.userID}`;
+    const id = `${currentUser.userID}-${item.id}`;
     const docRef = doc(db, `MessagingList`, id);
     const docSnap = await getDoc(docRef);
     let res = null;
@@ -61,7 +61,11 @@ function MarketplaceItemInfoScreen({ navigation }) {
         messageImage: item.images[0],
         timestamp: Timestamp.fromDate(new Date()),
         hasPeople: [currentUser.userID, item.userID],
+        price: item.price,
         isNew: true,
+        isSold: false,
+        marketplacePostId: currentMarketplacePost.id,
+        unseenCount: 0,
       });
     }
 
@@ -70,6 +74,12 @@ function MarketplaceItemInfoScreen({ navigation }) {
         otherPersonName: item.userFirstName + " " + item.userLastName,
         otherPersonId: item.userID,
         channelId: id,
+        messageImage: item.images[0],
+        itemTitle: item.postTitle,
+        isSeller: false,
+        price: item.price,
+        isSold: false,
+        marketplacePostId: currentMarketplacePost.id,
       });
     }
   };

@@ -6,9 +6,12 @@ import { setTime } from "../../utils/setTime";
 function CommentReply({ item, theme, styleVariables, styles }) {
   const [timeSincePost, setTimeSincePost] = useState("");
 
-  useEffect(async () => {
-    let time = setTime(item.timestamp.seconds * 1000);
-    setTimeSincePost(time);
+  useEffect(() => {
+    async function convertTime() {
+      let time = setTime(item.timestamp.seconds * 1000);
+      setTimeSincePost(time);
+    }
+    convertTime();
   }, []);
 
   return (

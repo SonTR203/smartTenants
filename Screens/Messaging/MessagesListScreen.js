@@ -8,15 +8,18 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppContext } from "../../Context/AppContext";
-import { setTime } from "../../utils/setTime";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { updateItemInFirestore } from "../../utils/firebase.services";
+import { useTheme } from "../../ThemeContext";
 import _ from "lodash";
 
 function MessagesListScreen({ navigation }) {
-  const [messagesList, setMessagesList] = useState([]);
+  const [buyingList, setBuyingList] = useState([]);
+  const [sellingList, setSellingList] = useState([]);
+  const [messageListFilter, setMessageListFilter] = useState("Buying");
   const { currentUser, marketplaceBadges } = useAppContext();
+  const { styleVariables } = useTheme();
 
   useEffect(() => {
     // console.log("marketplace screen list: ", marketplaceBadges.list.length);
@@ -25,54 +28,79 @@ function MessagesListScreen({ navigation }) {
         marketplaceBadges.list,
         "timestamp"
       ).reverse();
-      setMessagesList(sortedListOfNotifications);
+      const buyerList = sortedListOfNotifications.filter(
+        (item) => currentUser.userID == item.buyerId
+      );
+      const sellerList = sortedListOfNotifications.filter(
+        (item) => currentUser.userID == item.sellerId
+      );
+      setSellingList(sellerList);
+      setBuyingList(buyerList);
     }
   }, [marketplaceBadges.list]);
 
   const handleNavigateToPrivateMessagingScreen = async (
     otherPersonName,
     otherPersonId,
-    channelId
+    channelId,
+    messageImage,
+    itemTitle,
+    sellerId,
+    price,
+    isSold,
+    marketplacePostId
   ) => {
+    if (marketplaceBadges.unseen.includes(channelId)) {
+      resetUnseenList(channelId);
+    }
+    const isSeller = currentUser.userID == sellerId;
     navigation.navigate("PrivateMessagingScreen", {
       otherPersonName: otherPersonName,
       otherPersonId: otherPersonId,
       channelId: channelId,
+      messageImage: messageImage,
+      itemTitle: itemTitle,
+      isSeller: isSeller,
+      price: price,
+      isSold: isSold,
+      marketplacePostId: marketplacePostId,
     });
   };
+
+  function resetUnseenList(channelId) {
+    updateItemInFirestore("MessagingList", channelId, { unseenCount: 0 });
+    console.log(channelId);
+  }
+
+  function configureItemTime(time) {
+    let timestamp = time * 1000;
+    let date = new Date(timestamp).toTimeString().split(":");
+    if (date[0] > 12) {
+      return `${date[0] - 12}:${date[1]}pm`;
+    } else {
+      return `${date[0]}:${date[1]}am`;
+    }
+  }
 
   const renderItem = ({ item }) => {
     const otherPersonName =
       item.sellerId === currentUser.userID ? item.buyerName : item.sellerName;
     const otherPersonId =
       item.sellerId === currentUser.userID ? item.buyerId : item.sellerId;
-
-    const isNew = item.isNew;
-    let lastMessage = "";
-    if (!isNew) {
-      // if you sent the last message
-      if (item.lastMessage.senderId === currentUser.userID) {
-        lastMessage = `${
-          item.lastMessage.senderId === currentUser.userID
-            ? "You"
-            : item.lastMessage.senderFirstName
-        }: ${item.lastMessage.content}`;
-      } else {
-        // if you received the last message
-        lastMessage = `${item.lastMessage.senderFirstName}: ${item.lastMessage.content}`;
-      }
-    }
-    return (
-      <View style={styles.itemContainer}>
-        {marketplaceBadges.unseen.includes(item.id) ? (
-          <MaterialCommunityIcons name="new-box" size={30} color={"red"} />
-        ) : null}
+    return item.lastMessage ? (
+      <View style={[styles.itemContainer]}>
         <TouchableOpacity
           onPress={() => {
             handleNavigateToPrivateMessagingScreen(
               otherPersonName,
               otherPersonId,
-              item.id
+              item.id,
+              item.messageImage,
+              item.title,
+              item.sellerId,
+              item.price,
+              item.isSold,
+              item.marketplacePostId
             );
           }}
           style={styles.itemTouchable}
@@ -80,105 +108,237 @@ function MessagesListScreen({ navigation }) {
           <Image style={styles.itemImage} source={{ uri: item.messageImage }} />
 
           <View style={styles.itemTextContainer}>
-            <Text style={styles.itemTitle}>{item.title}</Text>
-            <Text style={styles.itemPersonName}>{otherPersonName}</Text>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.itemContent}
-            >
-              {isNew ? "New Inquiry" : lastMessage}
-            </Text>
-            {item.lastMessage ? (
-              <View style={styles.itemTimestamp}>
-                <Text>
-                  {setTime(item.lastMessage.timestamp.seconds * 1000)}
-                </Text>
-                {item.lastMessage.seen ? (
-                  <MaterialCommunityIcons
-                    name={"check-all"}
-                    size={25}
-                    color={"green"}
-                  />
+            <View style={styles.flexApart}>
+              <View style={styles.flexApart}>
+                <Text style={styles.itemTitle}>{item.title}</Text>
+                {item.isSold == true ? (
+                  <View style={styles.isSoldView}>
+                    <Text style={styles.isSoldText}>Sold</Text>
+                  </View>
                 ) : null}
               </View>
-            ) : null}
+              {item.lastMessage ? (
+                <Text style={styles.itemTimestamp}>
+                  {configureItemTime(item.lastMessage.timestamp.seconds)}
+                </Text>
+              ) : null}
+            </View>
+            <Text style={styles.itemPersonName}>{otherPersonName}</Text>
+            <View style={styles.flexApart}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.itemContent}
+              >
+                {item.lastMessage.content}
+              </Text>
+              {marketplaceBadges.unseen.includes(item.id) ? (
+                <View style={styles.newMessageIcon}>
+                  <Text style={styles.newMessageText}>{item.unseenCount}</Text>
+                </View>
+              ) : item.lastMessage ? (
+                <View>
+                  {item.lastMessage.seen ? (
+                    <MaterialCommunityIcons
+                      name={"check-all"}
+                      size={16}
+                      color={styleVariables.colors.primary}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name={"check"}
+                      size={16}
+                      color={styleVariables.colors.primary}
+                    />
+                  )}
+                </View>
+              ) : null}
+            </View>
           </View>
         </TouchableOpacity>
       </View>
-    );
+    ) : null;
   };
 
+  const styles = StyleSheet.create({
+    flatlist: {
+      height: "100%",
+      paddingTop: 24,
+    },
+    noItemText: {
+      textAlign: "center",
+      color: "#9D9D9D",
+    },
+    itemContainer: {
+      flex: 1,
+      padding: 8,
+      backgroundColor: "white",
+      flexDirection: "row-reverse",
+      marginHorizontal: 16,
+      marginBottom: 8,
+      borderRadius: 16,
+      ...styleVariables.shadow,
+    },
+    itemTouchable: {
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: "flex-start",
+      alignItems: "center",
+    },
+    itemImage: {
+      width: 83.2,
+      height: 64,
+      borderRadius: 8,
+    },
+    itemTextContainer: {
+      flex: 1,
+      marginLeft: 20,
+    },
+    itemTitle: {
+      fontSize: 15,
+      marginBottom: 2,
+      color: styleVariables.colors.black,
+    },
+    itemPersonName: {
+      fontSize: 13,
+      marginBottom: 4,
+      color: styleVariables.colors.black,
+    },
+    itemContent: {
+      fontSize: 13,
+      opacity: 0.5,
+      flex: 1,
+    },
+    itemTimestamp: {
+      fontSize: 11,
+      opacity: 0.5,
+      color: styleVariables.colors.black,
+    },
+    primaryClr: {
+      color: styleVariables.colors.primary,
+    },
+    messageFilter: {
+      width: "100%",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-around",
+      paddingHorizontal: 32,
+      paddingTop: 7,
+    },
+    bottomBar: {
+      height: 4,
+      width: 150,
+      backgroundColor: styleVariables.colors.primary,
+      marginTop: 8,
+      borderTopLeftRadius: 2,
+      borderTopRightRadius: 2,
+    },
+    filterTitle: {
+      display: "flex",
+      alignItems: "center",
+    },
+    hidden: {
+      backgroundColor: "white",
+    },
+    flexApart: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    newMessageIcon: {
+      backgroundColor: styleVariables.colors.primary,
+      borderRadius: 50,
+      paddingVertical: 2,
+      paddingHorizontal: 8,
+    },
+    newMessageText: {
+      fontSize: 11,
+      color: styleVariables.colors.white,
+    },
+    isSoldView: {
+      display: "flex",
+      justifyContent: "center",
+      backgroundColor: "#EBEFF0",
+      paddingVertical: 2,
+      paddingHorizontal: 8,
+      marginLeft: 4,
+      borderRadius: 50,
+    },
+    isSoldText: {
+      fontSize: 11,
+      color: styleVariables.colors.primary,
+    },
+    titleActive: {
+      fontSize: 22,
+      fontFamily: "Roboto_500Medium",
+    },
+    titleInactive: {
+      fontSize: 22,
+      fontFamily: "Roboto_400Regular",
+    },
+  });
+
   return (
-    <SafeAreaView>
+    <View style={{ backgroundColor: "white" }}>
       <StatusBar style="dark" />
-      <View>
-        <FlatList
-          ListEmptyComponent={() => {
-            return <Text style={styles.noItemText}>You have no messages.</Text>;
+      <View style={styles.messageFilter}>
+        <TouchableOpacity
+          onPress={() => {
+            setMessageListFilter("Buying");
           }}
-          style={styles.flatlist}
-          keyExtractor={(item) => item.id}
-          data={messagesList}
-          renderItem={renderItem}
-        />
+          style={styles.filterTitle}
+        >
+          <Text
+            style={[
+              messageListFilter == "Buying"
+                ? styles.titleActive
+                : styles.titleInactive,
+              styles.primaryClr,
+            ]}
+          >
+            Buying
+          </Text>
+          <View
+            style={[
+              styles.bottomBar,
+              messageListFilter != "Buying" ? styles.hidden : "",
+            ]}
+          ></View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setMessageListFilter("Selling");
+          }}
+          style={styles.filterTitle}
+        >
+          <Text
+            style={[
+              messageListFilter == "Selling"
+                ? styles.titleActive
+                : styles.titleInactive,
+              styles.primaryClr,
+            ]}
+          >
+            Selling
+          </Text>
+          <View
+            style={[
+              styles.bottomBar,
+              messageListFilter != "Selling" ? styles.hidden : "",
+            ]}
+          ></View>
+        </TouchableOpacity>
       </View>
-    </SafeAreaView>
+      <FlatList
+        ListEmptyComponent={() => {
+          return <Text style={styles.noItemText}>You have no messages.</Text>;
+        }}
+        style={styles.flatlist}
+        keyExtractor={(item) => item.id}
+        data={messageListFilter == "Buying" ? buyingList : sellingList}
+        renderItem={renderItem}
+      />
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  flatlist: {
-    height: "100%",
-  },
-  noItemText: {
-    textAlign: "center",
-  },
-  itemContainer: {
-    flex: 1,
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: "#4d4d4d",
-    flexDirection: "row-reverse",
-  },
-  itemTouchable: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  itemImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: "#4d4d4d",
-  },
-  itemTextContainer: {
-    flex: 1,
-    marginLeft: 20,
-  },
-  itemTitle: {
-    fontSize: 20,
-    marginBottom: 5,
-  },
-  itemPersonName: {
-    fontSize: 17,
-    marginBottom: 5,
-    opacity: 0.8,
-  },
-  itemContent: {
-    fontSize: 15,
-    opacity: 0.5,
-    width: "95%",
-  },
-  itemTimestamp: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    opacity: 0.5,
-  },
-});
-
 export default MessagesListScreen;
