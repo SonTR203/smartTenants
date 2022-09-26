@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { updateItemInFirestore } from "../../utils/firebase.services";
 import { useTheme } from "../../ThemeContext";
 import _ from "lodash";
 
@@ -49,6 +50,9 @@ function MessagesListScreen({ navigation }) {
     isSold,
     marketplacePostId
   ) => {
+    if (marketplaceBadges.unseen.includes(channelId)) {
+      resetUnseenList(channelId);
+    }
     const isSeller = currentUser.userID == sellerId;
     navigation.navigate("PrivateMessagingScreen", {
       otherPersonName: otherPersonName,
@@ -62,6 +66,11 @@ function MessagesListScreen({ navigation }) {
       marketplacePostId: marketplacePostId,
     });
   };
+
+  function resetUnseenList(channelId) {
+    updateItemInFirestore("MessagingList", channelId, { unseenCount: 0 });
+    console.log(channelId);
+  }
 
   function configureItemTime(time) {
     let timestamp = time * 1000;
