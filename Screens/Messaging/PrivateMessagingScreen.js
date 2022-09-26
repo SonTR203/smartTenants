@@ -135,7 +135,7 @@ function PrivateMessagingScreen({ route, navigation }) {
       title: isSeller
         ? `${currentUser.firstName} ${currentUser.lastName}`
         : otherPersonName,
-      itemUserId: sellerId,
+      itemUserId: isSeller ? currentUser.userID : otherPersonId,
       item: post,
     });
   };
