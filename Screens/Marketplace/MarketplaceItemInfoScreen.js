@@ -39,7 +39,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
   }, [currentMarketplacePost]);
 
   const handleSendMessage = async () => {
-    const id = `${currentUser.userID}-${item.userID}`;
+    const id = `${currentUser.userID}-${item.id}`;
     const docRef = doc(db, `MessagingList`, id);
     const docSnap = await getDoc(docRef);
     let res = null;
