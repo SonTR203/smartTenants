@@ -55,7 +55,6 @@ function PrivateMessagingScreen({ route, navigation }) {
     otherPersonId,
     messageImage,
     itemTitle,
-    sellerId,
     isSeller,
     isSold,
     price,
