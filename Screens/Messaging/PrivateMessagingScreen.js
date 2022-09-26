@@ -48,15 +48,15 @@ function PrivateMessagingScreen({ route, navigation }) {
   const [sendingText, setSendingText] = useState(false);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAppContext();
-  const [isSold, setIsSold] = useState(null);
+  const [itemSold, setItemSold] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const {
     otherPersonName,
     otherPersonId,
     messageImage,
     itemTitle,
-    sellerId,
     isSeller,
+    isSold,
     price,
     marketplacePostId,
   } = route.params;
@@ -64,9 +64,12 @@ function PrivateMessagingScreen({ route, navigation }) {
   useEffect(() => {
     if (route.params && route.params.channelId) {
       setChannelId(route.params.channelId);
-      setIsSold(isSold);
     }
   }, [route.params]);
+
+  useEffect(() => {
+    setItemSold(isSold);
+  }, []);
 
   useEffect(() => {
     let unsubscribe;
@@ -131,7 +134,7 @@ function PrivateMessagingScreen({ route, navigation }) {
       title: isSeller
         ? `${currentUser.firstName} ${currentUser.lastName}`
         : otherPersonName,
-      itemUserId: sellerId,
+      itemUserId: isSeller ? currentUser.userID : otherPersonId,
       item: post,
     });
   };
@@ -149,10 +152,13 @@ function PrivateMessagingScreen({ route, navigation }) {
   };
 
   const handleMarkSold = () => {
-    updateItemInFirestore("MessagingList", channelId, {
+    updateItemInFirestore("Marketplace", marketplacePostId, {
       isSold: true,
     });
-    setIsSold(true);
+    setItemSold(true);
+    navigation.navigate("MessagesListScreen", {
+      marketplacePostId: marketplacePostId,
+    });
   };
 
   const incrementUnseenCount = () => {
@@ -299,7 +305,7 @@ function PrivateMessagingScreen({ route, navigation }) {
           </View>
         </TouchableOpacity>
         <View style={styles.arrowAndMarkSold}>
-          {isSeller && !isSold ? (
+          {isSeller && !itemSold ? (
             <TouchableOpacity
               onPress={() => {
                 setModalVisible(true);
@@ -340,7 +346,9 @@ function PrivateMessagingScreen({ route, navigation }) {
               listRef.current.scrollToEnd({ animated: true })
             }
             onLayout={() => listRef.current.scrollToEnd({ animated: true })}
-            ListFooterComponent={isSold ? <ListFooter styles={styles} /> : null}
+            ListFooterComponent={
+              itemSold ? <ListFooter styles={styles} /> : null
+            }
           />
         )}
       </View>
