@@ -63,7 +63,6 @@ function MarketplaceItemInfoScreen({ navigation }) {
         hasPeople: [currentUser.userID, item.userID],
         price: item.price,
         isNew: true,
-        isSold: false,
         marketplacePostId: currentMarketplacePost.id,
         unseenCount: 0,
       });
@@ -78,7 +77,6 @@ function MarketplaceItemInfoScreen({ navigation }) {
         itemTitle: item.postTitle,
         isSeller: false,
         price: item.price,
-        isSold: false,
         marketplacePostId: currentMarketplacePost.id,
       });
     }

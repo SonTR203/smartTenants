@@ -10,7 +10,10 @@ import {
 } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { updateItemInFirestore } from "../../utils/firebase.services";
+import {
+  updateItemInFirestore,
+  getItemById,
+} from "../../utils/firebase.services";
 import { useTheme } from "../../ThemeContext";
 import _ from "lodash";
 
@@ -83,11 +86,29 @@ function MessagesListScreen({ navigation }) {
   }
 
   const renderItem = ({ item }) => {
+    return item.lastMessage ? <ConversationBubble item={item} /> : null;
+  };
+
+  function ConversationBubble({ item }) {
+    const [isSold, setIsSold] = useState(false);
+    const [time, setTime] = useState(null);
     const otherPersonName =
       item.sellerId === currentUser.userID ? item.buyerName : item.sellerName;
     const otherPersonId =
       item.sellerId === currentUser.userID ? item.buyerId : item.sellerId;
-    return item.lastMessage ? (
+    useEffect(() => {
+      async function getIsSold(id) {
+        let post = await getItemById("Marketplace", id);
+        setIsSold(post.isSold);
+      }
+      getIsSold(item.marketplacePostId);
+    });
+    useEffect(() => {
+      const time = configureItemTime(item.lastMessage.timestamp.seconds);
+      setTime(time);
+    }, []);
+
+    return (
       <View style={[styles.itemContainer]}>
         <TouchableOpacity
           onPress={() => {
@@ -99,7 +120,7 @@ function MessagesListScreen({ navigation }) {
               item.title,
               item.sellerId,
               item.price,
-              item.isSold,
+              isSold,
               item.marketplacePostId
             );
           }}
@@ -111,16 +132,14 @@ function MessagesListScreen({ navigation }) {
             <View style={styles.flexApart}>
               <View style={styles.flexApart}>
                 <Text style={styles.itemTitle}>{item.title}</Text>
-                {item.isSold == true ? (
+                {isSold == true ? (
                   <View style={styles.isSoldView}>
                     <Text style={styles.isSoldText}>Sold</Text>
                   </View>
                 ) : null}
               </View>
               {item.lastMessage ? (
-                <Text style={styles.itemTimestamp}>
-                  {configureItemTime(item.lastMessage.timestamp.seconds)}
-                </Text>
+                <Text style={styles.itemTimestamp}>{time}</Text>
               ) : null}
             </View>
             <Text style={styles.itemPersonName}>{otherPersonName}</Text>
@@ -157,8 +176,8 @@ function MessagesListScreen({ navigation }) {
           </View>
         </TouchableOpacity>
       </View>
-    ) : null;
-  };
+    );
+  }
 
   const styles = StyleSheet.create({
     flatlist: {
