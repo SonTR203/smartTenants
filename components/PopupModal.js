@@ -28,7 +28,7 @@ const PopupModal = ({ modalType, message }) => {
       backgroundColor: primaryColor,
       width: "90%",
       borderRadius: 8,
-      flex: 0.05,
+      height: message.length > 40 ? "10%" : 56,
       marginTop: "auto",
       marginBottom: 100,
       marginLeft: "auto",
@@ -39,16 +39,29 @@ const PopupModal = ({ modalType, message }) => {
       shadowRadius: "16, 16, 0, 0",
     },
     subContainer: {
-      width: "99%",
+      width: "98.7%",
       backgroundColor: "#fff",
       borderRadius: 8,
+      paddingVertical: 8,
+      paddingHorizontal: 12,
+      display: "flex",
+      flexDirection: "row",
+      height: "100%",
+      alignItems: "center",
+    },
+    message: {
+      color: primaryColor,
+      flex: 1,
+      marginLeft: 8,
     },
   });
   return (
-    <View style={styles.mainContainer}>
+    <View style={[styleVariables.shadow, styles.mainContainer]}>
       <View style={styles.subContainer}>
         {mainIcon}
-        <Text>{message}</Text>
+        <Text style={[styleVariables.fontSizes.callout, styles.message]}>
+          {message}
+        </Text>
       </View>
     </View>
   );

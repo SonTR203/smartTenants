@@ -66,8 +66,7 @@ const EditProfile = ({ route, navigation }) => {
             animationType="slide"
             transparent={true}
             // statusBarTranslucent={true}
-            // visible={route.params?.saveModal === true ? true : false}
-            visible={true}
+            visible={route.params?.saveModal === true ? true : false}
             onRequestClose={() => {
               navigation.setParams({
                 saveModal: false,
@@ -80,7 +79,10 @@ const EditProfile = ({ route, navigation }) => {
                 });
               }, 2000);
             }}>
-            <PopupModal modalType={"success"} message="Hello Word" />
+            <PopupModal
+              modalType={"success"}
+              message=" Something went wrong "
+            />
           </Modal>
           <View style={[theme.topCard, styles(styleVariables).topCard]}>
             <View style={styles(styleVariables).headerSection}>
