@@ -10,22 +10,31 @@ import {
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { BottomMenuItem } from "./BottomMenuItem";
 
-export const TabBar = ({ state, descriptors, navigation }) => {
+export const TabBar = ({ state, descriptors, navigation, routeName }) => {
   const totalWidth = Dimensions.get("window").width;
   const tabWidth = totalWidth / state.routes.length;
   const [translateValue] = useState(new Animated.Value(0));
 
-  const getRouteName = (route) => {
-    const routeName = getFocusedRouteNameFromRoute(route);
-    if (
-      routeName?.includes("Login") ||
-      routeName?.includes("Signup") ||
-      routeName?.includes("AccountApprovalPending") ||
-      routeName?.includes("ForgotPassword") ||
-      routeName?.includes("TermsAndConditions")
-    ) {
-      return "none";
-    } else if (routeName == undefined) {
+  const getRouteName = () => {
+    switch (routeName) {
+      case "Login":
+        return "none";
+      case "Signup":
+        return "none";
+      case "AccountApprovalPending":
+        return "none";
+      case "ForgotPassword":
+        return "none";
+      case "TermsAndConditions":
+        return "none";
+      case "Splashscreen":
+        return "none";
+      case "PrivateMessagingScreen":
+        return "none";
+      default:
+        break;
+    }
+    if (routeName == undefined) {
       return "none";
     }
     return "flex";
@@ -64,7 +73,7 @@ export const TabBar = ({ state, descriptors, navigation }) => {
             getFocusedRouteNameFromRoute(state.routes[0]) == "IndividualPosts"
               ? "0%"
               : "10%",
-          display: getRouteName(state.routes[0]),
+          display: getRouteName(),
         },
       ]}
     >
