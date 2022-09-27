@@ -251,11 +251,15 @@ function PrivateMessagingScreen({ route, navigation }) {
     },
     inputArea: {
       flex: 1,
+      marginBottom: 34,
     },
     uploadButton: {
       marginRight: 8,
-      marginBottom: 16,
+      marginBottom: 34,
       alignSelf: "flex-end",
+    },
+    sendMessageIcon: {
+      marginBottom: 34,
     },
     arrowAndMarkSold: {
       display: "flex",
@@ -372,6 +376,7 @@ function PrivateMessagingScreen({ route, navigation }) {
           onPress={() => handleSendMessage(messages)}
           style={[
             theme.postButton,
+            styles.sendMessageIcon,
             { backgroundColor: !messages ? "#748E94" : "#395E66" },
           ]}
           disabled={!messages}
