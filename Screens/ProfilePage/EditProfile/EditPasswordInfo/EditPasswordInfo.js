@@ -55,8 +55,9 @@ const EditEmailInfo = ({ navigation }) => {
       case "Firebase: Password should be at least 6 characters (auth/weak-password).":
         setErrorText("Password must be at least 6 characters");
         break;
-      default:
+      case "success":
         handleSaveSuccess();
+        break;
     }
   };
 
