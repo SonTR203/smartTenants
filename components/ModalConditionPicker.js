@@ -45,7 +45,14 @@ function ModalConditionPicker({
     <View style={styles.modalContainer}>
       <View style={styles.checkBoxContainer}>
         <View style={[styles.checkBox, { marginBottom: 30 }]}>
-          <Text style={styleVariables.fontSizes.body}>New</Text>
+          <Text
+            style={[
+              styleVariables.fontSizes.body,
+              { color: styleVariables.colors.black },
+            ]}
+          >
+            New
+          </Text>
           <BouncyCheckbox
             size={28}
             fillColor={styleVariables.colors.primary}
@@ -72,7 +79,14 @@ function ModalConditionPicker({
           />
         </View>
         <View style={styles.checkBox}>
-          <Text style={styleVariables.fontSizes.body}>Used</Text>
+          <Text
+            style={[
+              styleVariables.fontSizes.body,
+              { color: styleVariables.colors.black },
+            ]}
+          >
+            Used
+          </Text>
           <BouncyCheckbox
             size={28}
             fillColor={styleVariables.colors.primary}

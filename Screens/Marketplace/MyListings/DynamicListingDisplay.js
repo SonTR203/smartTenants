@@ -6,12 +6,14 @@ import { useAppContext } from "../../../Context/AppContext";
 import MarketplaceFirstItem from "../MarketplaceItem/MarketplaceFirstItem";
 import CustomBottomModal from "../../../components/CustomBottomModal";
 import ModalActionConfirm from "../../../components/CustomBottomModal/ModalActionConfirm";
+import { useTheme } from "../../../ThemeContext";
 
 function DynamicListingDisplay({ data, available, handleSetListingSold }) {
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState(undefined);
   const navigation = useNavigation();
   const { setCurrentMarketplacePost } = useAppContext();
+  const { styleVariables } = useTheme();
 
   const handleOpenSoldModal = (item) => {
     if (available) {
@@ -80,6 +82,7 @@ function DynamicListingDisplay({ data, available, handleSetListingSold }) {
             style={{
               marginTop: 20,
               textAlign: "center",
+              color: styleVariables.colors.black,
             }}
           >
             You have no listing

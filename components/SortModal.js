@@ -58,7 +58,14 @@ function SortModal({
   return (
     <View style={styles.modalContainer}>
       <View style={styles.flexApart}>
-        <Text style={styleVariables.fontSizes.title}>Sort</Text>
+        <Text
+          style={[
+            styleVariables.fontSizes.title,
+            { color: styleVariables.colors.black },
+          ]}
+        >
+          Sort
+        </Text>
         <TouchableOpacity
           onPress={() => {
             setSortingBy("Date(newest)");

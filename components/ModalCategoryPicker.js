@@ -203,7 +203,11 @@ function ModalCategoryPicker({
               <TouchableOpacity onPress={closeCategory} style={styles.title}>
                 <ChevronLeftSVG />
                 <Text
-                  style={[styleVariables.fontSizes.title, styles.marginLeft]}
+                  style={[
+                    styleVariables.fontSizes.title,
+                    styles.marginLeft,
+                    { color: styleVariables.colors.black },
+                  ]}
                 >
                   Category
                 </Text>

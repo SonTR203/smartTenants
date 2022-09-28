@@ -6,6 +6,7 @@ import {
   updateItemInFirestore,
 } from "../../../utils/firebase.services";
 import MarketplaceFirstItem from "../MarketplaceItem/MarketplaceFirstItem";
+import { useTheme } from "../../../ThemeContext";
 
 function SavedListingsScreen({ navigation }) {
   const {
@@ -16,6 +17,7 @@ function SavedListingsScreen({ navigation }) {
     setUpdatedMarketplacePosts,
   } = useAppContext();
   const [data, setData] = useState(undefined);
+  const { styleVariables } = useTheme();
 
   /**
    * Update the list whenever the user saves/unsaves a Marketplace post.
@@ -98,7 +100,9 @@ function SavedListingsScreen({ navigation }) {
   const renderListEmpty = () => {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>You have no saved listings</Text>
+        <Text style={{ color: styleVariables.colors.black }}>
+          You have no saved listings
+        </Text>
       </View>
     );
   };
