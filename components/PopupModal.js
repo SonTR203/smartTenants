@@ -6,7 +6,7 @@ import WarningIcon from "../components/Icons/WarningIcon";
 import ErrorIcon from "../components/Icons/ErrorIcon";
 
 const PopupModal = ({ modalType, message }) => {
-  const { theme, styleVariables } = useTheme();
+  const { styleVariables } = useTheme();
   let primaryColor;
   let mainIcon;
   switch (modalType) {

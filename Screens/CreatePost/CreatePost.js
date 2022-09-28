@@ -6,7 +6,6 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
-  Modal,
   Platform,
   ActivityIndicator,
   ScrollView,
@@ -35,8 +34,6 @@ import { moderateImage, moderateText } from "../../utils/moderation.services";
 const CreatePost = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
   const [postContent, setPostContent] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalText, setModalText] = useState("");
   const [image, setImage] = useState(null);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
@@ -169,36 +166,6 @@ const CreatePost = ({ navigation }) => {
       <View style={theme.globalMargins}>
         <StatusBar style="auto" />
 
-        <Modal
-          animationType="slide"
-          transparent={false}
-          statusBarTranslucent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-          onShow={() => {
-            setTimeout(() => {
-              setModalVisible(!modalVisible);
-              navigation.navigate("Newsfeed", { reload: true });
-            }, 2000);
-          }}
-        >
-          <View style={theme.container}>
-            <View style={theme.modalView}>
-              <Text
-                style={{
-                  fontSize: 17,
-                  fontFamily: "Roboto_400Regular",
-                  color: "#191919",
-                }}
-              >
-                {modalText}
-              </Text>
-            </View>
-          </View>
-        </Modal>
-
         <View id="statusInput">
           <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
             What's on your mind?
@@ -219,8 +186,7 @@ const CreatePost = ({ navigation }) => {
                 paddingTop: 22,
                 paddingBottom: Platform.OS === "android" ? 70 : 0,
               },
-            ]}
-          ></TextInput>
+            ]}></TextInput>
         </View>
 
         <View id="imageUploadPreview" style={theme.container}>
@@ -232,11 +198,9 @@ const CreatePost = ({ navigation }) => {
         <TouchableOpacity
           id="uploadImageButton"
           onPress={pickImage}
-          style={theme.secondaryButton}
-        >
+          style={theme.secondaryButton}>
           <Text
-            style={[theme.secondaryButtonText, styleVariables.fontSizes.body]}
-          >
+            style={[theme.secondaryButtonText, styleVariables.fontSizes.body]}>
             Upload image{" "}
             <MaterialCommunityIcons
               name="image-plus"
@@ -256,14 +220,12 @@ const CreatePost = ({ navigation }) => {
           <TouchableOpacity
             id="submitPostButton"
             onPress={handleSelectedImage}
-            style={[theme.primaryButton, { marginBottom: 130 }]}
-          >
+            style={[theme.primaryButton, { marginBottom: 130 }]}>
             <Text
               style={[
                 theme.primaryButtonText,
                 styleVariables.fontSizes.bodyBold,
-              ]}
-            >
+              ]}>
               Submit post
             </Text>
           </TouchableOpacity>

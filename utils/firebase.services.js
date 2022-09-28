@@ -32,7 +32,6 @@ import {
 import { Alert, Linking } from "react-native";
 
 const auth = getAuth();
-const functions = getFunctions(app);
 
 export const deleteItemFromFirestore = async (collection, id) => {
   try {
