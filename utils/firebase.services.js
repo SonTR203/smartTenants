@@ -9,8 +9,7 @@ import {
   updateDoc,
   getDoc,
 } from "firebase/firestore";
-import { getFunctions } from "firebase/functions";
-import { db, app } from "../firebase-config";
+import { db } from "../firebase-config";
 import {
   getStorage,
   ref,
