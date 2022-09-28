@@ -11,8 +11,8 @@ import { useAppContext } from "../../Context/AppContext";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
 import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
-import HeartSVG from "../../components/Icons/HeartSVG";
-import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
+// import HeartSVG from "../../components/Icons/HeartSVG";
+// import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 
 function Comment({
   item,
