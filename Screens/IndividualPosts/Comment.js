@@ -7,8 +7,12 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
+import { useAppContext } from "../../Context/AppContext";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
+// import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
+import HeartSVG from "../../components/Icons/HeartSVG";
+import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 
 function Comment({
   item,
@@ -18,9 +22,16 @@ function Comment({
   setUserCommentId,
   getCommentReplies,
   comments,
+  passedPost,
+  userLiked,
+  setUserLiked,
 }) {
   const [timeSincePost, setTimeSincePost] = useState("");
   const [replies, setReplies] = useState([]);
+  const [numberOfLikes, setNumberOfLikes] = useState(0);
+  const [numberOfReplies, setNumberOfReplies] = useState(0);
+  const { currentUser, setPost, post } = useAppContext();
+  const [currentPost, setCurrentPost] = useState(passedPost);
 
   useEffect(() => {
     let time = setTime(item.timestamp.seconds * 1000);
@@ -51,11 +62,21 @@ function Comment({
     />
   );
 
+  const handleLikeComment = async () => {
+    const updatedPost = await likeComment(
+      userLiked,
+      setUserLiked,
+      setNumberOfLikes,
+      numberOfLikes,
+      currentUser,
+      currentPost
+    );
+    if (updatedPost) {
+      setCurrentPost({ ...updatedPost });
+    }
+  };
+
   const styles = StyleSheet.create({
-    container: {
-      shadowColor: styleVariables.colors.primary,
-      marginTop: 12,
-    },
     ownerInfo: {
       display: "flex",
       flexDirection: "row",
@@ -69,15 +90,23 @@ function Comment({
       flexDirection: "row",
       alignItems: "center",
     },
-    fullName: { color: styleVariables.colors.black, marginLeft: 8 },
+    fullName: { color: styleVariables.colors.black },
     timestamp: { color: styleVariables.colors.black, opacity: 0.66 },
-    content: { color: styleVariables.colors.black, marginBottom: 17 },
+    content: {
+      color: styleVariables.colors.black,
+      marginBottom: 17,
+    },
     replyBtn: {
       width: "100%",
       display: "flex",
       alignItems: "flex-end",
     },
-    replyText: { color: styleVariables.colors.primary },
+    replyText: {
+      display: "flex",
+      justifyContent: "space-between",
+      gap: 2,
+      color: styleVariables.colors.primary,
+    },
     reply: {
       width: "87%",
       marginLeft: 0,
@@ -89,35 +118,44 @@ function Comment({
       alignItems: "flex-start",
     },
     replyLine: {
-      width: 10,
-      height: "50%",
+      width: 4,
+      top: 8,
+      right: 8,
+      height: "100%",
       borderLeftWidth: 2,
-      borderBottomWidth: 2,
-      borderLeftColor: styleVariables.colors.primary14,
-      borderBottomColor: styleVariables.colors.primary14,
-      borderBottomLeftRadius: 5,
+      borderLeftColor: "#EBEFF0",
+      borderBottomColor: "#EBEFF0",
+      borderBottomLeftRadius: 1,
+    },
+    likeCommentReplySection: {
+      display: "flex",
+      flexDirection: "row",
     },
   });
 
   return (
     <View>
-      <View id="userComment" style={[theme.cardContainer, styles.container]}>
+      <View id="userComment" style={[theme.individualPostCardContainer]}>
         <View className="commentOwnerInfo" style={styles.ownerInfo}>
           <View
             className="commentOwnerImageAndName"
             style={styles.ownerImageAndName}
           >
             <DynamicProfilePicture user={item} size={43} borderRadius={12} />
-            <Text style={[styleVariables.fontSizes.bodyBold, styles.fullName]}>
-              {`${item.firstName} ${item.lastName}`}
-            </Text>
+            <View style={{ flexDirection: "column", margin: 8 }}>
+              <Text
+                style={[styleVariables.fontSizes.bodyBold, styles.fullName]}
+              >
+                {`${item.firstName} ${item.lastName}`}
+              </Text>
+              <Text
+                id="timeCommentPosted"
+                style={[styleVariables.fontSizes.callout, styles.timestamp]}
+              >
+                {timeSincePost}
+              </Text>
+            </View>
           </View>
-          <Text
-            id="timeCommentPosted"
-            style={[styleVariables.fontSizes.callout, styles.timestamp]}
-          >
-            {timeSincePost}
-          </Text>
         </View>
 
         <View className="commentContent">
@@ -125,17 +163,27 @@ function Comment({
             {item.commentContent}
           </Text>
         </View>
-        <View className="replyIcon" style={styles.replyBtn}>
-          <TouchableOpacity
-            onPress={() => {
-              setUserCommentName(`${item.firstName} ${item.lastName}`);
-              setUserCommentId(item.id);
-            }}
-          >
-            <Text style={[styleVariables.fontSizes.bodyBold, styles.replyText]}>
-              Reply →
-            </Text>
-          </TouchableOpacity>
+        <View style={[styles.likeCommentReplySection, styles.replyContainer]}>
+          <View>
+            <TouchableOpacity onPress={handleLikeComment}>
+              {/* <HeartSVG></HeartSVG> */}
+            </TouchableOpacity>
+          </View>
+          <View className="replyIcon" style={styles.replyBtn}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                setUserCommentName(`${item.firstName} ${item.lastName}`);
+                setUserCommentId(item.id);
+              }}
+            >
+              <Text
+                style={[styleVariables.fontSizes.bodyBold, styles.replyText]}
+              >
+                Reply
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
       {item.replied == true && (
