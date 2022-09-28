@@ -7,7 +7,7 @@ import { collection, doc, getDocs, getDoc } from "@firebase/firestore";
 import { useAppContext } from "../../Context/AppContext";
 import { likePost } from "../../utils/Newsfeed/newsfeed.services";
 import { useTheme } from "../../ThemeContext";
-// import CommentIcon from "../../components/Icons/CommentIconSVG";
+import CommentIcon from "../../components/Icons/CommentIconSVG";
 import HeartOutline from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import UsersWhoLikedHeartSVG from "../../components/Icons/UsersWhoLikedHeartSVG";
@@ -151,7 +151,7 @@ function LikeSection({
             style={styles.commentCountContainer}
             activeOpacity={1}
           >
-            {/* <CommentIcon></CommentIcon> */}
+            <CommentIcon></CommentIcon>
             <Text
               style={[
                 styleVariables.fontSizes.callout,

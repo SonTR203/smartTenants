@@ -10,7 +10,7 @@ import {
 import { useAppContext } from "../../Context/AppContext";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
-// import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
+import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
 import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 
@@ -180,7 +180,7 @@ function Comment({
               <Text
                 style={[styleVariables.fontSizes.bodyBold, styles.replyText]}
               >
-                Reply
+                Reply <ReplyArrowSVG />
               </Text>
             </TouchableOpacity>
           </View>
