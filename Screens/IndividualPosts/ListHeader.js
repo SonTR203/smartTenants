@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo } from "react";
 import { useAppContext } from "../../Context/AppContext";
 import { useTheme } from "../../ThemeContext";
 import { setTime } from "../../utils/setTime";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 import { constants } from "../../utils/constants";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import LikeSection from "./LikeSection";
