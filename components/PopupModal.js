@@ -28,7 +28,7 @@ const PopupModal = ({ modalType, message }) => {
       backgroundColor: primaryColor,
       width: "90%",
       borderRadius: 8,
-      height: message.length > 40 ? "10%" : 56,
+      height: message?.length > 40 ? "10%" : 56,
       marginTop: "auto",
       marginBottom: 100,
       marginLeft: "auto",
