@@ -80,8 +80,8 @@ const EditProfile = ({ route, navigation }) => {
               }, 2000);
             }}>
             <PopupModal
-              modalType={"success"}
-              message=" Something went wrong "
+              modalType={route.params?.modalType}
+              message={route.params?.message}
             />
           </Modal>
           <View style={[theme.topCard, styles(styleVariables).topCard]}>
