@@ -145,7 +145,13 @@ const MarketplaceScreen = ({ navigation, route }) => {
 
   const renderListFooter = () => {
     if (itemList.length > 0) {
-      return <ListFooter styleVariables={styleVariables} theme={theme} />;
+      return (
+        <ListFooter
+          styleVariables={styleVariables}
+          theme={theme}
+          isMarketplace={true}
+        />
+      );
     } else {
       return null;
     }

@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-function ListFooter({ styleVariables }) {
+function ListFooter({ styleVariables, isMarketplace }) {
   const styles = StyleSheet.create({
     footerContainer: {
       height: 204,
@@ -24,7 +24,7 @@ function ListFooter({ styleVariables }) {
         Oh oh! Seems like you&apos;ve reached the end.
       </Text>
       <Text style={[styleVariables.fontSizes.callout, styles.footerMessage]}>
-        Refresh at the top for new posts!
+        Refresh at the top for new {isMarketplace ? "listings!" : "posts!"}
       </Text>
     </View>
   );
