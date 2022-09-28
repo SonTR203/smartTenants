@@ -37,6 +37,7 @@ function FilterModal({
   setDistance,
   listingAmount,
   setListingAmount,
+  setFilterActive,
 }) {
   const [inputFocus, setInputFocus] = useState({
     min: false,
@@ -89,9 +90,21 @@ function FilterModal({
     setMinPrice("");
     setDistance("0");
     setFilteredItemList(marketplaceData);
+    setFilterActive(false);
   };
 
   const applyFilters = () => {
+    if (
+      categoryFilter != "All" ||
+      conditionFilter != "All" ||
+      maxPrice != "" ||
+      minPrice != ""
+      // || distance != 0
+    ) {
+      setFilterActive(true);
+    } else {
+      setFilterActive(false);
+    }
     const filteredList = getFilteredList(
       marketplaceData,
       categoryFilter,

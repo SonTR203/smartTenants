@@ -11,10 +11,16 @@ function SortModal({
   setFilteredItemList,
   sortingBy,
   setSortingBy,
+  setSortActive,
 }) {
   const { styleVariables, theme } = useTheme();
 
   const applySort = () => {
+    if (sortingBy != "Date(newest)") {
+      setSortActive(true);
+    } else {
+      setSortActive(false);
+    }
     if (filteredItemList) {
       const sortedList = getSortedList(filteredItemList, sortingBy);
       setFilteredItemList(sortedList);
