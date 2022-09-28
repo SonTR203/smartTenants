@@ -4,9 +4,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
   ScrollView,
-  FlatList,
 } from "react-native";
 import { useTheme } from "../ThemeContext";
 import DynamicProfilePicture from "./ProfilePicture/DynamicProfilePicture";

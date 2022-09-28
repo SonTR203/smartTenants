@@ -1,9 +1,8 @@
 import React, { useState, useEffect, memo } from "react";
-import { View, TouchableOpacity, Text, StyleSheet, Modal } from "react-native";
-import PeopleWhoLikedModal from "../../components/PeopleWhoLikedModal";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import { db } from "../../firebase-config";
-import { collection, doc, getDocs, getDoc } from "@firebase/firestore";
+import { doc, getDoc } from "@firebase/firestore";
 import { useAppContext } from "../../Context/AppContext";
 import { likePost } from "../../utils/Newsfeed/newsfeed.services";
 import { useTheme } from "../../ThemeContext";
@@ -12,11 +11,7 @@ import HeartOutline from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import UsersWhoLikedHeartSVG from "../../components/Icons/UsersWhoLikedHeartSVG";
 
-function LikeSection({
-  likesModalVisible,
-  setLikesModalVisible,
-  setPeopleWhoLiked,
-}) {
+function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
   const [userLiked, setUserLiked] = useState(false);
   const [numberOfLikes, setNumberOfLikes] = useState(0);
   const [peopleArray, setPeopleArray] = useState([]);

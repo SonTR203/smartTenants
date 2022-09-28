@@ -16,7 +16,7 @@ function ListHeader({
 }) {
   const { post } = useAppContext();
   const [currentPost, setCurrentPost] = useState(null);
-  const { theme, styleVariables } = useTheme();
+  const { styleVariables } = useTheme();
   const [timeSincePost, setTimeSincePost] = useState("");
 
   useEffect(() => {
@@ -27,14 +27,12 @@ function ListHeader({
 
   const styles = StyleSheet.create({
     container: {
-      marginTop: 27,
       flex: 2,
       display: "flex",
       alignItems: "flex-start",
       justifyContent: "center",
       backgroundColor: styleVariables.colors.white,
       padding: 17,
-      // marginHorizontal: 17,
       marginTop: 17,
       borderRadius: 16,
     },
