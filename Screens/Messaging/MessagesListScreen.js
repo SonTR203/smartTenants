@@ -165,13 +165,14 @@ function MessagesListScreen({ navigation, route }) {
                 </View>
               ) : item.lastMessage ? (
                 <View>
-                  {item.lastMessage.seen ? (
+                  {item.lastMessage.seen &&
+                  currentUser.userID == item.lastMessage.senderId ? (
                     <MaterialCommunityIcons
                       name={"check-all"}
                       size={16}
                       color={styleVariables.colors.primary}
                     />
-                  ) : (
+                  ) : item.lastMessage.seen ? null : (
                     <MaterialCommunityIcons
                       name={"check"}
                       size={16}
