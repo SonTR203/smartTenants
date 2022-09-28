@@ -215,20 +215,20 @@ const IndividualPosts = ({ navigation, route }) => {
           keyExtractor={(item) => item.id}
           renderItem={callBackRenderItem}
         ></FlatList>
-
-        <Modal
-          backdropOpacity={0.5}
-          style={styles.modal}
-          animationType="slide"
-          visible={likesModalVisible}
-          onBackdropPress={() => setLikesModalVisible(false)}
-        >
-          <PeopleWhoLikedModal
-            setLikesModalVisible={setLikesModalVisible}
-            peopleWhoLiked={peopleWhoLiked}
-          />
-        </Modal>
       </View>
+      <Modal
+        backdropOpacity={0.5}
+        transparent={true}
+        style={styles.modal}
+        animationType="fade"
+        isVisible={likesModalVisible}
+        onBackdropPress={() => setLikesModalVisible(false)}
+      >
+        <PeopleWhoLikedModal
+          setLikesModalVisible={setLikesModalVisible}
+          peopleWhoLiked={peopleWhoLiked}
+        />
+      </Modal>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={Dimensions.get("window").height * 0.12}
@@ -277,7 +277,6 @@ const styles = StyleSheet.create({
   },
   modal: {
     display: "flex",
-    flex: 1,
     justifyContent: "flex-end",
     margin: 0,
   },

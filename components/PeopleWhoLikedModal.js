@@ -14,13 +14,10 @@ function PeopleWhoLikedModal({ setLikesModalVisible, peopleWhoLiked }) {
 
   const styles = StyleSheet.create({
     modalContainer: {
-      flex: 0.4,
       marginTop: "auto",
       backgroundColor: "#ffffff",
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,
-      display: "flex",
-      flexDirection: "column",
       paddingTop: 24,
       paddingHorizontal: 24,
       justifyContent: "space-around",
@@ -49,7 +46,6 @@ function PeopleWhoLikedModal({ setLikesModalVisible, peopleWhoLiked }) {
       borderColor: "#395E66",
     },
     modalScrollView: {
-      display: "flex",
       marginVertical: 24,
     },
   });
@@ -84,7 +80,7 @@ function PeopleWhoLikedModal({ setLikesModalVisible, peopleWhoLiked }) {
         </ScrollView>
       </View>
 
-      <View style={{ backgroundColor: "white", marginTop: 8 }}>
+      <View style={{ marginTop: 8 }}>
         <TouchableOpacity
           setLikesModalVisible={setLikesModalVisible}
           activeOpacity={1}
