@@ -3,8 +3,15 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { useTheme } from "../../ThemeContext";
 
-function DynamicProfilePicture({ user, size, borderRadius }) {
+function DynamicProfilePicture({
+  user,
+  size,
+  borderRadius,
+  defaultTextSize,
+  style,
+}) {
   const [defaultColor, setDefaultColor] = useState(null);
+  const [textSize] = useState(defaultTextSize ? defaultTextSize : 20.25);
   const { styleVariables } = useTheme();
 
   useEffect(() => {
@@ -18,7 +25,7 @@ function DynamicProfilePicture({ user, size, borderRadius }) {
   }
 
   return (
-    <View>
+    <View style={style}>
       {user.userProfileImage !== "" ? (
         <Image
           source={{ uri: user.userProfileImage }}
@@ -38,7 +45,7 @@ function DynamicProfilePicture({ user, size, borderRadius }) {
             style={styles.linearGradient(size, borderRadius)}
           />
           <View style={styles.textContainer}>
-            <Text style={styles.initials}>
+            <Text style={styles.initials(textSize)}>
               {user.firstName.substring(0, 1)}
               {user.lastName.substring(0, 1)}
             </Text>
@@ -71,12 +78,12 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  initials: {
+  initials: (textSize) => ({
     fontWeight: "500",
-    fontSize: 20.25,
+    fontSize: textSize,
     lineHeight: 26,
     color: "#fff",
-  },
+  }),
 });
 
 export default DynamicProfilePicture;
