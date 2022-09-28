@@ -31,7 +31,6 @@ function PeopleWhoLikedModal({ setLikesModalVisible, peopleWhoLiked }) {
       fontWeight: "500",
       lineHeight: 22,
       color: "#395E66",
-      marginBottom: 8,
     },
     person: {
       display: "flex",
@@ -51,6 +50,7 @@ function PeopleWhoLikedModal({ setLikesModalVisible, peopleWhoLiked }) {
     },
     modalScrollView: {
       display: "flex",
+      marginVertical: 24,
     },
   });
 
