@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import { useAppContext } from "../../Context/AppContext";
+// import { useAppContext } from "../../Context/AppContext";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
 import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
@@ -22,16 +22,16 @@ function Comment({
   setUserCommentId,
   getCommentReplies,
   comments,
-  passedPost,
-  userLiked,
-  setUserLiked,
+  // passedPost,
+  // userLiked,
+  // setUserLiked,
 }) {
   const [timeSincePost, setTimeSincePost] = useState("");
   const [replies, setReplies] = useState([]);
-  const [numberOfLikes, setNumberOfLikes] = useState(0);
+  // const [numberOfLikes, setNumberOfLikes] = useState(0);
   // const [numberOfReplies, setNumberOfReplies] = useState(0);
-  const { currentUser } = useAppContext();
-  const [currentPost, setCurrentPost] = useState(passedPost);
+  // const { currentUser } = useAppContext();
+  // const [currentPost, setCurrentPost] = useState(passedPost);
 
   useEffect(() => {
     let time = setTime(item.timestamp.seconds * 1000);
