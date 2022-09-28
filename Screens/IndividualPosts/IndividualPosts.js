@@ -10,6 +10,7 @@ import {
 import Modal from "react-native-modal";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAppContext } from "../../Context/AppContext";
+import { StatusBar } from "expo-status-bar";
 import { db } from "../../firebase-config";
 import { collection, getDocs } from "@firebase/firestore";
 import _ from "lodash";
@@ -130,6 +131,7 @@ const IndividualPosts = ({ navigation, route }) => {
   const renderListHeader = () => {
     return (
       <>
+        <StatusBar style="dark" />
         <ListHeader
           setLikesModalVisible={setLikesModalVisible}
           likesModalVisible={likesModalVisible}
@@ -220,7 +222,7 @@ const IndividualPosts = ({ navigation, route }) => {
         backdropOpacity={0.5}
         transparent={true}
         style={styles.modal}
-        animationType="fade"
+        // animationType="fade"
         isVisible={likesModalVisible}
         onBackdropPress={() => setLikesModalVisible(false)}
       >
