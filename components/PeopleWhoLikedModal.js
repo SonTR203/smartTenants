@@ -47,6 +47,7 @@ function PeopleWhoLikedModal({ setLikesModalVisible, peopleWhoLiked }) {
     closeButton: {
       alignSelf: "center",
       marginBottom: 34,
+      borderColor: "#395E66",
     },
     modalScrollView: {
       display: "flex",
