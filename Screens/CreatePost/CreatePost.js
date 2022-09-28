@@ -62,10 +62,13 @@ const CreatePost = ({ navigation }) => {
 
       const res = await createItemInFirestore("Newsfeed", id, propObj);
       if (isNsfw) {
-        alert(
-          "We've detected potential suggestive or profane content. Your post will be reviewed."
-        );
-        navigation.navigate("Newsfeed", { reload: true });
+        navigation.navigate("Newsfeed", {
+          reload: true,
+          saveModal: true,
+          modalType: "warning",
+          message:
+            "We’ve detected potential inappropriate content. Your post will be reviewed.",
+        });
       } else if (res) {
         postSuccess();
       } else {
@@ -79,14 +82,22 @@ const CreatePost = ({ navigation }) => {
 
   function postSuccess() {
     setIsloading(false);
-    setModalText("Post Successful!");
-    setModalVisible(true);
+    navigation.navigate("Newsfeed", {
+      reload: true,
+      saveModal: true,
+      modalType: "success",
+      message: "Post submitted",
+    });
   }
 
   function postFailure() {
     setIsloading(false);
-    setModalText("Post Failed");
-    setModalVisible(true);
+    navigation.navigate("Newsfeed", {
+      reload: true,
+      saveModal: true,
+      modalType: "error",
+      message: "Something went wrong, please try again",
+    });
   }
 
   // ============================= IMAGE UPLOAD =============================
