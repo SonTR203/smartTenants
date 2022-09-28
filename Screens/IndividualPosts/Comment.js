@@ -29,8 +29,8 @@ function Comment({
   const [timeSincePost, setTimeSincePost] = useState("");
   const [replies, setReplies] = useState([]);
   const [numberOfLikes, setNumberOfLikes] = useState(0);
-  const [numberOfReplies, setNumberOfReplies] = useState(0);
-  const { currentUser, setPost, post } = useAppContext();
+  // const [numberOfReplies, setNumberOfReplies] = useState(0);
+  const { currentUser } = useAppContext();
   const [currentPost, setCurrentPost] = useState(passedPost);
 
   useEffect(() => {
@@ -62,19 +62,20 @@ function Comment({
     />
   );
 
-  const handleLikeComment = async () => {
-    const updatedPost = await likeComment(
-      userLiked,
-      setUserLiked,
-      setNumberOfLikes,
-      numberOfLikes,
-      currentUser,
-      currentPost
-    );
-    if (updatedPost) {
-      setCurrentPost({ ...updatedPost });
-    }
-  };
+  // In progress: add like functionality to comments
+  // const handleLikeComment = async () => {
+  //   const updatedPost = await likeComment(
+  //     userLiked,
+  //     setUserLiked,
+  //     setNumberOfLikes,
+  //     numberOfLikes,
+  //     currentUser,
+  //     currentPost
+  //   );
+  //   if (updatedPost) {
+  //     setCurrentPost({ ...updatedPost });
+  //   }
+  // };
 
   const styles = StyleSheet.create({
     ownerInfo: {
@@ -165,9 +166,7 @@ function Comment({
         </View>
         <View style={[styles.likeCommentReplySection, styles.replyContainer]}>
           <View>
-            <TouchableOpacity onPress={handleLikeComment}>
-              {/* <HeartSVG></HeartSVG> */}
-            </TouchableOpacity>
+            <TouchableOpacity>{/* <HeartSVG></HeartSVG> */}</TouchableOpacity>
           </View>
           <View className="replyIcon" style={styles.replyBtn}>
             <TouchableOpacity
