@@ -161,39 +161,41 @@ function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
       </View>
 
       <View>
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles.dynamicProfilePicturesContainer}
-          onPress={() => {
-            setLikesModalVisible(true);
-          }}
-        >
-          <UsersWhoLikedHeartSVG
-            style={{ marginRight: -6, zIndex: 9999 }}
-          ></UsersWhoLikedHeartSVG>
-          {peopleArray.map((person, index) => {
-            if (index < 3) {
-              let idx = peopleArray.length - index;
-              return (
-                <DynamicProfilePicture
-                  key={person.userID}
-                  user={{
-                    userProfileImage: person.userProfileImage,
-                    firstName: person.firstName,
-                    lastName: person.lastName,
-                    colors: person.colors,
-                  }}
-                  size={24}
-                  borderRadius={8}
-                  defaultTextSize={11.25}
-                  style={[styles.dynamicProfilePictures, { zIndex: idx }]}
-                ></DynamicProfilePicture>
-              );
-            } else {
-              return null;
-            }
-          })}
-        </TouchableOpacity>
+        {peopleArray.length > 0 ? (
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.dynamicProfilePicturesContainer}
+            onPress={() => {
+              setLikesModalVisible(true);
+            }}
+          >
+            <UsersWhoLikedHeartSVG
+              style={{ marginRight: -6, zIndex: 9999 }}
+            ></UsersWhoLikedHeartSVG>
+            {peopleArray.map((person, index) => {
+              if (index < 3) {
+                let idx = peopleArray.length - index;
+                return (
+                  <DynamicProfilePicture
+                    key={person.userID}
+                    user={{
+                      userProfileImage: person.userProfileImage,
+                      firstName: person.firstName,
+                      lastName: person.lastName,
+                      colors: person.colors,
+                    }}
+                    size={24}
+                    borderRadius={8}
+                    defaultTextSize={11.25}
+                    style={[styles.dynamicProfilePictures, { zIndex: idx }]}
+                  ></DynamicProfilePicture>
+                );
+              } else {
+                return null;
+              }
+            })}
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );

@@ -8,7 +8,6 @@ import {
   Text,
 } from "react-native";
 import Modal from "react-native-modal";
-
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAppContext } from "../../Context/AppContext";
 import { db } from "../../firebase-config";
@@ -202,7 +201,7 @@ const IndividualPosts = ({ navigation, route }) => {
     );
   };
   return (
-    <View style={styles.container}>
+    <View>
       <View>
         <FlatList
           contentContainerStyle={{ paddingBottom: 100 }}
@@ -264,7 +263,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "red",
   },
   commentTextHeader: {
     color: "#4d4d4d",
