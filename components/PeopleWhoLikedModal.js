@@ -23,7 +23,6 @@ function PeopleWhoLikedModal({ setLikesModalVisible, peopleWhoLiked }) {
       flexDirection: "column",
       paddingTop: 24,
       paddingHorizontal: 24,
-      shadowRadius: "16, 16, 0, 0",
       justifyContent: "space-around",
     },
     modalHeader: {
