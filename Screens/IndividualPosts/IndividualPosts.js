@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width,
     height:
       Dimensions.get("window").height - Dimensions.get("window").height * 0.14,
-    backgroundColor: "#FFF",
+    backgroundColor: "#FFFFFF",
   },
   // styling for the text input
   textInputWrapper: {
