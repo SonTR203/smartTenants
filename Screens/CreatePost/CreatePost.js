@@ -210,15 +210,15 @@ const CreatePost = ({ navigation }) => {
             onChangeText={(text) => {
               setPostContent(text);
             }}
-            placeholder="280 characters maximum"
+            placeholder="Type your post here"
             multiline={true}
             maxLength={280}
             style={[
               theme.textInput,
               styleVariables.fontSizes.body,
               {
-                minHeight: 68 + 44,
-                paddingTop: 22,
+                height: 200,
+                paddingTop: 16,
                 paddingBottom: Platform.OS === "android" ? 70 : 0,
               },
             ]}
