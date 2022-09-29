@@ -33,7 +33,8 @@ function ListHeader({
       justifyContent: "center",
       backgroundColor: styleVariables.colors.white,
       padding: 17,
-      marginTop: 17,
+      paddingTop: 7,
+      marginTop: 0,
       borderRadius: 16,
     },
     postOwnerInfo: {
