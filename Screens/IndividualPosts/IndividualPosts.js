@@ -263,10 +263,6 @@ const styles = StyleSheet.create({
   textInputWrapper: {
     marginTop: "auto",
   },
-  container: {
-    flex: 1,
-    backgroundColor: "red",
-  },
   commentTextHeader: {
     color: "#4d4d4d",
     marginLeft: 16,
