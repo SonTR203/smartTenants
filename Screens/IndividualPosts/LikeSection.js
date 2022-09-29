@@ -15,7 +15,6 @@ function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
   const [userLiked, setUserLiked] = useState(false);
   const [numberOfLikes, setNumberOfLikes] = useState(0);
   const [peopleArray, setPeopleArray] = useState([]);
-
   const { post, setPost, currentUser } = useAppContext();
   const { styleVariables } = useTheme();
 

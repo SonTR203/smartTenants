@@ -7,12 +7,13 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-// import { useAppContext } from "../../Context/AppContext";
+import { useAppContext } from "../../Context/AppContext";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
 import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
-// import HeartSVG from "../../components/Icons/HeartSVG";
+import HeartSVG from "../../components/Icons/HeartSVG";
 // import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
+import CommentIcon from "../../components/Icons/CommentIconSVG";
 
 function Comment({
   item,
@@ -28,10 +29,11 @@ function Comment({
 }) {
   const [timeSincePost, setTimeSincePost] = useState("");
   const [replies, setReplies] = useState([]);
-  // const [numberOfLikes, setNumberOfLikes] = useState(0);
-  // const [numberOfReplies, setNumberOfReplies] = useState(0);
+  const [numberOfLikes, setNumberOfLikes] = useState(0);
+  const [numberOfReplies, setNumberOfReplies] = useState(0);
   // const { currentUser } = useAppContext();
   // const [currentPost, setCurrentPost] = useState(passedPost);
+  const { post, setPost, currentUser } = useAppContext();
 
   useEffect(() => {
     let time = setTime(item.timestamp.seconds * 1000);
@@ -97,11 +99,6 @@ function Comment({
       color: styleVariables.colors.black,
       marginBottom: 17,
     },
-    replyBtn: {
-      width: "100%",
-      display: "flex",
-      alignItems: "flex-end",
-    },
     replyText: {
       display: "flex",
       justifyContent: "space-between",
@@ -119,14 +116,24 @@ function Comment({
       alignItems: "flex-start",
     },
     replyLine: {
-      width: 4,
-      top: 8,
-      right: 8,
-      height: "100%",
-      borderLeftWidth: 2,
-      borderLeftColor: "#EBEFF0",
-      borderBottomColor: "#EBEFF0",
-      borderBottomLeftRadius: 1,
+      width: "100%",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    commentStatsContainer: {
+      display: "flex",
+      flexDirection: "row",
+    },
+
+    likeCommentContainer: {
+      display: "flex",
+      flexDirection: "row",
+    },
+    likeCommentCount: {
+      alignSelf: "center",
+      marginLeft: 10,
     },
     likeCommentReplySection: {
       display: "flex",
@@ -165,10 +172,18 @@ function Comment({
           </Text>
         </View>
         <View style={[styles.likeCommentReplySection, styles.replyContainer]}>
-          <View>
-            <TouchableOpacity>{/* <HeartSVG></HeartSVG> */}</TouchableOpacity>
-          </View>
-          <View className="replyIcon" style={styles.replyBtn}>
+          <View className="replyIcon" style={styles.replyLine}>
+            <View style={styles.commentStatsContainer}>
+              <TouchableOpacity style={styles.likeCommentContainer}>
+                <HeartSVG></HeartSVG>
+                <Text style={styles.likeCommentCount}>{numberOfLikes}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.likeCommentContainer}>
+                <CommentIcon></CommentIcon>
+                <Text style={styles.likeCommentCount}>{}</Text>
+              </TouchableOpacity>
+            </View>
+
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {
