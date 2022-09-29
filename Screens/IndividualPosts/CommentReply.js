@@ -51,7 +51,7 @@ function CommentReply({ item, theme, styleVariables, styles }) {
         </View>
 
         <View className="commentContent">
-          <Text style={[styleVariables.fontSizes.body, styles.content]}>
+          <Text style={[styleVariables.fontSizes.body]}>
             {item.commentContent}
           </Text>
         </View>

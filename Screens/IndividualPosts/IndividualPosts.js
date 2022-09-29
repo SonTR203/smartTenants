@@ -215,7 +215,6 @@ const IndividualPosts = ({ navigation, route }) => {
         backdropOpacity={0.5}
         transparent={true}
         style={styles.modal}
-        // animationType="fade"
         isVisible={likesModalVisible}
         onBackdropPress={() => setLikesModalVisible(false)}>
 
