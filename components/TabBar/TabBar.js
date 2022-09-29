@@ -6,6 +6,7 @@ import {
   Dimensions,
   StyleSheet,
   Animated,
+  Platform,
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { BottomMenuItem } from "./BottomMenuItem";
@@ -75,15 +76,19 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
               : "10%",
           display: getRouteName(),
         },
-      ]}
-    >
+      ]}>
       <View style={{ flexDirection: "row" }}>
         <Animated.View
           style={[
             style.slider,
             {
               transform: [{ translateX: translateValue }],
-              width: 42,
+              width: tabWidth * 0.4,
+              marginLeft: -(totalWidth * 0.025 -
+                totalWidth * 0.4 * Platform.OS ==
+              "ios"
+                ? 0.05
+                : 0.055),
             },
           ]}
         />
@@ -118,8 +123,7 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
                   flex: 1,
                   marginBottom: 28,
                   marginTop: 8,
-                }}
-              >
+                }}>
                 <BottomMenuItem
                   label={label.toString()}
                   isCurrent={isFocused}
