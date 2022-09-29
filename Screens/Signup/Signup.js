@@ -275,7 +275,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !firstName
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -301,7 +301,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !lastName
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -328,7 +328,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !unitNumber
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -356,7 +356,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !buildingID.trim()
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -408,7 +408,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !email
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -436,7 +436,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !password
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -463,7 +463,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed &&
                   (!passwordConfirm || password != passwordConfirm)
                     ? styles.inputLabelEmpty

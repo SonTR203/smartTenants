@@ -162,7 +162,10 @@ const Login = ({ navigation, route }) => {
             {/* textInput */}
             <View id="emailInput">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.calloutBold,
+                ]}
               >
                 Email
               </Text>
@@ -176,7 +179,10 @@ const Login = ({ navigation, route }) => {
             </View>
             <View id="passwordInput">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.calloutBold,
+                ]}
               >
                 Password
               </Text>

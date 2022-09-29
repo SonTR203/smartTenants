@@ -200,7 +200,9 @@ const CreatePost = ({ navigation }) => {
         </Modal>
 
         <View id="statusInput">
-          <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+          <Text
+            style={[theme.textInputLabel, styleVariables.fontSizes.calloutBold]}
+          >
             What's on your mind?
           </Text>
           <TextInput

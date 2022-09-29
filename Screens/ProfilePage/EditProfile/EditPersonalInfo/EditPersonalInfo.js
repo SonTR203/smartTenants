@@ -240,7 +240,10 @@ const EditPersonalInfo = ({ navigation }) => {
             <View id="signupInputs">
               <View id="firstNameInput">
                 <Text
-                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                  style={[
+                    theme.textInputLabel,
+                    styleVariables.fontSizes.calloutBold,
+                  ]}
                 >
                   First Name
                 </Text>
@@ -254,7 +257,10 @@ const EditPersonalInfo = ({ navigation }) => {
               </View>
               <View id="lastNameInput">
                 <Text
-                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                  style={[
+                    theme.textInputLabel,
+                    styleVariables.fontSizes.calloutBold,
+                  ]}
                 >
                   Last name
                 </Text>
