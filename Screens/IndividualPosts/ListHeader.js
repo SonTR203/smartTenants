@@ -8,21 +8,34 @@ import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfil
 import LikeSection from "./LikeSection";
 
 //* userPost */
-function ListHeader() {
+function ListHeader({
+  likesModalVisible,
+  setLikesModalVisible,
+  setPeopleWhoLiked,
+  peopleWhoLiked,
+}) {
   const { post } = useAppContext();
   const [currentPost, setCurrentPost] = useState(null);
-  const { theme, styleVariables } = useTheme();
+  const { styleVariables } = useTheme();
   const [timeSincePost, setTimeSincePost] = useState("");
 
   useEffect(() => {
     const time = setTime(post.timestamp.seconds * 1000);
     setTimeSincePost(time);
-
     setCurrentPost(post);
   }, []);
 
   const styles = StyleSheet.create({
-    container: { marginTop: 27, flex: 2 },
+    container: {
+      flex: 2,
+      display: "flex",
+      alignItems: "flex-start",
+      justifyContent: "center",
+      backgroundColor: styleVariables.colors.white,
+      padding: 17,
+      marginTop: 17,
+      borderRadius: 16,
+    },
     postOwnerInfo: {
       display: "flex",
       flexDirection: "row",
@@ -38,8 +51,9 @@ function ListHeader() {
     },
     fullName: {
       color: styleVariables.colors.black,
-      marginLeft: 8,
-      marginRight: 8,
+    },
+    nameAndTime: {
+      marginHorizontal: 8,
     },
     timestamp: { color: styleVariables.colors.black, opacity: 0.66 },
     postContent: {
@@ -47,7 +61,7 @@ function ListHeader() {
       marginBottom: 17,
     },
     postImage: {
-      width: constants.width - 68,
+      width: constants.width - constants.width * 0.08,
       height: constants.width - 68,
       borderRadius: 16,
       marginBottom: 17,
@@ -59,7 +73,7 @@ function ListHeader() {
   }
 
   return (
-    <View id="userPost" style={[theme.cardContainer, styles.container]}>
+    <View id="userPost" style={[styles.container]}>
       {/* postOwnerInfo */}
       <View className="postOwnerInfo" style={styles.postOwnerInfo}>
         <View className="ownerImageAndName" style={styles.ownerImageAndName}>
@@ -73,17 +87,18 @@ function ListHeader() {
             size={43}
             borderRadius={12}
           />
-
-          <Text style={[styleVariables.fontSizes.bodyBold, styles.fullName]}>
-            {post.userFirstName} {post.userLastName}
-          </Text>
+          <View style={styles.nameAndTime}>
+            <Text style={[styleVariables.fontSizes.bodyBold, styles.fullName]}>
+              {post.userFirstName} {post.userLastName}
+            </Text>
+            <Text
+              id="timePosted"
+              style={[styleVariables.fontSizes.callout, styles.timestamp]}
+            >
+              {timeSincePost}
+            </Text>
+          </View>
         </View>
-        <Text
-          id="timePosted"
-          style={[styleVariables.fontSizes.callout, styles.timestamp]}
-        >
-          {timeSincePost}
-        </Text>
       </View>
 
       {/* postContent */}
@@ -102,7 +117,12 @@ function ListHeader() {
           />
         ) : null}
       </View>
-      <LikeSection />
+      <LikeSection
+        setPeopleWhoLiked={setPeopleWhoLiked}
+        likesModalVisible={likesModalVisible}
+        setLikesModalVisible={setLikesModalVisible}
+        peopleWhoLiked={peopleWhoLiked}
+      />
     </View>
   );
 }
