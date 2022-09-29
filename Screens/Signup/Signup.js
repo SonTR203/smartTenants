@@ -216,6 +216,8 @@ const Signup = ({ navigation }) => {
 
   const styles = StyleSheet.create({
     inputFieldEmpty: {
+      borderWidth: 1,
+      backgroundColor: "#F7E6EA",
       borderColor: "hsla(348, 92%, 35%, 0.5)",
     },
     inputFieldFilled: {
@@ -226,6 +228,9 @@ const Signup = ({ navigation }) => {
     },
     inputLabelFilled: {
       color: styleVariables.colors.black,
+    },
+    errorPlaceholderText: {
+      color: "#AB0728",
     },
     buildingInput: {
       display: "flex",
@@ -284,7 +289,11 @@ const Signup = ({ navigation }) => {
                 First Name
               </Text>
               <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholderTextColor={
+                  signupPressed && !firstName
+                    ? styleVariables.colors.errorText
+                    : styleVariables.colors.placeholderText
+                }
                 placeholder="John"
                 value={firstName}
                 onChangeText={(text) => setFirstName(text)}
@@ -310,7 +319,11 @@ const Signup = ({ navigation }) => {
                 Last Name
               </Text>
               <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholderTextColor={
+                  signupPressed && !lastName
+                    ? styleVariables.colors.errorText
+                    : styleVariables.colors.placeholderText
+                }
                 placeholder="Doe"
                 value={lastName}
                 onChangeText={(text) => setLastName(text)}
@@ -337,7 +350,11 @@ const Signup = ({ navigation }) => {
                 Unit number
               </Text>
               <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholderTextColor={
+                  signupPressed && !unitNumber
+                    ? styleVariables.colors.errorText
+                    : styleVariables.colors.placeholderText
+                }
                 keyboardType="numeric"
                 placeholder="123"
                 value={unitNumber}
@@ -381,7 +398,13 @@ const Signup = ({ navigation }) => {
                   <Text
                     style={[
                       styleVariables.fontSizes.body,
-                      { color: styleVariables.colors.placeholderText },
+                      {
+                        color: buildingID.trim()
+                          ? styleVariables.colors.black
+                          : signupPressed && !buildingID.trim()
+                          ? styleVariables.colors.errorText
+                          : styleVariables.colors.placeholderText,
+                      },
                     ]}
                   >
                     {buildingAddress}
@@ -417,7 +440,11 @@ const Signup = ({ navigation }) => {
                 Email
               </Text>
               <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholderTextColor={
+                  signupPressed && !email
+                    ? styleVariables.colors.errorText
+                    : styleVariables.colors.placeholderText
+                }
                 placeholder="name@email.com"
                 value={email}
                 onChangeText={(text) => {
@@ -445,7 +472,11 @@ const Signup = ({ navigation }) => {
                 Password
               </Text>
               <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholderTextColor={
+                  signupPressed && !password
+                    ? styleVariables.colors.errorText
+                    : styleVariables.colors.placeholderText
+                }
                 placeholder="Minimum 6 characters"
                 value={password}
                 onChangeText={(text) => setPassword(text)}
@@ -473,7 +504,12 @@ const Signup = ({ navigation }) => {
                 Confirm Password
               </Text>
               <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholderTextColor={
+                  signupPressed &&
+                  (!passwordConfirm || password != passwordConfirm)
+                    ? styleVariables.colors.errorText
+                    : styleVariables.colors.placeholderText
+                }
                 placeholder="Enter new password again"
                 value={passwordConfirm}
                 onChangeText={(text) => setPasswordConfirm(text)}

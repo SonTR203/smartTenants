@@ -23,6 +23,7 @@ let styleVariables = {
     white: "#FFF",
     black: "#4d4d4d",
     placeholderText: "#92A6AB",
+    errorText: "#AB0728",
     listFooterText: "rgba(176, 191, 194, 1)",
     notificationBadge: "#E84855",
     imageLoading: "#EDEDED",
