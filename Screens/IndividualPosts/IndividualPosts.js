@@ -138,49 +138,43 @@ const IndividualPosts = ({ navigation, route }) => {
           setPeopleWhoLiked={setPeopleWhoLiked}
           peopleWhoLiked={peopleWhoLiked}
         />
-        <Text
-          style={[
-            styleVariables.fontSizes.bodyBold,
-            styles.commentTextHeader,
-            { display: post.commentCount < 1 ? "none" : "" },
-          ]}
-        >
-          Comments
-        </Text>
-        <View
-          style={[
-            styles.noComments,
-            { display: post.commentCount < 1 ? "" : "none" },
-          ]}
-        >
+        {post.commentCount < 1 ? (
           <Text
             style={[
-              {
-                color: "#9D9D9D",
-                fontSize: 13,
-                fontWeight: "bold",
-                lineHeight: 18,
-              },
-            ]}
-          >
-            No comments yet.
+              styleVariables.fontSizes.bodyBold,
+              styles.commentTextHeader,
+            ]}>
+            Comments
           </Text>
-          <Text
-            style={[
-              {
-                color: "#9D9D9D",
-                fontSize: 13,
-                fontWeight: "regular",
-                lineHeight: 18,
-              },
-            ]}
-          >
-            Be the first to comment!
-          </Text>
-          <NoCommentBubblesSVG
-            style={[{ marginTop: 24 }]}
-          ></NoCommentBubblesSVG>
-        </View>
+        ) : null}
+        {post.commentCount < 1 ? (
+          <View style={[styles.noComments]}>
+            <Text
+              style={[
+                {
+                  color: "#9D9D9D",
+                  fontSize: 13,
+                  fontWeight: "bold",
+                  lineHeight: 18,
+                },
+              ]}>
+              No comments yet.
+            </Text>
+            <Text
+              style={[
+                {
+                  color: "#9D9D9D",
+                  fontSize: 13,
+                  fontWeight: "regular",
+                  lineHeight: 18,
+                },
+              ]}>
+              Be the first to comment!
+            </Text>
+            <NoCommentBubblesSVG
+              style={[{ marginTop: 24 }]}></NoCommentBubblesSVG>
+          </View>
+        ) : null}
       </>
     );
   };
@@ -215,8 +209,7 @@ const IndividualPosts = ({ navigation, route }) => {
           ListHeaderComponent={callBackRenderListHeader}
           data={comments}
           keyExtractor={(item) => item.id}
-          renderItem={callBackRenderItem}
-        ></FlatList>
+          renderItem={callBackRenderItem}></FlatList>
       </View>
       <Modal
         backdropOpacity={0.5}
@@ -224,8 +217,7 @@ const IndividualPosts = ({ navigation, route }) => {
         style={styles.modal}
         // animationType="fade"
         isVisible={likesModalVisible}
-        onBackdropPress={() => setLikesModalVisible(false)}
-      >
+        onBackdropPress={() => setLikesModalVisible(false)}>
         <PeopleWhoLikedModal
           setLikesModalVisible={setLikesModalVisible}
           peopleWhoLiked={peopleWhoLiked}
@@ -234,8 +226,7 @@ const IndividualPosts = ({ navigation, route }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={Dimensions.get("window").height * 0.12}
-        style={[styles.textInputWrapper, styleVariables.shadow]}
-      >
+        style={[styles.textInputWrapper, styleVariables.shadow]}>
         <FlatList
           scrollEnabled={false}
           ListFooterComponent={renderListFooter}
@@ -244,8 +235,7 @@ const IndividualPosts = ({ navigation, route }) => {
             if (textInputHeight === 0) {
               setTextInputHeight(event.nativeEvent.layout.height);
             }
-          }}
-        ></FlatList>
+          }}></FlatList>
       </KeyboardAvoidingView>
     </View>
   );

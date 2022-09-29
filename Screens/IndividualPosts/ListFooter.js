@@ -180,21 +180,16 @@ function ListFooter({
       color: styleVariables.colors.primary,
     },
   });
+  if (post.isNSFW == true) return;
 
   return (
-    <View
-      style={[
-        theme.replyContainer,
-        { display: post.isNSFW === true ? "none" : "" },
-      ]}
-    >
+    <View style={[theme.replyContainer]}>
       {userCommentName != "" && (
         <View style={styles.replyView}>
           <Text style={styleVariables.fontSizes.callout}>
             Replying to{" "}
             <Text
-              style={[styles.replyName, styleVariables.fontSizes.calloutBold]}
-            >
+              style={[styles.replyName, styleVariables.fontSizes.calloutBold]}>
               {userCommentName}
               {"        "}
             </Text>
@@ -204,8 +199,7 @@ function ListFooter({
             onPress={() => {
               setUserCommentName("");
               setUserCommentId("");
-            }}
-          >
+            }}>
             <X></X>
             {/* <Text style={styles.cancelButton}>x</Text> */}
           </TouchableOpacity>
@@ -235,8 +229,7 @@ function ListFooter({
             theme.postButton,
             { backgroundColor: !textInputValue ? "#748E94" : "#395E66" },
           ]}
-          disabled={!textInputValue}
-        >
+          disabled={!textInputValue}>
           <ArrowUpSVG></ArrowUpSVG>
         </TouchableOpacity>
       </View>
