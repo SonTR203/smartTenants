@@ -124,6 +124,7 @@ const IndividualPosts = ({ navigation, route }) => {
       width={constants.width}
       setUserCommentName={setUserCommentName}
       setUserCommentId={setUserCommentId}
+      userCommentId={userCommentId}
       getCommentReplies={getCommentReplies}
       comments={comments}
     />

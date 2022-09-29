@@ -8,11 +8,12 @@ import {
   FlatList,
 } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
+import { likePost } from "../../utils/IndividualPosts/individualPosts.services";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
 import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
 import HeartSVG from "../../components/Icons/HeartSVG";
-// import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
+import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import CommentIcon from "../../components/Icons/CommentIconSVG";
 
 function Comment({
@@ -21,18 +22,16 @@ function Comment({
   styleVariables,
   setUserCommentName,
   setUserCommentId,
+  userCommentId,
   getCommentReplies,
   comments,
   // passedPost,
-  // userLiked,
-  // setUserLiked,
 }) {
   const [timeSincePost, setTimeSincePost] = useState("");
   const [replies, setReplies] = useState([]);
+  // const [numberOfReplies, setNumberOfReplies] = useState(0);
+  const [userLiked, setUserLiked] = useState(false);
   const [numberOfLikes, setNumberOfLikes] = useState(0);
-  const [numberOfReplies, setNumberOfReplies] = useState(0);
-  // const { currentUser } = useAppContext();
-  // const [currentPost, setCurrentPost] = useState(passedPost);
   const { post, setPost, currentUser } = useAppContext();
 
   useEffect(() => {
@@ -65,19 +64,24 @@ function Comment({
   );
 
   // In progress: add like functionality to comments
-  // const handleLikeComment = async () => {
-  //   const updatedPost = await likeComment(
-  //     userLiked,
-  //     setUserLiked,
-  //     setNumberOfLikes,
-  //     numberOfLikes,
-  //     currentUser,
-  //     currentPost
-  //   );
-  //   if (updatedPost) {
-  //     setCurrentPost({ ...updatedPost });
-  //   }
-  // };
+  const handleLikeComment = async () => {
+    const updatedPost = await likePost(
+      userLiked,
+      setUserLiked,
+      setNumberOfLikes,
+      numberOfLikes,
+      currentUser,
+      post,
+      userCommentId
+    );
+
+    if (updatedPost) {
+      setPost({
+        ...updatedPost,
+        updated: true,
+      });
+    }
+  };
 
   const styles = StyleSheet.create({
     ownerInfo: {
@@ -174,14 +178,20 @@ function Comment({
         <View style={[styles.likeCommentReplySection, styles.replyContainer]}>
           <View className="replyIcon" style={styles.replyLine}>
             <View style={styles.commentStatsContainer}>
-              <TouchableOpacity style={styles.likeCommentContainer}>
+              <TouchableOpacity
+                style={styles.likeCommentContainer}
+                onPress={() => {
+                  setUserCommentId(item.id);
+                  handleLikeComment();
+                }}
+              >
                 <HeartSVG></HeartSVG>
                 <Text style={styles.likeCommentCount}>{numberOfLikes}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.likeCommentContainer}>
+              <View style={styles.likeCommentContainer}>
                 <CommentIcon></CommentIcon>
                 <Text style={styles.likeCommentCount}>{}</Text>
-              </TouchableOpacity>
+              </View>
             </View>
 
             <TouchableOpacity
