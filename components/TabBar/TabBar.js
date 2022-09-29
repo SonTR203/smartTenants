@@ -6,14 +6,13 @@ import {
   Dimensions,
   StyleSheet,
   Animated,
-  Platform,
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { BottomMenuItem } from "./BottomMenuItem";
 
 export const TabBar = ({ state, descriptors, navigation, routeName }) => {
   const totalWidth = Dimensions.get("window").width;
-  const tabWidth = totalWidth / state.routes.length;
+  const tabWidth = totalWidth / state.routes.length - 41.5;
   const [translateValue] = useState(new Animated.Value(0));
 
   const getRouteName = () => {
@@ -83,12 +82,7 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
             style.slider,
             {
               transform: [{ translateX: translateValue }],
-              width: tabWidth * 0.4,
-              marginLeft: -(totalWidth * 0.025 -
-                totalWidth * 0.4 * Platform.OS ==
-              "ios"
-                ? 0.05
-                : 0.055),
+              width: tabWidth,
             },
           ]}
         />
@@ -103,7 +97,7 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
           const isFocused = state.index === index;
           if (isFocused) {
             Animated.spring(translateValue, {
-              toValue: index * tabWidth,
+              toValue: index * (tabWidth + 41.5),
               velocity: 10,
               useNativeDriver: true,
             }).start();
@@ -154,7 +148,7 @@ const style = StyleSheet.create({
     height: 4,
     position: "absolute",
     top: 0,
-    left: 32,
+    left: 21.5,
     backgroundColor: "#395E66",
     borderRadius: 2,
   },
