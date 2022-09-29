@@ -144,7 +144,8 @@ const IndividualPosts = ({ navigation, route }) => {
             style={[
               styleVariables.fontSizes.bodyBold,
               styles.commentTextHeader,
-            ]}>
+            ]}
+          >
             Comments
           </Text>
         ) : null}
@@ -158,7 +159,8 @@ const IndividualPosts = ({ navigation, route }) => {
                   fontWeight: "bold",
                   lineHeight: 18,
                 },
-              ]}>
+              ]}
+            >
               No comments yet.
             </Text>
             <Text
@@ -169,11 +171,13 @@ const IndividualPosts = ({ navigation, route }) => {
                   fontWeight: "regular",
                   lineHeight: 18,
                 },
-              ]}>
+              ]}
+            >
               Be the first to comment!
             </Text>
             <NoCommentBubblesSVG
-              style={[{ marginTop: 24 }]}></NoCommentBubblesSVG>
+              style={[{ marginTop: 24 }]}
+            ></NoCommentBubblesSVG>
           </View>
         ) : null}
       </>
@@ -210,15 +214,16 @@ const IndividualPosts = ({ navigation, route }) => {
           ListHeaderComponent={callBackRenderListHeader}
           data={comments}
           keyExtractor={(item) => item.id}
-          renderItem={callBackRenderItem}></FlatList>
+          renderItem={callBackRenderItem}
+        ></FlatList>
       </View>
       <Modal
         backdropOpacity={0.5}
         transparent={true}
         style={styles.modal}
         isVisible={likesModalVisible}
-        onBackdropPress={() => setLikesModalVisible(false)}>
-
+        onBackdropPress={() => setLikesModalVisible(false)}
+      >
         <PeopleWhoLikedModal
           setLikesModalVisible={setLikesModalVisible}
           peopleWhoLiked={peopleWhoLiked}
@@ -227,7 +232,8 @@ const IndividualPosts = ({ navigation, route }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={Dimensions.get("window").height * 0.12}
-        style={[styles.textInputWrapper, styleVariables.shadow]}>
+        style={[styles.textInputWrapper, styleVariables.shadow]}
+      >
         <FlatList
           scrollEnabled={false}
           ListFooterComponent={renderListFooter}
@@ -236,7 +242,8 @@ const IndividualPosts = ({ navigation, route }) => {
             if (textInputHeight === 0) {
               setTextInputHeight(event.nativeEvent.layout.height);
             }
-          }}></FlatList>
+          }}
+        ></FlatList>
       </KeyboardAvoidingView>
     </View>
   );
