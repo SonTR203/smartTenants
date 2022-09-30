@@ -9,21 +9,21 @@ import { setTime } from "../../../utils/setTime";
 import { incrementItemCLicks } from "../../../utils/Marketplace/marketplace.services.js";
 
 function MarketplaceFirstItem({
-	item,
-	navigation,
-	own,
-	sold,
-	handleOpenSoldModal,
-	saved,
-	handleUnSaved,
-	isPopular = false,
-	isMyPost,
+  item,
+  navigation,
+  own,
+  sold,
+  handleOpenSoldModal,
+  saved,
+  handleUnSaved,
+  isPopular = false,
+  isMyPost,
 }) {
-	const { theme, styleVariables } = useTheme();
-	const { setCurrentMarketplacePost } = useAppContext();
-	const [timeSincePost, setTimeSincePost] = useState("");
-	//prettier-ignore
-	const styles = StyleSheet.create({
+  const { theme, styleVariables } = useTheme();
+  const { setCurrentMarketplacePost } = useAppContext();
+  const [timeSincePost, setTimeSincePost] = useState("");
+  //prettier-ignore
+  const styles = StyleSheet.create({
 		container: {
 			marginTop: 17,
 			marginLeft: 17,
@@ -120,119 +120,132 @@ function MarketplaceFirstItem({
 				},
 	});
 
-	useEffect(() => {
-		if (item) {
-			const time = setTime(item.timestamp.seconds * 1000);
-			setTimeSincePost(time);
-		}
-	}, [item]);
-	if (!item) {
-		return null;
-	}
+  useEffect(() => {
+    if (item) {
+      const time = setTime(item.timestamp.seconds * 1000);
+      setTimeSincePost(time);
+    }
+  }, [item]);
+  if (!item) {
+    return null;
+  }
 
-	return (
-		// CONTAINER
-		<TouchableOpacity
-			onPress={() => {
-				setCurrentMarketplacePost(item);
-				incrementItemCLicks(item);
-				navigation.navigate("MarketplaceItemInfo", {
-					title: item.userFirstName,
-					itemUserId: item.userID,
-					item: item,
-				});
-			}}
-			style={[theme.marketplaceItemContainer, styles.container]}>
-			{/* ITEM IMAGE  */}
+  return (
+    // CONTAINER
+    <TouchableOpacity
+      onPress={() => {
+        setCurrentMarketplacePost(item);
+        incrementItemCLicks(item);
+        navigation.navigate("MarketplaceItemInfo", {
+          title: item.userFirstName,
+          itemUserId: item.userID,
+          item: item,
+        });
+      }}
+      style={[theme.marketplaceItemContainer, styles.container]}
+      activeOpacity={1}
+    >
+      {/* ITEM IMAGE  */}
 
-			<Image style={styles.image} source={{ uri: item.images[0] }} />
-			<LinearGradient
-				style={{
-					position: "absolute",
-					top: 0,
-					left: 0,
-					right: 0,
-					bottom: 0,
-					borderRadius: 17,
-					borderBottomEndRadius: 0,
-					borderBottomStartRadius: 0,
+      <Image style={styles.image} source={{ uri: item.images[0] }} />
+      <LinearGradient
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          borderRadius: 17,
+          borderBottomEndRadius: 0,
+          borderBottomStartRadius: 0,
 
-					width: "100%",
-					height: constants.height * 0.25,
-				}}
-				colors={["rgba(0, 0, 0, 0.15)", "rgba(0, 0, 0, 0)"]}
-			/>
-			{saved && (
-				<SaveIcon
-					isSaved={true}
-					onPress={handleUnSaved}
-					style={styles.saveIcon}
-					size={30}
-				/>
-			)}
-			{isPopular && (
-				<View
-					style={{
-						position: "absolute",
-						top: 16,
-						right: 16,
-						paddingHorizontal: 8,
-						paddingVertical: 4,
-						backgroundColor: "rgba(255, 255, 255, 0.9)",
-						borderRadius: 8,
-						...styleVariables.shadow,
-					}}>
-					<Text
-						style={{
-							fontSize: 15,
-							lineHeight: 20,
-							color: styleVariables.colors.popularOrange,
-							textAlign: "center",
-						}}>
-						Popular 🔥️
-					</Text>
-				</View>
-			)}
+          width: "100%",
+          height: constants.height * 0.25,
+        }}
+        colors={["rgba(0, 0, 0, 0.15)", "rgba(0, 0, 0, 0)"]}
+      />
+      {saved && (
+        <SaveIcon
+          isSaved={true}
+          onPress={handleUnSaved}
+          style={styles.saveIcon}
+          size={30}
+        />
+      )}
+      {isPopular && (
+        <View
+          style={{
+            position: "absolute",
+            top: 16,
+            right: 16,
+            paddingHorizontal: 8,
+            paddingVertical: 4,
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            borderRadius: 8,
+            ...styleVariables.shadow,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 15,
+              lineHeight: 20,
+              color: styleVariables.colors.popularOrange,
+              textAlign: "center",
+            }}
+          >
+            Popular 🔥️
+          </Text>
+        </View>
+      )}
 
-			{/* IMAGE TITLE & PRICE  */}
+      {/* IMAGE TITLE & PRICE  */}
 
-			<View style={styles.titleContainer}>
-				<View style={{ flexDirection: "row" }}>
-					<Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
-						{item.postTitle}
-					</Text>
-					<Text style={styles.price}>{item.price === 0 ? "Free" : item.price}</Text>
-				</View>
-				{isMyPost === true ? (
-					<View style={styles.postStatusContainer}>
-						<Text style={[styleVariables.fontSizes.callout, { marginRight: 8 }]}>
-							{timeSincePost}
-						</Text>
-						<Text style={styles.postStatus}>
-							{item.isNSFW === false ? "Posted" : "Pending approval"}
-						</Text>
-					</View>
-				) : (
-					""
-				)}
-			</View>
-			{/* ITEM CONTENT  */}
-			<View style={styles.contentContainer}>
-				<Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
-					{item.postContent}
-				</Text>
-				{own || sold ? (
-					<TouchableOpacity
-						onPress={() => handleOpenSoldModal(item)}
-						style={styles.bottomButton}>
-						<Text style={styles.buttonText} numberOfLines={2} ellipsizeMode={"tail"}>
-							{sold ? "List again" : "Mark as sold"}
-						</Text>
-					</TouchableOpacity>
-				) : null}
-			</View>
-		</TouchableOpacity>
-	);
+      <View style={styles.titleContainer}>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
+            {item.postTitle}
+          </Text>
+          <Text style={styles.price}>
+            {item.price === 0 ? "Free" : item.price}
+          </Text>
+        </View>
+        {isMyPost === true ? (
+          <View style={styles.postStatusContainer}>
+            <Text
+              style={[styleVariables.fontSizes.callout, { marginRight: 8 }]}
+            >
+              {timeSincePost}
+            </Text>
+            <Text style={styles.postStatus}>
+              {item.isNSFW === false ? "Posted" : "Pending approval"}
+            </Text>
+          </View>
+        ) : (
+          ""
+        )}
+      </View>
+      {/* ITEM CONTENT  */}
+      <View style={styles.contentContainer}>
+        <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
+          {item.postContent}
+        </Text>
+        {own || sold ? (
+          <TouchableOpacity
+            onPress={() => handleOpenSoldModal(item)}
+            style={styles.bottomButton}
+          >
+            <Text
+              style={styles.buttonText}
+              numberOfLines={2}
+              ellipsizeMode={"tail"}
+            >
+              {sold ? "List again" : "Mark as sold"}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
+    </TouchableOpacity>
+  );
 }
 
 export default MarketplaceFirstItem;
