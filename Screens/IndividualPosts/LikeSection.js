@@ -117,9 +117,11 @@ function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
   });
   if (post.isNSFW == true) return;
   return (
+
     <View style={[styles.container]}>
       <View
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+
         <View id="likeCount" style={styles.likeCountContainer}>
           {userLiked && (
             <TouchableOpacity activeOpacity={1} onPress={handleLikePost}>
@@ -138,14 +140,18 @@ function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
         <View>
           <TouchableOpacity
             style={styles.commentCountContainer}
+
             activeOpacity={1}>
+
             <CommentIcon></CommentIcon>
             <Text
               style={[
                 styleVariables.fontSizes.callout,
                 styles.likedBy,
                 { marginLeft: 8 },
+
               ]}>
+
               {post.commentCount}
             </Text>
           </TouchableOpacity>
@@ -159,9 +165,11 @@ function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
             style={styles.dynamicProfilePicturesContainer}
             onPress={() => {
               setLikesModalVisible(true);
+
             }}>
             <UsersWhoLikedHeartSVG
               style={{ marginRight: -6, zIndex: 9999 }}></UsersWhoLikedHeartSVG>
+
             {peopleArray.map((person, index) => {
               if (index < 3) {
                 let idx = peopleArray.length - index;
@@ -177,10 +185,12 @@ function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
                     size={24}
                     borderRadius={8}
                     defaultTextSize={11.25}
+
                     style={[
                       styles.dynamicProfilePictures,
                       { zIndex: idx },
                     ]}></DynamicProfilePicture>
+
                 );
               } else {
                 return null;

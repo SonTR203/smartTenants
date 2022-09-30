@@ -218,6 +218,7 @@ const IndividualPosts = ({ navigation, route }) => {
         // animationType="fade"
         isVisible={likesModalVisible}
         onBackdropPress={() => setLikesModalVisible(false)}>
+
         <PeopleWhoLikedModal
           setLikesModalVisible={setLikesModalVisible}
           peopleWhoLiked={peopleWhoLiked}

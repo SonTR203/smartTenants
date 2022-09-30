@@ -183,7 +183,12 @@ function ListFooter({
   if (post.isNSFW == true) return;
 
   return (
-    <View style={[theme.replyContainer]}>
+    <View
+      style={[
+        theme.replyContainer,
+        { display: post.isNSFW === true ? "none" : "" },
+      ]}
+    >
       {userCommentName != "" && (
         <View style={styles.replyView}>
           <Text style={styleVariables.fontSizes.callout}>
