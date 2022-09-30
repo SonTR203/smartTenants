@@ -5,10 +5,12 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
+  Text,
 } from "react-native";
-
+import Modal from "react-native-modal";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAppContext } from "../../Context/AppContext";
+import { StatusBar } from "expo-status-bar";
 import { db } from "../../firebase-config";
 import { collection, getDocs } from "@firebase/firestore";
 import _ from "lodash";
@@ -17,6 +19,8 @@ import Comment from "./Comment";
 import { constants } from "../../utils/constants";
 import ListHeader from "./ListHeader";
 import ListFooter from "./ListFooter";
+import NoCommentBubblesSVG from "../../components/Icons/NoCommentBubblesSVG";
+import PeopleWhoLikedModal from "../../components/PeopleWhoLikedModal";
 
 const IndividualPosts = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -29,6 +33,10 @@ const IndividualPosts = ({ navigation, route }) => {
   const [userCommentId, setUserCommentId] = useState("");
 
   const [textInputHeight, setTextInputHeight] = useState(0);
+
+  const [likesModalVisible, setLikesModalVisible] = useState(false);
+
+  const [peopleWhoLiked, setPeopleWhoLiked] = useState([]);
 
   const commentListRef = useRef();
 
@@ -101,6 +109,7 @@ const IndividualPosts = ({ navigation, route }) => {
     ({ item, index }) => renderPostItem({ item, index }),
     [comments]
   );
+
   const callBackRenderListHeader = useCallback(
     () => renderListHeader(),
     [comments]
@@ -119,9 +128,61 @@ const IndividualPosts = ({ navigation, route }) => {
       comments={comments}
     />
   );
-
   const renderListHeader = () => {
-    return <ListHeader />;
+    return (
+      <>
+        <StatusBar style="dark" />
+        <ListHeader
+          setLikesModalVisible={setLikesModalVisible}
+          likesModalVisible={likesModalVisible}
+          setPeopleWhoLiked={setPeopleWhoLiked}
+          peopleWhoLiked={peopleWhoLiked}
+        />
+        <Text
+          style={[
+            styleVariables.fontSizes.bodyBold,
+            styles.commentTextHeader,
+            { display: post.commentCount < 1 ? "none" : "" },
+          ]}
+        >
+          Comments
+        </Text>
+        <View
+          style={[
+            styles.noComments,
+            { display: post.commentCount < 1 ? "" : "none" },
+          ]}
+        >
+          <Text
+            style={[
+              {
+                color: "#9D9D9D",
+                fontSize: 13,
+                fontWeight: "bold",
+                lineHeight: 18,
+              },
+            ]}
+          >
+            No comments yet.
+          </Text>
+          <Text
+            style={[
+              {
+                color: "#9D9D9D",
+                fontSize: 13,
+                fontWeight: "regular",
+                lineHeight: 18,
+              },
+            ]}
+          >
+            Be the first to comment!
+          </Text>
+          <NoCommentBubblesSVG
+            style={[{ marginTop: 24 }]}
+          ></NoCommentBubblesSVG>
+        </View>
+      </>
+    );
   };
 
   const renderListFooter = () => {
@@ -141,13 +202,13 @@ const IndividualPosts = ({ navigation, route }) => {
       />
     );
   };
-
   return (
     <View>
       <View>
         <FlatList
+          contentContainerStyle={{ paddingBottom: 100 }}
           scrollEnabled={true}
-          style={[styles.itemWrapper]}
+          style={styles.itemWrapper}
           getItemLayout={getItemLayout}
           ref={commentListRef}
           removeClippedSubviews={true}
@@ -157,7 +218,19 @@ const IndividualPosts = ({ navigation, route }) => {
           renderItem={callBackRenderItem}
         ></FlatList>
       </View>
-
+      <Modal
+        backdropOpacity={0.5}
+        transparent={true}
+        style={styles.modal}
+        // animationType="fade"
+        isVisible={likesModalVisible}
+        onBackdropPress={() => setLikesModalVisible(false)}
+      >
+        <PeopleWhoLikedModal
+          setLikesModalVisible={setLikesModalVisible}
+          peopleWhoLiked={peopleWhoLiked}
+        />
+      </Modal>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={Dimensions.get("window").height * 0.12}
@@ -178,22 +251,32 @@ const IndividualPosts = ({ navigation, route }) => {
   );
 };
 
-// Make this a constant for dynamic change in height.
-// Make dynamic sizing for flatList when keyboard pops up
-
 const styles = StyleSheet.create({
   // Styling for the posts/comments
   itemWrapper: {
     width: Dimensions.get("window").width,
     height:
-      Dimensions.get("window").height - Dimensions.get("window").height * 0.12,
+      Dimensions.get("window").height - Dimensions.get("window").height * 0.14,
+    backgroundColor: "#FFFFFF",
   },
   // styling for the text input
   textInputWrapper: {
     marginTop: "auto",
   },
-  container: {
+  commentTextHeader: {
+    color: "#4d4d4d",
+    marginLeft: 16,
+    marginTop: 8,
+  },
+  noComments: {
+    display: "flex",
+    alignItems: "center",
+    alignSelf: "center",
+  },
+  modal: {
+    display: "flex",
     justifyContent: "flex-end",
+    margin: 0,
   },
 });
 

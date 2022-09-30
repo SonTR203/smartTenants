@@ -343,6 +343,16 @@ const theme = StyleSheet.create({
     maxHeight: 140,
     numberOfLines: 6,
   },
+  individualPostCardContainer: {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    backgroundColor: "#F5F7F7",
+    padding: 17,
+    marginHorizontal: 17,
+    marginTop: 17,
+    borderRadius: 16,
+  },
 });
 
 //primary color (navy/dark green): #395E66

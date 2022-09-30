@@ -19,7 +19,11 @@ function CommentReply({ item, theme, styleVariables, styles }) {
       <View id="replyLine" style={styles.replyLine}></View>
       <View
         id="userReply"
-        style={[theme.cardContainer, styles.container, styles.reply]}
+        style={[
+          theme.individualPostCardContainer,
+          styles.container,
+          styles.reply,
+        ]}
       >
         <View className="commentOwnerInfo" style={styles.ownerInfo}>
           <View
@@ -27,16 +31,23 @@ function CommentReply({ item, theme, styleVariables, styles }) {
             style={styles.ownerImageAndName}
           >
             <DynamicProfilePicture user={item} size={43} borderRadius={12} />
-            <Text style={[styleVariables.fontSizes.bodyBold, styles.fullName]}>
-              {`${item.firstName} ${item.lastName}`}
-            </Text>
+
+            <View
+              style={[{ flexDirection: "column" }, { marginHorizontal: 8 }]}
+            >
+              <Text
+                style={[styleVariables.fontSizes.bodyBold, styles.fullName]}
+              >
+                {`${item.firstName} ${item.lastName}`}
+              </Text>
+              <Text
+                id="timeCommentPosted"
+                style={[styleVariables.fontSizes.callout, styles.timestamp]}
+              >
+                {timeSincePost}
+              </Text>
+            </View>
           </View>
-          <Text
-            id="timeCommentPosted"
-            style={[styleVariables.fontSizes.callout, styles.timestamp]}
-          >
-            {timeSincePost}
-          </Text>
         </View>
 
         <View className="commentContent">
