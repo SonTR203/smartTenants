@@ -303,8 +303,8 @@ function MarketplaceNewPostScreen({ navigation }) {
       // paddingTop: 22,
     },
     textInputDescription: {
-      minHeight: 68 + 44,
-      paddingTop: 22,
+      height: 160,
+      paddingTop: 16,
       paddingBottom: Platform.OS === "android" ? 70 : 0,
     },
     uploadButtonContainer: {
@@ -489,7 +489,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               onChangeText={(text) => {
                 setContent(text);
               }}
-              placeholder="Type your text here"
+              placeholder="Type item description here"
               multiline={true}
               style={[
                 theme.textInput,
