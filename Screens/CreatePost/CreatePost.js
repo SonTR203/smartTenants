@@ -11,6 +11,7 @@ import {
   ScrollView,
   Alert,
   StyleSheet,
+  Modal,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
@@ -30,8 +31,9 @@ import {
   getFileInfo,
 } from "../../utils/Profile/profile.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
+import PopupModal from "../../components/PopupModal";
 
-const CreatePost = ({ navigation }) => {
+const CreatePost = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [postContent, setPostContent] = useState("");
   const [image, setImage] = useState(null);
@@ -137,7 +139,12 @@ const CreatePost = ({ navigation }) => {
       if (isNsfw !== undefined) {
         PostContent(null, id, isNsfw);
       } else {
-        alert("Error moderating text");
+        navigation.setParams({
+          reload: null,
+          saveModal: true,
+          modalType: "error",
+          message: "Something went wrong, please try again",
+        });
         setIsloading(false);
         return;
       }
@@ -176,7 +183,30 @@ const CreatePost = ({ navigation }) => {
     <ScrollView style={theme.pageContainer}>
       <View style={theme.globalMargins}>
         <StatusBar style="auto" />
-
+        <Modal
+          animationType="slide"
+          transparent={true}
+          // statusBarTranslucent={true}
+          visible={route.params?.saveModal === true ? true : false}
+          onRequestClose={() => {
+            navigation.setParams({
+              saveModal: false,
+              reload: null,
+            });
+          }}
+          onShow={() => {
+            setTimeout(() => {
+              navigation.setParams({
+                saveModal: false,
+                reload: null,
+              });
+            }, 2000);
+          }}>
+          <PopupModal
+            modalType={route.params?.modalType}
+            message={route.params?.message}
+          />
+        </Modal>
         <View id="statusInput">
           <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
             What's on your mind?
