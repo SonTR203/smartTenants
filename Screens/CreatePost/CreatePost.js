@@ -6,12 +6,12 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
-  Modal,
   Platform,
   ActivityIndicator,
   ScrollView,
   Alert,
   StyleSheet,
+  Modal,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
@@ -31,12 +31,11 @@ import {
   getFileInfo,
 } from "../../utils/Profile/profile.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
+import PopupModal from "../../components/PopupModal";
 
-const CreatePost = ({ navigation }) => {
+const CreatePost = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [postContent, setPostContent] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalText, setModalText] = useState("");
   const [image, setImage] = useState(null);
   const [isLoading, setIsloading] = useState(false);
   const { currentUser } = useAppContext();
@@ -65,10 +64,13 @@ const CreatePost = ({ navigation }) => {
 
       const res = await createItemInFirestore("Newsfeed", id, propObj);
       if (isNsfw) {
-        alert(
-          "We've detected potential suggestive or profane content. Your post will be reviewed."
-        );
-        navigation.navigate("Newsfeed", { reload: true });
+        navigation.navigate("Newsfeed", {
+          reload: true,
+          saveModal: true,
+          modalType: "warning",
+          message:
+            "We’ve detected potential inappropriate content. Your post will be reviewed.",
+        });
       } else if (res) {
         postSuccess();
       } else {
@@ -82,14 +84,22 @@ const CreatePost = ({ navigation }) => {
 
   function postSuccess() {
     setIsloading(false);
-    setModalText("Post Successful!");
-    setModalVisible(true);
+    navigation.navigate("Newsfeed", {
+      reload: true,
+      saveModal: true,
+      modalType: "success",
+      message: "Post submitted",
+    });
   }
 
   function postFailure() {
     setIsloading(false);
-    setModalText("Post Failed");
-    setModalVisible(true);
+    navigation.navigate("Newsfeed", {
+      reload: true,
+      saveModal: true,
+      modalType: "error",
+      message: "Something went wrong, please try again",
+    });
   }
 
   // ============================= IMAGE UPLOAD =============================
@@ -129,7 +139,12 @@ const CreatePost = ({ navigation }) => {
       if (isNsfw !== undefined) {
         PostContent(null, id, isNsfw);
       } else {
-        alert("Error moderating text");
+        navigation.setParams({
+          reload: null,
+          saveModal: true,
+          modalType: "error",
+          message: "Something went wrong, please try again",
+        });
         setIsloading(false);
         return;
       }
@@ -168,37 +183,30 @@ const CreatePost = ({ navigation }) => {
     <ScrollView style={theme.pageContainer}>
       <View style={theme.globalMargins}>
         <StatusBar style="auto" />
-
         <Modal
           animationType="slide"
-          transparent={false}
-          statusBarTranslucent={true}
-          visible={modalVisible}
+          transparent={true}
+          // statusBarTranslucent={true}
+          visible={route.params?.saveModal === true ? true : false}
           onRequestClose={() => {
-            setModalVisible(!modalVisible);
+            navigation.setParams({
+              saveModal: false,
+              reload: null,
+            });
           }}
           onShow={() => {
             setTimeout(() => {
-              setModalVisible(!modalVisible);
-              navigation.navigate("Newsfeed", { reload: true });
+              navigation.setParams({
+                saveModal: false,
+                reload: null,
+              });
             }, 2000);
-          }}
-        >
-          <View style={theme.container}>
-            <View style={theme.modalView}>
-              <Text
-                style={{
-                  fontSize: 17,
-                  fontFamily: "Roboto_400Regular",
-                  color: "#191919",
-                }}
-              >
-                {modalText}
-              </Text>
-            </View>
-          </View>
+          }}>
+          <PopupModal
+            modalType={route.params?.modalType}
+            message={route.params?.message}
+          />
         </Modal>
-
         <View id="statusInput">
           <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
             What's on your mind?
@@ -219,8 +227,7 @@ const CreatePost = ({ navigation }) => {
                 paddingTop: 22,
                 paddingBottom: Platform.OS === "android" ? 70 : 0,
               },
-            ]}
-          ></TextInput>
+            ]}></TextInput>
         </View>
 
         <View id="imageUploadPreview" style={theme.container}>
@@ -232,11 +239,9 @@ const CreatePost = ({ navigation }) => {
         <TouchableOpacity
           id="uploadImageButton"
           onPress={pickImage}
-          style={theme.secondaryButton}
-        >
+          style={theme.secondaryButton}>
           <Text
-            style={[theme.secondaryButtonText, styleVariables.fontSizes.body]}
-          >
+            style={[theme.secondaryButtonText, styleVariables.fontSizes.body]}>
             Upload image{" "}
             <MaterialCommunityIcons
               name="image-plus"
@@ -256,14 +261,12 @@ const CreatePost = ({ navigation }) => {
           <TouchableOpacity
             id="submitPostButton"
             onPress={handleSelectedImage}
-            style={[theme.primaryButton, { marginBottom: 130 }]}
-          >
+            style={[theme.primaryButton, { marginBottom: 130 }]}>
             <Text
               style={[
                 theme.primaryButtonText,
                 styleVariables.fontSizes.bodyBold,
-              ]}
-            >
+              ]}>
               Submit post
             </Text>
           </TouchableOpacity>
