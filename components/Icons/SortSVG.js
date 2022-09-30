@@ -1,28 +1,21 @@
 import React from "react";
 import Svg, { Path } from "react-native-svg";
 
-function SortSVG() {
+function SortSVG(props) {
   return (
     <Svg
-      width="17"
-      height="16"
-      viewBox="0 0 17 16"
+      width={17}
+      height={16}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <Path
-        d="M11.0837 6.33333L8.75033 4L6.41699 6.33333"
+        d="m12.25 5-3.5-3.5L5.25 5M12.25 11l-3.5 3.5-3.5-3.5"
         stroke="#395E66"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <Path
-        d="M11.0837 9.33301L8.75033 11.6663L6.41699 9.33301"
-        stroke="#395E66"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </Svg>
   );
