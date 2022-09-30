@@ -103,12 +103,14 @@ const Newsfeed = ({ navigation, route }) => {
         onRequestClose={() => {
           navigation.setParams({
             saveModal: false,
+            reload: null,
           });
         }}
         onShow={() => {
           setTimeout(() => {
             navigation.setParams({
               saveModal: false,
+              reload: null,
             });
           }, 2000);
         }}>
