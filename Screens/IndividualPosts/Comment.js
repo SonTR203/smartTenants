@@ -8,7 +8,7 @@ import {
   FlatList,
 } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
-import { likePost } from "../../utils/IndividualPosts/individualPosts.services";
+import { likeComment } from "../../utils/IndividualPosts/individualPosts.services";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
 import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
@@ -25,13 +25,13 @@ function Comment({
   userCommentId,
   getCommentReplies,
   comments,
-  // passedPost,
+  passedPost,
 }) {
   const [timeSincePost, setTimeSincePost] = useState("");
   const [replies, setReplies] = useState([]);
-  // const [numberOfReplies, setNumberOfReplies] = useState(0);
-  const [userLiked, setUserLiked] = useState(false);
-  const [numberOfLikes, setNumberOfLikes] = useState(0);
+  const [numberOfReplies, setNumberOfReplies] = useState(0);
+  const [userLikedComment, setUserLikedComment] = useState(false);
+  const [numberOfCommentLikes, setNumberOfCommentLikes] = useState(0);
   const { post, setPost, currentUser } = useAppContext();
 
   useEffect(() => {
@@ -65,14 +65,14 @@ function Comment({
 
   // In progress: add like functionality to comments
   const handleLikeComment = async () => {
-    const updatedPost = await likePost(
-      userLiked,
-      setUserLiked,
-      setNumberOfLikes,
-      numberOfLikes,
-      currentUser,
+    const updatedPost = await likeComment(
+      item,
       post,
-      userCommentId
+      currentUser,
+      userLikedComment,
+      setUserLikedComment,
+      numberOfCommentLikes,
+      setNumberOfCommentLikes
     );
 
     if (updatedPost) {
@@ -181,12 +181,16 @@ function Comment({
               <TouchableOpacity
                 style={styles.likeCommentContainer}
                 onPress={() => {
-                  setUserCommentId(item.id);
-                  handleLikeComment();
+                  // handleLikeComment();
+                  console.log(item);
+                  console.log("------------------------------------");
+                  console.log(post);
                 }}
               >
                 <HeartSVG></HeartSVG>
-                <Text style={styles.likeCommentCount}>{numberOfLikes}</Text>
+                <Text style={styles.likeCommentCount}>
+                  {numberOfCommentLikes}
+                </Text>
               </TouchableOpacity>
               <View style={styles.likeCommentContainer}>
                 <CommentIcon></CommentIcon>

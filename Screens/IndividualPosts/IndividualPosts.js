@@ -31,6 +31,7 @@ const IndividualPosts = ({ navigation, route }) => {
 
   const [userCommentName, setUserCommentName] = useState("");
   const [userCommentId, setUserCommentId] = useState("");
+  const [commentLikeCount, setCommentLikeCount] = useState(0);
 
   const [textInputHeight, setTextInputHeight] = useState(0);
 
@@ -127,6 +128,7 @@ const IndividualPosts = ({ navigation, route }) => {
       userCommentId={userCommentId}
       getCommentReplies={getCommentReplies}
       comments={comments}
+      setCommentLikeCount={setCommentLikeCount}
     />
   );
   const renderListHeader = () => {
