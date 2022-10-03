@@ -115,7 +115,7 @@ function Comment({
     fullName: { color: styleVariables.colors.black },
     timestamp: { color: styleVariables.colors.black, opacity: 0.66 },
     content: {
-      color: styleVariables.colors.black,
+      color: styleVariables.colors.primary,
       marginBottom: 17,
     },
     replyText: {
