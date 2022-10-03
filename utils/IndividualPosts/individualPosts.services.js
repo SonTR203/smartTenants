@@ -11,22 +11,25 @@ import {
 import _ from "lodash";
 import uuid from "react-native-uuid";
 import { createItemInFirestore } from "../firebase.services";
+import { useState } from "react";
 
-export const getComments = async () => {
-  const colRef = collection(db, `Newsfeed/${post.id}/`);
+let commentID;
 
-  const sortedColRef = query(colRef, where("isNSFW", "==", false));
+// export const getComments = async (post, item) => {
+//   const colRef = collection(db, `Newsfeed/${post.id}/`);
 
-  const data = await getDocs(sortedColRef);
-  const formattedData = data.docs.map((doc) => {
-    return {
-      ...doc.data(),
-      id: doc.id,
-    };
-  });
-  const sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
-  return sortedListOfPosts;
-};
+//   const sortedColRef = query(colRef, where("isNSFW", "==", false));
+
+//   const data = await getDocs(sortedColRef);
+//   const formattedData = data.docs.map((doc) => {
+//     return {
+//       ...doc.data(),
+//       id: doc.id,
+//     };
+//   });
+//   const sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
+//   return sortedListOfPosts;
+// };
 
 export const likeComment = async (
   item,
@@ -37,17 +40,14 @@ export const likeComment = async (
   numberOfCommentLikes,
   setNumberOfCommentLikes
 ) => {
-  let updatedComment = item;
-
-  // addLike(currentUser, post, item);
   // ================ checking if current user liked comment ====================
   if (userLikedComment) {
-    const res = await removeLike(currentUser, item);
+    const res = await removeLike(currentUser, post, item);
     if (res) {
       setUserLikedComment(false);
-      setNumberOfCommentLikes(numberOfLikes - 1);
+      setNumberOfCommentLikes(numberOfCommentLikes - 1);
 
-      updatedComment = {
+      item = {
         ...item,
         peopleWhoLiked: item.peopleWhoLiked.filter(
           (item) => item !== currentUser.userID
@@ -56,14 +56,14 @@ export const likeComment = async (
     }
   } else {
   }
-  const res = await addLike(currentUser, item);
+  const res = await addLike(currentUser, post, item);
   if (res) {
-    setUserLiked(true);
-    setNumberOfLikes(numberOfLikes + 1);
+    setUserLikedComment(true);
+    setNumberOfCommentLikes(numberOfCommentLikes + 1);
 
     userLikedComment = {
       ...item,
-      peopleWhoLiked: [...post.peopleWhoLiked, currentUser.userID],
+      peopleWhoLiked: [...item.peopleWhoLiked, currentUser.userID],
     };
   }
   return userLikedComment;
@@ -71,11 +71,14 @@ export const likeComment = async (
 
 export const addLike = async (currentUser, post, item) => {
   const peopleWhoLikedCommentId = uuid.v4();
-  const peopleWhoLikedCommentDocRef = doc(db, "Newsfeed", post.id);
+  const peopleWhoLikedCommentDocRef = doc(
+    db,
+    `Newsfeed/${post.id}/peopleWhoCommented/`,
+    item.id
+  );
 
   // =============== adding user to peopleWhoLiked subcollection & update peopleWhoLiked array =============
   try {
-    console.log(item);
     await createItemInFirestore(
       `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoLiked`,
       peopleWhoLikedCommentId,
@@ -89,47 +92,52 @@ export const addLike = async (currentUser, post, item) => {
     );
 
     await updateDoc(peopleWhoLikedCommentDocRef, {
-      peopleWhoLikedComment: [...item.peopleWhoLiked, currentUser.userID],
+      peopleWhoLiked: [...item.peopleWhoLiked, currentUser.userID],
     });
   } catch (error) {
     console.log("error adding like to DB", error);
     alert("Error liking post. Please try again later.");
     return false;
   }
-
   return true;
 };
 
-// export const removeLike = async (currentUser, post, item) => {
-//   // remove document in the peopleWhoLiked subcollection and update the likeCount
-//   try {
-//     const peopleWhoLikedColRef = collection(
-//       db,
-//       `Newsfeed/${post.id}/peopleWhoLiked`
-//     );
-//     const peopleWhoLikedDocRef = doc(db, "Newsfeed", post.id);
-//     const q = query(
-//       peopleWhoLikedColRef,
-//       where("userID", "==", currentUser.userID)
-//     );
+export const removeLike = async (currentUser, post, item) => {
+  // remove document in the peopleWhoLiked subcollection and update the likeCount
 
-//     const querySnapshot = await getDocs(q);
-//     querySnapshot.forEach(async (doc) => {
-//       // doc.data() is never undefined for query doc snapshots
-//       console.log("doc to be deleted with unlike => ", doc.data());
-//       await deleteDoc(doc.ref);
-//     });
+  try {
+    const peopleWhoLikedColRef = collection(
+      db,
+      `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoLiked`
+    );
 
-//     await updateDoc(peopleWhoLikedDocRef, {
-//       peopleWhoLiked: post.peopleWhoLiked.filter(
-//         (item) => item != currentUser.userID
-//       ),
-//     });
-//   } catch (error) {
-//     console.log("error remove like: ", error);
-//     alert("Error removing like. Please try again later.");
-//     return false;
-//   }
+    const peopleWhoLikedDocRef = doc(
+      db,
+      `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoLiked`
+    );
 
-//   return true;
-// };
+    const q = query(
+      peopleWhoLikedColRef,
+      where("userID", "==", currentUser.userID)
+    );
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log("doc to be deleted with unlike => ", doc.data());
+      await deleteDoc(doc.ref);
+    });
+
+    await updateDoc(peopleWhoLikedDocRef, {
+      peopleWhoLiked: item.peopleWhoLiked.filter(
+        (item) => item != currentUser.userID
+      ),
+    });
+  } catch (error) {
+    console.log("error remove like: ", error);
+    alert("Error removing like. Please try again later.");
+    return false;
+  }
+
+  return true;
+};

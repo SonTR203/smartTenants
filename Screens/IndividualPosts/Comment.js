@@ -22,14 +22,12 @@ function Comment({
   styleVariables,
   setUserCommentName,
   setUserCommentId,
-  userCommentId,
   getCommentReplies,
   comments,
   passedPost,
 }) {
   const [timeSincePost, setTimeSincePost] = useState("");
   const [replies, setReplies] = useState([]);
-  const [numberOfReplies, setNumberOfReplies] = useState(0);
   const [userLikedComment, setUserLikedComment] = useState(false);
   const [numberOfCommentLikes, setNumberOfCommentLikes] = useState(0);
   const { post, setPost, currentUser } = useAppContext();
@@ -43,7 +41,6 @@ function Comment({
     async function setCommentReplies() {
       if (item.replied == true) {
         let replyList = await getCommentReplies(item.id);
-        console.log(replyList);
         setReplies(replyList);
       }
     }
@@ -54,6 +51,22 @@ function Comment({
     ({ item }) => renderReplyItem({ item }),
     [replies]
   );
+
+  // execute function
+  useEffect(() => {
+    if (item && item.peopleWhoLiked.length > 0) {
+      setHeartsToGreen();
+      setNumberOfCommentLikes(item.peopleWhoLiked.length);
+    }
+  }, [item]);
+
+  const setHeartsToGreen = () => {
+    post.peopleWhoLiked.map((item) => {
+      if (item == currentUser.userID) {
+        setUserLikedComment(true);
+      }
+    });
+  };
 
   const renderReplyItem = ({ item }) => (
     <CommentReply
@@ -76,7 +89,7 @@ function Comment({
       setNumberOfCommentLikes
     );
 
-    if (updatedPost) {
+    if (updatedPost == true) {
       setPost({
         ...updatedPost,
         peopleWhoCommented: [...updatedPost.peopleWhoCommented],
@@ -137,10 +150,15 @@ function Comment({
       display: "flex",
       flexDirection: "row",
     },
+
     likeCommentCount: {
       alignSelf: "center",
-      marginLeft: 10,
+      marginLeft: 4.67,
+      fontSize: 15,
+      fontWeight: "400",
+      lineHeight: 20,
     },
+
     likeCommentReplySection: {
       display: "flex",
       flexDirection: "row",
@@ -180,20 +198,28 @@ function Comment({
         <View style={[styles.likeCommentReplySection, styles.replyContainer]}>
           <View className="replyIcon" style={styles.replyLine}>
             <View style={styles.commentStatsContainer}>
-              <TouchableOpacity
-                style={styles.likeCommentContainer}
-                onPress={() => {
-                  // handleLikeComment();
-                  // console.log(item);
-                  // console.log("------------------------------------");
-                  // console.log(post);
-                }}
-              >
-                <HeartSVG></HeartSVG>
+              <View style={[styles.likeCommentContainer, { marginRight: 16 }]}>
+                {userLikedComment && (
+                  <TouchableOpacity
+                    style={styles.likeCommentContainer}
+                    onPress={handleLikeComment}
+                  >
+                    <HeartFilledSVG></HeartFilledSVG>
+                  </TouchableOpacity>
+                )}
+                {!userLikedComment && (
+                  <TouchableOpacity
+                    style={styles.likeCommentContainer}
+                    onPress={handleLikeComment}
+                  >
+                    <HeartSVG></HeartSVG>
+                  </TouchableOpacity>
+                )}
                 <Text style={styles.likeCommentCount}>
                   {numberOfCommentLikes}
                 </Text>
-              </TouchableOpacity>
+              </View>
+
               <View style={styles.likeCommentContainer}>
                 <CommentIcon></CommentIcon>
                 <Text style={styles.likeCommentCount}>{replies.length}</Text>
