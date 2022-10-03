@@ -1,8 +1,12 @@
 import React from "react";
+import { TouchableOpacity } from "react-native";
 import EyeOpenSVG from "./Icons/EyeOpenSVG";
 import EyeClosedSVG from "./Icons/EyeClosedSVG";
+import { useTheme } from "../ThemeContext";
 
 function PasswordToggle({ passwordSecure, setPasswordSecure }) {
+  const { theme } = useTheme();
+
   return passwordSecure ? (
     <TouchableOpacity
       style={theme.passwordIcon}
