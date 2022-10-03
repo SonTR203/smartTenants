@@ -32,6 +32,7 @@ const Login = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [passwordSecure, setpasswordSecure] = useState(true);
 
   // clear the text inputs when the screen is navigated to
   useEffect(() => {
@@ -188,14 +189,33 @@ const Login = ({ navigation, route }) => {
               >
                 Password
               </Text>
-              <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
-                placeholder="••••••••••"
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
+              <View style={theme.passwordView}>
+                <TextInput
+                  placeholderTextColor={styleVariables.colors.placeholderText}
+                  placeholder="••••••••••"
+                  value={password}
+                  onChangeText={(text) => setPassword(text)}
+                  secureTextEntry={passwordSecure}
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+                {passwordSecure ? (
+                  <TouchableOpacity
+                    style={theme.passwordIcon}
+                    onPress={() => setpasswordSecure(false)}
+                    activeOpacity={1}
+                  >
+                    <EyeClosedSVG />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={theme.passwordIcon}
+                    onPress={() => setpasswordSecure(true)}
+                    activeOpacity={1}
+                  >
+                    <EyeOpenSVG />
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
 
             {/* forgotPassword */}

@@ -353,6 +353,21 @@ const theme = StyleSheet.create({
     marginTop: 17,
     borderRadius: 16,
   },
+  passwordView: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  passwordIcon: {
+    position: "absolute",
+    right: 0,
+    bottom: 0,
+    padding: 15,
+    marginBottom: 12,
+    backgroundColor: "#EBEFF0",
+    borderRadius: 12,
+    zIndex: 1,
+  },
 });
 
 //primary color (navy/dark green): #395E66
