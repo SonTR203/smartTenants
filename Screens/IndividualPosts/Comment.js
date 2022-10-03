@@ -201,6 +201,7 @@ function Comment({
               <View style={[styles.likeCommentContainer, { marginRight: 16 }]}>
                 {userLikedComment && (
                   <TouchableOpacity
+                    activeOpacity={1}
                     style={styles.likeCommentContainer}
                     onPress={handleLikeComment}
                   >
@@ -209,6 +210,7 @@ function Comment({
                 )}
                 {!userLikedComment && (
                   <TouchableOpacity
+                    activeOpacity={1}
                     style={styles.likeCommentContainer}
                     onPress={handleLikeComment}
                   >

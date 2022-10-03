@@ -55,18 +55,18 @@ export const likeComment = async (
       };
     }
   } else {
-  }
-  const res = await addLike(currentUser, post, item);
-  if (res) {
-    setUserLikedComment(true);
-    setNumberOfCommentLikes(numberOfCommentLikes + 1);
+    const res = await addLike(currentUser, post, item);
+    if (res) {
+      setUserLikedComment(true);
+      setNumberOfCommentLikes(numberOfCommentLikes + 1);
 
-    userLikedComment = {
-      ...item,
-      peopleWhoLiked: [...item.peopleWhoLiked, currentUser.userID],
-    };
+      item = {
+        ...item,
+        peopleWhoLiked: [...item.peopleWhoLiked, currentUser.userID],
+      };
+    }
   }
-  return userLikedComment;
+  return item;
 };
 
 export const addLike = async (currentUser, post, item) => {
@@ -106,12 +106,9 @@ export const removeLike = async (currentUser, post, item) => {
   // remove document in the peopleWhoLiked subcollection and update the likeCount
 
   try {
-    const peopleWhoLikedColRef = collection(
-      db,
-      `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoLiked`
-    );
+    let commentID = "";
 
-    const peopleWhoLikedDocRef = doc(
+    const peopleWhoLikedColRef = collection(
       db,
       `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoLiked`
     );
@@ -124,9 +121,17 @@ export const removeLike = async (currentUser, post, item) => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach(async (doc) => {
       // doc.data() is never undefined for query doc snapshots
+      commentID = doc.data().id;
+      console.log(commentID);
       console.log("doc to be deleted with unlike => ", doc.data());
       await deleteDoc(doc.ref);
     });
+
+    const peopleWhoLikedDocRef = doc(
+      db,
+      `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoLiked`,
+      commentID
+    );
 
     await updateDoc(peopleWhoLikedDocRef, {
       peopleWhoLiked: item.peopleWhoLiked.filter(
