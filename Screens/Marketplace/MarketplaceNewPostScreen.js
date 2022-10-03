@@ -298,10 +298,6 @@ function MarketplaceNewPostScreen({ navigation }) {
     horizontalMargin: {
       marginHorizontal: 16,
     },
-    textInputTitleAndPrice: {
-      height: 64,
-      // paddingTop: 22,
-    },
     textInputDescription: {
       height: 160,
       paddingTop: 16,
@@ -380,11 +376,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               placeholder="What are you selling?"
               multiline={false}
               maxLength={60}
-              style={[
-                theme.textInput,
-                styleVariables.fontSizes.body,
-                styles.textInputTitleAndPrice,
-              ]}
+              style={[theme.textInput, styleVariables.fontSizes.body]}
             />
             {/* CATEGORY */}
             <Text
@@ -515,11 +507,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               placeholder="$0.00"
               onEndEditing={handleEndEditing}
               onChangeText={setPrice}
-              style={[
-                theme.textInput,
-                styleVariables.fontSizes.body,
-                styles.textInputTitleAndPrice,
-              ]}
+              style={[theme.textInput, styleVariables.fontSizes.body]}
             />
           </View>
           {/* UPLOAD IMAGE */}
