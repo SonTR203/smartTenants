@@ -402,7 +402,7 @@ const ProfileNavigator = ({ navigation }) => {
               currentUserId={currentUser.userID}
               itemUserId={route.params.itemUserId}
               item={route.params.item}
-              previousScreen={"MarketplaceScreen"}
+              previousScreen={"MyPosts"}
               collection={"Marketplace"}
               openModal={route.params.openModal}
             />
