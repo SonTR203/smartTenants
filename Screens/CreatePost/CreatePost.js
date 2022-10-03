@@ -183,7 +183,6 @@ const CreatePost = ({ navigation, route }) => {
     }
   }
 
-  console.log(buttonDisabled);
   useEffect(() => {
     if (!postContent && !image) return setButtonDisabled(true);
     setButtonDisabled(false);
