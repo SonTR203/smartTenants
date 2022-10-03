@@ -20,6 +20,8 @@ import { getItemById, handleSignIn } from "../../utils/firebase.services";
 import { getAuth, signOut } from "firebase/auth";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import ErrorArea from "../../components/SignUp/ErrorArea";
+import EyeOpenSVG from "../../components/Icons/EyeOpenSVG";
+import EyeClosedSVG from "../../components/Icons/EyeClosedSVG";
 
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation, route }) => {
