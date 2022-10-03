@@ -236,6 +236,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         onBackdropPress={() => {
           setSortModalVisible(false);
         }}
+        statusBarTranslucent={true}
       >
         <SortModal
           setSortModalVisible={setSortModalVisible}
@@ -253,6 +254,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         isVisible={filterModalVisible}
         style={styles.modal}
         onBackdropPress={() => setFilterModalVisible(false)}
+        statusBarTranslucent={true}
       >
         <FilterModal
           marketplaceData={itemList}

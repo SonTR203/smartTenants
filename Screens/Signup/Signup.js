@@ -422,6 +422,7 @@ const Signup = ({ navigation }) => {
               backdropOpacity={0.5}
               onBackdropPress={() => setModalVisible(false)}
               style={styles.buildingSelectModal}
+              statusBarTranslucent={true}
             >
               <ModalPicker
                 changeModalVisibility={changeModalVisibility}

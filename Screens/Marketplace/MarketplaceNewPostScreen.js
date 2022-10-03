@@ -414,6 +414,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               backdropOpacity={0.5}
               onBackdropPress={() => setCategoryModalVisible(false)}
               style={styles.modal}
+              statusBarTranslucent={true}
             >
               <ModalCategoryPicker
                 theme={theme}
@@ -458,6 +459,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               backdropOpacity={0.5}
               onBackdropPress={() => setConditionModalVisible(false)}
               style={styles.modal}
+              statusBarTranslucent={true}
             >
               <ModalConditionPicker
                 theme={theme}
