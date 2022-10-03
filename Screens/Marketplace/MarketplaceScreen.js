@@ -117,6 +117,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
               styles.headerBtn,
               sortActive ? styles.activeCondition : null,
             ]}
+            activeOpacity={1}
           >
             <Text
               style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
@@ -134,6 +135,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
               styles.headerBtn,
               filterActive ? styles.activeCondition : null,
             ]}
+            activeOpacity={1}
           >
             <Text
               style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
