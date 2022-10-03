@@ -14,7 +14,7 @@ import {
   Modal,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useTheme } from "../../ThemeContext";
 import { useAppContext } from "../../Context/AppContext";
@@ -38,6 +38,7 @@ const CreatePost = ({ navigation, route }) => {
   const [postContent, setPostContent] = useState("");
   const [image, setImage] = useState(null);
   const [isLoading, setIsloading] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const { currentUser } = useAppContext();
 
   async function PostContent(imgUrl, id, isNsfw) {
@@ -179,6 +180,11 @@ const CreatePost = ({ navigation, route }) => {
     }
   }
 
+  console.log(buttonDisabled);
+  useEffect(() => {
+    if (!postContent && !image) return setButtonDisabled(true);
+    setButtonDisabled(false);
+  }, [postContent, image]);
   return (
     <ScrollView style={theme.pageContainer}>
       <View style={theme.globalMargins}>
@@ -261,7 +267,12 @@ const CreatePost = ({ navigation, route }) => {
           <TouchableOpacity
             id="submitPostButton"
             onPress={handleSelectedImage}
-            style={[theme.primaryButton, { marginBottom: 130 }]}>
+            disabled={buttonDisabled}
+            style={[
+              theme.primaryButton,
+              { marginBottom: 130 },
+              buttonDisabled ? styles.buttonDisabled : null,
+            ]}>
             <Text
               style={[
                 theme.primaryButtonText,
@@ -279,6 +290,9 @@ const CreatePost = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   loader: {
     marginBottom: 20,
+  },
+  buttonDisabled: {
+    backgroundColor: "#748E94",
   },
 });
 
