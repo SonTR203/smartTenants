@@ -141,7 +141,7 @@ const IndividualPosts = ({ navigation, route }) => {
           setPeopleWhoLiked={setPeopleWhoLiked}
           peopleWhoLiked={peopleWhoLiked}
         />
-        {post.commentCount < 1 ? (
+        {post.commentCount > 1 ? (
           <Text
             style={[
               styleVariables.fontSizes.bodyBold,
