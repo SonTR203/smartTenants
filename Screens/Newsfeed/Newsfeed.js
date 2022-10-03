@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, FlatList, StyleSheet, RefreshControl } from "react-native";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  RefreshControl,
+  Modal,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
@@ -11,117 +17,142 @@ import { getPosts } from "../../utils/Newsfeed/newsfeed.services";
 import Fab from "../../components/Fab";
 import EmptyListComponent from "../../components/EmptyListComponent";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
+import PopupModal from "../../components/PopupModal";
 
 const Newsfeed = ({ navigation, route }) => {
-	const { theme, styleVariables } = useTheme();
-	const [posts, setPosts] = useState([]);
-	const [refreshing, setRefreshing] = useState(true);
+  const { theme, styleVariables } = useTheme();
+  const [posts, setPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(true);
 
-	const onRefresh = useCallback(() => {
-		setRefreshing(true);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
 
-		wait(refreshDelay).then(async () => {
-			await fetchNotifications();
-			setRefreshing(false);
-		});
-	}, []);
+    wait(refreshDelay).then(async () => {
+      await fetchNotifications();
+      setRefreshing(false);
+    });
+  }, []);
 
-	const styles = StyleSheet.create({
-		newsfeedContainer: {
-			flex: 1,
-			backgroundColor: styleVariables.colors.primary,
-		},
-		flatlist: {
-			flex: 1,
-			borderTopLeftRadius: 27,
-			borderTopRightRadius: 27,
-			backgroundColor: "transparent",
-		},
-		flatListContainer: {
-			flex: 1,
-			overflow: "hidden",
-			borderTopLeftRadius: 27,
-			borderTopRightRadius: 27,
-			backgroundColor: "white",
-		},
-	});
+  const styles = StyleSheet.create({
+    newsfeedContainer: {
+      flex: 1,
+      backgroundColor: styleVariables.colors.primary,
+    },
+    flatlist: {
+      flex: 1,
+      borderTopLeftRadius: 27,
+      borderTopRightRadius: 27,
+      backgroundColor: "transparent",
+    },
+    flatListContainer: {
+      flex: 1,
+      overflow: "hidden",
+      borderTopLeftRadius: 27,
+      borderTopRightRadius: 27,
+      backgroundColor: "white",
+    },
+  });
 
-	async function fetchNotifications() {
-		const list = await getPosts();
+  async function fetchNotifications() {
+    const list = await getPosts();
 
-		setPosts(list);
-		setRefreshing(false);
-	}
+    setPosts(list);
+    setRefreshing(false);
+  }
 
-	useEffect(() => {
-		fetchNotifications();
-	}, []);
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
-	useEffect(() => {
-		if (route.params && route.params.reload) {
-			setRefreshing(true);
-			fetchNotifications();
-		}
-	}, [route.params]);
+  useEffect(() => {
+    if (route.params && route.params.reload) {
+      setRefreshing(true);
+      fetchNotifications();
+    }
+  }, [route.params]);
 
-	const callBackRender = useCallback(
-		({ item, index }) => renderPostItem({ item, index }),
-		[[posts]]
-	);
+  const callBackRender = useCallback(
+    ({ item, index }) => renderPostItem({ item, index }),
+    [[posts]]
+  );
 
-	const renderPostItem = ({ item }) => (
-		<Post passedPost={item} windowWidth={constants.width} />
-	);
+  const renderPostItem = ({ item }) => (
+    <Post passedPost={item} windowWidth={constants.width} />
+  );
 
-	const renderEmpty = () => {
-		return <EmptyListComponent screenName={"newsfeed"} />;
-	};
+  const renderEmpty = () => {
+    return <EmptyListComponent screenName={"newsfeed"} />;
+  };
 
-	const renderListFooter = () => {
-		if (posts.length > 0) {
-			return <ListFooter styleVariables={styleVariables} theme={theme} />;
-		} else {
-			return null;
-		}
-	};
+  const renderListFooter = () => {
+    if (posts.length > 0) {
+      return <ListFooter styleVariables={styleVariables} theme={theme} />;
+    } else {
+      return null;
+    }
+  };
 
-	return (
-		<SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
-			<StatusBar style="light" />
-			<View style={styles.flatListContainer}>
-				<FlatListRefreshControl refreshing={refreshing} />
-				<FlatList
-					removeClippedSubviews={true}
-					initialNumToRender={3}
-					style={styles.flatlist}
-					data={posts}
-					extraData={refreshing}
-					keyExtractor={(item) => item.id}
-					renderItem={callBackRender}
-					ListEmptyComponent={renderEmpty}
-					ListFooterComponent={renderListFooter}
-					refreshControl={
-						<RefreshControl
-							progressBackgroundColor="white"
-							colors={[styleVariables.colors.primary]}
-							tintColor="transparent"
-							style={{ backgroundColor: "transparent", color: "transparent" }}
-							onRefresh={onRefresh}
-							refreshing={refreshing}
-						/>
-					}
-				/>
-			</View>
+  return (
+    <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
+      <StatusBar style="light" />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        // statusBarTranslucent={true}
+        visible={route.params?.saveModal === true ? true : false}
+        onRequestClose={() => {
+          navigation.setParams({
+            saveModal: false,
+            reload: null,
+          });
+        }}
+        onShow={() => {
+          setTimeout(() => {
+            navigation.setParams({
+              saveModal: false,
+              reload: null,
+            });
+          }, 2000);
+        }}>
+        <PopupModal
+          modalType={route.params?.modalType}
+          message={route.params?.message}
+        />
+      </Modal>
+      <View style={styles.flatListContainer}>
+        <FlatListRefreshControl refreshing={refreshing} />
+        <FlatList
+          removeClippedSubviews={true}
+          initialNumToRender={3}
+          style={styles.flatlist}
+          data={posts}
+          extraData={refreshing}
+          keyExtractor={(item) => item.id}
+          renderItem={callBackRender}
+          ListEmptyComponent={renderEmpty}
+          ListFooterComponent={renderListFooter}
+          refreshControl={
+            <RefreshControl
+              progressBackgroundColor="white"
+              colors={[styleVariables.colors.primary]}
+              tintColor="transparent"
+              style={{ backgroundColor: "transparent", color: "transparent" }}
+              onRefresh={onRefresh}
+              refreshing={refreshing}
+            />
+          }
+        />
+      </View>
 
-			{/* FAB */}
-			<Fab
-				route={"CreatePost"}
-				navigation={navigation}
-				theme={theme}
-				styleVariables={styleVariables}
-			/>
-		</SafeAreaView>
-	);
+      {/* FAB */}
+      <Fab
+        route={"CreatePost"}
+        navigation={navigation}
+        theme={theme}
+        styleVariables={styleVariables}
+      />
+    </SafeAreaView>
+  );
 };
 
 export default Newsfeed;

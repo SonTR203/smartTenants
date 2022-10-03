@@ -67,7 +67,11 @@ const EditPersonalInfo = ({ navigation }) => {
           lastName,
         });
         setIsLoading(false);
-        navigation.navigate("EditProfile", { saveModal: true });
+        navigation.navigate("EditProfile", {
+          saveModal: true,
+          modalType: "success",
+          message: "Changes saved",
+        });
       } catch (error) {
         console.log(error);
       }

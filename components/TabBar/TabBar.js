@@ -12,7 +12,7 @@ import { BottomMenuItem } from "./BottomMenuItem";
 
 export const TabBar = ({ state, descriptors, navigation, routeName }) => {
   const totalWidth = Dimensions.get("window").width;
-  const tabWidth = totalWidth / state.routes.length;
+  const tabWidth = totalWidth / state.routes.length - 41.5;
   const [translateValue] = useState(new Animated.Value(0));
 
   const getRouteName = () => {
@@ -77,15 +77,14 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
               : "10%",
           display: getRouteName(),
         },
-      ]}
-    >
+      ]}>
       <View style={{ flexDirection: "row" }}>
         <Animated.View
           style={[
             style.slider,
             {
               transform: [{ translateX: translateValue }],
-              width: 42,
+              width: tabWidth,
             },
           ]}
         />
@@ -100,7 +99,7 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
           const isFocused = state.index === index;
           if (isFocused) {
             Animated.spring(translateValue, {
-              toValue: index * tabWidth,
+              toValue: index * (tabWidth + 41.5),
               velocity: 10,
               useNativeDriver: true,
             }).start();
@@ -120,8 +119,7 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
                   flex: 1,
                   marginBottom: 28,
                   marginTop: 8,
-                }}
-              >
+                }}>
                 <BottomMenuItem
                   label={label.toString()}
                   isCurrent={isFocused}
@@ -152,7 +150,7 @@ const style = StyleSheet.create({
     height: 4,
     position: "absolute",
     top: 0,
-    left: 32,
+    left: 20,
     backgroundColor: "#395E66",
     borderRadius: 2,
   },

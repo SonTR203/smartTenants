@@ -14,7 +14,7 @@ import { useTheme } from "../../../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { useAppContext } from "../../../../Context/AppContext";
 import {
-  changeEmail,
+  updateUserEmail,
   verifyPassword,
 } from "../../../../utils/firebase.services";
 import LoadingIndicator from "../../../../components/LoadingIndicator";
@@ -51,14 +51,18 @@ const EditEmailInfo = ({ navigation }) => {
         await updateDoc(userDocRef, {
           email,
         }).then(async () => {
-          await changeEmail({ email: currentUser.email, newEmail: email });
+          await updateUserEmail(email);
           setIsLoading(false);
         });
         setCurrentUser({
           ...currentUser,
           email,
         });
-        navigation.navigate("EditProfile", { saveModal: true });
+        navigation.navigate("EditProfile", {
+          saveModal: true,
+          modalType: "success",
+          message: "Changes saved",
+        });
       } catch (error) {
         console.log(error);
       }

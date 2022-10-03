@@ -43,7 +43,11 @@ const EditEmailInfo = ({ navigation }) => {
 
   const handleSaveSuccess = () => {
     setIsLoading(false);
-    navigation.navigate("EditProfile", { saveModal: true });
+    navigation.navigate("EditProfile", {
+      saveModal: true,
+      modalType: "success",
+      message: "Changes saved",
+    });
   };
 
   const updatePassword = async () => {
@@ -53,8 +57,9 @@ const EditEmailInfo = ({ navigation }) => {
       case "Firebase: Password should be at least 6 characters (auth/weak-password).":
         setErrorText("Password must be at least 6 characters");
         break;
-      default:
+      case "success":
         handleSaveSuccess();
+        break;
     }
   };
 
