@@ -13,7 +13,7 @@ import uuid from "react-native-uuid";
 import { createItemInFirestore } from "../firebase.services";
 
 export const getComments = async () => {
-  const colRef = collection(db, `Newsfeed/${post.id}/peopleWhoCommented`);
+  const colRef = collection(db, `Newsfeed/${post.id}/`);
 
   const sortedColRef = query(colRef, where("isNSFW", "==", false));
 
@@ -61,12 +61,12 @@ export const likeComment = async (
     setUserLiked(true);
     setNumberOfLikes(numberOfLikes + 1);
 
-    likedComment = {
+    userLikedComment = {
       ...item,
       peopleWhoLiked: [...post.peopleWhoLiked, currentUser.userID],
     };
   }
-  return likedComment;
+  return userLikedComment;
 };
 
 export const addLike = async (currentUser, post, item) => {
@@ -75,6 +75,7 @@ export const addLike = async (currentUser, post, item) => {
 
   // =============== adding user to peopleWhoLiked subcollection & update peopleWhoLiked array =============
   try {
+    console.log(item);
     await createItemInFirestore(
       `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoLiked`,
       peopleWhoLikedCommentId,

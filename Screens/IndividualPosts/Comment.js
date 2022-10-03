@@ -43,6 +43,7 @@ function Comment({
     async function setCommentReplies() {
       if (item.replied == true) {
         let replyList = await getCommentReplies(item.id);
+        console.log(replyList);
         setReplies(replyList);
       }
     }
@@ -78,6 +79,7 @@ function Comment({
     if (updatedPost) {
       setPost({
         ...updatedPost,
+        peopleWhoCommented: [...updatedPost.peopleWhoCommented],
         updated: true,
       });
     }
@@ -182,9 +184,9 @@ function Comment({
                 style={styles.likeCommentContainer}
                 onPress={() => {
                   // handleLikeComment();
-                  console.log(item);
-                  console.log("------------------------------------");
-                  console.log(post);
+                  // console.log(item);
+                  // console.log("------------------------------------");
+                  // console.log(post);
                 }}
               >
                 <HeartSVG></HeartSVG>
@@ -194,7 +196,7 @@ function Comment({
               </TouchableOpacity>
               <View style={styles.likeCommentContainer}>
                 <CommentIcon></CommentIcon>
-                <Text style={styles.likeCommentCount}>{}</Text>
+                <Text style={styles.likeCommentCount}>{replies.length}</Text>
               </View>
             </View>
 
