@@ -70,6 +70,7 @@ const MyPosts = ({ navigation, route }) => {
 
   const handleCreateNewPost = () => {
     if (postsType === "Newsfeed") return navigation.navigate("CreatePost");
+    return navigation.navigate("CreateMarketplaceItem");
   };
   const styles = StyleSheet.create({
     postsOptions: {
@@ -210,11 +211,12 @@ const MyPosts = ({ navigation, route }) => {
             />
           }>
           <Text
-            style={
-              (styleVariables.fontSizes.callout,
-              { marginTop: Platform.OS === "android" ? 48 : 24 })
-            }>
-            You don’t have any posts yet.
+            style={[
+              styleVariables.fontSizes.callout,
+              { marginTop: Platform.OS === "android" ? 48 : 24 },
+            ]}>
+            You don’t have any {postsType === "Newsfeed" ? "posts" : "listings"}{" "}
+            yet.
           </Text>
           <TouchableOpacity
             onPress={handleCreateNewPost}
@@ -225,7 +227,7 @@ const MyPosts = ({ navigation, route }) => {
                 theme.primaryButtonText,
                 styleVariables.fontSizes.bodyBold,
               ]}>
-              Create post
+              Create {postsType === "Newsfeed" ? "posts" : "listings"}{" "}
             </Text>
           </TouchableOpacity>
         </ScrollView>
