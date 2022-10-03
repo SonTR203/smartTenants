@@ -33,8 +33,7 @@ import LoadingIndicator from "../../components/LoadingIndicator";
 import ChevronDownSVG from "../../components/Icons/ChevronDownSVG";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Modal from "react-native-modal";
-import EyeOpenSVG from "../../components/Icons/EyeOpenSVG";
-import EyeClosedSVG from "../../components/Icons/EyeClosedSVG";
+import PasswordToggle from "../../components/PasswordToggle";
 
 const auth = getAuth();
 
@@ -494,23 +493,10 @@ const Signup = ({ navigation }) => {
                       : styles.inputFieldFilled,
                   ]}
                 />
-                {passwordSecure ? (
-                  <TouchableOpacity
-                    style={theme.passwordIcon}
-                    onPress={() => setPasswordSecure(false)}
-                    activeOpacity={1}
-                  >
-                    <EyeClosedSVG />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={theme.passwordIcon}
-                    onPress={() => setPasswordSecure(true)}
-                    activeOpacity={1}
-                  >
-                    <EyeOpenSVG />
-                  </TouchableOpacity>
-                )}
+                <PasswordToggle
+                  passwordSecure={passwordSecure}
+                  setPasswordSecure={setPasswordSecure}
+                />
               </View>
             </View>
             <View id="passwordConfirm">
@@ -547,23 +533,10 @@ const Signup = ({ navigation }) => {
                       : styles.inputFieldFilled,
                   ]}
                 />
-                {confirmPasswordSecure ? (
-                  <TouchableOpacity
-                    style={theme.passwordIcon}
-                    onPress={() => setConfirmPasswordSecure(false)}
-                    activeOpacity={1}
-                  >
-                    <EyeClosedSVG />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={theme.passwordIcon}
-                    onPress={() => setConfirmPasswordSecure(true)}
-                    activeOpacity={1}
-                  >
-                    <EyeOpenSVG />
-                  </TouchableOpacity>
-                )}
+                <PasswordToggle
+                  passwordSecure={confirmPasswordSecure}
+                  setPasswordSecure={setConfirmPasswordSecure}
+                />
               </View>
             </View>
           </View>

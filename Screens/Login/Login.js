@@ -20,8 +20,7 @@ import { getItemById, handleSignIn } from "../../utils/firebase.services";
 import { getAuth, signOut } from "firebase/auth";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import ErrorArea from "../../components/SignUp/ErrorArea";
-import EyeOpenSVG from "../../components/Icons/EyeOpenSVG";
-import EyeClosedSVG from "../../components/Icons/EyeClosedSVG";
+import PasswordToggle from "../../components/PasswordToggle";
 
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation, route }) => {
@@ -198,23 +197,10 @@ const Login = ({ navigation, route }) => {
                   secureTextEntry={passwordSecure}
                   style={[theme.textInput, styleVariables.fontSizes.body]}
                 />
-                {passwordSecure ? (
-                  <TouchableOpacity
-                    style={theme.passwordIcon}
-                    onPress={() => setPasswordSecure(false)}
-                    activeOpacity={1}
-                  >
-                    <EyeClosedSVG />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={theme.passwordIcon}
-                    onPress={() => setPasswordSecure(true)}
-                    activeOpacity={1}
-                  >
-                    <EyeOpenSVG />
-                  </TouchableOpacity>
-                )}
+                <PasswordToggle
+                  passwordSecure={passwordSecure}
+                  setPasswordSecure={setPasswordSecure}
+                />
               </View>
             </View>
 
