@@ -126,7 +126,11 @@ function AnnouncementItem({
   };
 
   return (
-    <TouchableOpacity onPress={handlePressEvent} style={theme.cardContainer}>
+    <TouchableOpacity
+      onPress={handlePressEvent}
+      style={theme.cardContainer}
+      activeOpacity={1}
+    >
       {/* ownerInfo */}
       <StatusBar style="light" />
       <View style={styles.announcementInfo}>
