@@ -410,6 +410,24 @@ const ProfileNavigator = ({ navigation }) => {
         })}
       />
       <Stack.Screen
+        name="CreateMarketplaceItem"
+        component={MarketplaceNewPostScreen}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Create post"} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="CreatePost"
+        component={CreatePost}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Create post"} />
+          ),
+        }}
+      />
+      <Stack.Screen
         name="BuildingInfo"
         component={BuildingInfo}
         options={{
