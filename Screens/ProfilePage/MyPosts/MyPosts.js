@@ -215,7 +215,7 @@ const MyPosts = ({ navigation, route }) => {
               styleVariables.fontSizes.callout,
               { marginTop: Platform.OS === "android" ? 48 : 24 },
             ]}>
-            You don’t have any {postsType === "Newsfeed" ? "posts" : "listings"}{" "}
+            You don’t have any {postsType === "Newsfeed" ? "post" : "listing"}{" "}
             yet.
           </Text>
           <TouchableOpacity
@@ -227,7 +227,7 @@ const MyPosts = ({ navigation, route }) => {
                 theme.primaryButtonText,
                 styleVariables.fontSizes.bodyBold,
               ]}>
-              Create {postsType === "Newsfeed" ? "posts" : "listings"}{" "}
+              Create {postsType === "Newsfeed" ? "post" : "listing"}{" "}
             </Text>
           </TouchableOpacity>
         </ScrollView>
