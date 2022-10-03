@@ -40,7 +40,7 @@ export const categories = [
   { id: "3", category: "Free Goods" },
   {
     id: "4",
-    category: "Health & beaty",
+    category: "Health & beauty",
     subCategories: [
       { id: "40", category: "All" },
       { id: "41", category: "Makeup" },

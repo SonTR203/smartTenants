@@ -33,6 +33,8 @@ import LoadingIndicator from "../../components/LoadingIndicator";
 import ChevronDownSVG from "../../components/Icons/ChevronDownSVG";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Modal from "react-native-modal";
+import EyeOpenSVG from "../../components/Icons/EyeOpenSVG";
+import EyeClosedSVG from "../../components/Icons/EyeClosedSVG";
 
 const auth = getAuth();
 
@@ -55,6 +57,8 @@ const Signup = ({ navigation }) => {
   const [tenantAuthorized] = useState(false);
   const [signupPressed, setSignupPressed] = useState(false);
   const [checkboxState, setCheckboxState] = useState(false);
+  const [passwordSecure, setPasswordSecure] = useState(true);
+  const [confirmPasswordSecure, setConfirmPasswordSecure] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -471,24 +475,43 @@ const Signup = ({ navigation }) => {
               >
                 Password
               </Text>
-              <TextInput
-                placeholderTextColor={
-                  signupPressed && !password
-                    ? styleVariables.colors.errorText
-                    : styleVariables.colors.placeholderText
-                }
-                placeholder="Minimum 6 characters"
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry
-                style={[
-                  theme.textInput,
-                  styleVariables.fontSizes.body,
-                  signupPressed && !password
-                    ? styles.inputFieldEmpty
-                    : styles.inputFieldFilled,
-                ]}
-              />
+              <View style={theme.passwordView}>
+                <TextInput
+                  placeholderTextColor={
+                    signupPressed && !password
+                      ? styleVariables.colors.errorText
+                      : styleVariables.colors.placeholderText
+                  }
+                  placeholder="Minimum 6 characters"
+                  value={password}
+                  onChangeText={(text) => setPassword(text)}
+                  secureTextEntry={passwordSecure}
+                  style={[
+                    theme.textInput,
+                    styleVariables.fontSizes.body,
+                    signupPressed && !password
+                      ? styles.inputFieldEmpty
+                      : styles.inputFieldFilled,
+                  ]}
+                />
+                {passwordSecure ? (
+                  <TouchableOpacity
+                    style={theme.passwordIcon}
+                    onPress={() => setPasswordSecure(false)}
+                    activeOpacity={1}
+                  >
+                    <EyeClosedSVG />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={theme.passwordIcon}
+                    onPress={() => setPasswordSecure(true)}
+                    activeOpacity={1}
+                  >
+                    <EyeOpenSVG />
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
             <View id="passwordConfirm">
               <Text
@@ -503,26 +526,45 @@ const Signup = ({ navigation }) => {
               >
                 Confirm Password
               </Text>
-              <TextInput
-                placeholderTextColor={
-                  signupPressed &&
-                  (!passwordConfirm || password != passwordConfirm)
-                    ? styleVariables.colors.errorText
-                    : styleVariables.colors.placeholderText
-                }
-                placeholder="Enter new password again"
-                value={passwordConfirm}
-                onChangeText={(text) => setPasswordConfirm(text)}
-                secureTextEntry
-                style={[
-                  theme.textInput,
-                  styleVariables.fontSizes.body,
-                  signupPressed &&
-                  (!passwordConfirm || password != passwordConfirm)
-                    ? styles.inputFieldEmpty
-                    : styles.inputFieldFilled,
-                ]}
-              />
+              <View>
+                <TextInput
+                  placeholderTextColor={
+                    signupPressed &&
+                    (!passwordConfirm || password != passwordConfirm)
+                      ? styleVariables.colors.errorText
+                      : styleVariables.colors.placeholderText
+                  }
+                  placeholder="Enter new password again"
+                  value={passwordConfirm}
+                  onChangeText={(text) => setPasswordConfirm(text)}
+                  secureTextEntry={confirmPasswordSecure}
+                  style={[
+                    theme.textInput,
+                    styleVariables.fontSizes.body,
+                    signupPressed &&
+                    (!passwordConfirm || password != passwordConfirm)
+                      ? styles.inputFieldEmpty
+                      : styles.inputFieldFilled,
+                  ]}
+                />
+                {confirmPasswordSecure ? (
+                  <TouchableOpacity
+                    style={theme.passwordIcon}
+                    onPress={() => setConfirmPasswordSecure(false)}
+                    activeOpacity={1}
+                  >
+                    <EyeClosedSVG />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={theme.passwordIcon}
+                    onPress={() => setConfirmPasswordSecure(true)}
+                    activeOpacity={1}
+                  >
+                    <EyeOpenSVG />
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
           </View>
           <View id="termsCheckbox" style={styles.terms}>

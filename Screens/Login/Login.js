@@ -32,7 +32,7 @@ const Login = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
-  const [passwordSecure, setpasswordSecure] = useState(true);
+  const [passwordSecure, setPasswordSecure] = useState(true);
 
   // clear the text inputs when the screen is navigated to
   useEffect(() => {
@@ -201,7 +201,7 @@ const Login = ({ navigation, route }) => {
                 {passwordSecure ? (
                   <TouchableOpacity
                     style={theme.passwordIcon}
-                    onPress={() => setpasswordSecure(false)}
+                    onPress={() => setPasswordSecure(false)}
                     activeOpacity={1}
                   >
                     <EyeClosedSVG />
@@ -209,7 +209,7 @@ const Login = ({ navigation, route }) => {
                 ) : (
                   <TouchableOpacity
                     style={theme.passwordIcon}
-                    onPress={() => setpasswordSecure(true)}
+                    onPress={() => setPasswordSecure(true)}
                     activeOpacity={1}
                   >
                     <EyeOpenSVG />
