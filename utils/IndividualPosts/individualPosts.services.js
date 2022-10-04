@@ -44,7 +44,38 @@ export const deleteComment = async (post, item) => {
 };
 
 // Delete Reply
-export const deleteReply = async (currentUser, post, item) => {};
+export const deleteReply = async (currentUser, post, item) => {
+  try {
+    const peopleWhoCommentedColRef = collection(
+      db,
+      `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoReplied`
+    );
+
+    const peopleWhoCommentedDocRef = doc(db, `Newsfeed/${post.id}`);
+
+    const q = query(
+      peopleWhoCommentedColRef,
+      where("userID", "==", currentUser.userID)
+    );
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log("doc to be deleted with unlike => ", doc.data());
+      await deleteDoc(doc.ref);
+    });
+
+    await updateDoc(peopleWhoCommentedDocRef, {
+      commentCount: post.commentCount - 1,
+    });
+  } catch (error) {
+    console.log("error remove comment: ", error);
+    alert("Error removing comment. Please try again later.");
+    return;
+  }
+
+  return post;
+};
 
 export const likeComment = async (
   item,
