@@ -64,7 +64,14 @@ export const updateItemInFirestore = async (collection, id, propertyObject) => {
 
 export const createListener = (col, callback) => {
   const colRef = collection(db, col);
-  return onSnapshot(colRef, { includeMetadataChanges: true }, callback());
+  const cleanup = onSnapshot(
+    colRef,
+    { includeMetadataChanges: true },
+    async (snapshot) => {
+      callback(snapshot);
+    }
+  );
+  return cleanup;
 };
 export const createItemInFirestore = async (collection, id, propertyObject) => {
   try {
