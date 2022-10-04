@@ -361,6 +361,9 @@ function MarketplaceNewPostScreen({ navigation }) {
       justifyContent: "flex-end",
       margin: 0,
     },
+    submitButton: {
+      marginTop: 12,
+    },
   });
 
   return (
@@ -534,33 +537,33 @@ function MarketplaceNewPostScreen({ navigation }) {
             data={selectedImages}
             renderItem={renderSelectedImages}
           />
+          {isLoading ? (
+            <ActivityIndicator
+              style={styles.loader}
+              size="large"
+              color={styleVariables.colors.primary}
+            />
+          ) : (
+            <View style={[styles.horizontalMargin, styles.submitButton]}>
+              <TouchableOpacity
+                id="submitPostButton"
+                onPress={handleSubmit}
+                style={[theme.primaryButton]}
+              >
+                <Text
+                  style={[
+                    theme.primaryButtonText,
+                    styleVariables.fontSizes.bodyBold,
+                  ]}
+                >
+                  Submit post
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
       {/* SUBMIT BUTTON  */}
-      {isLoading ? (
-        <ActivityIndicator
-          style={styles.loader}
-          size="large"
-          color={styleVariables.colors.primary}
-        />
-      ) : (
-        <View style={styles.horizontalMargin}>
-          <TouchableOpacity
-            id="submitPostButton"
-            onPress={handleSubmit}
-            style={[theme.primaryButton]}
-          >
-            <Text
-              style={[
-                theme.primaryButtonText,
-                styleVariables.fontSizes.bodyBold,
-              ]}
-            >
-              Submit post
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
     </View>
   );
 }
