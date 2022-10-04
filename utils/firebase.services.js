@@ -8,6 +8,7 @@ import {
   where,
   updateDoc,
   getDoc,
+  onSnapshot,
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 import {
@@ -61,6 +62,10 @@ export const updateItemInFirestore = async (collection, id, propertyObject) => {
   }
 };
 
+export const createListener = (col, callback) => {
+  const colRef = collection(db, col);
+  return onSnapshot(colRef, { includeMetadataChanges: true }, callback());
+};
 export const createItemInFirestore = async (collection, id, propertyObject) => {
   try {
     await setDoc(doc(db, collection, id), propertyObject)
