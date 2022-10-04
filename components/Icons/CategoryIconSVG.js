@@ -70,7 +70,7 @@ function CategoryIconSVG({ category, props }) {
             />
           </Svg>
         );
-      case "Health & beaty":
+      case "Health & beauty":
         return (
           <Svg
             width={24}
