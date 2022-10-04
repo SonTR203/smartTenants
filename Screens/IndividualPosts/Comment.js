@@ -33,7 +33,8 @@ function Comment({
   setUserCommentId,
   getCommentReplies,
   comments,
-  passedPost,
+  setNumberOfComments,
+  numberOfComments,
 }) {
   const [timeSincePost, setTimeSincePost] = useState("");
   const [replies, setReplies] = useState([]);
@@ -97,7 +98,6 @@ function Comment({
       numberOfCommentLikes,
       setNumberOfCommentLikes
     );
-
     if (updatedPost == true) {
       setPost({
         ...updatedPost,
@@ -108,15 +108,17 @@ function Comment({
   };
 
   const handleDeleteComment = async () => {
-    const updatedPost = await deleteComment(post, item);
-    if (updatedPost == true) {
+    const updatedComment = await deleteComment(post, item);
+
+    if (updatedComment == true) {
+      setNumberOfComments(numberOfComments - 1);
       setPost({
-        ...updatedPost,
-        commentCount: [...updatedPost.commentCount],
+        ...updatedComment,
+        commentCount: updatedComment.commentCount - 1,
         updated: true,
       });
-      setModalVisible(false);
     }
+    setModalVisible(false);
   };
 
   const styles = StyleSheet.create({

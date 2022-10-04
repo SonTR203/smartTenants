@@ -11,11 +11,15 @@ import HeartOutline from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import UsersWhoLikedHeartSVG from "../../components/Icons/UsersWhoLikedHeartSVG";
 
-function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
+function LikeSection({
+  setLikesModalVisible,
+  setPeopleWhoLiked,
+  setNumberOfComments,
+  numberOfComments,
+}) {
   const [userLiked, setUserLiked] = useState(false);
   const [numberOfLikes, setNumberOfLikes] = useState(0);
   const [peopleArray, setPeopleArray] = useState([]);
-  const [numberOfComments, setNumberOfComments] = useState(0);
 
   const { post, setPost, currentUser } = useAppContext();
   const { styleVariables } = useTheme();

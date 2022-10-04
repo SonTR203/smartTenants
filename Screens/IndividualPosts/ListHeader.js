@@ -13,6 +13,8 @@ function ListHeader({
   setLikesModalVisible,
   setPeopleWhoLiked,
   peopleWhoLiked,
+  setNumberOfComments,
+  numberOfComments,
 }) {
   const { post } = useAppContext();
   const [currentPost, setCurrentPost] = useState(null);
@@ -123,6 +125,8 @@ function ListHeader({
         likesModalVisible={likesModalVisible}
         setLikesModalVisible={setLikesModalVisible}
         peopleWhoLiked={peopleWhoLiked}
+        setNumberOfComments={setNumberOfComments}
+        numberOfComments={numberOfComments}
       />
     </View>
   );

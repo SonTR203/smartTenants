@@ -12,6 +12,7 @@ import _ from "lodash";
 import uuid from "react-native-uuid";
 import { createItemInFirestore } from "../firebase.services";
 
+// Delete Comment
 export const deleteComment = async (post, item) => {
   try {
     const peopleWhoCommentedColRef = collection(
@@ -19,7 +20,7 @@ export const deleteComment = async (post, item) => {
       `Newsfeed/${post.id}/peopleWhoCommented/`
     );
 
-    const peopleWhoCommentedDocRef = doc(db, `Newsfeed`, post.id);
+    const peopleWhoCommentedDocRef = doc(db, `Newsfeed/${post.id}`);
 
     const q = query(peopleWhoCommentedColRef, where("id", "==", item.id));
 
@@ -34,9 +35,16 @@ export const deleteComment = async (post, item) => {
       commentCount: post.commentCount - 1,
     });
   } catch (error) {
-    console.log(error);
+    console.log("error remove comment: ", error);
+    alert("Error removing comment. Please try again later.");
+    return;
   }
+
+  return post;
 };
+
+// Delete Reply
+export const deleteReply = async (currentUser, post, item) => {};
 
 export const likeComment = async (
   item,
@@ -129,12 +137,6 @@ export const removeLike = async (currentUser, post, item) => {
       commentID = doc.data().id;
       console.log(commentID);
     });
-
-    // const peopleWhoLikedDocRef = doc(
-    //   db,
-    //   `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoLiked`,
-    //   commentID
-    // );
 
     const peopleWhoLikedCommentDocRef = doc(
       db,
