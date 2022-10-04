@@ -7,6 +7,7 @@ import {
   updateItemInFirestore,
 } from "../../../utils/firebase.services";
 import DynamicListingDisplay from "./DynamicListingDisplay";
+import { Timestamp } from "@firebase/firestore";
 
 function MyListingsScreen() {
   const [available, setAvailable] = useState(true);
@@ -37,6 +38,7 @@ function MyListingsScreen() {
   const handleSetListingSold = async (selectedItem) => {
     const res = await updateItemInFirestore("Marketplace", selectedItem.id, {
       isSold: true,
+      soldDate: Timestamp.fromDate(new Date()),
     });
     if (!res) {
       Alert.alert("Something went wrong");
