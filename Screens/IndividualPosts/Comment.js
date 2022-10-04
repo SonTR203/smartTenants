@@ -8,10 +8,14 @@ import {
   FlatList,
 } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
-import { likeComment } from "../../utils/IndividualPosts/individualPosts.services";
+import {
+  likeComment,
+  deleteComment,
+} from "../../utils/IndividualPosts/individualPosts.services";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
 import CustomBottomModal from "../../components/CustomBottomModal/index";
+import ModalActionConfirm from "../../components/CustomBottomModal/ModalActionConfirm/index.js";
 
 // components / CustomBottomModal / index.js;
 // Import Icons
@@ -83,7 +87,6 @@ function Comment({
     />
   );
 
-  // In progress: add like functionality to comments
   const handleLikeComment = async () => {
     const updatedPost = await likeComment(
       item,
@@ -177,6 +180,52 @@ function Comment({
     },
   });
 
+  const options = [
+    {
+      content: `Edit`,
+      onPress: () => {},
+      iconName: "pencil",
+      iconColor: "#4D4D4D",
+    },
+    {
+      content: `Delete`,
+      onPress: () => {},
+      iconName: "trash-can-outline",
+      iconColor: "#4D4D4D",
+      renderSubscreen: () => {
+        return (
+          <ModalActionConfirm
+            destructive={true}
+            title={`Delete your comment?`}
+            subtitle={"You won't be able to restore it"}
+            confirmText="Delete"
+            onConfirm={() => {
+              deleteComment(currentUser, post, item);
+            }}
+            onCancel={() => setModalVisible(false)}
+          />
+        );
+      },
+    },
+    {
+      content: "Turn off notifications",
+      onPress: () => {},
+      iconName: "bell-off-outline",
+      iconColor: "#4D4D4D",
+      renderSubscreen: () => {
+        return (
+          <ModalActionConfirm
+            title={"Turn off notifications for this post?"}
+            subtitle={"You will be able to undo this action"}
+            confirmText="Confirm"
+            // onConfirm={handleTurnOffNotifications}
+            onCancel={() => setModalVisible(false)}
+          />
+        );
+      },
+    },
+  ];
+
   return (
     <View>
       <View id="userComment" style={[theme.individualPostCardContainer]}>
@@ -204,8 +253,7 @@ function Comment({
             <View style={styles.HorizontalDots}>
               <TouchableOpacity
                 onPress={() => {
-                  console.log(item.userID);
-                  console.log(currentUser.userID);
+                  setModalVisible(true);
                 }}
               >
                 <HorizontalDotsSVG />
@@ -267,8 +315,9 @@ function Comment({
           </View>
         </View>
         <CustomBottomModal
-          isModalVisible={false}
+          isModalVisible={isModalVisible}
           setModalVisible={setModalVisible}
+          options={options}
         ></CustomBottomModal>
       </View>
       {item.replied == true && (

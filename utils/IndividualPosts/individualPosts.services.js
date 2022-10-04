@@ -12,6 +12,32 @@ import _ from "lodash";
 import uuid from "react-native-uuid";
 import { createItemInFirestore } from "../firebase.services";
 
+export const deleteComment = async (currentUser, post, item) => {
+  try {
+    const peopleWhoCommentedColRef = collection(
+      db,
+      `Newsfeed/${post.id}/peopleWhoCommented/`
+    );
+
+    const peopleWhoCommentedDocRef = doc(db, `Newsfeed`, post.id);
+
+    const q = query(peopleWhoCommentedColRef, where("id", "==", item.id));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log("doc to be deleted with unlike => ", doc.data());
+      await deleteDoc(doc.ref);
+    });
+
+    await updateDoc(peopleWhoCommentedDocRef, {
+      commentCount: post.commentCount - 1,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const likeComment = async (
   item,
   post,
@@ -99,17 +125,16 @@ export const removeLike = async (currentUser, post, item) => {
     );
 
     const querySnapshot = await getDocs(q);
-
     querySnapshot.forEach((doc) => {
       commentID = doc.data().id;
       console.log(commentID);
     });
 
-    const peopleWhoLikedDocRef = doc(
-      db,
-      `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoLiked`,
-      commentID
-    );
+    // const peopleWhoLikedDocRef = doc(
+    //   db,
+    //   `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoLiked`,
+    //   commentID
+    // );
 
     const peopleWhoLikedCommentDocRef = doc(
       db,
