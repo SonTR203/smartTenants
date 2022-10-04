@@ -119,6 +119,12 @@ function Comment({
       color: styleVariables.colors.primary,
       marginBottom: 17,
     },
+    HorizontalDots: {
+      display: "flex",
+      justifyContent: "flex-end",
+      alignItems: "flex-end",
+      alignSelf: "center",
+    },
     replyText: {
       display: "flex",
       justifyContent: "space-between",
@@ -188,9 +194,15 @@ function Comment({
                 {timeSincePost}
               </Text>
             </View>
-            <View>
+          </View>
+          <View style={styles.HorizontalDots}>
+            <TouchableOpacity
+              onPress={() => {
+                console.log("Hello there");
+              }}
+            >
               <HorizontalDotsSVG />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
 
