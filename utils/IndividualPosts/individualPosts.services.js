@@ -13,14 +13,23 @@ import uuid from "react-native-uuid";
 import { createItemInFirestore } from "../firebase.services";
 
 // Delete Comment
-export const deleteComment = async (post, item) => {
+export const deleteComment = async (
+  post,
+  item,
+  setModalVisible,
+  numberOfComments,
+  setNumberOfComments
+) => {
   try {
     const peopleWhoCommentedColRef = collection(
       db,
       `Newsfeed/${post.id}/peopleWhoCommented/`
     );
 
-    const peopleWhoCommentedDocRef = doc(db, `Newsfeed/${post.id}`);
+    const peopleWhoCommentedDocRef = doc(
+      db,
+      `Newsfeed/${post.id}/peopleWhoCommented/`
+    );
 
     const q = query(peopleWhoCommentedColRef, where("id", "==", item.id));
 
@@ -34,12 +43,19 @@ export const deleteComment = async (post, item) => {
     await updateDoc(peopleWhoCommentedDocRef, {
       commentCount: post.commentCount - 1,
     });
+
+    post = {
+      ...post,
+      commentCount: post.commentCount - 1,
+    };
   } catch (error) {
     console.log("error remove comment: ", error);
     alert("Error removing comment. Please try again later.");
     return;
   }
 
+  setNumberOfComments(post.commentCount - 1);
+  setModalVisible(false);
   return post;
 };
 
@@ -68,6 +84,11 @@ export const deleteReply = async (currentUser, post, item) => {
     await updateDoc(peopleWhoCommentedDocRef, {
       commentCount: post.commentCount - 1,
     });
+
+    post = {
+      ...post,
+      commentCount: post.commentCount - 1,
+    };
   } catch (error) {
     console.log("error remove comment: ", error);
     alert("Error removing comment. Please try again later.");

@@ -17,7 +17,6 @@ import CommentReply from "./CommentReply";
 import CustomBottomModal from "../../components/CustomBottomModal/index";
 import ModalActionConfirm from "../../components/CustomBottomModal/ModalActionConfirm/index.js";
 
-// components / CustomBottomModal / index.js;
 // Import Icons
 import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
 import HeartSVG from "../../components/Icons/HeartSVG";
@@ -108,17 +107,21 @@ function Comment({
   };
 
   const handleDeleteComment = async () => {
-    const updatedComment = await deleteComment(post, item);
+    const updatedComment = await deleteComment(
+      post,
+      item,
+      setModalVisible,
+      numberOfComments,
+      setNumberOfComments
+    );
 
     if (updatedComment == true) {
-      setNumberOfComments(numberOfComments - 1);
       setPost({
         ...updatedComment,
         commentCount: updatedComment.commentCount - 1,
         updated: true,
       });
     }
-    setModalVisible(false);
   };
 
   const styles = StyleSheet.create({
@@ -307,12 +310,13 @@ function Comment({
                 </Text>
               </View>
 
-              <View style={styles.likeCommentContainer}>
-                <CommentIcon></CommentIcon>
-                <Text style={styles.likeCommentCount}>{replies.length}</Text>
-              </View>
+              {replies.length > 0 ? (
+                <View style={styles.likeCommentContainer}>
+                  <CommentIcon></CommentIcon>
+                  <Text style={styles.likeCommentCount}>{replies.length}</Text>
+                </View>
+              ) : null}
             </View>
-
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {
