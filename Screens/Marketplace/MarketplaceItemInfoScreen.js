@@ -183,11 +183,19 @@ function MarketplaceItemInfoScreen({ navigation }) {
       color: "white",
       backgroundColor: "#395E66",
     },
-    conditionText: {
+    primaryClr: {
       color: styleVariables.colors.primary,
     },
     conditionContainer: {
       marginVertical: 16,
+    },
+    soldContainer: {
+      marginRight: "auto",
+      paddingVertical: 4,
+      paddingHorizontal: 8,
+      marginTop: 12,
+      borderRadius: 16,
+      backgroundColor: styleVariables.colors.inputBackground,
     },
   });
 
@@ -224,9 +232,17 @@ function MarketplaceItemInfoScreen({ navigation }) {
           </Text>
           <Text style={styles.price}>{item.price}</Text>
         </View>
+        {/* ITEM SOLD STATUS */}
+        {item.isSold ? (
+          <View style={styles.soldContainer}>
+            <Text style={[styleVariables.fontSizes.callout, styles.primaryClr]}>
+              Sold
+            </Text>
+          </View>
+        ) : null}
         {/* ITEM CONDITION */}
         <View style={styles.conditionContainer}>
-          <Text style={[styleVariables.fontSizes.body, styles.conditionText]}>
+          <Text style={[styleVariables.fontSizes.body, styles.primaryClr]}>
             Condition: {item.condition}
           </Text>
         </View>
