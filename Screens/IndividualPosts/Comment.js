@@ -11,6 +11,10 @@ import { useAppContext } from "../../Context/AppContext";
 import { likeComment } from "../../utils/IndividualPosts/individualPosts.services";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
+import CustomBottomModal from "../../components/CustomBottomModal/index";
+
+// components / CustomBottomModal / index.js;
+// Import Icons
 import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
 import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
@@ -31,6 +35,7 @@ function Comment({
   const [replies, setReplies] = useState([]);
   const [userLikedComment, setUserLikedComment] = useState(false);
   const [numberOfCommentLikes, setNumberOfCommentLikes] = useState(0);
+  const [isModalVisible, setModalVisible] = useState(false);
   const { post, setPost, currentUser } = useAppContext();
 
   useEffect(() => {
@@ -195,17 +200,19 @@ function Comment({
               </Text>
             </View>
           </View>
-          <View style={styles.HorizontalDots}>
-            <TouchableOpacity
-              onPress={() => {
-                console.log("Hello there");
-              }}
-            >
-              <HorizontalDotsSVG />
-            </TouchableOpacity>
-          </View>
+          {currentUser.userID == item.userID ? (
+            <View style={styles.HorizontalDots}>
+              <TouchableOpacity
+                onPress={() => {
+                  console.log(item.userID);
+                  console.log(currentUser.userID);
+                }}
+              >
+                <HorizontalDotsSVG />
+              </TouchableOpacity>
+            </View>
+          ) : null}
         </View>
-
         <View className="commentContent">
           <Text style={[styleVariables.fontSizes.body, styles.content]}>
             {item.commentContent}
@@ -259,6 +266,10 @@ function Comment({
             </TouchableOpacity>
           </View>
         </View>
+        <CustomBottomModal
+          isModalVisible={false}
+          setModalVisible={setModalVisible}
+        ></CustomBottomModal>
       </View>
       {item.replied == true && (
         <FlatList
