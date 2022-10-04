@@ -402,12 +402,30 @@ const ProfileNavigator = ({ navigation }) => {
               currentUserId={currentUser.userID}
               itemUserId={route.params.itemUserId}
               item={route.params.item}
-              previousScreen={"MarketplaceScreen"}
+              previousScreen={"MyPosts"}
               collection={"Marketplace"}
               openModal={route.params.openModal}
             />
           ),
         })}
+      />
+      <Stack.Screen
+        name="CreateMarketplaceItem"
+        component={MarketplaceNewPostScreen}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Create post"} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="CreatePost"
+        component={CreatePost}
+        options={{
+          header: (props) => (
+            <CustomSubStackScreenHeader {...props} title={"Create post"} />
+          ),
+        }}
       />
       <Stack.Screen
         name="BuildingInfo"

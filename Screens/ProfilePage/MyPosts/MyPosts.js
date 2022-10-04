@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  Platform,
+  ScrollView,
 } from "react-native";
 import { React, useEffect, useState, useCallback } from "react";
 import { useAppContext } from "../../../Context/AppContext";
@@ -66,6 +68,10 @@ const MyPosts = ({ navigation, route }) => {
       );
   };
 
+  const handleCreateNewPost = () => {
+    if (postsType === "Newsfeed") return navigation.navigate("CreatePost");
+    return navigation.navigate("CreateMarketplaceItem");
+  };
   const styles = StyleSheet.create({
     postsOptions: {
       position: "absolute",
@@ -89,6 +95,12 @@ const MyPosts = ({ navigation, route }) => {
     postOptionButtonText: {
       color: styleVariables.colors.primary,
       textAlign: "center",
+    },
+    listContainer: {
+      flex: 1,
+      paddingHorizontal: 17,
+      width: "100%",
+      alignItems: "center",
     },
   });
 
@@ -159,13 +171,14 @@ const MyPosts = ({ navigation, route }) => {
             ]}></View>
         </TouchableOpacity>
       </View>
-      {displayedPosts.length > 0 && (
+      {displayedPosts.length > 0 ? (
         <FlatList
           style={{
             height:
               Dimensions.get("window").height -
               Dimensions.get("window").height * 0.12,
             marginBottom: -Dimensions.get("window").height * 0.12,
+            marginTop: Platform.OS === "android" ? 24 : 0,
           }}
           data={displayedPosts}
           renderItem={callBackRender}
@@ -184,6 +197,40 @@ const MyPosts = ({ navigation, route }) => {
             <ListFooter styleVariables={styleVariables} theme={theme} />
           }
         />
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.listContainer}
+          refreshControl={
+            <RefreshControl
+              onRefresh={onRefresh}
+              refreshing={refreshing}
+              style={{
+                backgroundColor: styleVariables.colors.white,
+              }}
+              tintColor={styleVariables.colors.primary}
+            />
+          }>
+          <Text
+            style={[
+              styleVariables.fontSizes.callout,
+              { marginTop: Platform.OS === "android" ? 48 : 24 },
+            ]}>
+            You don’t have any {postsType === "Newsfeed" ? "post" : "listing"}{" "}
+            yet.
+          </Text>
+          <TouchableOpacity
+            onPress={handleCreateNewPost}
+            id="submitPostButton"
+            style={[theme.primaryButton, { marginTop: 24 }]}>
+            <Text
+              style={[
+                theme.primaryButtonText,
+                styleVariables.fontSizes.bodyBold,
+              ]}>
+              Create {postsType === "Newsfeed" ? "post" : "listing"}{" "}
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
       )}
     </SafeAreaView>
   );
