@@ -236,7 +236,14 @@ function MarketplaceItemInfoScreen({ navigation }) {
         {item.isSold ? (
           <View style={styles.soldContainer}>
             <Text style={[styleVariables.fontSizes.callout, styles.primaryClr]}>
-              Sold
+              Sold on{" "}
+              {new Date(item.soldDate.seconds * 1000).toLocaleDateString(
+                "en-US",
+                {
+                  month: "short",
+                  day: "numeric",
+                }
+              )}
             </Text>
           </View>
         ) : null}
