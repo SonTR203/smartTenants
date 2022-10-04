@@ -209,7 +209,7 @@ function Comment({
                     style={styles.likeCommentContainer}
                     onPress={handleLikeComment}
                   >
-                    <HeartFilledSVG></HeartFilledSVG>
+                    <HeartFilledSVG />
                   </TouchableOpacity>
                 )}
                 {!userLikedComment && (
@@ -218,7 +218,7 @@ function Comment({
                     style={styles.likeCommentContainer}
                     onPress={handleLikeComment}
                   >
-                    <HeartSVG></HeartSVG>
+                    <HeartSVG />
                   </TouchableOpacity>
                 )}
                 <Text style={styles.likeCommentCount}>
