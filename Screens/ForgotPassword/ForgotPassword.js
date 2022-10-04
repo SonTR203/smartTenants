@@ -68,7 +68,12 @@ const ForgotPassword = ({ navigation }) => {
 
           {/* textInput */}
           <View id="emailInput">
-            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+            <Text
+              style={[
+                theme.textInputLabel,
+                styleVariables.fontSizes.calloutBold,
+              ]}
+            >
               Email
             </Text>
 

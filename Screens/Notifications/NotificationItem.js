@@ -87,6 +87,7 @@ function NotificationItem({
       disabled={notifications.postID == "" ? true : false}
       onPress={handleViewNotifications}
       style={[theme.cardButton, styles.container]}
+      activeOpacity={1}
     >
       <View id="notificationContent">
         <View id="timeStamp-readState" style={styles.timestampContainer}>

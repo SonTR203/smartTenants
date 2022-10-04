@@ -31,6 +31,8 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
         return "none";
       case "PrivateMessagingScreen":
         return "none";
+      case "IndividualPosts":
+        return "none";
       default:
         break;
     }

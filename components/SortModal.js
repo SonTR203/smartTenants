@@ -11,10 +11,16 @@ function SortModal({
   setFilteredItemList,
   sortingBy,
   setSortingBy,
+  setSortActive,
 }) {
   const { styleVariables, theme } = useTheme();
 
   const applySort = () => {
+    if (sortingBy != "Date(newest)") {
+      setSortActive(true);
+    } else {
+      setSortActive(false);
+    }
     if (filteredItemList) {
       const sortedList = getSortedList(filteredItemList, sortingBy);
       setFilteredItemList(sortedList);
@@ -58,7 +64,14 @@ function SortModal({
   return (
     <View style={styles.modalContainer}>
       <View style={styles.flexApart}>
-        <Text style={styleVariables.fontSizes.title}>Sort</Text>
+        <Text
+          style={[
+            styleVariables.fontSizes.title,
+            { color: styleVariables.colors.black },
+          ]}
+        >
+          Sort
+        </Text>
         <TouchableOpacity
           onPress={() => {
             setSortingBy("Date(newest)");

@@ -272,7 +272,7 @@ function PrivateMessagingScreen({ route, navigation }) {
 
   return (
     <KeyboardAvoidingView
-      keyboardVerticalOffset={constants.height * 0.15}
+      keyboardVerticalOffset={constants.height * 0.12}
       behavior={Platform.OS === "ios" ? "padding" : null}
       style={styles.container}
     >

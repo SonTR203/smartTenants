@@ -13,10 +13,20 @@ function TermsAndConditions({ navigation }) {
       ]}
     >
       <ScrollView>
-        <Text style={[styleVariables.fontSizes.header, { marginBottom: 20 }]}>
+        <Text
+          style={[
+            styleVariables.fontSizes.header,
+            { marginBottom: 20, color: styleVariables.colors.black },
+          ]}
+        >
           Lorem Ipsum
         </Text>
-        <Text style={[styleVariables.fontSizes.body, { marginBottom: 40 }]}>
+        <Text
+          style={[
+            styleVariables.fontSizes.body,
+            { marginBottom: 40, color: styleVariables.colors.black },
+          ]}
+        >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -25,7 +35,12 @@ function TermsAndConditions({ navigation }) {
           pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum.
         </Text>
-        <Text style={[styleVariables.fontSizes.body, { marginBottom: 40 }]}>
+        <Text
+          style={[
+            styleVariables.fontSizes.body,
+            { marginBottom: 40, color: styleVariables.colors.black },
+          ]}
+        >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -34,7 +49,12 @@ function TermsAndConditions({ navigation }) {
           pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum.
         </Text>
-        <Text style={[styleVariables.fontSizes.body, { marginBottom: 40 }]}>
+        <Text
+          style={[
+            styleVariables.fontSizes.body,
+            { marginBottom: 40, color: styleVariables.colors.black },
+          ]}
+        >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -43,7 +63,12 @@ function TermsAndConditions({ navigation }) {
           pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum.
         </Text>
-        <Text style={[styleVariables.fontSizes.body, { marginBottom: 40 }]}>
+        <Text
+          style={[
+            styleVariables.fontSizes.body,
+            { marginBottom: 40, color: styleVariables.colors.black },
+          ]}
+        >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut

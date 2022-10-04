@@ -17,6 +17,7 @@ import {
 } from "../../../../utils/firebase.services";
 import LoadingIndicator from "../../../../components/LoadingIndicator";
 import ErrorArea from "../../../../components/SignUp/ErrorArea";
+import PasswordToggle from "../../../../components/PasswordToggle";
 
 const EditEmailInfo = ({ navigation }) => {
   const { theme, styleVariables } = useTheme();
@@ -25,10 +26,11 @@ const EditEmailInfo = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
-
   const [errorText, setErrorText] = useState("");
-
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [currentPasswordSecure, setCurrentPasswordSecure] = useState(true);
+  const [newPasswordSecure, setNewPasswordSecure] = useState(true);
+  const [confirmPasswordSecure, setConfirmPasswordSecure] = useState(true);
 
   // Check if passwords matches
   const checkPasswords = () => {
@@ -100,56 +102,87 @@ const EditEmailInfo = ({ navigation }) => {
             {
               height: "100%",
             },
-          ]}>
+          ]}
+        >
           <StatusBar style="dark" />
           <View>
             <View>
               <ErrorArea errorText={errorText} />
               <View id="passwordCurrentInput">
                 <Text
-                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+                  style={[
+                    theme.textInputLabel,
+                    styleVariables.fontSizes.calloutBold,
+                  ]}
+                >
                   Current password
                 </Text>
-                <TextInput
-                  onChangeText={(text) => setPassword(text)}
-                  placeholderTextColor={styleVariables.colors.placeholderText}
-                  placeholder="*******"
-                  secureTextEntry={true}
-                  //================================= will need to research how to do this SAFELY ==========================
-                  style={[theme.textInput, styleVariables.fontSizes.body]}
-                />
+                <View style={theme.passwordView}>
+                  <TextInput
+                    onChangeText={(text) => setPassword(text)}
+                    placeholderTextColor={styleVariables.colors.placeholderText}
+                    placeholder="*******"
+                    secureTextEntry={currentPasswordSecure}
+                    //================================= will need to research how to do this SAFELY ==========================
+                    style={[theme.textInput, styleVariables.fontSizes.body]}
+                  />
+                  <PasswordToggle
+                    passwordSecure={currentPasswordSecure}
+                    setPasswordSecure={setCurrentPasswordSecure}
+                  />
+                </View>
               </View>
             </View>
             <View>
               <View id="passwordNewInput">
                 <Text
-                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+                  style={[
+                    theme.textInputLabel,
+                    styleVariables.fontSizes.calloutBold,
+                  ]}
+                >
                   New password
                 </Text>
-                <TextInput
-                  onChangeText={(text) => setNewPassword(text)}
-                  placeholderTextColor={styleVariables.colors.placeholderText}
-                  placeholder="*******"
-                  secureTextEntry={true}
-                  //================================= will need to research how to do this SAFELY ==========================
-                  style={[theme.textInput, styleVariables.fontSizes.body]}
-                />
+                <View style={theme.passwordView}>
+                  <TextInput
+                    onChangeText={(text) => setNewPassword(text)}
+                    placeholderTextColor={styleVariables.colors.placeholderText}
+                    placeholder="*******"
+                    secureTextEntry={newPasswordSecure}
+                    //================================= will need to research how to do this SAFELY ==========================
+                    style={[theme.textInput, styleVariables.fontSizes.body]}
+                  />
+                  <PasswordToggle
+                    passwordSecure={newPasswordSecure}
+                    setPasswordSecure={setNewPasswordSecure}
+                  />
+                </View>
               </View>
             </View>
             <View>
               <View id="passwordConfirmInput">
                 <Text
-                  style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+                  style={[
+                    theme.textInputLabel,
+                    styleVariables.fontSizes.calloutBold,
+                  ]}
+                >
                   Confirm password
                 </Text>
-                <TextInput
-                  onChangeText={(text) => setConfirmPassword(text)}
-                  placeholderTextColor={styleVariables.colors.placeholderText}
-                  placeholder="*******"
-                  secureTextEntry={true}
-                  //================================= will need to research how to do this SAFELY ==========================
-                  style={[theme.textInput, styleVariables.fontSizes.body]}
-                />
+                <View style={theme.passwordView}>
+                  <TextInput
+                    onChangeText={(text) => setConfirmPassword(text)}
+                    placeholderTextColor={styleVariables.colors.placeholderText}
+                    placeholder="*******"
+                    secureTextEntry={confirmPasswordSecure}
+                    //================================= will need to research how to do this SAFELY ==========================
+                    style={[theme.textInput, styleVariables.fontSizes.body]}
+                  />
+                  <PasswordToggle
+                    passwordSecure={confirmPasswordSecure}
+                    setPasswordSecure={setConfirmPasswordSecure}
+                  />
+                </View>
               </View>
             </View>
           </View>
@@ -159,18 +192,21 @@ const EditEmailInfo = ({ navigation }) => {
             disabled={buttonDisabled}
             onPress={() => {
               verifyPassword(password, updatePassword, setErrorText);
-            }}>
+            }}
+          >
             <View
               style={[
                 theme.primaryButton,
                 { margin: 0, shadowColor: "#fff" },
                 buttonDisabled === true ? styles.buttonDisabled : null,
-              ]}>
+              ]}
+            >
               <Text
                 style={[
                   theme.primaryButtonText,
                   styleVariables.fontSizes.bodyBold,
-                ]}>
+                ]}
+              >
                 Save
               </Text>
             </View>

@@ -40,6 +40,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const [maxPrice, setMaxPrice] = useState("");
   const [distance, setDistance] = useState("0");
   const [listingAmount, setListingAmount] = useState("0");
+  const [sortActive, setSortActive] = useState(false);
+  const [filterActive, setFilterActive] = useState(false);
   const { updatedMarketplacePosts, setUpdatedMarketplacePosts } =
     useAppContext();
 
@@ -111,7 +113,11 @@ const MarketplaceScreen = ({ navigation, route }) => {
             onPress={() => {
               setSortModalVisible(true);
             }}
-            style={[styles.headerBtn]}
+            style={[
+              styles.headerBtn,
+              sortActive ? styles.activeCondition : null,
+            ]}
+            activeOpacity={1}
           >
             <Text
               style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
@@ -124,7 +130,12 @@ const MarketplaceScreen = ({ navigation, route }) => {
             onPress={() => {
               setFilterModalVisible(true);
             }}
-            style={[styles.filterBtn, styles.headerBtn]}
+            style={[
+              styles.filterBtn,
+              styles.headerBtn,
+              filterActive ? styles.activeCondition : null,
+            ]}
+            activeOpacity={1}
           >
             <Text
               style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
@@ -145,7 +156,13 @@ const MarketplaceScreen = ({ navigation, route }) => {
 
   const renderListFooter = () => {
     if (itemList.length > 0) {
-      return <ListFooter styleVariables={styleVariables} theme={theme} />;
+      return (
+        <ListFooter
+          styleVariables={styleVariables}
+          theme={theme}
+          isMarketplace={true}
+        />
+      );
     } else {
       return null;
     }
@@ -202,6 +219,9 @@ const MarketplaceScreen = ({ navigation, route }) => {
       justifyContent: "flex-end",
       margin: 0,
     },
+    activeCondition: {
+      backgroundColor: "#CDD7D9",
+    },
   });
 
   return (
@@ -213,7 +233,10 @@ const MarketplaceScreen = ({ navigation, route }) => {
         backdropOpacity={0.5}
         isVisible={sortModalVisible}
         style={styles.modal}
-        onBackdropPress={() => setSortModalVisible(false)}
+        onBackdropPress={() => {
+          setSortModalVisible(false);
+        }}
+        statusBarTranslucent={true}
       >
         <SortModal
           setSortModalVisible={setSortModalVisible}
@@ -222,6 +245,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
           setFilteredItemList={setFilteredItemList}
           sortingBy={sortingBy}
           setSortingBy={setSortingBy}
+          setSortActive={setSortActive}
         />
       </Modal>
       {/* FILTER MODAL */}
@@ -230,6 +254,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         isVisible={filterModalVisible}
         style={styles.modal}
         onBackdropPress={() => setFilterModalVisible(false)}
+        statusBarTranslucent={true}
       >
         <FilterModal
           marketplaceData={itemList}
@@ -247,6 +272,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
           setDistance={setDistance}
           listingAmount={listingAmount}
           setListingAmount={setListingAmount}
+          setFilterActive={setFilterActive}
         />
       </Modal>
 

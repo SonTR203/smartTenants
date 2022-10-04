@@ -19,6 +19,7 @@ import {
 } from "../../../../utils/firebase.services";
 import LoadingIndicator from "../../../../components/LoadingIndicator";
 import ErrorArea from "../../../../components/SignUp/ErrorArea";
+import PasswordToggle from "../../../../components/PasswordToggle";
 
 const EditEmailInfo = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
@@ -29,6 +30,7 @@ const EditEmailInfo = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [passwordSecure, setPasswordSecure] = useState(true);
 
   const checkTextInputs = () => {
     try {
@@ -94,13 +96,18 @@ const EditEmailInfo = ({ navigation }) => {
             {
               height: "100%",
             },
-          ]}>
+          ]}
+        >
           <StatusBar style="dark" />
           <View>
             <ErrorArea errorText={errorText} />
             <View id="emailInput" style={{ marginTop: 7 }}>
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.calloutBold,
+                ]}
+              >
                 Email
               </Text>
               <TextInput
@@ -115,17 +122,27 @@ const EditEmailInfo = ({ navigation }) => {
             </View>
             <View id="passwordInput">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.calloutBold,
+                ]}
+              >
                 Password
               </Text>
-              <TextInput
-                onChangeText={(text) => setPassword(text)}
-                placeholderTextColor={styleVariables.colors.placeholderText}
-                placeholder="*******"
-                secureTextEntry={true}
-                //================================= will need to research how to do this SAFELY ==========================
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
+              <View style={theme.passwordView}>
+                <TextInput
+                  onChangeText={(text) => setPassword(text)}
+                  placeholderTextColor={styleVariables.colors.placeholderText}
+                  placeholder="*******"
+                  secureTextEntry={passwordSecure}
+                  //================================= will need to research how to do this SAFELY ==========================
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+                <PasswordToggle
+                  passwordSecure={passwordSecure}
+                  setPasswordSecure={setPasswordSecure}
+                />
+              </View>
             </View>
           </View>
           {/* save button */}
@@ -134,18 +151,21 @@ const EditEmailInfo = ({ navigation }) => {
             disabled={buttonDisabled}
             onPress={() => {
               verifyPassword(password, saveProfileInfo, setErrorText);
-            }}>
+            }}
+          >
             <View
               style={[
                 theme.primaryButton,
                 { margin: 0, shadowColor: "#fff" },
                 buttonDisabled === true ? { backgroundColor: "#748E94" } : null,
-              ]}>
+              ]}
+            >
               <Text
                 style={[
                   theme.primaryButtonText,
                   styleVariables.fontSizes.bodyBold,
-                ]}>
+                ]}
+              >
                 Save
               </Text>
             </View>

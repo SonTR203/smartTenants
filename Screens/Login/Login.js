@@ -20,6 +20,7 @@ import { getItemById, handleSignIn } from "../../utils/firebase.services";
 import { getAuth, signOut } from "firebase/auth";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import ErrorArea from "../../components/SignUp/ErrorArea";
+import PasswordToggle from "../../components/PasswordToggle";
 
 /* The login screen allows registered users to login to app as well directing prospective tenants to the Smart Living  residential portal to browse its current listings */
 const Login = ({ navigation, route }) => {
@@ -30,6 +31,7 @@ const Login = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [passwordSecure, setPasswordSecure] = useState(true);
 
   // clear the text inputs when the screen is navigated to
   useEffect(() => {
@@ -162,7 +164,10 @@ const Login = ({ navigation, route }) => {
             {/* textInput */}
             <View id="emailInput">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.calloutBold,
+                ]}
               >
                 Email
               </Text>
@@ -176,18 +181,27 @@ const Login = ({ navigation, route }) => {
             </View>
             <View id="passwordInput">
               <Text
-                style={[theme.textInputLabel, styleVariables.fontSizes.body]}
+                style={[
+                  theme.textInputLabel,
+                  styleVariables.fontSizes.calloutBold,
+                ]}
               >
                 Password
               </Text>
-              <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
-                placeholder="••••••••••"
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry
-                style={[theme.textInput, styleVariables.fontSizes.body]}
-              />
+              <View style={theme.passwordView}>
+                <TextInput
+                  placeholderTextColor={styleVariables.colors.placeholderText}
+                  placeholder="••••••••••"
+                  value={password}
+                  onChangeText={(text) => setPassword(text)}
+                  secureTextEntry={passwordSecure}
+                  style={[theme.textInput, styleVariables.fontSizes.body]}
+                />
+                <PasswordToggle
+                  passwordSecure={passwordSecure}
+                  setPasswordSecure={setPasswordSecure}
+                />
+              </View>
             </View>
 
             {/* forgotPassword */}

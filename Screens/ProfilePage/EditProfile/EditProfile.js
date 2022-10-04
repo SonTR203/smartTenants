@@ -60,7 +60,8 @@ const EditProfile = ({ route, navigation }) => {
     <SafeAreaView edges={["top"]}>
       <KeyboardAvoidingView behavior="padding">
         <ScrollView
-          style={[theme.pageContainer, theme.globalMargins, theme.fullHeight]}>
+          style={[theme.pageContainer, theme.globalMargins, theme.fullHeight]}
+        >
           <StatusBar style="dark" />
           <Modal
             animationType="slide"
@@ -78,7 +79,8 @@ const EditProfile = ({ route, navigation }) => {
                   saveModal: false,
                 });
               }, 2000);
-            }}>
+            }}
+          >
             <PopupModal
               modalType={route.params?.modalType}
               message={route.params?.message}
@@ -89,7 +91,8 @@ const EditProfile = ({ route, navigation }) => {
               {/* userImage */}
               <View
                 id="userImage"
-                style={styles(styleVariables).userImageContainer}>
+                style={styles(styleVariables).userImageContainer}
+              >
                 <DynamicProfilePicture
                   user={{
                     userProfileImage: currentUser.userProfileImage,
@@ -110,7 +113,8 @@ const EditProfile = ({ route, navigation }) => {
                   {
                     color: styleVariables.colors.black,
                   },
-                ]}>
+                ]}
+              >
                 {`${currentUser.firstName} ${currentUser.lastName}`}
               </Text>
             </View>

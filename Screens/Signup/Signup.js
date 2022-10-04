@@ -33,6 +33,7 @@ import LoadingIndicator from "../../components/LoadingIndicator";
 import ChevronDownSVG from "../../components/Icons/ChevronDownSVG";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Modal from "react-native-modal";
+import PasswordToggle from "../../components/PasswordToggle";
 
 const auth = getAuth();
 
@@ -55,6 +56,8 @@ const Signup = ({ navigation }) => {
   const [tenantAuthorized] = useState(false);
   const [signupPressed, setSignupPressed] = useState(false);
   const [checkboxState, setCheckboxState] = useState(false);
+  const [passwordSecure, setPasswordSecure] = useState(true);
+  const [confirmPasswordSecure, setConfirmPasswordSecure] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -216,6 +219,8 @@ const Signup = ({ navigation }) => {
 
   const styles = StyleSheet.create({
     inputFieldEmpty: {
+      borderWidth: 1,
+      backgroundColor: "#F7E6EA",
       borderColor: "hsla(348, 92%, 35%, 0.5)",
     },
     inputFieldFilled: {
@@ -226,6 +231,9 @@ const Signup = ({ navigation }) => {
     },
     inputLabelFilled: {
       color: styleVariables.colors.black,
+    },
+    errorPlaceholderText: {
+      color: "#AB0728",
     },
     buildingInput: {
       display: "flex",
@@ -275,7 +283,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !firstName
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -284,7 +292,11 @@ const Signup = ({ navigation }) => {
                 First Name
               </Text>
               <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholderTextColor={
+                  signupPressed && !firstName
+                    ? styleVariables.colors.errorText
+                    : styleVariables.colors.placeholderText
+                }
                 placeholder="John"
                 value={firstName}
                 onChangeText={(text) => setFirstName(text)}
@@ -301,7 +313,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !lastName
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -310,7 +322,11 @@ const Signup = ({ navigation }) => {
                 Last Name
               </Text>
               <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholderTextColor={
+                  signupPressed && !lastName
+                    ? styleVariables.colors.errorText
+                    : styleVariables.colors.placeholderText
+                }
                 placeholder="Doe"
                 value={lastName}
                 onChangeText={(text) => setLastName(text)}
@@ -328,7 +344,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !unitNumber
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -337,7 +353,11 @@ const Signup = ({ navigation }) => {
                 Unit number
               </Text>
               <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholderTextColor={
+                  signupPressed && !unitNumber
+                    ? styleVariables.colors.errorText
+                    : styleVariables.colors.placeholderText
+                }
                 keyboardType="numeric"
                 placeholder="123"
                 value={unitNumber}
@@ -356,7 +376,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !buildingID.trim()
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -381,7 +401,13 @@ const Signup = ({ navigation }) => {
                   <Text
                     style={[
                       styleVariables.fontSizes.body,
-                      { color: styleVariables.colors.placeholderText },
+                      {
+                        color: buildingID.trim()
+                          ? styleVariables.colors.black
+                          : signupPressed && !buildingID.trim()
+                          ? styleVariables.colors.errorText
+                          : styleVariables.colors.placeholderText,
+                      },
                     ]}
                   >
                     {buildingAddress}
@@ -396,6 +422,7 @@ const Signup = ({ navigation }) => {
               backdropOpacity={0.5}
               onBackdropPress={() => setModalVisible(false)}
               style={styles.buildingSelectModal}
+              statusBarTranslucent={true}
             >
               <ModalPicker
                 changeModalVisibility={changeModalVisibility}
@@ -408,7 +435,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !email
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -417,7 +444,11 @@ const Signup = ({ navigation }) => {
                 Email
               </Text>
               <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
+                placeholderTextColor={
+                  signupPressed && !email
+                    ? styleVariables.colors.errorText
+                    : styleVariables.colors.placeholderText
+                }
                 placeholder="name@email.com"
                 value={email}
                 onChangeText={(text) => {
@@ -436,7 +467,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed && !password
                     ? styles.inputLabelEmpty
                     : styles.inputLabelFilled,
@@ -444,26 +475,36 @@ const Signup = ({ navigation }) => {
               >
                 Password
               </Text>
-              <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
-                placeholder="Minimum 6 characters"
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry
-                style={[
-                  theme.textInput,
-                  styleVariables.fontSizes.body,
-                  signupPressed && !password
-                    ? styles.inputFieldEmpty
-                    : styles.inputFieldFilled,
-                ]}
-              />
+              <View style={theme.passwordView}>
+                <TextInput
+                  placeholderTextColor={
+                    signupPressed && !password
+                      ? styleVariables.colors.errorText
+                      : styleVariables.colors.placeholderText
+                  }
+                  placeholder="Minimum 6 characters"
+                  value={password}
+                  onChangeText={(text) => setPassword(text)}
+                  secureTextEntry={passwordSecure}
+                  style={[
+                    theme.textInput,
+                    styleVariables.fontSizes.body,
+                    signupPressed && !password
+                      ? styles.inputFieldEmpty
+                      : styles.inputFieldFilled,
+                  ]}
+                />
+                <PasswordToggle
+                  passwordSecure={passwordSecure}
+                  setPasswordSecure={setPasswordSecure}
+                />
+              </View>
             </View>
             <View id="passwordConfirm">
               <Text
                 style={[
                   theme.textInputLabel,
-                  styleVariables.fontSizes.body,
+                  styleVariables.fontSizes.calloutBold,
                   signupPressed &&
                   (!passwordConfirm || password != passwordConfirm)
                     ? styles.inputLabelEmpty
@@ -472,21 +513,32 @@ const Signup = ({ navigation }) => {
               >
                 Confirm Password
               </Text>
-              <TextInput
-                placeholderTextColor={styleVariables.colors.placeholderText}
-                placeholder="Enter new password again"
-                value={passwordConfirm}
-                onChangeText={(text) => setPasswordConfirm(text)}
-                secureTextEntry
-                style={[
-                  theme.textInput,
-                  styleVariables.fontSizes.body,
-                  signupPressed &&
-                  (!passwordConfirm || password != passwordConfirm)
-                    ? styles.inputFieldEmpty
-                    : styles.inputFieldFilled,
-                ]}
-              />
+              <View>
+                <TextInput
+                  placeholderTextColor={
+                    signupPressed &&
+                    (!passwordConfirm || password != passwordConfirm)
+                      ? styleVariables.colors.errorText
+                      : styleVariables.colors.placeholderText
+                  }
+                  placeholder="Enter new password again"
+                  value={passwordConfirm}
+                  onChangeText={(text) => setPasswordConfirm(text)}
+                  secureTextEntry={confirmPasswordSecure}
+                  style={[
+                    theme.textInput,
+                    styleVariables.fontSizes.body,
+                    signupPressed &&
+                    (!passwordConfirm || password != passwordConfirm)
+                      ? styles.inputFieldEmpty
+                      : styles.inputFieldFilled,
+                  ]}
+                />
+                <PasswordToggle
+                  passwordSecure={confirmPasswordSecure}
+                  setPasswordSecure={setConfirmPasswordSecure}
+                />
+              </View>
             </View>
           </View>
           <View id="termsCheckbox" style={styles.terms}>

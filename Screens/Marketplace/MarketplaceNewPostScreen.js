@@ -278,7 +278,8 @@ function MarketplaceNewPostScreen({ navigation }) {
         onPress={() => {
           handlePickImage(item.uri, index);
         }}
-        style={styles.imageContainer}>
+        style={styles.imageContainer}
+      >
         <>
           {imageLoading ? (
             <Progress.CircleSnail
@@ -310,13 +311,9 @@ function MarketplaceNewPostScreen({ navigation }) {
     horizontalMargin: {
       marginHorizontal: 16,
     },
-    textInputTitleAndPrice: {
-      height: 64,
-      paddingTop: 22,
-    },
     textInputDescription: {
-      minHeight: 68 + 44,
-      paddingTop: 22,
+      height: 160,
+      paddingTop: 16,
       paddingBottom: Platform.OS === "android" ? 70 : 0,
     },
     uploadButtonContainer: {
@@ -376,7 +373,12 @@ function MarketplaceNewPostScreen({ navigation }) {
           {/* TEXT INPUT SECTIONS  */}
           <View style={styles.horizontalMargin}>
             {/* TITLE  */}
-            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+            <Text
+              style={[
+                theme.textInputLabel,
+                styleVariables.fontSizes.calloutBold,
+              ]}
+            >
               Title
             </Text>
             <TextInput
@@ -387,20 +389,22 @@ function MarketplaceNewPostScreen({ navigation }) {
               placeholder="What are you selling?"
               multiline={false}
               maxLength={60}
-              style={[
-                theme.textInput,
-                styleVariables.fontSizes.body,
-                styles.textInputTitleAndPrice,
-              ]}
+              style={[theme.textInput, styleVariables.fontSizes.body]}
             />
             {/* CATEGORY */}
-            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+            <Text
+              style={[
+                theme.textInputLabel,
+                styleVariables.fontSizes.calloutBold,
+              ]}
+            >
               Category
             </Text>
             <TouchableOpacity
               onPress={() => {
                 setCategoryModalVisible(true);
-              }}>
+              }}
+            >
               <View style={[theme.textInput, styles.input]}>
                 <Text
                   style={[
@@ -410,7 +414,8 @@ function MarketplaceNewPostScreen({ navigation }) {
                         ? styleVariables.colors.placeholderText
                         : styleVariables.colors.black,
                     },
-                  ]}>
+                  ]}
+                >
                   {category || "Choose category"}
                 </Text>
                 <ChevronDownSVG />
@@ -421,7 +426,9 @@ function MarketplaceNewPostScreen({ navigation }) {
               isVisible={categoryModalVisible}
               backdropOpacity={0.5}
               onBackdropPress={() => setCategoryModalVisible(false)}
-              style={styles.modal}>
+              style={styles.modal}
+              statusBarTranslucent={true}
+            >
               <ModalCategoryPicker
                 theme={theme}
                 styleVariables={styleVariables}
@@ -430,13 +437,19 @@ function MarketplaceNewPostScreen({ navigation }) {
               />
             </Modal>
             {/* CONDITION */}
-            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+            <Text
+              style={[
+                theme.textInputLabel,
+                styleVariables.fontSizes.calloutBold,
+              ]}
+            >
               Condition
             </Text>
             <TouchableOpacity
               onPress={() => {
                 setConditionModalVisible(true);
-              }}>
+              }}
+            >
               <View style={[theme.textInput, styles.input]}>
                 <Text
                   style={[
@@ -446,7 +459,8 @@ function MarketplaceNewPostScreen({ navigation }) {
                         ? styleVariables.colors.placeholderText
                         : styleVariables.colors.black,
                     },
-                  ]}>
+                  ]}
+                >
                   {condition || "Choose condition"}
                 </Text>
                 <ChevronDownSVG />
@@ -457,7 +471,9 @@ function MarketplaceNewPostScreen({ navigation }) {
               isVisible={conditionModalVisible}
               backdropOpacity={0.5}
               onBackdropPress={() => setConditionModalVisible(false)}
-              style={styles.modal}>
+              style={styles.modal}
+              statusBarTranslucent={true}
+            >
               <ModalConditionPicker
                 theme={theme}
                 styleVariables={styleVariables}
@@ -467,7 +483,12 @@ function MarketplaceNewPostScreen({ navigation }) {
               />
             </Modal>
             {/* DESCRIPTION */}
-            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+            <Text
+              style={[
+                theme.textInputLabel,
+                styleVariables.fontSizes.calloutBold,
+              ]}
+            >
               Description
             </Text>
             <TextInput
@@ -475,7 +496,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               onChangeText={(text) => {
                 setContent(text);
               }}
-              placeholder="Type your text here"
+              placeholder="Type item description here"
               multiline={true}
               style={[
                 theme.textInput,
@@ -485,21 +506,23 @@ function MarketplaceNewPostScreen({ navigation }) {
             />
 
             {/* PRICE */}
-            <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+            <Text
+              style={[
+                theme.textInputLabel,
+                styleVariables.fontSizes.calloutBold,
+              ]}
+            >
               Price
             </Text>
             <TextInput
+              placeholderTextColor={styleVariables.colors.placeholderText}
               editable={category !== "Free Goods"}
               keyboardType="numeric"
               value={price}
               placeholder="$0.00"
               onEndEditing={handleEndEditing}
               onChangeText={setPrice}
-              style={[
-                theme.textInput,
-                styleVariables.fontSizes.body,
-                styles.textInputTitleAndPrice,
-              ]}
+              style={[theme.textInput, styleVariables.fontSizes.body]}
             />
           </View>
           {/* UPLOAD IMAGE */}
@@ -525,12 +548,14 @@ function MarketplaceNewPostScreen({ navigation }) {
           <TouchableOpacity
             id="submitPostButton"
             onPress={handleSubmit}
-            style={[theme.primaryButton]}>
+            style={[theme.primaryButton]}
+          >
             <Text
               style={[
                 theme.primaryButtonText,
                 styleVariables.fontSizes.bodyBold,
-              ]}>
+              ]}
+            >
               Submit post
             </Text>
           </TouchableOpacity>

@@ -216,7 +216,9 @@ const CreatePost = ({ navigation, route }) => {
           />
         </Modal>
         <View id="statusInput">
-          <Text style={[theme.textInputLabel, styleVariables.fontSizes.body]}>
+          <Text
+            style={[theme.textInputLabel, styleVariables.fontSizes.calloutBold]}
+          >
             What's on your mind?
           </Text>
           <TextInput
@@ -224,15 +226,15 @@ const CreatePost = ({ navigation, route }) => {
             onChangeText={(text) => {
               setPostContent(text);
             }}
-            placeholder="280 characters maximum"
+            placeholder="Type your post here"
             multiline={true}
             maxLength={280}
             style={[
               theme.textInput,
               styleVariables.fontSizes.body,
               {
-                minHeight: 68 + 44,
-                paddingTop: 22,
+                height: 200,
+                paddingTop: 16,
                 paddingBottom: Platform.OS === "android" ? 70 : 0,
               },
             ]}></TextInput>
