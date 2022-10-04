@@ -15,6 +15,7 @@ import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
 import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import CommentIcon from "../../components/Icons/CommentIconSVG";
+import HorizontalDotsSVG from "../../components/Icons/HorizontalDotsSVG";
 
 function Comment({
   item,
@@ -186,6 +187,9 @@ function Comment({
               >
                 {timeSincePost}
               </Text>
+            </View>
+            <View>
+              <HorizontalDotsSVG />
             </View>
           </View>
         </View>

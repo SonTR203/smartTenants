@@ -1,5 +1,5 @@
 import * as React from "react";
-import Svg from "react-native-svg";
+import Svg, { Circle } from "react-native-svg";
 
 const HorizontalDotsSVG = (props) => (
   <Svg
