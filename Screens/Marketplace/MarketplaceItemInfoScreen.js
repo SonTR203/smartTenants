@@ -129,9 +129,6 @@ function MarketplaceItemInfoScreen({ navigation }) {
       fontWeight: "400",
       lineHeight: 26,
     },
-    contentContainer: {
-      marginTop: 11,
-    },
     content: {
       color: styleVariables.colors.black,
       fontSize: 17,
@@ -186,6 +183,12 @@ function MarketplaceItemInfoScreen({ navigation }) {
       color: "white",
       backgroundColor: "#395E66",
     },
+    conditionText: {
+      color: styleVariables.colors.primary,
+    },
+    conditionContainer: {
+      marginVertical: 16,
+    },
   });
 
   return (
@@ -221,8 +224,14 @@ function MarketplaceItemInfoScreen({ navigation }) {
           </Text>
           <Text style={styles.price}>{item.price}</Text>
         </View>
+        {/* ITEM CONDITION */}
+        <View style={styles.conditionContainer}>
+          <Text style={[styleVariables.fontSizes.body, styles.conditionText]}>
+            Condition: {item.condition}
+          </Text>
+        </View>
         {/* ITEM CONTENT  */}
-        <View style={styles.contentContainer}>
+        <View>
           <Text style={styles.content}>{item.postContent}</Text>
         </View>
         {/* PROFILE SECTION */}
