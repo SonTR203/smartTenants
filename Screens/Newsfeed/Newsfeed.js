@@ -13,7 +13,10 @@ import { constants, refreshDelay } from "../../utils/constants";
 import Post from "./Post";
 import ListFooter from "./ListFooter";
 import { wait } from "../../utils/wait";
-import { getPosts } from "../../utils/Newsfeed/newsfeed.services";
+import {
+  getPosts,
+  listenForNewPost,
+} from "../../utils/Newsfeed/newsfeed.services";
 import Fab from "../../components/Fab";
 import EmptyListComponent from "../../components/EmptyListComponent";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
@@ -22,6 +25,7 @@ import PopupModal from "../../components/PopupModal";
 const Newsfeed = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [posts, setPosts] = useState([]);
+  const [newPostsLength, setNewPostsLength] = useState(0);
   const [refreshing, setRefreshing] = useState(true);
 
   const onRefresh = useCallback(() => {
@@ -71,6 +75,14 @@ const Newsfeed = ({ navigation, route }) => {
     }
   }, [route.params]);
 
+  useEffect(() => {
+    const unsubscribe = listenForNewPost(setNewPostsLength);
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {}, [newPostsLength]);
   const callBackRender = useCallback(
     ({ item, index }) => renderPostItem({ item, index }),
     [[posts]]
