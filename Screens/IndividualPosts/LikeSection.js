@@ -15,6 +15,7 @@ function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
   const [userLiked, setUserLiked] = useState(false);
   const [numberOfLikes, setNumberOfLikes] = useState(0);
   const [peopleArray, setPeopleArray] = useState([]);
+  const [numberOfComments, setNumberOfComments] = useState(0);
 
   const { post, setPost, currentUser } = useAppContext();
   const { styleVariables } = useTheme();
@@ -64,6 +65,10 @@ function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
       setNumberOfLikes(post.peopleWhoLiked.length);
     }
   }, [post]);
+
+  useEffect(() => {
+    setNumberOfComments(post.commentCount);
+  });
 
   const styles = StyleSheet.create({
     container: {
@@ -149,7 +154,7 @@ function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
                 { marginLeft: 8 },
               ]}
             >
-              {post.commentCount}
+              {numberOfComments}
             </Text>
           </TouchableOpacity>
         </View>

@@ -107,6 +107,18 @@ function Comment({
     }
   };
 
+  const handleDeleteComment = async () => {
+    const updatedPost = await deleteComment(post, item);
+    if (updatedPost == true) {
+      setPost({
+        ...updatedPost,
+        commentCount: [...updatedPost.commentCount],
+        updated: true,
+      });
+      setModalVisible(false);
+    }
+  };
+
   const styles = StyleSheet.create({
     ownerInfo: {
       display: "flex",
@@ -200,7 +212,7 @@ function Comment({
             subtitle={"You won't be able to restore it"}
             confirmText="Delete"
             onConfirm={() => {
-              deleteComment(currentUser, post, item);
+              handleDeleteComment();
             }}
             onCancel={() => setModalVisible(false)}
           />

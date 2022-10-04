@@ -12,7 +12,7 @@ import _ from "lodash";
 import uuid from "react-native-uuid";
 import { createItemInFirestore } from "../firebase.services";
 
-export const deleteComment = async (currentUser, post, item) => {
+export const deleteComment = async (post, item) => {
   try {
     const peopleWhoCommentedColRef = collection(
       db,
