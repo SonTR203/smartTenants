@@ -11,25 +11,6 @@ import {
 import _ from "lodash";
 import uuid from "react-native-uuid";
 import { createItemInFirestore } from "../firebase.services";
-import { useState } from "react";
-
-let commentID;
-
-// export const getComments = async (post, item) => {
-//   const colRef = collection(db, `Newsfeed/${post.id}/`);
-
-//   const sortedColRef = query(colRef, where("isNSFW", "==", false));
-
-//   const data = await getDocs(sortedColRef);
-//   const formattedData = data.docs.map((doc) => {
-//     return {
-//       ...doc.data(),
-//       id: doc.id,
-//     };
-//   });
-//   const sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
-//   return sortedListOfPosts;
-// };
 
 export const likeComment = async (
   item,
