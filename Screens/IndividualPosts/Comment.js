@@ -21,7 +21,6 @@ import ModalActionConfirm from "../../components/CustomBottomModal/ModalActionCo
 import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
 import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
-import CommentIcon from "../../components/Icons/CommentIconSVG";
 import HorizontalDotsSVG from "../../components/Icons/HorizontalDotsSVG";
 
 function Comment({
@@ -309,13 +308,6 @@ function Comment({
                   {numberOfCommentLikes}
                 </Text>
               </View>
-
-              {replies.length > 0 ? (
-                <View style={styles.likeCommentContainer}>
-                  <CommentIcon></CommentIcon>
-                  <Text style={styles.likeCommentCount}>{replies.length}</Text>
-                </View>
-              ) : null}
             </View>
             <TouchableOpacity
               activeOpacity={1}
