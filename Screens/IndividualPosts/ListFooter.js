@@ -203,7 +203,6 @@ function ListFooter({
             }}
           >
             <X></X>
-            {/* <Text style={styles.cancelButton}>x</Text> */}
           </TouchableOpacity>
         </View>
       )}
