@@ -138,6 +138,8 @@ export const listenForNewPost = (setter) => {
       if (doc.data().isNSFW === true) return;
       return approvedPosts.push(doc.data());
     });
-    return setter(approvedPosts.length);
+    setTimeout(() => {
+      setter(approvedPosts.length);
+    }, 1000);
   });
 };
