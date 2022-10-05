@@ -161,7 +161,7 @@ const Newsfeed = ({ navigation, route }) => {
       <View style={styles.flatListContainer}>
         <FlatListRefreshControl refreshing={refreshing} />
         <Animated.View style={styles.newPostsButtonContainer}>
-          <TouchableOpacity style={styles.newPostsButton}>
+          <TouchableOpacity activeOpacity={1} style={styles.newPostsButton}>
             <Text
               style={[{ color: "#fff" }, styleVariables.fontSizes.calloutBold]}>
               New posts
