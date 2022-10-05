@@ -91,7 +91,6 @@ const CreatePost = ({ navigation, route }) => {
       saveModal: true,
       modalType: "success",
       message: "Post submitted",
-      hideNewPostsButton: true,
     });
     navigation.pop(2);
   }
@@ -218,8 +217,10 @@ const CreatePost = ({ navigation, route }) => {
         </Modal>
         <View id="statusInput">
           <Text
-            style={[theme.textInputLabel, styleVariables.fontSizes.calloutBold]}
-          >
+            style={[
+              theme.textInputLabel,
+              styleVariables.fontSizes.calloutBold,
+            ]}>
             What's on your mind?
           </Text>
           <TextInput
