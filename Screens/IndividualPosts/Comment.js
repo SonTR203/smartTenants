@@ -244,7 +244,10 @@ function Comment({
 
   return (
     <View>
-      <View id="userComment" style={[theme.individualPostCardContainer]}>
+      <View
+        id="userComment"
+        style={[theme.individualPostCardContainer, { marginTop: 16 }]}
+      >
         <View className="commentOwnerInfo" style={styles.ownerInfo}>
           <View
             className="commentOwnerImageAndName"
@@ -304,9 +307,11 @@ function Comment({
                     <HeartSVG />
                   </TouchableOpacity>
                 )}
-                <Text style={styles.likeCommentCount}>
-                  {numberOfCommentLikes}
-                </Text>
+                {numberOfCommentLikes > 0 ? (
+                  <Text style={styles.likeCommentCount}>
+                    {numberOfCommentLikes}
+                  </Text>
+                ) : null}
               </View>
             </View>
             <TouchableOpacity

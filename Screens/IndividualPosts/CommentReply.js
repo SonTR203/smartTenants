@@ -23,6 +23,7 @@ function CommentReply({ item, theme, styleVariables, styles }) {
           theme.individualPostCardContainer,
           styles.container,
           styles.reply,
+          { marginTop: 8 },
         ]}
       >
         <View className="commentOwnerInfo" style={styles.ownerInfo}>

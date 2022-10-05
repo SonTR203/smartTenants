@@ -350,7 +350,6 @@ const theme = StyleSheet.create({
     backgroundColor: "#F5F7F7",
     padding: 17,
     marginHorizontal: 17,
-    marginTop: 17,
     borderRadius: 16,
   },
   passwordView: {
