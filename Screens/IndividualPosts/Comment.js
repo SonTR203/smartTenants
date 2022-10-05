@@ -9,10 +9,10 @@ import {
 } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
 import {
-  getComments,
   likeComment,
   deleteComment,
 } from "../../utils/IndividualPosts/individualPosts.services";
+import _ from "lodash";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
 import CustomBottomModal from "../../components/CustomBottomModal/index";
@@ -34,7 +34,6 @@ function Comment({
   setComments,
   comments,
   setNumberOfComments,
-  numberOfComments,
 }) {
   const [timeSincePost, setTimeSincePost] = useState("");
   const [replies, setReplies] = useState([]);
@@ -52,7 +51,10 @@ function Comment({
     async function setCommentReplies() {
       if (item.replied == true) {
         let replyList = await getCommentReplies(item.id);
-        setReplies(replyList);
+
+        let sortedReplyList = _.sortBy(replyList, "timestamp");
+
+        setReplies(sortedReplyList);
       }
     }
     setCommentReplies();
@@ -113,7 +115,6 @@ function Comment({
       post,
       item,
       setModalVisible,
-      setNumberOfComments,
       setComments
     );
 

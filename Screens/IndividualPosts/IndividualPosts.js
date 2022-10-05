@@ -28,7 +28,6 @@ const IndividualPosts = ({ navigation, route }) => {
 
   const [comments, setComments] = useState([]);
   const [commentCount, setCommentCount] = useState(0);
-
   const [userCommentName, setUserCommentName] = useState("");
   const [userCommentId, setUserCommentId] = useState("");
   const [commentLikeCount, setCommentLikeCount] = useState(0);
@@ -66,6 +65,7 @@ const IndividualPosts = ({ navigation, route }) => {
     );
 
     const data = await getDocs(colRef);
+    console.log(data);
     const formattedData = data.docs.map((doc) => {
       return {
         ...doc.data(),

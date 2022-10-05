@@ -57,13 +57,13 @@ function ListFooter({
             lastName: currentUser.lastName,
             userProfileImage: currentUser.userProfileImage,
             commentContent: textInputValue,
+            peopleWhoLiked: [],
             userID: currentUser.userID,
             authorID: post.userID,
             colors: currentUser.colors,
             timestamp: Timestamp.fromDate(new Date()),
             postID: post.id,
             replied: false,
-            peopleWhoLiked: [],
           }).then(() => {
             setTextInputValue("");
             getComments();

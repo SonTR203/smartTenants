@@ -39,7 +39,6 @@ export const deleteComment = async (
   post,
   item,
   setModalVisible,
-  setNumberOfComments,
   setComments
 ) => {
   try {
