@@ -62,17 +62,11 @@ export const deleteComment = async (
     await updateDoc(peopleWhoCommentedDocRef, {
       commentCount: post.commentCount - 1,
     });
-
-    post = {
-      ...post,
-      commentCount: post.commentCount - 1,
-    };
   } catch (error) {
     console.log("error remove comment: ", error);
     alert("Error removing comment. Please try again later.");
     return;
   }
-  setNumberOfComments(post.commentCount - 1);
   setModalVisible(false);
   getComments(post, setComments);
 
