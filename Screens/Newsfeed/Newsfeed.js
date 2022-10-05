@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   FlatList,
@@ -8,7 +8,6 @@ import {
   Animated,
   TouchableOpacity,
   Text,
-  Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -30,12 +29,11 @@ const Newsfeed = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [posts, setPosts] = useState([]);
   const [newPostsLength, setNewPostsLength] = useState(0);
-  const [hasNewPosts, setHasNewPosts] = useState(false);
   const [refreshing, setRefreshing] = useState(true);
-
+  const slideDown = useRef(new Animated.Value(-100)).current;
   const onRefresh = useCallback(() => {
+    resetAnimation();
     setRefreshing(true);
-
     wait(refreshDelay).then(async () => {
       await fetchNotifications();
       setRefreshing(false);
@@ -86,11 +84,24 @@ const Newsfeed = ({ navigation, route }) => {
 
   async function fetchNotifications() {
     const list = await getPosts();
-
     setPosts(list);
     setRefreshing(false);
   }
 
+  const startAnimation = () => {
+    Animated.spring(slideDown, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+  const resetAnimation = () => {
+    Animated.spring(slideDown, {
+      toValue: -100,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
   useEffect(() => {
     fetchNotifications();
   }, []);
@@ -109,12 +120,16 @@ const Newsfeed = ({ navigation, route }) => {
     };
   }, []);
 
-  useEffect(() => {}, [newPostsLength]);
+  useEffect(() => {
+    if (newPostsLength > posts.length) {
+      startAnimation();
+    }
+  }, [newPostsLength, posts]);
   const callBackRender = useCallback(
     ({ item, index }) => renderPostItem({ item, index }),
     [[posts]]
   );
-
+  useEffect(() => {}, [slideDown]);
   const renderPostItem = ({ item }) => (
     <Post passedPost={item} windowWidth={constants.width} />
   );
@@ -160,8 +175,19 @@ const Newsfeed = ({ navigation, route }) => {
       </Modal>
       <View style={styles.flatListContainer}>
         <FlatListRefreshControl refreshing={refreshing} />
-        <Animated.View style={styles.newPostsButtonContainer}>
-          <TouchableOpacity activeOpacity={1} style={styles.newPostsButton}>
+        <Animated.View
+          style={[
+            styles.newPostsButtonContainer,
+            {
+              transform: [{ translateY: slideDown }],
+            },
+          ]}>
+          <TouchableOpacity
+            onPress={() => {
+              resetAnimation();
+            }}
+            activeOpacity={1}
+            style={styles.newPostsButton}>
             <Text
               style={[{ color: "#fff" }, styleVariables.fontSizes.calloutBold]}>
               New posts
