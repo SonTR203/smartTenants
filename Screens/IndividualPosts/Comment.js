@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useAppContext } from "../../Context/AppContext";
 import {
+  getComments,
   likeComment,
   deleteComment,
 } from "../../utils/IndividualPosts/individualPosts.services";
@@ -30,6 +31,7 @@ function Comment({
   setUserCommentName,
   setUserCommentId,
   getCommentReplies,
+  setComments,
   comments,
   setNumberOfComments,
   numberOfComments,
@@ -83,6 +85,7 @@ function Comment({
       theme={theme}
       styleVariables={styleVariables}
       styles={styles}
+      currentUser={currentUser}
     />
   );
 
@@ -96,7 +99,7 @@ function Comment({
       numberOfCommentLikes,
       setNumberOfCommentLikes
     );
-    if (updatedPost == true) {
+    if (updatedPost) {
       setPost({
         ...updatedPost,
         peopleWhoCommented: [...updatedPost.peopleWhoCommented],
@@ -110,11 +113,11 @@ function Comment({
       post,
       item,
       setModalVisible,
-      numberOfComments,
-      setNumberOfComments
+      setNumberOfComments,
+      setComments
     );
 
-    if (updatedComment == true) {
+    if (updatedComment) {
       setPost({
         ...updatedComment,
         commentCount: updatedComment.commentCount - 1,

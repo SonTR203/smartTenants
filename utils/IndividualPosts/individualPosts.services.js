@@ -12,13 +12,35 @@ import _ from "lodash";
 import uuid from "react-native-uuid";
 import { createItemInFirestore } from "../firebase.services";
 
+// Get Post
+export const getComments = async (post, setComments) => {
+  const peopleWhoCommentedColRef = collection(
+    db,
+    `Newsfeed/${post.id}/peopleWhoCommented/`
+  );
+
+  const data = await getDocs(peopleWhoCommentedColRef);
+
+  const formattedData = data.docs.map((doc) => {
+    return {
+      ...doc.data(),
+      id: doc.id,
+    };
+  });
+
+  const sortedListOfPosts = _.sortBy(formattedData, "timestamp");
+
+  setComments(sortedListOfPosts);
+  return sortedListOfPosts;
+};
+
 // Delete Comment
 export const deleteComment = async (
   post,
   item,
   setModalVisible,
-  numberOfComments,
-  setNumberOfComments
+  setNumberOfComments,
+  setComments
 ) => {
   try {
     const peopleWhoCommentedColRef = collection(
@@ -26,10 +48,7 @@ export const deleteComment = async (
       `Newsfeed/${post.id}/peopleWhoCommented/`
     );
 
-    const peopleWhoCommentedDocRef = doc(
-      db,
-      `Newsfeed/${post.id}/peopleWhoCommented/`
-    );
+    const peopleWhoCommentedDocRef = doc(db, `Newsfeed/${post.id}`);
 
     const q = query(peopleWhoCommentedColRef, where("id", "==", item.id));
 
@@ -53,9 +72,10 @@ export const deleteComment = async (
     alert("Error removing comment. Please try again later.");
     return;
   }
-
   setNumberOfComments(post.commentCount - 1);
   setModalVisible(false);
+  getComments(post, setComments);
+
   return post;
 };
 

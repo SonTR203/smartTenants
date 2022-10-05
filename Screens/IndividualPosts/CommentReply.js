@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import { setTime } from "../../utils/setTime";
+import HorizontalDotsSVG from "../../components/Icons/HorizontalDotsSVG";
 
-function CommentReply({ item, theme, styleVariables, styles }) {
+function CommentReply({ item, theme, styleVariables, styles, currentUser }) {
   const [timeSincePost, setTimeSincePost] = useState("");
 
   useEffect(() => {
@@ -49,6 +50,17 @@ function CommentReply({ item, theme, styleVariables, styles }) {
               </Text>
             </View>
           </View>
+          {currentUser.userID == item.userID ? (
+            <View style={styles.HorizontalDots}>
+              <TouchableOpacity
+                onPress={() => {
+                  // setModalVisible(true);
+                }}
+              >
+                <HorizontalDotsSVG />
+              </TouchableOpacity>
+            </View>
+          ) : null}
         </View>
 
         <View className="commentContent">

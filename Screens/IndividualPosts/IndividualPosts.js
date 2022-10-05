@@ -127,6 +127,7 @@ const IndividualPosts = ({ navigation, route }) => {
       setUserCommentId={setUserCommentId}
       userCommentId={userCommentId}
       getCommentReplies={getCommentReplies}
+      setComments={setComments}
       comments={comments}
       setCommentLikeCount={setCommentLikeCount}
       setNumberOfComments={setNumberOfComments}
