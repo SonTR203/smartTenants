@@ -5,6 +5,10 @@ import {
   StyleSheet,
   RefreshControl,
   Modal,
+  Animated,
+  TouchableOpacity,
+  Text,
+  Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -26,6 +30,7 @@ const Newsfeed = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [posts, setPosts] = useState([]);
   const [newPostsLength, setNewPostsLength] = useState(0);
+  const [hasNewPosts, setHasNewPosts] = useState(false);
   const [refreshing, setRefreshing] = useState(true);
 
   const onRefresh = useCallback(() => {
@@ -54,6 +59,28 @@ const Newsfeed = ({ navigation, route }) => {
       borderTopLeftRadius: 27,
       borderTopRightRadius: 27,
       backgroundColor: "white",
+    },
+    newPostsButtonContainer: {
+      position: "absolute",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+      height: "7.5%",
+      zIndex: 2,
+    },
+    newPostsButton: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      width: 120,
+      height: 36,
+      backgroundColor: "#29AA6B",
+      paddingVertical: 8,
+      paddingHorizontal: 24,
+      gap: 8,
+      borderRadius: 16,
     },
   });
 
@@ -133,6 +160,14 @@ const Newsfeed = ({ navigation, route }) => {
       </Modal>
       <View style={styles.flatListContainer}>
         <FlatListRefreshControl refreshing={refreshing} />
+        <Animated.View style={styles.newPostsButtonContainer}>
+          <TouchableOpacity style={styles.newPostsButton}>
+            <Text
+              style={[{ color: "#fff" }, styleVariables.fontSizes.calloutBold]}>
+              New posts
+            </Text>
+          </TouchableOpacity>
+        </Animated.View>
         <FlatList
           removeClippedSubviews={true}
           initialNumToRender={3}
