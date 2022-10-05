@@ -102,6 +102,7 @@ function Comment({
     if (updatedPost) {
       setPost({
         ...updatedPost,
+        peopleWhoCommented: [...item.peopleWhoCommented],
         updated: true,
       });
     }

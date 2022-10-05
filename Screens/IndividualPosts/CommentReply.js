@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import { setTime } from "../../utils/setTime";
+import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
+import CustomBottomModal from "../../components/CustomBottomModal/index";
 import HorizontalDotsSVG from "../../components/Icons/HorizontalDotsSVG";
 
 function CommentReply({ item, theme, styleVariables, styles, currentUser }) {
   const [timeSincePost, setTimeSincePost] = useState("");
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     async function convertTime() {
@@ -55,6 +57,7 @@ function CommentReply({ item, theme, styleVariables, styles, currentUser }) {
               <TouchableOpacity
                 onPress={() => {
                   // setModalVisible(true);
+                  setModalVisible(true);
                 }}
               >
                 <HorizontalDotsSVG />
@@ -69,6 +72,11 @@ function CommentReply({ item, theme, styleVariables, styles, currentUser }) {
           </Text>
         </View>
       </View>
+      <CustomBottomModal
+        isModalVisible={isModalVisible}
+        setModalVisible={setModalVisible}
+        // options={options}
+      ></CustomBottomModal>
     </View>
   );
 }

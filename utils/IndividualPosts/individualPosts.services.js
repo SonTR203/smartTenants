@@ -125,28 +125,29 @@ export const likeComment = async (
   // ================ checking if current user liked comment ====================
   if (userLikedComment) {
     const res = await removeLike(currentUser, post, item);
-    if (res == true) {
+    if (res) {
       setUserLikedComment(false);
       setNumberOfCommentLikes(numberOfCommentLikes - 1);
 
       item = {
         ...item,
-        peopleWhoCommented: [...item.peopleWhoCommented],
+        peopleWhoLiked: item.peopleWhoLiked.filter(
+          (item) => item !== currentUser.userID
+        ),
       };
     }
   } else {
     const res = await addLike(currentUser, post, item);
-    if (res == true) {
+    if (res) {
       setUserLikedComment(true);
       setNumberOfCommentLikes(numberOfCommentLikes + 1);
 
       item = {
         ...item,
-        peopleWhoCommented: [...item.peopleWhoCommented],
+        peopleWhoLiked: [...item.peopleWhoLiked, currentUser.userID],
       };
     }
   }
-
   return item;
 };
 
@@ -201,6 +202,7 @@ export const removeLike = async (currentUser, post, item) => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       commentID = doc.data().id;
+      console.log(commentID);
     });
 
     const peopleWhoLikedCommentDocRef = doc(
