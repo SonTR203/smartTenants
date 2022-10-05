@@ -31,6 +31,7 @@ const Newsfeed = ({ navigation, route }) => {
   const [newPostsLength, setNewPostsLength] = useState(0);
   const [refreshing, setRefreshing] = useState(true);
   const slideDown = useRef(new Animated.Value(-100)).current;
+  let flatListRef;
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     resetAnimation();
@@ -122,7 +123,7 @@ const Newsfeed = ({ navigation, route }) => {
 
   // new posts button animation handler
   useEffect(() => {
-    if (refreshing || route.params.hideNewPostsButton) return;
+    if (refreshing) return;
     if (newPostsLength > posts.length) {
       startAnimation();
     }
@@ -146,12 +147,6 @@ const Newsfeed = ({ navigation, route }) => {
       return null;
     }
   };
-
-  useEffect(() => {
-    navigation.setParams({
-      hideNewPostsButton: false,
-    });
-  }, []);
   return (
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
@@ -191,6 +186,7 @@ const Newsfeed = ({ navigation, route }) => {
           <TouchableOpacity
             onPress={() => {
               resetAnimation();
+              flatListRef.scrollToOffset({ offset: 0, animated: true });
               setRefreshing(true);
               fetchNotifications();
             }}
@@ -212,6 +208,7 @@ const Newsfeed = ({ navigation, route }) => {
           renderItem={callBackRender}
           ListEmptyComponent={renderEmpty}
           ListFooterComponent={renderListFooter}
+          ref={(ref) => (flatListRef = ref)}
           refreshControl={
             <RefreshControl
               progressBackgroundColor="white"
