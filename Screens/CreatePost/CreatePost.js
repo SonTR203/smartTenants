@@ -91,6 +91,7 @@ const CreatePost = ({ navigation, route }) => {
       saveModal: true,
       modalType: "success",
       message: "Post submitted",
+      hideNewPostsButton: true,
     });
     navigation.pop(2);
   }
