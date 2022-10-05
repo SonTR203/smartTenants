@@ -34,7 +34,6 @@ const Newsfeed = ({ navigation, route }) => {
   let flatListRef;
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    resetAnimation();
     wait(refreshDelay).then(async () => {
       await fetchNotifications();
       setRefreshing(false);
@@ -73,7 +72,6 @@ const Newsfeed = ({ navigation, route }) => {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      width: 120,
       height: 36,
       backgroundColor: "#29AA6B",
       paddingVertical: 8,
