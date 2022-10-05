@@ -120,8 +120,9 @@ const Newsfeed = ({ navigation, route }) => {
     };
   }, []);
 
+  // new posts button animation handler
   useEffect(() => {
-    if (refreshing) return;
+    if (refreshing || route.params.hideNewPostsButton) return;
     if (newPostsLength > posts.length) {
       startAnimation();
     }
@@ -130,7 +131,6 @@ const Newsfeed = ({ navigation, route }) => {
     ({ item, index }) => renderPostItem({ item, index }),
     [[posts]]
   );
-  useEffect(() => {}, [slideDown]);
   const renderPostItem = ({ item }) => (
     <Post passedPost={item} windowWidth={constants.width} />
   );
@@ -147,6 +147,11 @@ const Newsfeed = ({ navigation, route }) => {
     }
   };
 
+  useEffect(() => {
+    navigation.setParams({
+      hideNewPostsButton: false,
+    });
+  }, []);
   return (
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
