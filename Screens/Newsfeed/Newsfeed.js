@@ -32,8 +32,8 @@ const Newsfeed = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(true);
   const slideDown = useRef(new Animated.Value(-100)).current;
   const onRefresh = useCallback(() => {
-    resetAnimation();
     setRefreshing(true);
+    resetAnimation();
     wait(refreshDelay).then(async () => {
       await fetchNotifications();
       setRefreshing(false);
@@ -121,6 +121,7 @@ const Newsfeed = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
+    if (refreshing) return;
     if (newPostsLength > posts.length) {
       startAnimation();
     }
@@ -185,6 +186,7 @@ const Newsfeed = ({ navigation, route }) => {
           <TouchableOpacity
             onPress={() => {
               resetAnimation();
+              setRefreshing(true);
             }}
             activeOpacity={1}
             style={styles.newPostsButton}>
