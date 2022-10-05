@@ -65,7 +65,7 @@ const IndividualPosts = ({ navigation, route }) => {
     );
 
     const data = await getDocs(colRef);
-    console.log(data);
+
     const formattedData = data.docs.map((doc) => {
       return {
         ...doc.data(),
