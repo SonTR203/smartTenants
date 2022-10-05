@@ -32,6 +32,7 @@ import {
 } from "../../utils/Profile/profile.services";
 import { moderateImage, moderateText } from "../../utils/moderation.services";
 import PopupModal from "../../components/PopupModal";
+import NewsfeedImageSVG from "../../components/Icons/NewsfeedImageSVG";
 
 const CreatePost = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -187,9 +188,39 @@ const CreatePost = ({ navigation, route }) => {
     if (!postContent && !image) return setButtonDisabled(true);
     setButtonDisabled(false);
   }, [postContent, image]);
+
+  const styles = StyleSheet.create({
+    loader: {
+      marginBottom: 20,
+    },
+    buttonDisabled: {
+      backgroundColor: "#748E94",
+    },
+    container: {
+      flex: 1,
+    },
+    submitButton: {
+      marginTop: "auto",
+    },
+    uploadImageButton: {
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 16,
+      borderRadius: 16,
+      marginTop: 12,
+      backgroundColor: styleVariables.colors.inputBackground,
+    },
+    uploadImageText: {
+      color: styleVariables.colors.primary,
+    },
+  });
+
   return (
-    <ScrollView style={theme.pageContainer}>
-      <View style={theme.globalMargins}>
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      style={theme.pageContainer}
+    >
+      <View style={[theme.globalMargins, styles.container]}>
         <StatusBar style="auto" />
         <Modal
           animationType="slide"
@@ -209,7 +240,8 @@ const CreatePost = ({ navigation, route }) => {
                 reload: null,
               });
             }, 2000);
-          }}>
+          }}
+        >
           <PopupModal
             modalType={route.params?.modalType}
             message={route.params?.message}
@@ -237,7 +269,8 @@ const CreatePost = ({ navigation, route }) => {
                 paddingTop: 16,
                 paddingBottom: Platform.OS === "android" ? 70 : 0,
               },
-            ]}></TextInput>
+            ]}
+          ></TextInput>
         </View>
 
         <View id="imageUploadPreview" style={theme.container}>
@@ -249,18 +282,14 @@ const CreatePost = ({ navigation, route }) => {
         <TouchableOpacity
           id="uploadImageButton"
           onPress={pickImage}
-          style={theme.secondaryButton}>
+          style={styles.uploadImageButton}
+        >
           <Text
-            style={[theme.secondaryButtonText, styleVariables.fontSizes.body]}>
-            Upload image{" "}
-            <MaterialCommunityIcons
-              name="image-plus"
-              size={18}
-              color={styleVariables.colors.primary}
-            />
+            style={[styles.uploadImageText, styleVariables.fontSizes.bodyBold]}
+          >
+            Upload image <NewsfeedImageSVG />
           </Text>
         </TouchableOpacity>
-
         {isLoading ? (
           <ActivityIndicator
             style={styles.loader}
@@ -274,14 +303,16 @@ const CreatePost = ({ navigation, route }) => {
             disabled={buttonDisabled}
             style={[
               theme.primaryButton,
-              { marginBottom: 130 },
+              styles.submitButton,
               buttonDisabled ? styles.buttonDisabled : null,
-            ]}>
+            ]}
+          >
             <Text
               style={[
                 theme.primaryButtonText,
                 styleVariables.fontSizes.bodyBold,
-              ]}>
+              ]}
+            >
               Submit post
             </Text>
           </TouchableOpacity>
@@ -290,14 +321,5 @@ const CreatePost = ({ navigation, route }) => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  loader: {
-    marginBottom: 20,
-  },
-  buttonDisabled: {
-    backgroundColor: "#748E94",
-  },
-});
 
 export default CreatePost;
