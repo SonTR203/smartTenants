@@ -187,6 +187,7 @@ const Newsfeed = ({ navigation, route }) => {
             onPress={() => {
               resetAnimation();
               setRefreshing(true);
+              fetchNotifications();
             }}
             activeOpacity={1}
             style={styles.newPostsButton}>
