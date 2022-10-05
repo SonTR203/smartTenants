@@ -83,14 +83,15 @@ function MarketplaceFirstItem({
 			borderRadius: 8,
 			backgroundColor: styleVariables.colors.primary,
 			justifyContent: "center",
-			alignItems: "center",
+      alignItems: "center",
+      marginTop: 24
 		},
 		buttonText: {
 			color: "white",
 			fontSize: 17,
 			lineHeight: 22,
 			fontWeight: "400",
-			fontFamily: "Roboto_400Regular",
+      fontFamily: "Roboto_400Regular",
 		},
 		postStatusContainer: {
 			flexDirection: "row",
