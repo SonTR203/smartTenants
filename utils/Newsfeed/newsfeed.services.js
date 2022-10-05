@@ -133,6 +133,11 @@ export const removeLike = async (currentUser, post) => {
 
 export const listenForNewPost = (setter) => {
   return createListener("Newsfeed", (snapshot) => {
-    if (setter) setter(snapshot.docs.length);
+    let approvedPosts = [];
+    snapshot.docs.forEach((doc) => {
+      if (doc.data().isNSFW === true) return;
+      return approvedPosts.push(doc.data());
+    });
+    return approvedPosts.length;
   });
 };
