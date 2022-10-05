@@ -3,10 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../../../ThemeContext";
 import { useAppContext } from "../../../Context/AppContext";
 import { constants } from "../../../utils/constants";
-import SaveIcon from "../../../components/SaveIcon/SaveIcon";
 import { LinearGradient } from "expo-linear-gradient";
 import { setTime } from "../../../utils/setTime";
 import { incrementItemCLicks } from "../../../utils/Marketplace/marketplace.services.js";
+import HeartFilledSVG from "../../../components/Icons/HeartFilledSVG";
 
 function MarketplaceFirstItem({
   item,
@@ -166,12 +166,9 @@ function MarketplaceFirstItem({
         colors={["rgba(0, 0, 0, 0.15)", "rgba(0, 0, 0, 0)"]}
       />
       {saved && (
-        <SaveIcon
-          isSaved={true}
-          onPress={handleUnSaved}
-          style={styles.saveIcon}
-          size={30}
-        />
+        <TouchableOpacity onPress={handleUnSaved} style={styles.saveIcon}>
+          <HeartFilledSVG width={25} height={25} />
+        </TouchableOpacity>
       )}
       {isPopular && (
         <View
