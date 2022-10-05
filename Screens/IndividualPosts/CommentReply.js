@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { setTime } from "../../utils/setTime";
+import { useAppContext } from "../../Context/AppContext";
+import { deleteReply } from "../../utils/IndividualPosts/individualPosts.services";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CustomBottomModal from "../../components/CustomBottomModal/index";
+import ModalActionConfirm from "../../components/CustomBottomModal/ModalActionConfirm/index.js";
 import HorizontalDotsSVG from "../../components/Icons/HorizontalDotsSVG";
 
-function CommentReply({ item, theme, styleVariables, styles, currentUser }) {
+function CommentReply({
+  post,
+  item,
+  theme,
+  styleVariables,
+  styles,
+  currentUser,
+  setComments,
+}) {
+  const { setPost } = useAppContext();
   const [timeSincePost, setTimeSincePost] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -16,6 +28,68 @@ function CommentReply({ item, theme, styleVariables, styles, currentUser }) {
     }
     convertTime();
   }, []);
+
+  const handleDeleteReply = async () => {
+    const updatedComment = await deleteReply(
+      post,
+      item,
+      currentUser,
+      setModalVisible,
+      setComments
+    );
+    if (updatedComment) {
+      setPost({
+        ...updatedComment,
+        updated: true,
+      });
+    }
+  };
+
+  const options = [
+    {
+      content: `Edit`,
+      onPress: () => {},
+      iconName: "pencil",
+      iconColor: "#4D4D4D",
+    },
+    {
+      content: `Delete`,
+      onPress: () => {},
+      iconName: "trash-can-outline",
+      iconColor: "#4D4D4D",
+      renderSubscreen: () => {
+        return (
+          <ModalActionConfirm
+            destructive={true}
+            title={`Delete your comment?`}
+            subtitle={"You won't be able to restore it"}
+            confirmText="Delete"
+            onConfirm={() => {
+              handleDeleteReply();
+            }}
+            onCancel={() => setModalVisible(false)}
+          />
+        );
+      },
+    },
+    {
+      content: "Turn off notifications",
+      onPress: () => {},
+      iconName: "bell-off-outline",
+      iconColor: "#4D4D4D",
+      renderSubscreen: () => {
+        return (
+          <ModalActionConfirm
+            title={"Turn off notifications for this post?"}
+            subtitle={"You will be able to undo this action"}
+            confirmText="Confirm"
+            // onConfirm={handleTurnOffNotifications}
+            onCancel={() => setModalVisible(false)}
+          />
+        );
+      },
+    },
+  ];
 
   return (
     <View style={styles.replyContainer}>
@@ -56,7 +130,6 @@ function CommentReply({ item, theme, styleVariables, styles, currentUser }) {
             <View style={styles.HorizontalDots}>
               <TouchableOpacity
                 onPress={() => {
-                  // setModalVisible(true);
                   setModalVisible(true);
                 }}
               >
@@ -75,7 +148,7 @@ function CommentReply({ item, theme, styleVariables, styles, currentUser }) {
       <CustomBottomModal
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
-        // options={options}
+        options={options}
       ></CustomBottomModal>
     </View>
   );

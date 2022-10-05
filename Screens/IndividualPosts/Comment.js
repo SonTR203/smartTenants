@@ -83,11 +83,13 @@ function Comment({
 
   const renderReplyItem = ({ item }) => (
     <CommentReply
+      post={post}
       item={item}
       theme={theme}
       styleVariables={styleVariables}
       styles={styles}
       currentUser={currentUser}
+      setComments={setComments}
     />
   );
 

@@ -74,39 +74,37 @@ export const deleteComment = async (
 };
 
 // Delete Reply
-export const deleteReply = async (currentUser, post, item) => {
+export const deleteReply = async (
+  post,
+  item,
+  currentUser,
+  setModalVisible,
+  setComments
+) => {
   try {
     const peopleWhoCommentedColRef = collection(
       db,
-      `Newsfeed/${post.id}/peopleWhoCommented/${item.id}/peopleWhoReplied`
+      `Newsfeed/${post.id}/peopleWhoCommented/`
     );
-
-    const peopleWhoCommentedDocRef = doc(db, `Newsfeed/${post.id}`);
-
-    const q = query(
-      peopleWhoCommentedColRef,
-      where("userID", "==", currentUser.userID)
-    );
+    const peopleRepliedDocRef = doc(db, `Newsfeed/${post.id}`);
+    const q = query(peopleWhoCommentedColRef, where("id", "==", item.id));
 
     const querySnapshot = await getDocs(q);
+
     querySnapshot.forEach(async (doc) => {
+      console.log(doc.data());
       // doc.data() is never undefined for query doc snapshots
-      console.log("doc to be deleted with unlike => ", doc.data());
-      await deleteDoc(doc.ref);
+      // console.log("doc to be deleted with unlike => ", doc.data());
+      // await deleteDoc(doc.ref);
     });
+    // await updateDoc(peopleRepliedDocRef, { replied: true });
 
-    await updateDoc(peopleWhoCommentedDocRef, {
-      commentCount: post.commentCount - 1,
-    });
-
-    post = {
-      ...post,
-      commentCount: post.commentCount - 1,
-    };
+    // setModalVisible(false);
+    // getComments(post, setComments);
   } catch (error) {
     console.log("error remove comment: ", error);
     alert("Error removing comment. Please try again later.");
-    return;
+    return null;
   }
 
   return post;
@@ -201,7 +199,6 @@ export const removeLike = async (currentUser, post, item) => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       commentID = doc.data().id;
-      console.log(commentID);
     });
 
     const peopleWhoLikedCommentDocRef = doc(

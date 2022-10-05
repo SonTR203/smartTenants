@@ -96,6 +96,7 @@ function ListFooter({
           colors: currentUser.colors,
           authorID: post.userID,
           timestamp: Timestamp.fromDate(new Date()),
+          commentID: userCommentId,
           postID: post.id,
         }
       ).then(() => {
