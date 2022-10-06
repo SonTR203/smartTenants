@@ -525,7 +525,12 @@ function MarketplaceNewPostScreen({ navigation }) {
               placeholder="$0.00"
               onEndEditing={handleEndEditing}
               onChangeText={setPrice}
-              style={[theme.textInput, styleVariables.fontSizes.body]}
+              style={[
+                category != "Free Goods"
+                  ? theme.textInput
+                  : theme.textInputDisabled,
+                styleVariables.fontSizes.body,
+              ]}
             />
           </View>
           {/* UPLOAD IMAGE */}

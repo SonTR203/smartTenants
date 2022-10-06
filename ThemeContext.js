@@ -220,6 +220,14 @@ const theme = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
   },
+  textInputDisabled: {
+    color: "#9D9D9D",
+    width: "100%",
+    backgroundColor: styleVariables.colors.imageLoading,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+  },
   primaryButton: {
     display: "flex",
     justifyContent: "center",
