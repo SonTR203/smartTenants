@@ -74,13 +74,7 @@ export const deleteComment = async (
 };
 
 // Delete Reply
-export const deleteReply = async (
-  post,
-  item,
-  currentUser,
-  setModalVisible,
-  setComments
-) => {
+export const deleteReply = async (post, item, setModalVisible, setComments) => {
   try {
     const peopleWhoCommentedColRef = collection(
       db,
@@ -187,7 +181,6 @@ export const addLike = async (currentUser, post, item) => {
 
 export const removeLike = async (currentUser, post, item) => {
   // remove document in the peopleWhoLiked subcollection and update the likeCount
-  let commentID;
 
   try {
     const peopleWhoLikedColRef = collection(
@@ -202,7 +195,7 @@ export const removeLike = async (currentUser, post, item) => {
 
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      commentID = doc.data().id;
+      doc.data().id;
     });
 
     const peopleWhoLikedCommentDocRef = doc(

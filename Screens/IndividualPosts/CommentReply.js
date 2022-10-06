@@ -33,7 +33,6 @@ function CommentReply({
     const updatedComment = await deleteReply(
       post,
       item,
-      currentUser,
       setModalVisible,
       setComments
     );

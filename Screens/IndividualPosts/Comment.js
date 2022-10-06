@@ -35,7 +35,6 @@ function Comment({
   getCommentReplies,
   setComments,
   comments,
-  setNumberOfComments,
 }) {
   const [timeSincePost, setTimeSincePost] = useState("");
   const [replies, setReplies] = useState([]);

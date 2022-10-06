@@ -30,7 +30,6 @@ const IndividualPosts = ({ navigation, route }) => {
   const [commentCount, setCommentCount] = useState(0);
   const [userCommentName, setUserCommentName] = useState("");
   const [userCommentId, setUserCommentId] = useState("");
-  const [commentLikeCount, setCommentLikeCount] = useState(0);
   const [numberOfComments, setNumberOfComments] = useState(0);
   const [textInputHeight, setTextInputHeight] = useState(0);
 
@@ -129,7 +128,6 @@ const IndividualPosts = ({ navigation, route }) => {
       getCommentReplies={getCommentReplies}
       setComments={setComments}
       comments={comments}
-      setCommentLikeCount={setCommentLikeCount}
       setNumberOfComments={setNumberOfComments}
       commentCount={commentCount}
     />
