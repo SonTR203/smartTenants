@@ -9,6 +9,7 @@ import LikeSection from "./LikeSection";
 
 //* userPost */
 function ListHeader({
+  post,
   likesModalVisible,
   setLikesModalVisible,
   setPeopleWhoLiked,
@@ -16,7 +17,6 @@ function ListHeader({
   setNumberOfComments,
   numberOfComments,
 }) {
-  const { post } = useAppContext();
   const [currentPost, setCurrentPost] = useState(null);
   const { styleVariables } = useTheme();
   const [timeSincePost, setTimeSincePost] = useState("");

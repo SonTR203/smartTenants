@@ -133,6 +133,7 @@ const IndividualPosts = ({ navigation, route }) => {
       <>
         <StatusBar style="dark" />
         <ListHeader
+          post={post}
           setLikesModalVisible={setLikesModalVisible}
           likesModalVisible={likesModalVisible}
           setPeopleWhoLiked={setPeopleWhoLiked}
