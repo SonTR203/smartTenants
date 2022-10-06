@@ -240,10 +240,11 @@ const IndividualPosts = ({ navigation, route }) => {
           peopleWhoLiked={peopleWhoLiked}
         />
       </Modal>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={Dimensions.get("window").height * 0.12}
-        style={[styles.textInputWrapper, styleVariables.shadow]}
+        style={[styles.textInputWrapper]}
       >
         <FlatList
           scrollEnabled={false}
@@ -271,15 +272,7 @@ const styles = StyleSheet.create({
   // styling for the text input
   textInputWrapper: {
     marginTop: "auto",
-    shadowColor: "#4D4D4D", // color: #4D4D4D
-    shadowOffset: {
-      // no offset x, y
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.15, // opacity: 0.15
-    shadowRadius: 24, // radius: 24
-    elevation: 5, // elevation: 5
+    backgroundColor: "white",
   },
   commentTextHeader: {
     color: "#4d4d4d",

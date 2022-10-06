@@ -329,6 +329,7 @@ const theme = StyleSheet.create({
     paddingBottom: 16,
     minHeight: 90,
     width: windowWidth,
+    ...styleVariables.shadow,
   },
   individualPostsTextInput: {
     color: "#4D4D4D",
