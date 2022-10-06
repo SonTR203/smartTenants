@@ -35,6 +35,7 @@ function Comment({
   getCommentReplies,
   setComments,
   comments,
+  setCommentBoxPlaceholder,
 }) {
   const [timeSincePost, setTimeSincePost] = useState("");
   const [replies, setReplies] = useState([]);
@@ -364,6 +365,7 @@ function Comment({
               onPress={() => {
                 setUserCommentName(`${item.firstName} ${item.lastName}`);
                 setUserCommentId(item.id);
+                setCommentBoxPlaceholder("Post a reply");
               }}
             >
               <Text

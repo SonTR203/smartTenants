@@ -27,6 +27,8 @@ function ListFooter({
   setUserCommentId,
   userCommentId,
   setRepliesVisible,
+  commentBoxPlaceholder,
+  setCommentBoxPlaceholder,
 }) {
   const [textInputValue, setTextInputValue] = useState("");
   const { setPost, post, currentUser } = useAppContext();
@@ -203,6 +205,7 @@ function ListFooter({
             onPress={() => {
               setUserCommentName("");
               setUserCommentId("");
+              setCommentBoxPlaceholder("Post a comment");
             }}
           >
             <X></X>
@@ -217,7 +220,7 @@ function ListFooter({
             setTextInputValue(text);
           }}
           value={textInputValue}
-          placeholder="Post a comment"
+          placeholder={commentBoxPlaceholder}
           maxLength={280}
           multiline
           style={[

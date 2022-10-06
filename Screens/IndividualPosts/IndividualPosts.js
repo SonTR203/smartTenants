@@ -35,6 +35,8 @@ const IndividualPosts = ({ navigation, route }) => {
   const [likesModalVisible, setLikesModalVisible] = useState(false);
   const [isRepliesVisible, setRepliesVisible] = useState(false);
   const [peopleWhoLiked, setPeopleWhoLiked] = useState([]);
+  const [commentBoxPlaceholder, setCommentBoxPlaceholder] =
+    useState("Post a comment");
   const commentListRef = useRef();
 
   // Get all Comments
@@ -129,6 +131,7 @@ const IndividualPosts = ({ navigation, route }) => {
       comments={comments}
       isRepliesVisible={isRepliesVisible}
       setRepliesVisible={setRepliesVisible}
+      setCommentBoxPlaceholder={setCommentBoxPlaceholder}
     />
   );
   const renderListHeader = () => {
@@ -204,6 +207,8 @@ const IndividualPosts = ({ navigation, route }) => {
         userCommentId={userCommentId}
         setUserCommentId={setUserCommentId}
         setRepliesVisible={setRepliesVisible}
+        commentBoxPlaceholder={commentBoxPlaceholder}
+        setCommentBoxPlaceholder={setCommentBoxPlaceholder}
       />
     );
   };
