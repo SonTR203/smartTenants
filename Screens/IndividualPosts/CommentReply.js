@@ -60,7 +60,7 @@ function CommentReply({
         return (
           <ModalActionConfirm
             destructive={true}
-            title={`Delete your comment?`}
+            title={`Delete your reply?`}
             subtitle={"You won't be able to restore it"}
             confirmText="Delete"
             onConfirm={() => {
