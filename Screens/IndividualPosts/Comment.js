@@ -24,6 +24,7 @@ import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import HorizontalDotsSVG from "../../components/Icons/HorizontalDotsSVG";
 import ReplyArrowHorizontalSVG from "../../components/Icons/ReplyArrowHorizontalSVG";
+import ReplyArrowVerticalSVG from "../../components/Icons/ReplyArrowVerticalSVG";
 
 function Comment({
   item,
@@ -355,6 +356,7 @@ function Comment({
           <TouchableOpacity
             onPress={() => {
               setRepliesVisible(!isRepliesVisible);
+              console.log(replies);
             }}
           >
             {isRepliesVisible ? (
@@ -365,7 +367,7 @@ function Comment({
             ) : (
               <Text>
                 <ReplyArrowHorizontalSVG />
-                Tibet Commented
+                {replies[0].firstName} replied
               </Text>
             )}
           </TouchableOpacity>
