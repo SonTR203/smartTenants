@@ -87,18 +87,6 @@ function Comment({
     }
   }, [item]);
 
-  // useEffect(() => {
-  //   const seen = new Set();
-
-  //   let filteredArr = replies.filter((reply) => {
-  //     console.log(replies);
-  //     const duplicate = seen.has(reply.userID);
-  //     seen.add(reply.userID);
-  //     return !duplicate;
-  //   });
-  //   setFilteredUserList(filteredArr);
-  // }, [comments]);
-
   const setHeartsToGreen = () => {
     post.peopleWhoLiked.map((item) => {
       if (item == currentUser.userID) {
