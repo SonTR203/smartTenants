@@ -115,6 +115,7 @@ const IndividualPosts = ({ navigation, route }) => {
   const renderPostItem = ({ item }) => (
     <Comment
       item={item}
+      post={post}
       navigation={navigation}
       theme={theme}
       styleVariables={styleVariables}

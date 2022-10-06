@@ -28,6 +28,7 @@ import ReplyArrowVerticalSVG from "../../components/Icons/ReplyArrowVerticalSVG"
 
 function Comment({
   item,
+  post,
   theme,
   styleVariables,
   setUserCommentName,
@@ -42,7 +43,7 @@ function Comment({
   const [numberOfCommentLikes, setNumberOfCommentLikes] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isRepliesVisible, setRepliesVisible] = useState(false);
-  const { post, setPost, currentUser } = useAppContext();
+  const { setPost, currentUser } = useAppContext();
 
   useEffect(() => {
     let time = setTime(item.timestamp.seconds * 1000);
@@ -108,7 +109,6 @@ function Comment({
     if (updatedPost) {
       setPost({
         ...updatedPost,
-        peopleWhoCommented: [...item.peopleWhoCommented],
         updated: true,
       });
     }
