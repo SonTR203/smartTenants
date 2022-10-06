@@ -376,12 +376,22 @@ function Comment({
                 <ReplyArrowHorizontalSVG />
                 Hide replies
               </Text>
-            ) : (
+            ) : !isRepliesVisible && replies.length === 1 ? (
               <Text style={styles.showHideReplyText}>
                 <ReplyArrowVerticalSVG />
-                {replies[0].firstName} replied
+                {replies[0].firstName} replied.
               </Text>
-            )}
+            ) : !isRepliesVisible && replies.length === 2 ? (
+              <Text style={styles.showHideReplyText}>
+                <ReplyArrowVerticalSVG />
+                {replies[0].firstName} and {replies.length - 1} other replied
+              </Text>
+            ) : !isRepliesVisible && replies.length > 2 ? (
+              <Text style={styles.showHideReplyText}>
+                <ReplyArrowVerticalSVG />
+                {replies[0].firstName} and {replies.length - 1} others replied
+              </Text>
+            ) : null}
           </TouchableOpacity>
         </View>
       ) : null}
