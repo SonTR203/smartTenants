@@ -42,7 +42,7 @@ function Comment({
   const [numberOfCommentLikes, setNumberOfCommentLikes] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isRepliesVisible, setRepliesVisible] = useState(false);
-  const [filteredUserList, setFilteredUserList] = useState([]);
+  const [filteredUserList, setFilteredUserList] = useState(replies);
   const { post, setPost, currentUser } = useAppContext();
 
   useEffect(() => {
@@ -79,21 +79,14 @@ function Comment({
   useEffect(() => {
     const seen = new Set();
 
-    let newArr = [];
+    let filteredArr = replies.filter((reply) => {
+      const duplicate = seen.has(reply.userID);
+      seen.add(reply.userID);
+      return !duplicate;
+    });
 
-    if (replies.length > 1) {
-      const filteredArr = replies.filter((el) => {
-        const duplicate = seen.has(el.userID);
-        seen.add(el.userID);
-        return !duplicate;
-      });
-      newArr.push(filteredArr);
-    }
-
-    // setFilteredUserList(newArr);
-
-    console.log(newArr);
-  });
+    setFilteredUserList(filteredArr);
+  }, [comments]);
 
   const setHeartsToGreen = () => {
     post.peopleWhoLiked.map((item) => {
@@ -396,20 +389,22 @@ function Comment({
                 <ReplyArrowHorizontalSVG />
                 Hide replies
               </Text>
-            ) : !isRepliesVisible && replies.length === 1 ? (
+            ) : !isRepliesVisible && filteredUserList.length === 1 ? (
               <Text style={styles.showHideReplyText}>
                 <ReplyArrowVerticalSVG />
                 {replies[0].firstName} replied
               </Text>
-            ) : !isRepliesVisible && replies.length === 2 ? (
+            ) : !isRepliesVisible && filteredUserList.length === 2 ? (
               <Text style={styles.showHideReplyText}>
                 <ReplyArrowVerticalSVG />
-                {replies[0].firstName} and {replies.length - 1} other replied
+                {replies[0].firstName} and {filteredUserList.length - 1} other
+                replied
               </Text>
-            ) : !isRepliesVisible && replies.length > 2 ? (
+            ) : !isRepliesVisible && filteredUserList.length > 2 ? (
               <Text style={styles.showHideReplyText}>
                 <ReplyArrowVerticalSVG />
-                {replies[0].firstName} and {replies.length - 1} others replied
+                {replies[0].firstName} and {filteredUserList.length - 1} others
+                replied
               </Text>
             ) : null}
           </TouchableOpacity>
