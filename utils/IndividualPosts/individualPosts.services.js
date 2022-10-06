@@ -101,7 +101,7 @@ export const deleteReply = async (
       console.log("doc to be deleted with deleteReply => ", doc.data());
       await deleteDoc(doc.ref);
     });
-    await updateDoc(peopleRepliedDocRef, {});
+    await updateDoc(peopleRepliedDocRef, { updated: true });
 
     setModalVisible(false);
     getComments(post, setComments);
