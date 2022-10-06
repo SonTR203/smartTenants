@@ -34,6 +34,7 @@ const Newsfeed = ({ navigation, route }) => {
   let flatListRef;
   const onRefresh = useCallback(() => {
     setRefreshing(true);
+    resetAnimation();
     wait(refreshDelay).then(async () => {
       await fetchNotifications();
       setRefreshing(false);

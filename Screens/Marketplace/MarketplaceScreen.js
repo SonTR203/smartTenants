@@ -52,7 +52,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-
+    resetAnimation();
     wait(refreshDelay).then(async () => {
       const list = await getMarketplaceItems();
       setItemList(list);
