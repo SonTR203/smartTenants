@@ -155,13 +155,13 @@ function ListFooter({
   };
 
   const styles = StyleSheet.create({
-    container: {},
     inputAreaContainer: {
       marginTop: 16,
       maxHeight: 160,
       display: "flex",
       flexDirection: "row",
       justifyContent: "flex-end",
+      ...styleVariables.shadow,
     },
     inputArea: {
       width: dynamicWidth,
@@ -190,7 +190,7 @@ function ListFooter({
   return (
     <View style={[theme.replyContainer]}>
       {userCommentName != "" && (
-        <View style={styles.replyView}>
+        <View style={[styles.replyView]}>
           <Text style={styleVariables.fontSizes.callout}>
             Replying to{" "}
             <Text

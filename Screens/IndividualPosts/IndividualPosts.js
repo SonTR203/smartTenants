@@ -271,6 +271,15 @@ const styles = StyleSheet.create({
   // styling for the text input
   textInputWrapper: {
     marginTop: "auto",
+    shadowColor: "#4D4D4D", // color: #4D4D4D
+    shadowOffset: {
+      // no offset x, y
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.15, // opacity: 0.15
+    shadowRadius: 24, // radius: 24
+    elevation: 5, // elevation: 5
   },
   commentTextHeader: {
     color: "#4d4d4d",
