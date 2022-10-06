@@ -8,14 +8,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "white",
+    marginHorizontal: 16,
   },
   availableSection: (available, styleVariables) => ({
-    marginLeft: 16,
     borderBottomColor: available
       ? styleVariables.colors.primary
       : "transparent",
     borderBottomWidth: 4,
-
     padding: 10,
     flex: 0.5,
   }),
