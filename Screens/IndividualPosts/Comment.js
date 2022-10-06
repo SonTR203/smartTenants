@@ -42,7 +42,7 @@ function Comment({
   const [numberOfCommentLikes, setNumberOfCommentLikes] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isRepliesVisible, setRepliesVisible] = useState(false);
-  const [filteredUserList, setFilteredUserList] = useState(replies);
+  const [filteredUserList, setFilteredUserList] = useState([]);
   const { post, setPost, currentUser } = useAppContext();
 
   useEffect(() => {
@@ -58,8 +58,18 @@ function Comment({
         let sortedReplyList = _.sortBy(replyList, "timestamp");
 
         setReplies(sortedReplyList);
+
+        const seen = new Set();
+
+        let filteredArr = replyList.filter((reply) => {
+          const duplicate = seen.has(reply.userID);
+          seen.add(reply.userID);
+          return !duplicate;
+        });
+        setFilteredUserList(filteredArr);
       }
     }
+
     setCommentReplies();
   }, [comments]);
 
@@ -76,17 +86,17 @@ function Comment({
     }
   }, [item]);
 
-  useEffect(() => {
-    const seen = new Set();
+  // useEffect(() => {
+  //   const seen = new Set();
 
-    let filteredArr = replies.filter((reply) => {
-      const duplicate = seen.has(reply.userID);
-      seen.add(reply.userID);
-      return !duplicate;
-    });
-
-    setFilteredUserList(filteredArr);
-  }, [comments]);
+  //   let filteredArr = replies.filter((reply) => {
+  //     console.log(replies);
+  //     const duplicate = seen.has(reply.userID);
+  //     seen.add(reply.userID);
+  //     return !duplicate;
+  //   });
+  //   setFilteredUserList(filteredArr);
+  // }, [comments]);
 
   const setHeartsToGreen = () => {
     post.peopleWhoLiked.map((item) => {
