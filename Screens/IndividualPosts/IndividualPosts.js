@@ -33,6 +33,7 @@ const IndividualPosts = ({ navigation, route }) => {
   const [numberOfComments, setNumberOfComments] = useState(0);
   const [textInputHeight, setTextInputHeight] = useState(0);
   const [likesModalVisible, setLikesModalVisible] = useState(false);
+  const [isRepliesVisible, setRepliesVisible] = useState(false);
   const [peopleWhoLiked, setPeopleWhoLiked] = useState([]);
   const commentListRef = useRef();
 
@@ -126,6 +127,8 @@ const IndividualPosts = ({ navigation, route }) => {
       getCommentReplies={getCommentReplies}
       setComments={setComments}
       comments={comments}
+      isRepliesVisible={isRepliesVisible}
+      setRepliesVisible={setRepliesVisible}
     />
   );
   const renderListHeader = () => {
@@ -200,6 +203,7 @@ const IndividualPosts = ({ navigation, route }) => {
         setUserCommentName={setUserCommentName}
         userCommentId={userCommentId}
         setUserCommentId={setUserCommentId}
+        setRepliesVisible={setRepliesVisible}
       />
     );
   };

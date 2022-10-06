@@ -42,6 +42,7 @@ function Comment({
   const [numberOfCommentLikes, setNumberOfCommentLikes] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isRepliesVisible, setRepliesVisible] = useState(false);
+  const [filteredUserList, setFilteredUserList] = useState([]);
   const { post, setPost, currentUser } = useAppContext();
 
   useEffect(() => {
@@ -74,6 +75,25 @@ function Comment({
       setNumberOfCommentLikes(item.peopleWhoLiked.length);
     }
   }, [item]);
+
+  useEffect(() => {
+    const seen = new Set();
+
+    let newArr = [];
+
+    if (replies.length > 1) {
+      const filteredArr = replies.filter((el) => {
+        const duplicate = seen.has(el.userID);
+        seen.add(el.userID);
+        return !duplicate;
+      });
+      newArr.push(filteredArr);
+    }
+
+    // setFilteredUserList(newArr);
+
+    console.log(newArr);
+  });
 
   const setHeartsToGreen = () => {
     post.peopleWhoLiked.map((item) => {
@@ -205,7 +225,7 @@ function Comment({
     showHideReply: {
       display: "flex",
       flexDirection: "row",
-      textAlign: "center",
+
       marginHorizontal: 36.5,
       marginTop: 8,
     },
@@ -214,6 +234,7 @@ function Comment({
       fontWeight: "500",
       lineHeight: 18,
       color: "#395E66",
+      textAlign: "center",
     },
   });
 

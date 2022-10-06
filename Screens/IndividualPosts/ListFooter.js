@@ -26,6 +26,7 @@ function ListFooter({
   setUserCommentName,
   setUserCommentId,
   userCommentId,
+  setRepliesVisible,
 }) {
   const [textInputValue, setTextInputValue] = useState("");
   const { setPost, post, currentUser } = useAppContext();
@@ -105,6 +106,7 @@ function ListFooter({
         setUserCommentId("");
         setUserCommentName("");
         setRepliedTrue(post.id, userCommentId);
+        setRepliesVisible(true);
       });
     } catch (err) {
       console.log(err);
