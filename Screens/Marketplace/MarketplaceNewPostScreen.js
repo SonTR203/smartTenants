@@ -215,23 +215,22 @@ function MarketplaceNewPostScreen({ navigation }) {
         alert(
           "We've detected potential suggestive or profane content. Your post will be reviewed."
         );
-        // navigation.navigate("MarketplaceScreen", { reload: true });
+        navigation.goBack();
         navigation.navigate("MarketplaceNavigator", {
           screen: "MarketplaceScreen",
           params: {
             reload: true,
           },
         });
-        navigation.pop(2);
       } else if (res) {
         alert("Marketplace item successfully created!");
+        navigation.goBack();
         navigation.navigate("MarketplaceNavigator", {
           screen: "MarketplaceScreen",
           params: {
             reload: true,
           },
         });
-        navigation.pop(2);
       } else {
         deleteMultipleImages(imageUrls);
         throw new Error("Error creating marketplace item", res.error);
@@ -278,8 +277,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         onPress={() => {
           handlePickImage(item.uri, index);
         }}
-        style={styles.imageContainer}
-      >
+        style={styles.imageContainer}>
         <>
           {imageLoading ? (
             <Progress.CircleSnail
@@ -377,8 +375,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}
-            >
+              ]}>
               Title
             </Text>
             <TextInput
@@ -396,15 +393,13 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}
-            >
+              ]}>
               Category
             </Text>
             <TouchableOpacity
               onPress={() => {
                 setCategoryModalVisible(true);
-              }}
-            >
+              }}>
               <View style={[theme.textInput, styles.input]}>
                 <Text
                   style={[
@@ -414,8 +409,7 @@ function MarketplaceNewPostScreen({ navigation }) {
                         ? styleVariables.colors.placeholderText
                         : styleVariables.colors.black,
                     },
-                  ]}
-                >
+                  ]}>
                   {category || "Choose category"}
                 </Text>
                 <ChevronDownSVG />
@@ -427,8 +421,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               backdropOpacity={0.5}
               onBackdropPress={() => setCategoryModalVisible(false)}
               style={styles.modal}
-              statusBarTranslucent={true}
-            >
+              statusBarTranslucent={true}>
               <ModalCategoryPicker
                 theme={theme}
                 styleVariables={styleVariables}
@@ -441,15 +434,13 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}
-            >
+              ]}>
               Condition
             </Text>
             <TouchableOpacity
               onPress={() => {
                 setConditionModalVisible(true);
-              }}
-            >
+              }}>
               <View style={[theme.textInput, styles.input]}>
                 <Text
                   style={[
@@ -459,8 +450,7 @@ function MarketplaceNewPostScreen({ navigation }) {
                         ? styleVariables.colors.placeholderText
                         : styleVariables.colors.black,
                     },
-                  ]}
-                >
+                  ]}>
                   {condition || "Choose condition"}
                 </Text>
                 <ChevronDownSVG />
@@ -472,8 +462,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               backdropOpacity={0.5}
               onBackdropPress={() => setConditionModalVisible(false)}
               style={styles.modal}
-              statusBarTranslucent={true}
-            >
+              statusBarTranslucent={true}>
               <ModalConditionPicker
                 theme={theme}
                 styleVariables={styleVariables}
@@ -487,8 +476,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}
-            >
+              ]}>
               Description
             </Text>
             <TextInput
@@ -510,8 +498,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}
-            >
+              ]}>
               Price
             </Text>
             <TextInput
@@ -548,14 +535,12 @@ function MarketplaceNewPostScreen({ navigation }) {
           <TouchableOpacity
             id="submitPostButton"
             onPress={handleSubmit}
-            style={[theme.primaryButton]}
-          >
+            style={[theme.primaryButton]}>
             <Text
               style={[
                 theme.primaryButtonText,
                 styleVariables.fontSizes.bodyBold,
-              ]}
-            >
+              ]}>
               Submit post
             </Text>
           </TouchableOpacity>
