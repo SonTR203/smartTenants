@@ -48,7 +48,7 @@ function MarketplaceProfile({ navigation }) {
       id: 3,
       title: "Saved listings",
       icon: () => {
-        return <HeartSVG width={24} height={25} stroke={1.5} />;
+        return <HeartSVG width={24} height={25} stroke={2} />;
       },
       onPress: handleViewSavedListings,
     },
