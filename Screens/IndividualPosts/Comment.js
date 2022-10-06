@@ -203,6 +203,19 @@ function Comment({
       display: "flex",
       flexDirection: "row",
     },
+    showHideReply: {
+      display: "flex",
+      flexDirection: "row",
+      textAlign: "center",
+      marginHorizontal: 36.5,
+      marginTop: 8,
+    },
+    showHideReplyText: {
+      fontSize: 13,
+      fontWeight: "500",
+      lineHeight: 18,
+      color: "#395E66",
+    },
   });
 
   const options = [
@@ -352,20 +365,19 @@ function Comment({
         />
       )}
       {replies.length > 0 ? (
-        <View>
+        <View style={styles.showHideReply}>
           <TouchableOpacity
             onPress={() => {
               setRepliesVisible(!isRepliesVisible);
-              console.log(replies);
             }}
           >
             {isRepliesVisible ? (
-              <Text>
+              <Text style={styles.showHideReplyText}>
                 <ReplyArrowHorizontalSVG />
                 Hide replies
               </Text>
             ) : (
-              <Text>
+              <Text style={styles.showHideReplyText}>
                 <ReplyArrowVerticalSVG />
                 {replies[0].firstName} replied
               </Text>
