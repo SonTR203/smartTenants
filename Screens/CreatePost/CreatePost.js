@@ -18,7 +18,6 @@ import React, { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useTheme } from "../../ThemeContext";
 import { useAppContext } from "../../Context/AppContext";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
 import {

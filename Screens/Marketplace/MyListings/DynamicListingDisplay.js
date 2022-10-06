@@ -13,7 +13,6 @@ function DynamicListingDisplay({ data, available, handleSetListingSold }) {
   const [selectedItem, setSelectedItem] = React.useState(undefined);
   const navigation = useNavigation();
   const { setCurrentMarketplacePost } = useAppContext();
-  const { styleVariables } = useTheme();
 
   const handleOpenSoldModal = (item) => {
     if (available) {
