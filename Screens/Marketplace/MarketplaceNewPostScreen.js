@@ -215,23 +215,22 @@ function MarketplaceNewPostScreen({ navigation }) {
         alert(
           "We've detected potential suggestive or profane content. Your post will be reviewed."
         );
-        // navigation.navigate("MarketplaceScreen", { reload: true });
+        navigation.goBack();
         navigation.navigate("MarketplaceNavigator", {
           screen: "MarketplaceScreen",
           params: {
             reload: true,
           },
         });
-        // navigation.pop();
       } else if (res) {
         alert("Marketplace item successfully created!");
+        navigation.goBack();
         navigation.navigate("MarketplaceNavigator", {
           screen: "MarketplaceScreen",
           params: {
             reload: true,
           },
         });
-        // navigation.pop();
       } else {
         deleteMultipleImages(imageUrls);
         throw new Error("Error creating marketplace item", res.error);

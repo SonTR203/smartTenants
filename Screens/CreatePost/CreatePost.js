@@ -65,6 +65,7 @@ const CreatePost = ({ navigation, route }) => {
 
       const res = await createItemInFirestore("Newsfeed", id, propObj);
       if (isNsfw) {
+        navigation.goBack();
         navigation.navigate("Newsfeed", {
           reload: true,
           saveModal: true,
@@ -87,23 +88,27 @@ const CreatePost = ({ navigation, route }) => {
 
   function postSuccess() {
     setIsloading(false);
+    navigation.goBack();
     navigation.navigate("Newsfeed", {
       reload: true,
       saveModal: true,
       modalType: "success",
       message: "Post submitted",
     });
+
     // navigation.pop();
   }
 
   function postFailure() {
     setIsloading(false);
+    navigation.goBack();
     navigation.navigate("Newsfeed", {
       reload: true,
       saveModal: true,
       modalType: "error",
       message: "Something went wrong, please try again",
     });
+
     // navigation.pop();
   }
 
