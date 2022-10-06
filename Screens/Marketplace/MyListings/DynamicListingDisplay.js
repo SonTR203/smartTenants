@@ -6,7 +6,6 @@ import { useAppContext } from "../../../Context/AppContext";
 import MarketplaceFirstItem from "../MarketplaceItem/MarketplaceFirstItem";
 import CustomBottomModal from "../../../components/CustomBottomModal";
 import ModalActionConfirm from "../../../components/CustomBottomModal/ModalActionConfirm";
-import { useTheme } from "../../../ThemeContext";
 
 function DynamicListingDisplay({ data, available, handleSetListingSold }) {
   const [isModalVisible, setModalVisible] = React.useState(false);
