@@ -123,24 +123,12 @@ export const likeComment = async (
     if (res) {
       setUserLikedComment(false);
       setNumberOfCommentLikes(numberOfCommentLikes - 1);
-
-      item = {
-        ...item,
-        peopleWhoLiked: item.peopleWhoLiked.filter(
-          (item) => item !== currentUser.userID
-        ),
-      };
     }
   } else {
     const res = await addLike(currentUser, post, item);
     if (res) {
       setUserLikedComment(true);
       setNumberOfCommentLikes(numberOfCommentLikes + 1);
-
-      item = {
-        ...item,
-        peopleWhoLiked: [...item.peopleWhoLiked, currentUser.userID],
-      };
     }
   }
   return item;
