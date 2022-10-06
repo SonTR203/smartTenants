@@ -236,7 +236,6 @@ const theme = StyleSheet.create({
     },
     shadowOpacity: 0.14,
     shadowRadius: 34,
-    elevation: 20,
   },
   primaryButtonText: {
     color: styleVariables.colors.white,
