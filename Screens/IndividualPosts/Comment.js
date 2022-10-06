@@ -366,7 +366,7 @@ function Comment({
               </Text>
             ) : (
               <Text>
-                <ReplyArrowHorizontalSVG />
+                <ReplyArrowVerticalSVG />
                 {replies[0].firstName} replied
               </Text>
             )}
