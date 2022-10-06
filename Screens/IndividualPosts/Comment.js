@@ -23,6 +23,7 @@ import ReplyArrowSVG from "../../components/Icons/ReplyArrowSVG";
 import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import HorizontalDotsSVG from "../../components/Icons/HorizontalDotsSVG";
+import ReplyArrowHorizontalSVG from "../../components/Icons/ReplyArrowHorizontalSVG";
 
 function Comment({
   item,
@@ -40,6 +41,7 @@ function Comment({
   const [userLikedComment, setUserLikedComment] = useState(false);
   const [numberOfCommentLikes, setNumberOfCommentLikes] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isRepliesVisible, setRepliesVisible] = useState(false);
   const { post, setPost, currentUser } = useAppContext();
 
   useEffect(() => {
@@ -341,13 +343,34 @@ function Comment({
           options={options}
         ></CustomBottomModal>
       </View>
-      {item.replied == true && (
+      {item.replied == true && isRepliesVisible == true && (
         <FlatList
           data={replies}
           keyExtractor={(item) => item.id}
           renderItem={callbackRenderItem}
         />
       )}
+      {replies.length > 0 ? (
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              setRepliesVisible(!isRepliesVisible);
+            }}
+          >
+            {isRepliesVisible ? (
+              <Text>
+                <ReplyArrowHorizontalSVG />
+                Hide replies
+              </Text>
+            ) : (
+              <Text>
+                <ReplyArrowHorizontalSVG />
+                Tibet Commented
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      ) : null}
     </View>
   );
 }
