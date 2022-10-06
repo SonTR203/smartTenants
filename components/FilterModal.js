@@ -52,7 +52,7 @@ function FilterModal({
       conditionFilter != "All" ||
       minPrice != "" ||
       maxPrice != ""
-      // || distance != "0"
+      // || distance != "100"
     ) {
       const filteredList = getFilteredList(
         marketplaceData,
@@ -88,7 +88,7 @@ function FilterModal({
     setConditionFilter("All");
     setMaxPrice("");
     setMinPrice("");
-    setDistance("0");
+    setDistance("100");
     setFilteredItemList(marketplaceData);
     setFilterActive(false);
   };
@@ -99,7 +99,7 @@ function FilterModal({
       conditionFilter != "All" ||
       maxPrice != "" ||
       minPrice != ""
-      // || distance != 0
+      // || distance != 100
     ) {
       setFilterActive(true);
     } else {

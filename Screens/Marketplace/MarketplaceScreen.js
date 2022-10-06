@@ -38,7 +38,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const [sortingBy, setSortingBy] = useState("Date(newest)");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const [distance, setDistance] = useState("0");
+  const [distance, setDistance] = useState("100");
   const [listingAmount, setListingAmount] = useState("0");
   const [sortActive, setSortActive] = useState(false);
   const [filterActive, setFilterActive] = useState(false);
