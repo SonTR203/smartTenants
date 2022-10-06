@@ -222,7 +222,7 @@ function MarketplaceNewPostScreen({ navigation }) {
             reload: true,
           },
         });
-        navigation.pop();
+        // navigation.pop();
       } else if (res) {
         alert("Marketplace item successfully created!");
         navigation.navigate("MarketplaceNavigator", {
@@ -231,7 +231,7 @@ function MarketplaceNewPostScreen({ navigation }) {
             reload: true,
           },
         });
-        navigation.pop();
+        // navigation.pop();
       } else {
         deleteMultipleImages(imageUrls);
         throw new Error("Error creating marketplace item", res.error);
