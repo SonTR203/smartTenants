@@ -82,10 +82,10 @@ function DynamicListingDisplay({ data, available, handleSetListingSold }) {
             style={{
               marginTop: 20,
               textAlign: "center",
-              color: styleVariables.colors.black,
+              color: "#9D9D9D",
             }}
           >
-            You have no listing
+            You don't have any listings yet
           </Text>
         )}
       />
