@@ -121,17 +121,18 @@ export const likeComment = async (
   if (userLikedComment) {
     const res = await removeLike(currentUser, post, item);
     if (res) {
+      console.log(post);
       setUserLikedComment(false);
       setNumberOfCommentLikes(numberOfCommentLikes - 1);
     }
   } else {
     const res = await addLike(currentUser, post, item);
     if (res) {
+      console.log(post);
       setUserLikedComment(true);
       setNumberOfCommentLikes(numberOfCommentLikes + 1);
     }
   }
-  return item;
 };
 
 export const addLike = async (currentUser, post, item) => {
