@@ -165,6 +165,6 @@ export const listenForNewListing = (setter) => {
     });
     setTimeout(() => {
       setter(approvedPosts.length);
-    }, 1000);
+    }, 3000);
   });
 };

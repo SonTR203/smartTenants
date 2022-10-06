@@ -140,6 +140,6 @@ export const listenForNewPost = (setter) => {
     });
     setTimeout(() => {
       setter(approvedPosts.length);
-    }, 1000);
+    }, 3000);
   });
 };
