@@ -160,7 +160,7 @@ export const listenForNewListing = (setter) => {
   return createListener("Marketplace", (snapshot) => {
     let approvedPosts = [];
     snapshot.docs.forEach((doc) => {
-      if (doc.data().isNSFW === true) return;
+      if (doc.data().isNSFW || doc.data().isSold) return;
       return approvedPosts.push(doc.data());
     });
     setTimeout(() => {
