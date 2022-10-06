@@ -72,7 +72,7 @@ const CreatePost = ({ navigation, route }) => {
           message:
             "We’ve detected potential inappropriate content. Your post will be reviewed.",
         });
-        navigation.pop(2);
+        navigation.pop();
       } else if (res) {
         postSuccess();
       } else {
@@ -92,7 +92,7 @@ const CreatePost = ({ navigation, route }) => {
       modalType: "success",
       message: "Post submitted",
     });
-    navigation.pop(2);
+    navigation.pop();
   }
 
   function postFailure() {
@@ -103,7 +103,7 @@ const CreatePost = ({ navigation, route }) => {
       modalType: "error",
       message: "Something went wrong, please try again",
     });
-    navigation.pop(2);
+    navigation.pop();
   }
 
   // ============================= IMAGE UPLOAD =============================
