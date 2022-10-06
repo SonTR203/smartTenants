@@ -32,11 +32,8 @@ const IndividualPosts = ({ navigation, route }) => {
   const [userCommentId, setUserCommentId] = useState("");
   const [numberOfComments, setNumberOfComments] = useState(0);
   const [textInputHeight, setTextInputHeight] = useState(0);
-
   const [likesModalVisible, setLikesModalVisible] = useState(false);
-
   const [peopleWhoLiked, setPeopleWhoLiked] = useState([]);
-
   const commentListRef = useRef();
 
   // Get all Comments
@@ -128,8 +125,6 @@ const IndividualPosts = ({ navigation, route }) => {
       getCommentReplies={getCommentReplies}
       setComments={setComments}
       comments={comments}
-      setNumberOfComments={setNumberOfComments}
-      commentCount={commentCount}
     />
   );
   const renderListHeader = () => {

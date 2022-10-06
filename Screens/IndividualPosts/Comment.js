@@ -378,7 +378,7 @@ function Comment({
             ) : !isRepliesVisible && replies.length === 1 ? (
               <Text style={styles.showHideReplyText}>
                 <ReplyArrowVerticalSVG />
-                {replies[0].firstName} replied.
+                {replies[0].firstName} replied
               </Text>
             ) : !isRepliesVisible && replies.length === 2 ? (
               <Text style={styles.showHideReplyText}>
