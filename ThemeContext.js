@@ -315,7 +315,6 @@ const theme = StyleSheet.create({
     },
     shadowOpacity: 0.14,
     shadowRadius: 34,
-    elevation: 20,
   },
   replyContainer: {
     display: "flex",
@@ -329,6 +328,7 @@ const theme = StyleSheet.create({
     paddingBottom: 16,
     minHeight: 90,
     width: windowWidth,
+    ...styleVariables.shadow,
   },
   individualPostsTextInput: {
     color: "#4D4D4D",
@@ -350,7 +350,6 @@ const theme = StyleSheet.create({
     backgroundColor: "#F5F7F7",
     padding: 17,
     marginHorizontal: 17,
-    marginTop: 17,
     borderRadius: 16,
   },
   passwordView: {

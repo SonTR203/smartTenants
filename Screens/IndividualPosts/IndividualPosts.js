@@ -28,16 +28,15 @@ const IndividualPosts = ({ navigation, route }) => {
 
   const [comments, setComments] = useState([]);
   const [commentCount, setCommentCount] = useState(0);
-
   const [userCommentName, setUserCommentName] = useState("");
   const [userCommentId, setUserCommentId] = useState("");
-
+  const [numberOfComments, setNumberOfComments] = useState(0);
   const [textInputHeight, setTextInputHeight] = useState(0);
-
   const [likesModalVisible, setLikesModalVisible] = useState(false);
-
+  const [isRepliesVisible, setRepliesVisible] = useState(false);
   const [peopleWhoLiked, setPeopleWhoLiked] = useState([]);
-
+  const [commentBoxPlaceholder, setCommentBoxPlaceholder] =
+    useState("Post a comment");
   const commentListRef = useRef();
 
   // Get all Comments
@@ -65,6 +64,7 @@ const IndividualPosts = ({ navigation, route }) => {
     );
 
     const data = await getDocs(colRef);
+
     const formattedData = data.docs.map((doc) => {
       return {
         ...doc.data(),
@@ -118,14 +118,20 @@ const IndividualPosts = ({ navigation, route }) => {
   const renderPostItem = ({ item }) => (
     <Comment
       item={item}
+      post={post}
       navigation={navigation}
       theme={theme}
       styleVariables={styleVariables}
       width={constants.width}
       setUserCommentName={setUserCommentName}
       setUserCommentId={setUserCommentId}
+      userCommentId={userCommentId}
       getCommentReplies={getCommentReplies}
+      setComments={setComments}
       comments={comments}
+      isRepliesVisible={isRepliesVisible}
+      setRepliesVisible={setRepliesVisible}
+      setCommentBoxPlaceholder={setCommentBoxPlaceholder}
     />
   );
   const renderListHeader = () => {
@@ -133,17 +139,21 @@ const IndividualPosts = ({ navigation, route }) => {
       <>
         <StatusBar style="dark" />
         <ListHeader
+          post={post}
           setLikesModalVisible={setLikesModalVisible}
           likesModalVisible={likesModalVisible}
           setPeopleWhoLiked={setPeopleWhoLiked}
           peopleWhoLiked={peopleWhoLiked}
+          setNumberOfComments={setNumberOfComments}
+          numberOfComments={numberOfComments}
         />
-        {post.commentCount < 1 ? (
+        {post.commentCount > 1 ? (
           <Text
             style={[
               styleVariables.fontSizes.bodyBold,
               styles.commentTextHeader,
-            ]}>
+            ]}
+          >
             Comments
           </Text>
         ) : null}
@@ -157,7 +167,8 @@ const IndividualPosts = ({ navigation, route }) => {
                   fontWeight: "bold",
                   lineHeight: 18,
                 },
-              ]}>
+              ]}
+            >
               No comments yet.
             </Text>
             <Text
@@ -168,11 +179,13 @@ const IndividualPosts = ({ navigation, route }) => {
                   fontWeight: "regular",
                   lineHeight: 18,
                 },
-              ]}>
+              ]}
+            >
               Be the first to comment!
             </Text>
             <NoCommentBubblesSVG
-              style={[{ marginTop: 24 }]}></NoCommentBubblesSVG>
+              style={[{ marginTop: 24 }]}
+            ></NoCommentBubblesSVG>
           </View>
         ) : null}
       </>
@@ -193,6 +206,9 @@ const IndividualPosts = ({ navigation, route }) => {
         setUserCommentName={setUserCommentName}
         userCommentId={userCommentId}
         setUserCommentId={setUserCommentId}
+        setRepliesVisible={setRepliesVisible}
+        commentBoxPlaceholder={commentBoxPlaceholder}
+        setCommentBoxPlaceholder={setCommentBoxPlaceholder}
       />
     );
   };
@@ -209,26 +225,29 @@ const IndividualPosts = ({ navigation, route }) => {
           ListHeaderComponent={callBackRenderListHeader}
           data={comments}
           keyExtractor={(item) => item.id}
-          renderItem={callBackRenderItem}></FlatList>
+          renderItem={callBackRenderItem}
+        ></FlatList>
       </View>
       <Modal
         backdropOpacity={0.5}
         transparent={true}
         style={styles.modal}
-        // animationType="fade"
         isVisible={likesModalVisible}
-        onBackdropPress={() => setLikesModalVisible(false)}>
-
+        onBackdropPress={() => setLikesModalVisible(false)}
+      >
         <PeopleWhoLikedModal
           setLikesModalVisible={setLikesModalVisible}
           peopleWhoLiked={peopleWhoLiked}
         />
       </Modal>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={Dimensions.get("window").height * 0.12}
-        style={[styles.textInputWrapper, styleVariables.shadow]}>
+        style={[styles.textInputWrapper]}
+      >
         <FlatList
+          keyboardShouldPersistTaps={"handled"}
           scrollEnabled={false}
           ListFooterComponent={renderListFooter}
           style={[styles.textInputWrapper]}
@@ -236,7 +255,8 @@ const IndividualPosts = ({ navigation, route }) => {
             if (textInputHeight === 0) {
               setTextInputHeight(event.nativeEvent.layout.height);
             }
-          }}></FlatList>
+          }}
+        ></FlatList>
       </KeyboardAvoidingView>
     </View>
   );
@@ -253,6 +273,16 @@ const styles = StyleSheet.create({
   // styling for the text input
   textInputWrapper: {
     marginTop: "auto",
+    backgroundColor: "white",
+    shadowColor: "#4D4D4D",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 24,
+    elevation: 10,
+    borderRadius: 16,
   },
   commentTextHeader: {
     color: "#4d4d4d",

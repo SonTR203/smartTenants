@@ -13,11 +13,13 @@ function ListHeader({
   setLikesModalVisible,
   setPeopleWhoLiked,
   peopleWhoLiked,
+  setNumberOfComments,
+  numberOfComments,
 }) {
-  const { post } = useAppContext();
   const [currentPost, setCurrentPost] = useState(null);
   const { styleVariables } = useTheme();
   const [timeSincePost, setTimeSincePost] = useState("");
+  const { post } = useAppContext();
 
   useEffect(() => {
     const time = setTime(post.timestamp.seconds * 1000);
@@ -33,7 +35,8 @@ function ListHeader({
       justifyContent: "center",
       backgroundColor: styleVariables.colors.white,
       padding: 17,
-      marginTop: 17,
+      paddingTop: 7,
+      marginTop: 0,
       borderRadius: 16,
     },
     postOwnerInfo: {
@@ -122,6 +125,8 @@ function ListHeader({
         likesModalVisible={likesModalVisible}
         setLikesModalVisible={setLikesModalVisible}
         peopleWhoLiked={peopleWhoLiked}
+        setNumberOfComments={setNumberOfComments}
+        numberOfComments={numberOfComments}
       />
     </View>
   );
