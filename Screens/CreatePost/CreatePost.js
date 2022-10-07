@@ -254,10 +254,8 @@ const CreatePost = ({ navigation, route }) => {
         </Modal>
         <View id="statusInput">
           <Text
-            style={[
-              theme.textInputLabel,
-              styleVariables.fontSizes.calloutBold,
-            ]}>
+            style={[theme.textInputLabel, styleVariables.fontSizes.calloutBold]}
+          >
             What's on your mind?
           </Text>
           <TextInput
@@ -272,9 +270,9 @@ const CreatePost = ({ navigation, route }) => {
               theme.textInput,
               styleVariables.fontSizes.body,
               {
+                textAlignVertical: "top",
                 height: 200,
                 paddingTop: 16,
-                paddingBottom: Platform.OS === "android" ? 70 : 0,
               },
             ]}
           ></TextInput>

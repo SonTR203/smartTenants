@@ -311,9 +311,9 @@ function MarketplaceNewPostScreen({ navigation }) {
       marginHorizontal: 16,
     },
     textInputDescription: {
+      textAlignVertical: "top",
       height: 160,
       paddingTop: 16,
-      paddingBottom: Platform.OS === "android" ? 70 : 0,
     },
     uploadButtonContainer: {
       flexDirection: "row",
