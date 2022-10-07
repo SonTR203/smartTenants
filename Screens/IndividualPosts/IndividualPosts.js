@@ -248,7 +248,7 @@ const IndividualPosts = ({ navigation, route }) => {
         style={[styles.textInputWrapper]}
       >
         <FlatList
-          keyboardShouldPersistTaps={true}
+          keyboardShouldPersistTaps={"handled"}
           scrollEnabled={false}
           ListFooterComponent={renderListFooter}
           style={[styles.textInputWrapper]}

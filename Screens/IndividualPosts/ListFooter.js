@@ -186,9 +186,9 @@ function ListFooter({
       justifyContent: "flex-end",
       width: 16,
       height: 16,
-      // ^ Talk to Kseniia about this styling, it makes it easier to click the cancel button
     },
   });
+
   if (post.isNSFW == true) return;
   return (
     <View style={theme.replyContainer}>
