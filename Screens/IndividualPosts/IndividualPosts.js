@@ -6,6 +6,7 @@ import {
   Dimensions,
   Platform,
   Text,
+  Keyboard,
 } from "react-native";
 import Modal from "react-native-modal";
 import React, { useState, useEffect, useCallback, useRef } from "react";
@@ -247,6 +248,7 @@ const IndividualPosts = ({ navigation, route }) => {
         style={[styles.textInputWrapper]}
       >
         <FlatList
+          keyboardShouldPersistTaps={true}
           scrollEnabled={false}
           ListFooterComponent={renderListFooter}
           style={[styles.textInputWrapper]}

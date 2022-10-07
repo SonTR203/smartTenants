@@ -183,6 +183,10 @@ function ListFooter({
     replyName: { color: styleVariables.colors.primary },
     cancelReply: {
       color: styleVariables.colors.primary,
+      justifyContent: "flex-end",
+      width: 16,
+      height: 16,
+      // ^ Talk to Kseniia about this styling, it makes it easier to click the cancel button
     },
   });
   if (post.isNSFW == true) return;
@@ -196,7 +200,6 @@ function ListFooter({
               style={[styles.replyName, styleVariables.fontSizes.calloutBold]}
             >
               {userCommentName}
-              {"        "}
             </Text>
           </Text>
           <TouchableOpacity
