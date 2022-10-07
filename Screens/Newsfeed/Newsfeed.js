@@ -1,10 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   FlatList,
   StyleSheet,
   RefreshControl,
   Modal,
+  Animated,
+  TouchableOpacity,
+  Text,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -13,7 +16,10 @@ import { constants, refreshDelay } from "../../utils/constants";
 import Post from "./Post";
 import ListFooter from "./ListFooter";
 import { wait } from "../../utils/wait";
-import { getPosts } from "../../utils/Newsfeed/newsfeed.services";
+import {
+  getPosts,
+  listenForNewPost,
+} from "../../utils/Newsfeed/newsfeed.services";
 import Fab from "../../components/Fab";
 import EmptyListComponent from "../../components/EmptyListComponent";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
@@ -22,11 +28,13 @@ import PopupModal from "../../components/PopupModal";
 const Newsfeed = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [posts, setPosts] = useState([]);
+  const [newPostsLength, setNewPostsLength] = useState(0);
   const [refreshing, setRefreshing] = useState(true);
-
+  const slideDown = useRef(new Animated.Value(-100)).current;
+  let flatListRef;
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-
+    resetAnimation();
     wait(refreshDelay).then(async () => {
       await fetchNotifications();
       setRefreshing(false);
@@ -51,15 +59,49 @@ const Newsfeed = ({ navigation, route }) => {
       borderTopRightRadius: 27,
       backgroundColor: "white",
     },
+    newPostsButtonContainer: {
+      position: "absolute",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+      height: "7.5%",
+      zIndex: 2,
+    },
+    newPostsButton: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      height: 36,
+      backgroundColor: "#29AA6B",
+      paddingVertical: 8,
+      paddingHorizontal: 24,
+      gap: 8,
+      borderRadius: 16,
+    },
   });
 
   async function fetchNotifications() {
     const list = await getPosts();
-
     setPosts(list);
     setRefreshing(false);
   }
 
+  const startAnimation = () => {
+    Animated.spring(slideDown, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+  const resetAnimation = () => {
+    Animated.spring(slideDown, {
+      toValue: -100,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
   useEffect(() => {
     fetchNotifications();
   }, []);
@@ -71,11 +113,24 @@ const Newsfeed = ({ navigation, route }) => {
     }
   }, [route.params]);
 
+  useEffect(() => {
+    const unsubscribe = listenForNewPost(setNewPostsLength);
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  // new posts button animation handler
+  useEffect(() => {
+    if (refreshing) return;
+    if (newPostsLength > posts.length) {
+      startAnimation();
+    }
+  }, [newPostsLength, posts]);
   const callBackRender = useCallback(
     ({ item, index }) => renderPostItem({ item, index }),
     [[posts]]
   );
-
   const renderPostItem = ({ item }) => (
     <Post passedPost={item} windowWidth={constants.width} />
   );
@@ -91,7 +146,6 @@ const Newsfeed = ({ navigation, route }) => {
       return null;
     }
   };
-
   return (
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
@@ -121,6 +175,28 @@ const Newsfeed = ({ navigation, route }) => {
       </Modal>
       <View style={styles.flatListContainer}>
         <FlatListRefreshControl refreshing={refreshing} />
+        <Animated.View
+          style={[
+            styles.newPostsButtonContainer,
+            {
+              transform: [{ translateY: slideDown }],
+            },
+          ]}>
+          <TouchableOpacity
+            onPress={() => {
+              resetAnimation();
+              flatListRef.scrollToOffset({ offset: 0, animated: true });
+              setRefreshing(true);
+              fetchNotifications();
+            }}
+            activeOpacity={1}
+            style={styles.newPostsButton}>
+            <Text
+              style={[{ color: "#fff" }, styleVariables.fontSizes.calloutBold]}>
+              New posts
+            </Text>
+          </TouchableOpacity>
+        </Animated.View>
         <FlatList
           removeClippedSubviews={true}
           initialNumToRender={3}
@@ -131,6 +207,7 @@ const Newsfeed = ({ navigation, route }) => {
           renderItem={callBackRender}
           ListEmptyComponent={renderEmpty}
           ListFooterComponent={renderListFooter}
+          ref={(ref) => (flatListRef = ref)}
           refreshControl={
             <RefreshControl
               progressBackgroundColor="white"

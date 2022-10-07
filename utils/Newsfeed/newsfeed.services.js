@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import _ from "lodash";
 import uuid from "react-native-uuid";
-import { createItemInFirestore } from "../firebase.services";
+import { createItemInFirestore, createListener } from "../firebase.services";
 
 export const getPosts = async () => {
   const colRef = collection(db, "Newsfeed");
@@ -129,4 +129,17 @@ export const removeLike = async (currentUser, post) => {
   }
 
   return true;
+};
+
+export const listenForNewPost = (setter) => {
+  return createListener("Newsfeed", (snapshot) => {
+    let approvedPosts = [];
+    snapshot.docs.forEach((doc) => {
+      if (doc.data().isNSFW === true) return;
+      return approvedPosts.push(doc.data());
+    });
+    setTimeout(() => {
+      setter(approvedPosts.length);
+    }, 3000);
+  });
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   FlatList,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Text,
   RefreshControl,
+  Animated,
 } from "react-native";
 import { wait } from "../../utils/wait";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,6 +14,7 @@ import { useTheme } from "../../ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import Fab from "../../components/Fab";
 import ListFooter from "../Newsfeed/ListFooter";
+import { listenForNewListing } from "../../utils/Marketplace/marketplace.services";
 import { getMarketplaceItems } from "../../utils/firebase.services";
 import { useAppContext } from "../../Context/AppContext";
 import EmptyListComponent from "../../components/EmptyListComponent";
@@ -42,18 +44,36 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const [listingAmount, setListingAmount] = useState("0");
   const [sortActive, setSortActive] = useState(false);
   const [filterActive, setFilterActive] = useState(false);
+  const [newPostsLength, setNewPostsLength] = useState(0);
+  const slideDown = useRef(new Animated.Value(-100)).current;
+  let flatListRef;
   const { updatedMarketplacePosts, setUpdatedMarketplacePosts } =
     useAppContext();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-
+    resetAnimation();
     wait(refreshDelay).then(async () => {
       const list = await getMarketplaceItems();
       setItemList(list);
       setRefreshing(false);
     });
   }, []);
+
+  const startAnimation = () => {
+    Animated.spring(slideDown, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+  const resetAnimation = () => {
+    Animated.spring(slideDown, {
+      toValue: -100,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
 
   // only fetching available items, not sold items
   async function fetchMarketplaceList() {
@@ -97,7 +117,22 @@ const MarketplaceScreen = ({ navigation, route }) => {
       fetchMarketplaceList();
     }
   }, [route.params]);
+  useEffect(() => {
+    const unsubscribe = listenForNewListing(setNewPostsLength);
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
+  // new itemList button animation handler
+  useEffect(() => {
+    console.log("new length " + newPostsLength);
+    console.log(itemList?.length);
+    if (refreshing) return;
+    if (newPostsLength > itemList.length) {
+      startAnimation();
+    }
+  }, [newPostsLength, itemList]);
   const renderEmpty = () => {
     if (itemList.length === 1) {
       return null;
@@ -117,11 +152,9 @@ const MarketplaceScreen = ({ navigation, route }) => {
               styles.headerBtn,
               sortActive ? styles.activeCondition : null,
             ]}
-            activeOpacity={1}
-          >
+            activeOpacity={1}>
             <Text
-              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
-            >
+              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}>
               Sort
             </Text>
             <SortSVG />
@@ -135,11 +168,9 @@ const MarketplaceScreen = ({ navigation, route }) => {
               styles.headerBtn,
               filterActive ? styles.activeCondition : null,
             ]}
-            activeOpacity={1}
-          >
+            activeOpacity={1}>
             <Text
-              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
-            >
+              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}>
               Filter
             </Text>
             <FilterSVG />
@@ -222,6 +253,27 @@ const MarketplaceScreen = ({ navigation, route }) => {
     activeCondition: {
       backgroundColor: "#CDD7D9",
     },
+    newPostsButtonContainer: {
+      position: "absolute",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+      height: "7.5%",
+      zIndex: 2,
+    },
+    newPostsButton: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      height: 36,
+      backgroundColor: "#29AA6B",
+      paddingVertical: 8,
+      paddingHorizontal: 24,
+      gap: 8,
+      borderRadius: 16,
+    },
   });
 
   return (
@@ -236,8 +288,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         onBackdropPress={() => {
           setSortModalVisible(false);
         }}
-        statusBarTranslucent={true}
-      >
+        statusBarTranslucent={true}>
         <SortModal
           setSortModalVisible={setSortModalVisible}
           marketplaceData={itemList}
@@ -254,8 +305,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         isVisible={filterModalVisible}
         style={styles.modal}
         onBackdropPress={() => setFilterModalVisible(false)}
-        statusBarTranslucent={true}
-      >
+        statusBarTranslucent={true}>
         <FilterModal
           marketplaceData={itemList}
           setFilteredItemList={setFilteredItemList}
@@ -281,11 +331,37 @@ const MarketplaceScreen = ({ navigation, route }) => {
         {itemList ? (
           <>
             <FlatListRefreshControl refreshing={refreshing} />
+            <Animated.View
+              style={[
+                styles.newPostsButtonContainer,
+                {
+                  transform: [{ translateY: slideDown }],
+                },
+              ]}>
+              <TouchableOpacity
+                onPress={() => {
+                  resetAnimation();
+                  flatListRef.scrollToOffset({ offset: 0, animated: true });
+                  setRefreshing(true);
+                  fetchMarketplaceList();
+                }}
+                activeOpacity={1}
+                style={styles.newPostsButton}>
+                <Text
+                  style={[
+                    { color: "#fff" },
+                    styleVariables.fontSizes.calloutBold,
+                  ]}>
+                  New posts
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
             <FlatList
               ListEmptyComponent={renderEmpty}
               removeClippedSubviews={true}
               initialNumToRender={3}
               style={styles.flatlist}
+              ref={(ref) => (flatListRef = ref)}
               data={
                 filteredItemList ? filteredItemList.slice(1) : itemList.slice(1)
               } // remove first item from list, put first item in Header

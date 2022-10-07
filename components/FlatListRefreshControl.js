@@ -7,8 +7,6 @@ function FlatListRefreshControl({ refreshing }) {
   const { styleVariables } = useTheme();
   const styles = StyleSheet.create({
     loaderContainer: {
-      display: refreshing ? "flex" : "none",
-      opacity: refreshing ? 1 : 0,
       width: "100%",
       height: 64,
       justifyContent: "center",
@@ -21,6 +19,7 @@ function FlatListRefreshControl({ refreshing }) {
     },
   });
 
+  if (!refreshing) return null;
   return (
     <View style={styles.loaderContainer}>
       <ProgressCircleSnail

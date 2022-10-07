@@ -65,6 +65,7 @@ const CreatePost = ({ navigation, route }) => {
 
       const res = await createItemInFirestore("Newsfeed", id, propObj);
       if (isNsfw) {
+        navigation.goBack();
         navigation.navigate("Newsfeed", {
           reload: true,
           saveModal: true,
@@ -72,7 +73,8 @@ const CreatePost = ({ navigation, route }) => {
           message:
             "We’ve detected potential inappropriate content. Your post will be reviewed.",
         });
-        navigation.pop(2);
+        /* Going back to the previous screen. */
+        // navigation.pop();
       } else if (res) {
         postSuccess();
       } else {
@@ -86,24 +88,28 @@ const CreatePost = ({ navigation, route }) => {
 
   function postSuccess() {
     setIsloading(false);
+    navigation.goBack();
     navigation.navigate("Newsfeed", {
       reload: true,
       saveModal: true,
       modalType: "success",
       message: "Post submitted",
     });
-    navigation.pop(2);
+
+    // navigation.pop();
   }
 
   function postFailure() {
     setIsloading(false);
+    navigation.goBack();
     navigation.navigate("Newsfeed", {
       reload: true,
       saveModal: true,
       modalType: "error",
       message: "Something went wrong, please try again",
     });
-    navigation.pop(2);
+
+    // navigation.pop();
   }
 
   // ============================= IMAGE UPLOAD =============================
@@ -248,8 +254,10 @@ const CreatePost = ({ navigation, route }) => {
         </Modal>
         <View id="statusInput">
           <Text
-            style={[theme.textInputLabel, styleVariables.fontSizes.calloutBold]}
-          >
+            style={[
+              theme.textInputLabel,
+              styleVariables.fontSizes.calloutBold,
+            ]}>
             What's on your mind?
           </Text>
           <TextInput

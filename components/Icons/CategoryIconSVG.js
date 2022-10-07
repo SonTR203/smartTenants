@@ -11,8 +11,7 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <Path
               d="M17.494 11.273h2.464a.718.718 0 0 0 .645-.4l1.673-3.346a.737.737 0 0 0-.291-.963L17.495 4M5.858 11.273H3.395a.718.718 0 0 1-.646-.4L1.076 7.527a.736.736 0 0 1 .291-.963L5.858 4"
               stroke="#4D4D4D"
@@ -36,8 +35,7 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <Path
               d="m12 16.01.01-.011"
               stroke="#4D4D4D"
@@ -59,8 +57,7 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <Path
               d="M20 12v9.4a.6.6 0 0 1-.6.6H4.6a.6.6 0 0 1-.6-.6V12M21.4 7H2.6a.6.6 0 0 0-.6.6v3.8a.6.6 0 0 0 .6.6h18.8a.6.6 0 0 0 .6-.6V7.6a.6.6 0 0 0-.6-.6ZM12 22V7M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7ZM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7Z"
               stroke="#4D4D4D"
@@ -77,8 +74,7 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <Path
               fillRule="evenodd"
               clipRule="evenodd"
@@ -108,8 +104,7 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <Path
               d="M17.737 20.192c4.524-3.167 5.623-9.403 2.455-13.927C17.025 1.741 10.79.642 6.265 3.81 1.741 6.977.642 13.213 3.81 17.737c3.168 4.524 9.403 5.623 13.928 2.455ZM17.737 20.193 6.266 3.81"
               stroke="#4D4D4D"
@@ -140,15 +135,13 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <G
               clipPath="url(#a)"
               stroke="#4D4D4D"
               strokeWidth={1.5}
               strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+              strokeLinejoin="round">
               <Path d="M20.25 20.25v-9.422a.778.778 0 0 0-.244-.553l-7.5-6.816a.75.75 0 0 0-1.012 0l-7.5 6.816a.777.777 0 0 0-.244.553v9.422M1.5 20.25h21" />
               <Path d="M14.25 20.25V15a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75v5.25" />
             </G>
@@ -166,8 +159,7 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <Path
               d="M10.5 3a8.5 8.5 0 0 0-7.212 13M17.713 16A8.46 8.46 0 0 0 19 11.5v-2h2.5M7 21a2 2 0 1 1 0-4 2 2 0 0 1 0 4ZM14 21a2 2 0 1 1 0-4 2 2 0 0 1 0 4ZM10.5 3v9M2.5 12h16"
               stroke="#4D4D4D"
@@ -184,8 +176,7 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <Path
               d="M2 11h20M2 11V4.6a.6.6 0 0 1 .6-.6h6.178a.6.6 0 0 1 .39.144l3.164 2.712a.6.6 0 0 0 .39.144H21.4a.6.6 0 0 1 .6.6V11H2Zm0 0v8.4a.6.6 0 0 0 .6.6h18.8a.6.6 0 0 0 .6-.6V11H2Z"
               stroke="#4D4D4D"
@@ -202,8 +193,7 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <Path
               d="M6.367 20.3s.5-4.5 4-8.5"
               stroke="#4D4D4D"
@@ -227,8 +217,7 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <Path
               d="M11.501 17.166V20"
               stroke="#4D4D4D"
@@ -265,8 +254,7 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <Path
               d="M14.143 9.668h2.856M7.002 9.668h2.856M8.43 8.24v2.856M15.927 5l-7.854.027a4.65 4.65 0 0 0-4.57 3.838v0L2.039 16.37a2.5 2.5 0 0 0 4.23 2.205v0l3.857-4.267 5.801-.026a4.641 4.641 0 0 0 0-9.283v0Z"
               stroke="#4D4D4D"
@@ -290,8 +278,7 @@ function CategoryIconSVG({ category, props }) {
             height={24}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
+            {...props}>
             <Path
               d="M8 10h8M7 14h1M16 14h1"
               stroke="#4D4D4D"
