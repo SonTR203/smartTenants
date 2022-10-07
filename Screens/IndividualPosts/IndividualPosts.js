@@ -273,6 +273,15 @@ const styles = StyleSheet.create({
   textInputWrapper: {
     marginTop: "auto",
     backgroundColor: "white",
+    shadowColor: "#4D4D4D",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 24,
+    elevation: 10,
+    borderRadius: 16,
   },
   commentTextHeader: {
     color: "#4d4d4d",

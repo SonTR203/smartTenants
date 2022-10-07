@@ -16,7 +16,7 @@ import { db } from "../../firebase-config";
 import { updateDoc, doc, setDoc } from "@firebase/firestore";
 import { Timestamp } from "@firebase/firestore";
 import uuid from "react-native-uuid";
-import { useTheme, styleVariables } from "../../ThemeContext";
+import { useTheme } from "../../ThemeContext";
 
 function ListFooter({
   getComments,
@@ -187,7 +187,7 @@ function ListFooter({
   });
   if (post.isNSFW == true) return;
   return (
-    <View style={[theme.replyContainer, styleVariables.shadow]}>
+    <View style={theme.replyContainer}>
       {userCommentName != "" && (
         <View style={[styles.replyView]}>
           <Text style={styleVariables.fontSizes.callout}>
