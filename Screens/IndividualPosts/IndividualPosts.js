@@ -6,7 +6,6 @@ import {
   Dimensions,
   Platform,
   Text,
-  Keyboard,
 } from "react-native";
 import Modal from "react-native-modal";
 import React, { useState, useEffect, useCallback, useRef } from "react";
