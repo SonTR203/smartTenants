@@ -26,6 +26,9 @@ function ListFooter({
   setUserCommentName,
   setUserCommentId,
   userCommentId,
+  setRepliesVisible,
+  commentBoxPlaceholder,
+  setCommentBoxPlaceholder,
 }) {
   const [textInputValue, setTextInputValue] = useState("");
   const { setPost, post, currentUser } = useAppContext();
@@ -57,6 +60,7 @@ function ListFooter({
             lastName: currentUser.lastName,
             userProfileImage: currentUser.userProfileImage,
             commentContent: textInputValue,
+            peopleWhoLiked: [],
             userID: currentUser.userID,
             authorID: post.userID,
             colors: currentUser.colors,
@@ -95,6 +99,7 @@ function ListFooter({
           colors: currentUser.colors,
           authorID: post.userID,
           timestamp: Timestamp.fromDate(new Date()),
+          commentID: userCommentId,
           postID: post.id,
         }
       ).then(() => {
@@ -103,6 +108,7 @@ function ListFooter({
         setUserCommentId("");
         setUserCommentName("");
         setRepliedTrue(post.id, userCommentId);
+        setRepliesVisible(true);
       });
     } catch (err) {
       console.log(err);
@@ -149,7 +155,6 @@ function ListFooter({
   };
 
   const styles = StyleSheet.create({
-    container: {},
     inputAreaContainer: {
       marginTop: 16,
       maxHeight: 160,
@@ -178,19 +183,23 @@ function ListFooter({
     replyName: { color: styleVariables.colors.primary },
     cancelReply: {
       color: styleVariables.colors.primary,
+      justifyContent: "flex-end",
+      width: 16,
+      height: 16,
     },
   });
+
   if (post.isNSFW == true) return;
   return (
-    <View style={[theme.replyContainer]}>
+    <View style={theme.replyContainer}>
       {userCommentName != "" && (
-        <View style={styles.replyView}>
+        <View style={[styles.replyView]}>
           <Text style={styleVariables.fontSizes.callout}>
             Replying to{" "}
             <Text
-              style={[styles.replyName, styleVariables.fontSizes.calloutBold]}>
+              style={[styles.replyName, styleVariables.fontSizes.calloutBold]}
+            >
               {userCommentName}
-              {"        "}
             </Text>
           </Text>
           <TouchableOpacity
@@ -198,9 +207,10 @@ function ListFooter({
             onPress={() => {
               setUserCommentName("");
               setUserCommentId("");
-            }}>
+              setCommentBoxPlaceholder("Post a comment");
+            }}
+          >
             <X></X>
-            {/* <Text style={styles.cancelButton}>x</Text> */}
           </TouchableOpacity>
         </View>
       )}
@@ -212,7 +222,7 @@ function ListFooter({
             setTextInputValue(text);
           }}
           value={textInputValue}
-          placeholder="Post a comment"
+          placeholder={commentBoxPlaceholder}
           maxLength={280}
           multiline
           style={[
@@ -228,7 +238,8 @@ function ListFooter({
             theme.postButton,
             { backgroundColor: !textInputValue ? "#748E94" : "#395E66" },
           ]}
-          disabled={!textInputValue}>
+          disabled={!textInputValue}
+        >
           <ArrowUpSVG></ArrowUpSVG>
         </TouchableOpacity>
       </View>

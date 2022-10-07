@@ -46,7 +46,8 @@ function PeopleWhoLikedModal({ setLikesModalVisible, peopleWhoLiked }) {
       borderColor: "#395E66",
     },
     modalScrollView: {
-      marginVertical: 24,
+      marginTop: 8,
+      marginBottom: 24,
     },
   });
 

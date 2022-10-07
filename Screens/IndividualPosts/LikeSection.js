@@ -11,7 +11,12 @@ import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import UsersWhoLikedHeartSVG from "../../components/Icons/UsersWhoLikedHeartSVG";
 
-function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
+function LikeSection({
+  setLikesModalVisible,
+  setPeopleWhoLiked,
+  setNumberOfComments,
+  numberOfComments,
+}) {
   const [userLiked, setUserLiked] = useState(false);
   const [numberOfLikes, setNumberOfLikes] = useState(0);
   const [peopleArray, setPeopleArray] = useState([]);
@@ -64,6 +69,10 @@ function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
       setNumberOfLikes(post.peopleWhoLiked.length);
     }
   }, [post]);
+
+  useEffect(() => {
+    setNumberOfComments(post.commentCount);
+  });
 
   const styles = StyleSheet.create({
     container: {
@@ -162,7 +171,7 @@ function LikeSection({ setLikesModalVisible, setPeopleWhoLiked }) {
                 { marginLeft: 8 },
               ]}
             >
-              {post.commentCount}
+              {numberOfComments}
             </Text>
           </TouchableOpacity>
         </View>
