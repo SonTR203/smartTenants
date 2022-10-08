@@ -12,7 +12,7 @@ import CommentIconSVG from "../../components/Icons/CommentIconSVG";
 import HorizontalDotsSVG from "../../components/Icons/HorizontalDotsSVG";
 
 //============================== Individual Post Cards ==========================
-function Post({ passedPost, windowWidth, isMyPost }) {
+function Post({ passedPost, windowWidth, isMyPost, setModalVisible }) {
   const navigation = useNavigation();
   const { theme, styleVariables } = useTheme();
   const [numberOfLikes, setNumberOfLikes] = useState(0);
@@ -199,8 +199,7 @@ function Post({ passedPost, windowWidth, isMyPost }) {
         {currentUser.userID == currentPost.userID ? (
           <TouchableOpacity
             onPress={() => {
-              // setModalVisible(true);
-              console.log(currentPost);
+              setModalVisible(true);
             }}
           >
             <HorizontalDotsSVG />

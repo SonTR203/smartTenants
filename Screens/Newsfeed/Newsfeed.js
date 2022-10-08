@@ -60,7 +60,7 @@ const Newsfeed = ({ navigation, route }) => {
         return (
           <ModalActionConfirm
             destructive={true}
-            title={`Delete your comment?`}
+            title={`Delete your post?`}
             subtitle={"You won't be able to restore it"}
             confirmText="Delete"
             onConfirm={() => {
