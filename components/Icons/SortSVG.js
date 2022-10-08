@@ -13,7 +13,7 @@ function SortSVG(props) {
       <Path
         d="m12.25 5-3.5-3.5L5.25 5M12.25 11l-3.5 3.5-3.5-3.5"
         stroke="#395E66"
-        strokeWidth={2}
+        strokeWidth={1.5}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
