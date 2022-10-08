@@ -171,7 +171,11 @@ function Post({ passedPost, windowWidth, isMyPost }) {
             <Text
               style={[
                 styleVariables.fontSizes.cardUserName,
-                { color: styleVariables.colors.black, marginLeft: 8 },
+                {
+                  color: styleVariables.colors.black,
+                  marginLeft: 8,
+                  marginBottom: 2,
+                },
               ]}
             >
               {currentPost.userFirstName} {currentPost.userLastName}
