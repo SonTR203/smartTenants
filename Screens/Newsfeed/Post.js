@@ -98,31 +98,37 @@ function Post({ passedPost, windowWidth, isMyPost }) {
   }
   //prettier-ignore
   const styles = StyleSheet.create({
-		postStatus:
-			currentPost.isNSFW === true
-				? {
-						paddingHorizontal: 16,
-						paddingVertical: 4,
-						backgroundColor: "#FEF0E8",
-						color: "#F26419",
-						marginLeft: 8,
-						marginTop: 4,
-						borderRadius: 8,
-						overflow: "hidden",
-						alignSelf: "flex-start",
-				}
-				: {
-						paddingHorizontal: 16,
-						paddingVertical: 4,
-						backgroundColor: "#E9FAF0",
-						color: "#23CE6B",
-						marginLeft: 8,
-						marginTop: 4,
-						borderRadius: 8,
-						overflow: "hidden",
-						alignSelf: "flex-start",
-				},
-	});
+    postStatus:
+      currentPost.isNSFW === true
+        ? {
+            paddingHorizontal: 16,
+            paddingVertical: 4,
+            backgroundColor: "#FEF0E8",
+            color: "#F26419",
+            marginLeft: 8,
+            marginTop: 4,
+            borderRadius: 8,
+            overflow: "hidden",
+            alignSelf: "flex-start",
+          }
+        : {
+            paddingHorizontal: 16,
+            paddingVertical: 4,
+            backgroundColor: "#E9FAF0",
+            color: "#23CE6B",
+            marginLeft: 8,
+            marginTop: 4,
+            borderRadius: 8,
+            overflow: "hidden",
+            alignSelf: "flex-start",
+          },
+    timePosted: {
+      color: styleVariables.colors.black,
+      opacity: 0.66,
+      marginHorizontal: 4,
+      paddingHorizontal: 5,
+    },
+  });
 
   return (
     <TouchableOpacity
@@ -177,17 +183,14 @@ function Post({ passedPost, windowWidth, isMyPost }) {
             ) : (
               ""
             )}
+            <Text
+              id="timePosted"
+              style={[styleVariables.fontSizes.callout, styles.timePosted]}
+            >
+              {timeSincePost}
+            </Text>
           </View>
         </View>
-        <Text
-          id="timePosted"
-          style={[
-            styleVariables.fontSizes.callout,
-            { color: styleVariables.colors.black, opacity: 0.66 },
-          ]}
-        >
-          {timeSincePost}
-        </Text>
       </View>
 
       {/* postContent */}
