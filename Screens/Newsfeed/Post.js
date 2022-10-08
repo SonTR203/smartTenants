@@ -3,12 +3,12 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../ThemeContext";
 import { useAppContext } from "../../Context/AppContext";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { setTime } from "../../utils/setTime";
 import { likePost } from "../../utils/Newsfeed/newsfeed.services";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
+import CommentIconSVG from "../../components/Icons/CommentIconSVG";
 
 //============================== Individual Post Cards ==========================
 function Post({ passedPost, windowWidth, isMyPost }) {
@@ -246,25 +246,12 @@ function Post({ passedPost, windowWidth, isMyPost }) {
             flexDirection: "row",
           }}
         >
-          {userLiked && (
-            <View style={{ marginRight: 8 }}>
-              <HeartFilledSVG width={24} height={24} color={"#0AA74C"} />
-            </View>
-          )}
-          {!userLiked && (
-            <View style={{ marginRight: 8 }}>
-              <HeartSVG
-                width={24}
-                height={24}
-                stroke={2}
-                color={styleVariables.colors.black}
-              />
-            </View>
-          )}
+          {userLiked && <HeartFilledSVG />}
+          {!userLiked && <HeartSVG />}
           <Text
             style={[
               styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black },
+              { color: styleVariables.colors.black, marginLeft: 8 },
             ]}
           >
             {numberOfLikes}
@@ -281,16 +268,11 @@ function Post({ passedPost, windowWidth, isMyPost }) {
             marginLeft: 17,
           }}
         >
-          <MaterialCommunityIcons
-            name="message-outline"
-            size={24}
-            color={styleVariables.colors.black}
-            style={{ marginRight: 8 }}
-          />
+          <CommentIconSVG />
           <Text
             style={[
               styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black },
+              { color: styleVariables.colors.black, marginLeft: 8 },
             ]}
           >
             {numberOfComments}
