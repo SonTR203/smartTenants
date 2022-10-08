@@ -9,6 +9,7 @@ import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfil
 import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import CommentIconSVG from "../../components/Icons/CommentIconSVG";
+import HorizontalDotsSVG from "../../components/Icons/HorizontalDotsSVG";
 
 //============================== Individual Post Cards ==========================
 function Post({ passedPost, windowWidth, isMyPost }) {
@@ -195,6 +196,9 @@ function Post({ passedPost, windowWidth, isMyPost }) {
             </Text>
           </View>
         </View>
+        <TouchableOpacity>
+          <HorizontalDotsSVG />
+        </TouchableOpacity>
       </View>
 
       {/* postContent */}
