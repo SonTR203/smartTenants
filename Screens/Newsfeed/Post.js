@@ -196,9 +196,16 @@ function Post({ passedPost, windowWidth, isMyPost }) {
             </Text>
           </View>
         </View>
-        <TouchableOpacity>
-          <HorizontalDotsSVG />
-        </TouchableOpacity>
+        {currentUser.userID == currentPost.userID ? (
+          <TouchableOpacity
+            onPress={() => {
+              // setModalVisible(true);
+              console.log(currentPost);
+            }}
+          >
+            <HorizontalDotsSVG />
+          </TouchableOpacity>
+        ) : null}
       </View>
 
       {/* postContent */}

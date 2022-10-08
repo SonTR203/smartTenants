@@ -24,12 +24,15 @@ import Fab from "../../components/Fab";
 import EmptyListComponent from "../../components/EmptyListComponent";
 import FlatListRefreshControl from "../../components/FlatListRefreshControl";
 import PopupModal from "../../components/PopupModal";
+import CustomBottomModal from "../../components/CustomBottomModal/index";
+import ModalActionConfirm from "../../components/CustomBottomModal/ModalActionConfirm";
 
 const Newsfeed = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
   const [posts, setPosts] = useState([]);
   const [newPostsLength, setNewPostsLength] = useState(0);
   const [refreshing, setRefreshing] = useState(true);
+  const [isModalVisible, setModalVisible] = useState(false);
   const slideDown = useRef(new Animated.Value(-100)).current;
   let flatListRef;
   const onRefresh = useCallback(() => {
@@ -40,6 +43,52 @@ const Newsfeed = ({ navigation, route }) => {
       setRefreshing(false);
     });
   }, []);
+
+  const options = [
+    {
+      content: `Edit`,
+      onPress: () => {},
+      iconName: "pencil",
+      iconColor: "#4D4D4D",
+    },
+    {
+      content: `Delete`,
+      onPress: () => {},
+      iconName: "trash-can-outline",
+      iconColor: "#4D4D4D",
+      renderSubscreen: () => {
+        return (
+          <ModalActionConfirm
+            destructive={true}
+            title={`Delete your comment?`}
+            subtitle={"You won't be able to restore it"}
+            confirmText="Delete"
+            onConfirm={() => {
+              handleDeletePost();
+            }}
+            onCancel={() => setModalVisible(false)}
+          />
+        );
+      },
+    },
+    {
+      content: "Turn off notifications",
+      onPress: () => {},
+      iconName: "bell-off-outline",
+      iconColor: "#4D4D4D",
+      renderSubscreen: () => {
+        return (
+          <ModalActionConfirm
+            title={"Turn off notifications for this post?"}
+            subtitle={"You will be able to undo this action"}
+            confirmText="Confirm"
+            // onConfirm={handleTurnOffNotifications}
+            onCancel={() => setModalVisible(false)}
+          />
+        );
+      },
+    },
+  ];
 
   const styles = StyleSheet.create({
     newsfeedContainer: {
@@ -132,7 +181,11 @@ const Newsfeed = ({ navigation, route }) => {
     [[posts]]
   );
   const renderPostItem = ({ item }) => (
-    <Post passedPost={item} windowWidth={constants.width} />
+    <Post
+      passedPost={item}
+      windowWidth={constants.width}
+      setModalVisible={setModalVisible}
+    />
   );
 
   const renderEmpty = () => {
@@ -167,7 +220,8 @@ const Newsfeed = ({ navigation, route }) => {
               reload: null,
             });
           }, 2000);
-        }}>
+        }}
+      >
         <PopupModal
           modalType={route.params?.modalType}
           message={route.params?.message}
@@ -181,7 +235,8 @@ const Newsfeed = ({ navigation, route }) => {
             {
               transform: [{ translateY: slideDown }],
             },
-          ]}>
+          ]}
+        >
           <TouchableOpacity
             onPress={() => {
               resetAnimation();
@@ -190,9 +245,11 @@ const Newsfeed = ({ navigation, route }) => {
               fetchNotifications();
             }}
             activeOpacity={1}
-            style={styles.newPostsButton}>
+            style={styles.newPostsButton}
+          >
             <Text
-              style={[{ color: "#fff" }, styleVariables.fontSizes.calloutBold]}>
+              style={[{ color: "#fff" }, styleVariables.fontSizes.calloutBold]}
+            >
               New posts
             </Text>
           </TouchableOpacity>
@@ -220,6 +277,12 @@ const Newsfeed = ({ navigation, route }) => {
           }
         />
       </View>
+
+      <CustomBottomModal
+        isModalVisible={isModalVisible}
+        setModalVisible={setModalVisible}
+        options={options}
+      ></CustomBottomModal>
 
       {/* FAB */}
       <Fab
