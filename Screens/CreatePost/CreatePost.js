@@ -288,12 +288,17 @@ const CreatePost = ({ navigation, route }) => {
         <TouchableOpacity
           id="uploadImageButton"
           onPress={pickImage}
-          style={styles.uploadImageButton}
+          style={theme.secondaryButton}
         >
           <Text
-            style={[styles.uploadImageText, styleVariables.fontSizes.bodyBold]}
+            style={[theme.secondaryButtonText, styleVariables.fontSizes.body]}
           >
-            Upload image
+            Upload image{" "}
+            <MaterialCommunityIcons
+              name="image-plus"
+              size={18}
+              color={styleVariables.colors.primary}
+            />
           </Text>
           <NewsfeedImageSVG />
         </TouchableOpacity>
@@ -307,7 +312,7 @@ const CreatePost = ({ navigation, route }) => {
           <TouchableOpacity
             id="submitPostButton"
             onPress={handleSelectedImage}
-            disabled={buttonDisabled}
+            disable={!postContent}
             style={[
               theme.primaryButton,
               styles.submitButton,
