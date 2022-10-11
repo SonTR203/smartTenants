@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
     flexDirection: "row",
     width: "100%",
-    justifyContent: "space-between",
   },
   subtitle: {
     marginTop: 8,
