@@ -207,6 +207,7 @@ const CreatePost = ({ navigation, route }) => {
       marginTop: "auto",
     },
     uploadImageButton: {
+      flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
       paddingVertical: 16,
@@ -216,6 +217,7 @@ const CreatePost = ({ navigation, route }) => {
     },
     uploadImageText: {
       color: styleVariables.colors.primary,
+      marginRight: 8,
     },
   });
 
@@ -291,8 +293,9 @@ const CreatePost = ({ navigation, route }) => {
           <Text
             style={[styles.uploadImageText, styleVariables.fontSizes.bodyBold]}
           >
-            Upload image <NewsfeedImageSVG />
+            Upload image
           </Text>
+          <NewsfeedImageSVG />
         </TouchableOpacity>
         {isLoading ? (
           <ActivityIndicator
