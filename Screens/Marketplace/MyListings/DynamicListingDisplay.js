@@ -44,6 +44,7 @@ function DynamicListingDisplay({ data, available, handleSetListingSold }) {
         own={true}
         item={item}
         navigation={navigation}
+        isMyPost={true}
       />
     );
   };

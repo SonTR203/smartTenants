@@ -98,27 +98,25 @@ function MarketplaceFirstItem({
 			alignItems: "center",
 			marginTop: 8,
 		},
-		postStatus:
-			item.isNSFW === true
-				? {
-						paddingHorizontal: 16,
-						paddingVertical: 4,
-						backgroundColor: "#FEF0E8",
-						color: "#F26419",
-						marginLeft: 8,
-						borderRadius: 8,
-						overflow: "hidden",
-						alignSelf: "flex-start",
-				}
-				: {
-						paddingHorizontal: 16,
-						paddingVertical: 4,
-						backgroundColor: "#E9FAF0",
-						color: "#23CE6B",
-						borderRadius: 8,
-						overflow: "hidden",
-						alignSelf: "flex-start",
-				},
+		postStatusNsfw: {
+			paddingHorizontal: 16,
+			paddingVertical: 4,
+			backgroundColor: "#FEF0E8",
+			color: "#F26419",
+			marginLeft: 8,
+			borderRadius: 8,
+			overflow: "hidden",
+			alignSelf: "flex-start",
+		},
+		postStatusPosted: {
+			paddingHorizontal: 16,
+			paddingVertical: 4,
+			backgroundColor: "#E9FAF0",
+			color: "#23CE6B",
+			borderRadius: 8,
+			overflow: "hidden",
+			alignSelf: "flex-start",
+		},
 	});
 
   useEffect(() => {
@@ -214,7 +212,11 @@ function MarketplaceFirstItem({
             >
               {timeSincePost}
             </Text>
-            <Text style={styles.postStatus}>
+            <Text
+              style={
+                item.isNSFW ? styles.postStatusNsfw : styles.postStatusPosted
+              }
+            >
               {item.isNSFW === false ? "Posted" : "Pending approval"}
             </Text>
           </View>
