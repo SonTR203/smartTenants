@@ -28,6 +28,23 @@ export const getPosts = async () => {
   return sortedListOfPosts;
 };
 
+export const deletePost = async (currentPost) => {
+  const colRef = collection(db, "Newsfeed");
+  const docRef = doc(db, `Newsfeed/${currentPost.id}`);
+
+  const q = query(colRef, where("id", "==", currentPost.id));
+
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach(async (doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    console.log("doc to be deleted with deletePost => ", doc.data());
+    await deleteDoc(doc.ref);
+  });
+
+  const data = await getDocs(colRef);
+  getPosts();
+};
+
 export const likePost = async (
   userLiked,
   setUserLiked,

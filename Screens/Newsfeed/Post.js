@@ -4,15 +4,17 @@ import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../ThemeContext";
 import { useAppContext } from "../../Context/AppContext";
 import { setTime } from "../../utils/setTime";
-import { likePost } from "../../utils/Newsfeed/newsfeed.services";
+import { likePost, deletePost } from "../../utils/Newsfeed/newsfeed.services";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import CommentIconSVG from "../../components/Icons/CommentIconSVG";
 import HorizontalDotsSVG from "../../components/Icons/HorizontalDotsSVG";
+import CustomBottomModal from "../../components/CustomBottomModal/index";
+import ModalActionConfirm from "../../components/CustomBottomModal/ModalActionConfirm";
 
 //============================== Individual Post Cards ==========================
-function Post({ passedPost, windowWidth, isMyPost, setModalVisible }) {
+function Post({ passedPost, windowWidth, isMyPost }) {
   const navigation = useNavigation();
   const { theme, styleVariables } = useTheme();
   const [numberOfLikes, setNumberOfLikes] = useState(0);
@@ -21,6 +23,7 @@ function Post({ passedPost, windowWidth, isMyPost, setModalVisible }) {
   const [userLiked, setUserLiked] = useState(false);
   const { currentUser, setPost, post } = useAppContext();
   const [currentPost, setCurrentPost] = useState(passedPost);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (currentPost) {
@@ -94,6 +97,14 @@ function Post({ passedPost, windowWidth, isMyPost, setModalVisible }) {
     }
   };
 
+  const handleDeletePost = async () => {
+    const updatedPost = await deletePost(currentPost);
+
+    if (updatedPost) {
+      setCurrentPost({ ...updatedPost });
+    }
+  };
+
   if (!currentPost) {
     return null;
   }
@@ -130,6 +141,52 @@ function Post({ passedPost, windowWidth, isMyPost, setModalVisible }) {
       paddingHorizontal: 5,
     },
   });
+
+  const options = [
+    {
+      content: `Edit`,
+      onPress: () => {},
+      iconName: "pencil",
+      iconColor: "#4D4D4D",
+    },
+    {
+      content: `Delete`,
+      onPress: () => {},
+      iconName: "trash-can-outline",
+      iconColor: "#4D4D4D",
+      renderSubscreen: () => {
+        return (
+          <ModalActionConfirm
+            destructive={true}
+            title={`Delete your post?`}
+            subtitle={"You won't be able to restore it"}
+            confirmText="Delete"
+            onConfirm={() => {
+              handleDeletePost();
+            }}
+            onCancel={() => setModalVisible(false)}
+          />
+        );
+      },
+    },
+    {
+      content: "Turn off notifications",
+      onPress: () => {},
+      iconName: "bell-off-outline",
+      iconColor: "#4D4D4D",
+      renderSubscreen: () => {
+        return (
+          <ModalActionConfirm
+            title={"Turn off notifications for this post?"}
+            subtitle={"You will be able to undo this action"}
+            confirmText="Confirm"
+            // onConfirm={handleTurnOffNotifications}
+            onCancel={() => setModalVisible(false)}
+          />
+        );
+      },
+    },
+  ];
 
   return (
     <TouchableOpacity
@@ -288,6 +345,11 @@ function Post({ passedPost, windowWidth, isMyPost, setModalVisible }) {
             {numberOfComments}
           </Text>
         </View>
+        <CustomBottomModal
+          isModalVisible={isModalVisible}
+          setModalVisible={setModalVisible}
+          options={options}
+        ></CustomBottomModal>
       </View>
     </TouchableOpacity>
   );
