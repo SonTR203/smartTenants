@@ -171,6 +171,12 @@ const Newsfeed = ({ navigation, route }) => {
         <PopupModal
           modalType={route.params?.modalType}
           message={route.params?.message}
+          hideModal={() => {
+            navigation.setParams({
+              saveModal: false,
+              reload: null,
+            });
+          }}
         />
       </Modal>
       <View style={styles.flatListContainer}>
