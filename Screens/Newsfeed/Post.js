@@ -98,10 +98,15 @@ function Post({ passedPost, windowWidth, isMyPost }) {
   };
 
   const handleDeletePost = async () => {
-    const updatedPost = await deletePost(currentPost);
+    const updatedPost = await deletePost(currentPost, setModalVisible);
 
     if (updatedPost) {
-      setCurrentPost({ ...updatedPost });
+      console.log("Hello");
+      console.log(updatedPost);
+      setCurrentPost({
+        ...updatedPost,
+        updated: true,
+      });
     }
   };
 

@@ -355,7 +355,7 @@ const theme = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     backgroundColor: "#F5F7F7",
-    padding: 17,
+    padding: 16,
     marginHorizontal: 17,
     borderRadius: 16,
   },

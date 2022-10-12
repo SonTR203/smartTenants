@@ -28,21 +28,47 @@ export const getPosts = async () => {
   return sortedListOfPosts;
 };
 
-export const deletePost = async (currentPost) => {
-  const colRef = collection(db, "Newsfeed");
-  const docRef = doc(db, `Newsfeed/${currentPost.id}`);
+export const deletePost = async (currentPost, setModalVisible) => {
+  try {
+    const colRef = collection(db, "Newsfeed");
+    const docRef = doc(db, `Newsfeed/${currentPost.id}`);
 
-  const q = query(colRef, where("id", "==", currentPost.id));
+    const q = query(colRef, where("id", "==", currentPost.id));
 
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach(async (doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log("doc to be deleted with deletePost => ", doc.data());
-    await deleteDoc(doc.ref);
-  });
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log("doc to be deleted with deletePost => ", doc.data());
+      // await deleteDoc(doc.ref);
+    });
 
-  const data = await getDocs(colRef);
+    await updateDoc(colRef);
+  } catch (error) {
+    console.log("error remove post:: ", error);
+    alert("Error removing post. Please try again later.");
+    return;
+  }
+
+  setModalVisible(false);
   getPosts();
+  return post;
+};
+
+const handleDeleteListing = async () => {
+  const resDB = await deleteItemFromFirestore(props.collection, props.item.id);
+  props.item.images.length > 0 && props.item.images.length < 2
+    ? await deleteImageFromStorage(props.item.images[0])
+    : await deleteMultipleImages(props.item.images);
+  if (resDB) {
+    alert("Post deleted.");
+  } else {
+    alert("Error deleting post. Please try again later.");
+    return;
+  }
+  setModalVisible(false);
+  navigation.navigate(props.previousScreen, {
+    reload: true,
+  });
 };
 
 export const likePost = async (

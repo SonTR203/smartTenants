@@ -12,6 +12,12 @@ import {
   likeComment,
   deleteComment,
 } from "../../utils/IndividualPosts/individualPosts.services";
+import {
+  deleteImageFromStorage,
+  deleteItemFromFirestore,
+  deleteMultipleImages,
+  updateItemInFirestore,
+} from "../utils/firebase.services.js";
 import _ from "lodash";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
@@ -160,7 +166,7 @@ function Comment({
     fullName: { color: styleVariables.colors.black },
     timestamp: { color: styleVariables.colors.black, opacity: 0.66 },
     content: {
-      color: styleVariables.colors.primary,
+      color: styleVariables.colors.black,
       marginBottom: 17,
     },
     HorizontalDots: {
