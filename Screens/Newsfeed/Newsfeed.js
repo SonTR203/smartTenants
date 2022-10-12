@@ -30,6 +30,7 @@ const Newsfeed = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const [newPostsLength, setNewPostsLength] = useState(0);
   const [refreshing, setRefreshing] = useState(true);
+  const [toastVisible, setToastVisible] = useState(false);
   const slideDown = useRef(new Animated.Value(-100)).current;
   let flatListRef;
   const onRefresh = useCallback(() => {
@@ -146,6 +147,18 @@ const Newsfeed = ({ navigation, route }) => {
       return null;
     }
   };
+
+  const displayModal = () => {
+    if (route.params?.immediately)
+      return setToastVisible(route.params?.saveModal === true ? true : false);
+    window.setTimeout(() => {
+      return setToastVisible(route.params?.saveModal === true ? true : false);
+    }, 400);
+  };
+
+  useEffect(() => {
+    displayModal();
+  }, [route.params]);
   return (
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
@@ -153,11 +166,12 @@ const Newsfeed = ({ navigation, route }) => {
         animationType="slide"
         transparent={true}
         // statusBarTranslucent={true}
-        visible={route.params?.saveModal === true ? true : false}
+        visible={toastVisible}
         onRequestClose={() => {
           navigation.setParams({
             saveModal: false,
             reload: null,
+            immediately: null,
           });
         }}
         onShow={() => {
@@ -165,6 +179,7 @@ const Newsfeed = ({ navigation, route }) => {
             navigation.setParams({
               saveModal: false,
               reload: null,
+              immediately: null,
             });
           }, 2000);
         }}>
@@ -175,6 +190,7 @@ const Newsfeed = ({ navigation, route }) => {
             navigation.setParams({
               saveModal: false,
               reload: null,
+              immediately: true,
             });
           }}
         />
