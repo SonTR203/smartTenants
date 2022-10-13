@@ -42,6 +42,7 @@ function LikeSection({
       post
     );
     if (updatedPost) {
+      console.log(peopleArray);
       setPost({
         ...updatedPost,
         updated: true,
