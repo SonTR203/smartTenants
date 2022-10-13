@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -77,7 +77,7 @@ const EditProfile = ({ route, navigation }) => {
             animationType="slide"
             transparent={true}
             // statusBarTranslucent={true}
-            visible={route.params?.saveModal === true ? true : false}
+            visible={toastVisible}
             onRequestClose={() => {
               navigation.setParams({
                 saveModal: false,
@@ -97,6 +97,7 @@ const EditProfile = ({ route, navigation }) => {
                 navigation.setParams({
                   saveModal: false,
                   reload: null,
+                  immediately: true,
                 });
               }}
             />
