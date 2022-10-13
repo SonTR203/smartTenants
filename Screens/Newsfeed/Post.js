@@ -4,11 +4,14 @@ import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../ThemeContext";
 import { useAppContext } from "../../Context/AppContext";
 import { setTime } from "../../utils/setTime";
-import { likePost } from "../../utils/Newsfeed/newsfeed.services";
+import { likePost, deletePost } from "../../utils/Newsfeed/newsfeed.services";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import CommentIconSVG from "../../components/Icons/CommentIconSVG";
+import HorizontalDotsSVG from "../../components/Icons/HorizontalDotsSVG";
+import CustomBottomModal from "../../components/CustomBottomModal/index";
+import ModalActionConfirm from "../../components/CustomBottomModal/ModalActionConfirm";
 
 //============================== Individual Post Cards ==========================
 function Post({ passedPost, windowWidth, isMyPost }) {
@@ -20,6 +23,7 @@ function Post({ passedPost, windowWidth, isMyPost }) {
   const [userLiked, setUserLiked] = useState(false);
   const { currentUser, setPost, post } = useAppContext();
   const [currentPost, setCurrentPost] = useState(passedPost);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (currentPost) {
@@ -93,36 +97,100 @@ function Post({ passedPost, windowWidth, isMyPost }) {
     }
   };
 
+  const handleDeletePost = async () => {
+    const updatedPost = await deletePost(currentPost, setModalVisible);
+
+    if (updatedPost) {
+      console.log(updatedPost);
+      setCurrentPost({
+        ...updatedPost,
+        updated: true,
+      });
+    }
+  };
+
   if (!currentPost) {
     return null;
   }
   //prettier-ignore
   const styles = StyleSheet.create({
-		postStatus:
-			currentPost.isNSFW === true
-				? {
-						paddingHorizontal: 16,
-						paddingVertical: 4,
-						backgroundColor: "#FEF0E8",
-						color: "#F26419",
-						marginLeft: 8,
-						marginTop: 4,
-						borderRadius: 8,
-						overflow: "hidden",
-						alignSelf: "flex-start",
-				}
-				: {
-						paddingHorizontal: 16,
-						paddingVertical: 4,
-						backgroundColor: "#E9FAF0",
-						color: "#23CE6B",
-						marginLeft: 8,
-						marginTop: 4,
-						borderRadius: 8,
-						overflow: "hidden",
-						alignSelf: "flex-start",
-				},
-	});
+    postStatus:
+      currentPost.isNSFW === true
+        ? {
+            paddingHorizontal: 16,
+            paddingVertical: 4,
+            backgroundColor: "#FEF0E8",
+            color: "#F26419",
+            marginLeft: 8,
+            marginTop: 4,
+            borderRadius: 8,
+            overflow: "hidden",
+            alignSelf: "flex-start",
+          }
+        : {
+            paddingHorizontal: 16,
+            paddingVertical: 4,
+            backgroundColor: "#E9FAF0",
+            color: "#23CE6B",
+            marginLeft: 8,
+            marginTop: 4,
+            borderRadius: 8,
+            overflow: "hidden",
+            alignSelf: "flex-start",
+          },
+    timePosted: {
+      color: styleVariables.colors.black,
+      opacity: 0.66,
+      marginHorizontal: 4,
+      paddingHorizontal: 5,
+    },
+  });
+
+  const options = [
+    {
+      content: `Edit`,
+      onPress: () => {},
+      iconName: "pencil",
+      iconColor: "#4D4D4D",
+    },
+    {
+      content: `Delete`,
+      onPress: () => {},
+      iconName: "trash-can-outline",
+      iconColor: "#4D4D4D",
+      renderSubscreen: () => {
+        return (
+          <ModalActionConfirm
+            destructive={true}
+            title={`Delete your post?`}
+            subtitle={"You won't be able to restore it"}
+            confirmText="Delete"
+            onConfirm={() => {
+              handleDeletePost();
+            }}
+            onCancel={() => setModalVisible(false)}
+          />
+        );
+      },
+    },
+    {
+      content: "Turn off notifications",
+      onPress: () => {},
+      iconName: "bell-off-outline",
+      iconColor: "#4D4D4D",
+      renderSubscreen: () => {
+        return (
+          <ModalActionConfirm
+            title={"Turn off notifications for this post?"}
+            subtitle={"You will be able to undo this action"}
+            confirmText="Confirm"
+            // onConfirm={handleTurnOffNotifications}
+            onCancel={() => setModalVisible(false)}
+          />
+        );
+      },
+    },
+  ];
 
   return (
     <TouchableOpacity
@@ -165,7 +233,11 @@ function Post({ passedPost, windowWidth, isMyPost }) {
             <Text
               style={[
                 styleVariables.fontSizes.cardUserName,
-                { color: styleVariables.colors.black, marginLeft: 8 },
+                {
+                  color: styleVariables.colors.black,
+                  marginLeft: 8,
+                  marginBottom: 2,
+                },
               ]}
             >
               {currentPost.userFirstName} {currentPost.userLastName}
@@ -177,17 +249,23 @@ function Post({ passedPost, windowWidth, isMyPost }) {
             ) : (
               ""
             )}
+            <Text
+              id="timePosted"
+              style={[styleVariables.fontSizes.callout, styles.timePosted]}
+            >
+              {timeSincePost}
+            </Text>
           </View>
         </View>
-        <Text
-          id="timePosted"
-          style={[
-            styleVariables.fontSizes.callout,
-            { color: styleVariables.colors.black, opacity: 0.66 },
-          ]}
-        >
-          {timeSincePost}
-        </Text>
+        {currentUser.userID == currentPost.userID ? (
+          <TouchableOpacity
+            onPress={() => {
+              setModalVisible(true);
+            }}
+          >
+            <HorizontalDotsSVG />
+          </TouchableOpacity>
+        ) : null}
       </View>
 
       {/* postContent */}
@@ -274,16 +352,21 @@ function Post({ passedPost, windowWidth, isMyPost }) {
             marginLeft: 17,
           }}
         >
-          <CommentIconSVG style={{ marginRight: 8 }} />
+          <CommentIconSVG />
           <Text
             style={[
               styleVariables.fontSizes.body,
-              { color: styleVariables.colors.black },
+              { color: styleVariables.colors.black, marginLeft: 8 },
             ]}
           >
             {numberOfComments}
           </Text>
         </View>
+        <CustomBottomModal
+          isModalVisible={isModalVisible}
+          setModalVisible={setModalVisible}
+          options={options}
+        ></CustomBottomModal>
       </View>
     </TouchableOpacity>
   );
