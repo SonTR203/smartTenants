@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -20,7 +20,18 @@ import PopupModal from "../../../components/PopupModal";
 const EditProfile = ({ route, navigation }) => {
   const { currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
+  const [toastVisible, setToastVisible] = useState(false);
+  const displayModal = () => {
+    if (route.params?.immediately)
+      return setToastVisible(route.params?.saveModal === true ? true : false);
+    window.setTimeout(() => {
+      return setToastVisible(route.params?.saveModal === true ? true : false);
+    }, 400);
+  };
 
+  useEffect(() => {
+    displayModal();
+  }, [route.params]);
   const styles = (styleVariables) =>
     StyleSheet.create({
       container: {
