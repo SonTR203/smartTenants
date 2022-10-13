@@ -335,7 +335,7 @@ function Comment({
                     style={styles.likeCommentContainer}
                     onPress={handleLikeComment}
                   >
-                    <HeartFilledSVG />
+                    <HeartFilledSVG width={24} height={24} color={"#0AA74C"} />
                   </TouchableOpacity>
                 )}
                 {!userLikedComment && (
@@ -344,7 +344,12 @@ function Comment({
                     style={styles.likeCommentContainer}
                     onPress={handleLikeComment}
                   >
-                    <HeartSVG />
+                    <HeartSVG
+                      width={24}
+                      height={24}
+                      stroke={1.5}
+                      color={styleVariables.colors.black}
+                    />
                   </TouchableOpacity>
                 )}
                 {numberOfCommentLikes > 0 ? (

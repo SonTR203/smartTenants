@@ -41,8 +41,8 @@ function LikeSection({
       currentUser,
       post
     );
+
     if (updatedPost) {
-      console.log(peopleArray);
       setPost({
         ...updatedPost,
         updated: true,
@@ -51,6 +51,7 @@ function LikeSection({
   };
 
   const handleShowPeopleWhoLiked = async () => {
+    console.log("showPeopleWhoLiked running!!!!!!!!");
     let arr = [];
     for (let personID of post.peopleWhoLiked) {
       const colRef = doc(db, `Tenants`, personID);
@@ -65,7 +66,6 @@ function LikeSection({
   // execute function
   useEffect(() => {
     if (post && post.peopleWhoLiked.length > 0) {
-      handleShowPeopleWhoLiked();
       setHeartsToGreen();
       setNumberOfLikes(post.peopleWhoLiked.length);
     }
@@ -74,6 +74,10 @@ function LikeSection({
   useEffect(() => {
     setNumberOfComments(post.commentCount);
   });
+
+  useEffect(() => {
+    handleShowPeopleWhoLiked();
+  }, [post]);
 
   const styles = StyleSheet.create({
     container: {
