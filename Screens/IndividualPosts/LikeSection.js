@@ -7,7 +7,7 @@ import { useAppContext } from "../../Context/AppContext";
 import { likePost } from "../../utils/Newsfeed/newsfeed.services";
 import { useTheme } from "../../ThemeContext";
 import CommentIcon from "../../components/Icons/CommentIconSVG";
-import HeartOutline from "../../components/Icons/HeartSVG";
+import HeartSVG from "../../components/Icons/HeartSVG";
 import HeartFilledSVG from "../../components/Icons/HeartFilledSVG";
 import UsersWhoLikedHeartSVG from "../../components/Icons/UsersWhoLikedHeartSVG";
 
@@ -132,13 +132,26 @@ function LikeSection({
       >
         <View id="likeCount" style={styles.likeCountContainer}>
           {userLiked && (
-            <TouchableOpacity activeOpacity={1} onPress={handleLikePost}>
-              <HeartFilledSVG style={styles.likeIcon}></HeartFilledSVG>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={handleLikePost}
+              style={styles.likeIcon}
+            >
+              <HeartFilledSVG width={24} height={24} color={"#29AA6B"} />
             </TouchableOpacity>
           )}
           {!userLiked && (
-            <TouchableOpacity activeOpacity={1} onPress={handleLikePost}>
-              <HeartOutline style={styles.likeIcon}></HeartOutline>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={handleLikePost}
+              style={styles.likeIcon}
+            >
+              <HeartSVG
+                width={24}
+                height={24}
+                stroke={1.5}
+                color={styleVariables.colors.black}
+              />
             </TouchableOpacity>
           )}
           <Text style={[styleVariables.fontSizes.callout, styles.likedBy]}>

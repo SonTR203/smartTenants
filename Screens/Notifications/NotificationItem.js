@@ -89,7 +89,7 @@ function NotificationItem({
       style={[theme.cardButton, styles.container]}
       activeOpacity={1}
     >
-      <View id="notificationContent">
+      <View id="notificationContent" style={styles.notificationContent}>
         <View id="timeStamp-readState" style={styles.timestampContainer}>
           <Text style={[styleVariables.fontSizes.callout]}>
             {timeSincePost}
@@ -138,6 +138,9 @@ const styles = StyleSheet.create({
   },
   fontFamily: {
     fontFamily: "Roboto_500Medium",
+  },
+  notificationContent: {
+    flex: 1,
   },
 });
 

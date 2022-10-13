@@ -1,11 +1,12 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { FlatList, Text } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import { useAppContext } from "../../../Context/AppContext";
 
 import MarketplaceFirstItem from "../MarketplaceItem/MarketplaceFirstItem";
 import CustomBottomModal from "../../../components/CustomBottomModal";
 import ModalActionConfirm from "../../../components/CustomBottomModal/ModalActionConfirm";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "../../../ThemeContext";
 
 function DynamicListingDisplay({ data, available, handleSetListingSold }) {
@@ -13,7 +14,7 @@ function DynamicListingDisplay({ data, available, handleSetListingSold }) {
   const [selectedItem, setSelectedItem] = React.useState(undefined);
   const navigation = useNavigation();
   const { setCurrentMarketplacePost } = useAppContext();
-  const { styleVariables } = useTheme();
+  const { styleVariables, theme } = useTheme();
 
   const handleOpenSoldModal = (item) => {
     if (available) {
@@ -31,6 +32,10 @@ function DynamicListingDisplay({ data, available, handleSetListingSold }) {
     }
   };
 
+  const handleCreateNewPost = () => {
+    navigation.navigate("CreateMarketplaceItem");
+  };
+
   const renderMyListings = ({ item }) => {
     return (
       <MarketplaceFirstItem
@@ -39,6 +44,7 @@ function DynamicListingDisplay({ data, available, handleSetListingSold }) {
         own={true}
         item={item}
         navigation={navigation}
+        isMyPost={true}
       />
     );
   };
@@ -78,15 +84,32 @@ function DynamicListingDisplay({ data, available, handleSetListingSold }) {
         renderItem={renderMyListings}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={() => (
-          <Text
-            style={{
-              marginTop: 20,
-              textAlign: "center",
-              color: styleVariables.colors.black,
-            }}
-          >
-            You have no listing
-          </Text>
+          <View style={{ paddingHorizontal: 17 }}>
+            <Text
+              style={{
+                marginTop: 20,
+                textAlign: "center",
+                color: "#9D9D9D",
+              }}
+            >
+              You don't have any listings yet
+            </Text>
+            {available ? (
+              <TouchableOpacity
+                onPress={handleCreateNewPost}
+                style={[theme.primaryButton, { marginTop: 24 }]}
+              >
+                <Text
+                  style={[
+                    theme.primaryButtonText,
+                    styleVariables.fontSizes.bodyBold,
+                  ]}
+                >
+                  Create a Listing
+                </Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
         )}
       />
     </>

@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Timestamp } from "firebase/firestore";
 
 import { useTheme } from "../ThemeContext.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -12,9 +19,10 @@ import {
 } from "../utils/firebase.services.js";
 import { useNavigation } from "@react-navigation/native";
 import { useAppContext } from "../Context/AppContext.js";
-import SaveIcon from "../components/SaveIcon/SaveIcon.js";
 import CustomBottomModal from "../components/CustomBottomModal/index.js";
 import ModalActionConfirm from "../components/CustomBottomModal/ModalActionConfirm/index.js";
+import HeartSVG from "../components/Icons/HeartSVG";
+import HeartFilledSVG from "../components/Icons/HeartFilledSVG";
 
 export default function CustomSubStackScreenHeader({ ...props }) {
   const { theme, styleVariables } = useTheme();
@@ -97,6 +105,7 @@ export default function CustomSubStackScreenHeader({ ...props }) {
   const handleSetListingAsSold = async () => {
     const res = await updateItemInFirestore("Marketplace", props.item.id, {
       isSold: props.item.isSold ? false : true,
+      soldDate: props.item.isSold ? "" : Timestamp.fromDate(new Date()),
     });
     if (!res) {
       alert("Something went wrong. Please try again later.");
@@ -250,11 +259,13 @@ export default function CustomSubStackScreenHeader({ ...props }) {
               />
             </Pressable>
           ) : props.item && props.item.isSavedBy ? (
-            <SaveIcon
-              isSaved={isSaved}
-              size={30}
-              onPress={handleSaveMarketplaceItem}
-            />
+            <TouchableOpacity onPress={handleSaveMarketplaceItem}>
+              {isSaved ? (
+                <HeartFilledSVG width={24} height={25} />
+              ) : (
+                <HeartSVG width={24} height={25} stroke={2} />
+              )}
+            </TouchableOpacity>
           ) : null}
         </View>
       </View>

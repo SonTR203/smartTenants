@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
-    padding: 25,
+    padding: 24,
     paddingBottom: 34,
   },
   closeButton: (styleVariables) => ({

@@ -129,9 +129,6 @@ function MarketplaceItemInfoScreen({ navigation }) {
       fontWeight: "400",
       lineHeight: 26,
     },
-    contentContainer: {
-      marginTop: 11,
-    },
     content: {
       color: styleVariables.colors.black,
       fontSize: 17,
@@ -186,6 +183,20 @@ function MarketplaceItemInfoScreen({ navigation }) {
       color: "white",
       backgroundColor: "#395E66",
     },
+    primaryClr: {
+      color: styleVariables.colors.primary,
+    },
+    conditionContainer: {
+      marginVertical: 16,
+    },
+    soldContainer: {
+      marginRight: "auto",
+      paddingVertical: 4,
+      paddingHorizontal: 8,
+      marginTop: 12,
+      borderRadius: 16,
+      backgroundColor: styleVariables.colors.inputBackground,
+    },
   });
 
   return (
@@ -221,8 +232,29 @@ function MarketplaceItemInfoScreen({ navigation }) {
           </Text>
           <Text style={styles.price}>{item.price}</Text>
         </View>
+        {/* ITEM SOLD STATUS */}
+        {item.isSold ? (
+          <View style={styles.soldContainer}>
+            <Text style={[styleVariables.fontSizes.callout, styles.primaryClr]}>
+              Sold on{" "}
+              {new Date(item.soldDate.seconds * 1000).toLocaleDateString(
+                "en-US",
+                {
+                  month: "short",
+                  day: "numeric",
+                }
+              )}
+            </Text>
+          </View>
+        ) : null}
+        {/* ITEM CONDITION */}
+        <View style={styles.conditionContainer}>
+          <Text style={[styleVariables.fontSizes.body, styles.primaryClr]}>
+            Condition: {item.condition}
+          </Text>
+        </View>
         {/* ITEM CONTENT  */}
-        <View style={styles.contentContainer}>
+        <View>
           <Text style={styles.content}>{item.postContent}</Text>
         </View>
         {/* PROFILE SECTION */}

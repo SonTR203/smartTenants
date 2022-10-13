@@ -154,6 +154,7 @@ function PrivateMessagingScreen({ route, navigation }) {
   const handleMarkSold = () => {
     updateItemInFirestore("Marketplace", marketplacePostId, {
       isSold: true,
+      soldDate: Timestamp.fromDate(new Date()),
     });
     setItemSold(true);
     navigation.navigate("MessagesListScreen", {

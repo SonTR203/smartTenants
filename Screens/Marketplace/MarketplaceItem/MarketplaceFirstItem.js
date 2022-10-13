@@ -3,10 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../../../ThemeContext";
 import { useAppContext } from "../../../Context/AppContext";
 import { constants } from "../../../utils/constants";
-import SaveIcon from "../../../components/SaveIcon/SaveIcon";
 import { LinearGradient } from "expo-linear-gradient";
 import { setTime } from "../../../utils/setTime";
 import { incrementItemCLicks } from "../../../utils/Marketplace/marketplace.services.js";
+import HeartFilledSVG from "../../../components/Icons/HeartFilledSVG";
 
 function MarketplaceFirstItem({
   item,
@@ -83,41 +83,40 @@ function MarketplaceFirstItem({
 			borderRadius: 8,
 			backgroundColor: styleVariables.colors.primary,
 			justifyContent: "center",
-			alignItems: "center",
+      alignItems: "center",
+      marginTop: 24
 		},
 		buttonText: {
 			color: "white",
 			fontSize: 17,
 			lineHeight: 22,
 			fontWeight: "400",
-			fontFamily: "Roboto_400Regular",
+      fontFamily: "Roboto_400Regular",
 		},
 		postStatusContainer: {
 			flexDirection: "row",
 			alignItems: "center",
 			marginTop: 8,
 		},
-		postStatus:
-			item.isNSFW === true
-				? {
-						paddingHorizontal: 16,
-						paddingVertical: 4,
-						backgroundColor: "#FEF0E8",
-						color: "#F26419",
-						marginLeft: 8,
-						borderRadius: 8,
-						overflow: "hidden",
-						alignSelf: "flex-start",
-				}
-				: {
-						paddingHorizontal: 16,
-						paddingVertical: 4,
-						backgroundColor: "#E9FAF0",
-						color: "#23CE6B",
-						borderRadius: 8,
-						overflow: "hidden",
-						alignSelf: "flex-start",
-				},
+		postStatusNsfw: {
+			paddingHorizontal: 16,
+			paddingVertical: 4,
+			backgroundColor: "#FEF0E8",
+			color: "#F26419",
+			marginLeft: 8,
+			borderRadius: 8,
+			overflow: "hidden",
+			alignSelf: "flex-start",
+		},
+		postStatusPosted: {
+			paddingHorizontal: 16,
+			paddingVertical: 4,
+			backgroundColor: "#E9FAF0",
+			color: "#23CE6B",
+			borderRadius: 8,
+			overflow: "hidden",
+			alignSelf: "flex-start",
+		},
 	});
 
   useEffect(() => {
@@ -165,12 +164,9 @@ function MarketplaceFirstItem({
         colors={["rgba(0, 0, 0, 0.15)", "rgba(0, 0, 0, 0)"]}
       />
       {saved && (
-        <SaveIcon
-          isSaved={true}
-          onPress={handleUnSaved}
-          style={styles.saveIcon}
-          size={30}
-        />
+        <TouchableOpacity onPress={handleUnSaved} style={styles.saveIcon}>
+          <HeartFilledSVG width={25} height={25} />
+        </TouchableOpacity>
       )}
       {isPopular && (
         <View
@@ -216,7 +212,11 @@ function MarketplaceFirstItem({
             >
               {timeSincePost}
             </Text>
-            <Text style={styles.postStatus}>
+            <Text
+              style={
+                item.isNSFW ? styles.postStatusNsfw : styles.postStatusPosted
+              }
+            >
               {item.isNSFW === false ? "Posted" : "Pending approval"}
             </Text>
           </View>

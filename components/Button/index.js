@@ -18,7 +18,9 @@ const styles = StyleSheet.create({
    */
   button: (destructive, primary) => ({
     paddingVertical: 12,
-    paddingHorizontal: 51.75,
+    flex: 1,
+    marginRight: primary ? 0 : 8,
+    marginLeft: primary ? 8 : 0,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: primary

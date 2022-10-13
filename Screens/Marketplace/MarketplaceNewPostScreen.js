@@ -4,7 +4,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Platform,
   TextInput,
   StyleSheet,
   KeyboardAvoidingView,
@@ -277,7 +276,8 @@ function MarketplaceNewPostScreen({ navigation }) {
         onPress={() => {
           handlePickImage(item.uri, index);
         }}
-        style={styles.imageContainer}>
+        style={styles.imageContainer}
+      >
         <>
           {imageLoading ? (
             <Progress.CircleSnail
@@ -310,9 +310,9 @@ function MarketplaceNewPostScreen({ navigation }) {
       marginHorizontal: 16,
     },
     textInputDescription: {
+      textAlignVertical: "top",
       height: 160,
       paddingTop: 16,
-      paddingBottom: Platform.OS === "android" ? 70 : 0,
     },
     uploadButtonContainer: {
       flexDirection: "row",
@@ -359,6 +359,9 @@ function MarketplaceNewPostScreen({ navigation }) {
       justifyContent: "flex-end",
       margin: 0,
     },
+    submitButton: {
+      marginTop: 12,
+    },
   });
 
   return (
@@ -375,7 +378,8 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}>
+              ]}
+            >
               Title
             </Text>
             <TextInput
@@ -393,13 +397,15 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}>
+              ]}
+            >
               Category
             </Text>
             <TouchableOpacity
               onPress={() => {
                 setCategoryModalVisible(true);
-              }}>
+              }}
+            >
               <View style={[theme.textInput, styles.input]}>
                 <Text
                   style={[
@@ -409,7 +415,8 @@ function MarketplaceNewPostScreen({ navigation }) {
                         ? styleVariables.colors.placeholderText
                         : styleVariables.colors.black,
                     },
-                  ]}>
+                  ]}
+                >
                   {category || "Choose category"}
                 </Text>
                 <ChevronDownSVG />
@@ -421,7 +428,8 @@ function MarketplaceNewPostScreen({ navigation }) {
               backdropOpacity={0.5}
               onBackdropPress={() => setCategoryModalVisible(false)}
               style={styles.modal}
-              statusBarTranslucent={true}>
+              statusBarTranslucent={true}
+            >
               <ModalCategoryPicker
                 theme={theme}
                 styleVariables={styleVariables}
@@ -434,13 +442,15 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}>
+              ]}
+            >
               Condition
             </Text>
             <TouchableOpacity
               onPress={() => {
                 setConditionModalVisible(true);
-              }}>
+              }}
+            >
               <View style={[theme.textInput, styles.input]}>
                 <Text
                   style={[
@@ -450,7 +460,8 @@ function MarketplaceNewPostScreen({ navigation }) {
                         ? styleVariables.colors.placeholderText
                         : styleVariables.colors.black,
                     },
-                  ]}>
+                  ]}
+                >
                   {condition || "Choose condition"}
                 </Text>
                 <ChevronDownSVG />
@@ -462,7 +473,8 @@ function MarketplaceNewPostScreen({ navigation }) {
               backdropOpacity={0.5}
               onBackdropPress={() => setConditionModalVisible(false)}
               style={styles.modal}
-              statusBarTranslucent={true}>
+              statusBarTranslucent={true}
+            >
               <ModalConditionPicker
                 theme={theme}
                 styleVariables={styleVariables}
@@ -476,7 +488,8 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}>
+              ]}
+            >
               Description
             </Text>
             <TextInput
@@ -498,7 +511,8 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}>
+              ]}
+            >
               Price
             </Text>
             <TextInput
@@ -509,7 +523,12 @@ function MarketplaceNewPostScreen({ navigation }) {
               placeholder="$0.00"
               onEndEditing={handleEndEditing}
               onChangeText={setPrice}
-              style={[theme.textInput, styleVariables.fontSizes.body]}
+              style={[
+                category != "Free Goods"
+                  ? theme.textInput
+                  : theme.textInputDisabled,
+                styleVariables.fontSizes.body,
+              ]}
             />
           </View>
           {/* UPLOAD IMAGE */}
@@ -521,31 +540,33 @@ function MarketplaceNewPostScreen({ navigation }) {
             data={selectedImages}
             renderItem={renderSelectedImages}
           />
+          {isLoading ? (
+            <ActivityIndicator
+              style={styles.loader}
+              size="large"
+              color={styleVariables.colors.primary}
+            />
+          ) : (
+            <View style={[styles.horizontalMargin, styles.submitButton]}>
+              {/* SUBMIT BUTTON  */}
+              <TouchableOpacity
+                id="submitPostButton"
+                onPress={handleSubmit}
+                style={[theme.primaryButton]}
+              >
+                <Text
+                  style={[
+                    theme.primaryButtonText,
+                    styleVariables.fontSizes.bodyBold,
+                  ]}
+                >
+                  Submit post
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
-      {/* SUBMIT BUTTON  */}
-      {isLoading ? (
-        <ActivityIndicator
-          style={styles.loader}
-          size="large"
-          color={styleVariables.colors.primary}
-        />
-      ) : (
-        <View style={styles.horizontalMargin}>
-          <TouchableOpacity
-            id="submitPostButton"
-            onPress={handleSubmit}
-            style={[theme.primaryButton]}>
-            <Text
-              style={[
-                theme.primaryButtonText,
-                styleVariables.fontSizes.bodyBold,
-              ]}>
-              Submit post
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
     </View>
   );
 }
