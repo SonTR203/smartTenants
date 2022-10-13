@@ -76,7 +76,9 @@ function LikeSection({
   });
 
   useEffect(() => {
-    handleShowPeopleWhoLiked();
+    if (post) {
+      handleShowPeopleWhoLiked();
+    }
   }, [post]);
 
   const styles = StyleSheet.create({
