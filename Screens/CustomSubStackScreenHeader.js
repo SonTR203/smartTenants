@@ -62,7 +62,8 @@ export default function CustomSubStackScreenHeader({ ...props }) {
       toastOption = {
         saveModal: true,
         modalType: "success",
-        message: "Post deleted",
+        message:
+          props.collection === "Newsfeed" ? "Post deleted" : "Listing deleted",
       };
     } else {
       // alert("Error deleting post. Please try again later.");
@@ -125,10 +126,15 @@ export default function CustomSubStackScreenHeader({ ...props }) {
     }
     setModalVisible(false);
     navigation.navigate(props.previousScreen, {
+      saveModal: true,
       reload: true,
+      modalType: "success",
+      message: props.item.isSold
+        ? "Your item was listed"
+        : "Item marked as sold",
     });
-    let msg = props.item.isSold ? "re-listed" : "sold";
-    alert(`Successfully ${msg} item.`);
+    // let msg = props.item.isSold ? "re-listed" : "sold";
+    // alert(`Successfully ${msg} item.`);
   };
 
   const setModalOptions = () => {
