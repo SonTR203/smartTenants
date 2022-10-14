@@ -8,6 +8,12 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import {
+  deleteImageFromStorage,
+  deleteItemFromFirestore,
+  deleteMultipleImages,
+  updateItemInFirestore,
+} from "../firebase.services.js";
 import _ from "lodash";
 import uuid from "react-native-uuid";
 import { createItemInFirestore, createListener } from "../firebase.services";
@@ -28,37 +34,12 @@ export const getPosts = async () => {
   return sortedListOfPosts;
 };
 
-export const deletePost = async (currentPost, setModalVisible) => {
-  try {
-    const colRef = collection(db, "Newsfeed");
-    const docRef = doc(db, `Newsfeed/${currentPost.id}`);
-
-    const q = query(colRef, where("id", "==", currentPost.id));
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log("doc to be deleted with deletePost => ", doc.data());
-      // await deleteDoc(doc.ref);
-    });
-
-    await updateDoc(colRef);
-  } catch (error) {
-    console.log("error remove post:: ", error);
-    alert("Error removing post. Please try again later.");
-    return;
-  }
-
-  setModalVisible(false);
-  getPosts();
-  return post;
-};
-
-const handleDeleteListing = async () => {
-  const resDB = await deleteItemFromFirestore(props.collection, props.item.id);
-  props.item.images.length > 0 && props.item.images.length < 2
-    ? await deleteImageFromStorage(props.item.images[0])
-    : await deleteMultipleImages(props.item.images);
+// Function to Delete Post from Newsfeed Screen
+export const deletePost = async (item, setModalVisible) => {
+  const resDB = await deleteItemFromFirestore("Newsfeed", item.id);
+  item.images.length > 0 && item.images.length < 2
+    ? await deleteImageFromStorage(item.images[0])
+    : await deleteMultipleImages(item.images);
   if (resDB) {
     alert("Post deleted.");
   } else {
@@ -66,9 +47,6 @@ const handleDeleteListing = async () => {
     return;
   }
   setModalVisible(false);
-  navigation.navigate(props.previousScreen, {
-    reload: true,
-  });
 };
 
 export const likePost = async (

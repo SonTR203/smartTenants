@@ -51,7 +51,6 @@ function LikeSection({
   };
 
   const handleShowPeopleWhoLiked = async () => {
-    console.log("showPeopleWhoLiked running!!!!!!!!");
     let arr = [];
     for (let personID of post.peopleWhoLiked) {
       const colRef = doc(db, `Tenants`, personID);

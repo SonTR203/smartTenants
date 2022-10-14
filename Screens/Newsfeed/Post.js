@@ -102,10 +102,7 @@ function Post({ passedPost, windowWidth, isMyPost }) {
 
     if (updatedPost) {
       console.log(updatedPost);
-      setCurrentPost({
-        ...updatedPost,
-        updated: true,
-      });
+      setCurrentPost({ ...updatedPost });
     }
   };
 
