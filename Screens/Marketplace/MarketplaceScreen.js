@@ -27,6 +27,7 @@ import FilterSVG from "../../components/Icons/FilterSVG";
 import Modal from "react-native-modal";
 import FilterModal from "../../components/FilterModal";
 import SortModal from "../../components/SortModal";
+import PopupModal from "../../components/PopupModal";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -343,6 +344,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         transparent={true}
         // statusBarTranslucent={true}
         visible={toastVisible}
+        // visible={true}
         onRequestClose={() => {
           navigation.setParams({
             saveModal: false,
@@ -360,7 +362,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
           }, 2000);
         }}>
         <PopupModal
-          inlineStyles={{ width: "100%", bottom: -20 }}
+          inlineStyles={{ width: "100%" }}
           modalType={route.params?.modalType}
           message={route.params?.message}
           hideModal={() => {
