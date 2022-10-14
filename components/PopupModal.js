@@ -5,7 +5,7 @@ import SuccessIcon from "../components/Icons/SuccessIcon";
 import WarningIcon from "../components/Icons/WarningIcon";
 import ErrorIcon from "../components/Icons/ErrorIcon";
 
-const PopupModal = ({ modalType, message, hideModal }) => {
+const PopupModal = ({ modalType, message, hideModal, inlineStyles }) => {
   const { styleVariables } = useTheme();
   let primaryColor;
   let mainIcon;
@@ -62,7 +62,7 @@ const PopupModal = ({ modalType, message, hideModal }) => {
         activeOpacity={1}
         style={{ width: "100%", height: "100%" }}
         onPress={() => hideModal()}></TouchableOpacity>
-      <View style={[styleVariables.shadow, styles.mainContainer]}>
+      <View style={[styleVariables.shadow, styles.mainContainer, inlineStyles]}>
         <View style={styles.subContainer}>
           {mainIcon}
           <Text style={[styleVariables.fontSizes.callout, styles.message]}>
