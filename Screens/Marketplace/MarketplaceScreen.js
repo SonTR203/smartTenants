@@ -27,6 +27,7 @@ import FilterSVG from "../../components/Icons/FilterSVG";
 import Modal from "react-native-modal";
 import FilterModal from "../../components/FilterModal";
 import SortModal from "../../components/SortModal";
+import PopupModal from "../../components/PopupModal";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -45,6 +46,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const [sortActive, setSortActive] = useState(false);
   const [filterActive, setFilterActive] = useState(false);
   const [newPostsLength, setNewPostsLength] = useState(0);
+  const [toastVisible, setToastVisible] = useState(false);
   const slideDown = useRef(new Animated.Value(-100)).current;
   let flatListRef;
   const { updatedMarketplacePosts, setUpdatedMarketplacePosts } =
@@ -140,6 +142,18 @@ const MarketplaceScreen = ({ navigation, route }) => {
     return <EmptyListComponent screenName={"marketplace"} />;
   };
 
+  // Toast handler
+  const displayModal = () => {
+    if (route.params?.immediately)
+      return setToastVisible(route.params?.saveModal === true ? true : false);
+    window.setTimeout(() => {
+      return setToastVisible(route.params?.saveModal === true ? true : false);
+    }, 400);
+  };
+
+  useEffect(() => {
+    displayModal();
+  }, [route.params]);
   const renderListHeader = () => {
     return (
       <>
@@ -280,6 +294,42 @@ const MarketplaceScreen = ({ navigation, route }) => {
     // CONTAINER
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
+      {/* SUCCESS / ERROR TOAST */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        // statusBarTranslucent={true}
+        visible={toastVisible}
+        // visible={true}
+        onRequestClose={() => {
+          navigation.setParams({
+            saveModal: false,
+            reload: null,
+            immediately: null,
+          });
+        }}
+        onShow={() => {
+          setTimeout(() => {
+            navigation.setParams({
+              saveModal: false,
+              reload: null,
+              immediately: null,
+            });
+          }, 2000);
+        }}>
+        <PopupModal
+          inlineStyles={{ width: "100%" }}
+          modalType={route.params?.modalType}
+          message={route.params?.message}
+          hideModal={() => {
+            navigation.setParams({
+              saveModal: false,
+              reload: null,
+              immediately: true,
+            });
+          }}
+        />
+      </Modal>
       {/* SORT MODAL */}
       <Modal
         backdropOpacity={0.5}
@@ -325,7 +375,6 @@ const MarketplaceScreen = ({ navigation, route }) => {
           setFilterActive={setFilterActive}
         />
       </Modal>
-
       {/* ITEM LIST  */}
       <View style={styles.flatListContainer}>
         {itemList ? (
