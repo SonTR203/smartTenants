@@ -1,24 +1,8 @@
 {
-  "parser": "babel-eslint",
-  "extends": [
-    "plugin:lodash/recommended",
-    "airbnb",
-    "prettier",
-    "prettier/react"
-  ],
-  "plugins": ["lodash", "react", "prettier"],
-  "settings": {
-    "import/resolver": {
-      "webpack": {
-        "config": "./tools/webpack/config.babel.js"
-      }
-    }
-  },
   "env": {
     "browser": true,
-    "node": true,
-    "jest": true,
-    "es6": true
+    "es2021": true,
+    "node": true
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parserOptions": {
