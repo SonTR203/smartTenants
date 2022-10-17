@@ -1,8 +1,17 @@
 {
+  "parser": "babel-eslint",
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "./tools/webpack/config.babel.js"
+      }
+    }
+  },
   "env": {
     "browser": true,
-    "es2021": true,
-    "node": true
+    "node": true,
+    "jest": true,
+    "es6": true
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parserOptions": {
