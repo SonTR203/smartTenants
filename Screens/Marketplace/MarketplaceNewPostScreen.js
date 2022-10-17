@@ -121,9 +121,9 @@ function MarketplaceNewPostScreen({ navigation }) {
         });
     } catch (err) {
       console.log("error: ", err);
-      Alert.alert(
-        "This functionality is not available on Expo Go. Please use the standalone version."
-      );
+      // Alert.alert(
+      //   "This functionality is not available on Expo Go. Please use the standalone version."
+      // );
     }
   };
 
@@ -181,7 +181,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         createMarketplacePostFirestore(imageUrls, id, isNsfw);
       }
     } else {
-      alert("Please fill out all fields");
+      // alert("Please fill out all fields");
     }
   };
 
@@ -226,7 +226,7 @@ function MarketplaceNewPostScreen({ navigation }) {
           },
         });
       } else if (res) {
-        alert("Marketplace item successfully created!");
+        // alert("Marketplace item successfully created!");
         navigation.goBack();
         navigation.navigate("MarketplaceNavigator", {
           screen: "MarketplaceScreen",
