@@ -87,6 +87,13 @@ const MarketplaceScreen = ({ navigation, route }) => {
     setRefreshing(false);
   }
 
+  // get most popular marketplace item
+  const getMostPopularItem = () => {
+    let sortedListByClicks = itemList.sort((a, b) => {
+      return b.clicks - a.clicks;
+    });
+    return sortedListByClicks[0];
+  };
   useEffect(() => {
     fetchMarketplaceList();
   }, []);
@@ -192,7 +199,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         </View>
         <MarketplaceFirstItem
           isPopular={true}
-          item={filteredItemList ? filteredItemList[0] : itemList[0]}
+          item={getMostPopularItem()}
           navigation={navigation}
         />
       </>
