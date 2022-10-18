@@ -11,7 +11,6 @@ import {
   Image,
   ScrollView,
   FlatList,
-  Alert,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
 import { Timestamp } from "@firebase/firestore";
