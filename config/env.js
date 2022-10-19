@@ -1,40 +1,23 @@
-import {
-  API_KEY_DEV,
-  API_KEY_PROD,
-  AUTH_DOMAIN_DEV,
-  AUTH_DOMAIN_PROD,
-  PROJECT_ID_DEV,
-  PROJECT_ID_PROD,
-  STORAGE_BUCKET_DEV,
-  STORAGE_BUCKET_PROD,
-  MESSAGING_SENDER_ID_DEV,
-  MESSAGING_SENDER_ID_PROD,
-  APP_ID_DEV,
-  APP_ID_PROD,
-  MEASUREMENT_ID_DEV,
-  MEASUREMENT_ID_PROD,
-} from "@env";
-
 function getEnvironment() {
-  if (__DEV__) {
+  if (process.env.NODE_ENV == "development") {
     return {
-      apiKey: API_KEY_DEV,
-      authDomain: AUTH_DOMAIN_DEV,
-      projectId: PROJECT_ID_DEV,
-      storageBucket: STORAGE_BUCKET_DEV,
-      messagingSenderId: MESSAGING_SENDER_ID_DEV,
-      appId: APP_ID_DEV,
-      measurementId: MEASUREMENT_ID_DEV,
+      apiKey: process.env.API_KEY_DEV,
+      authDomain: process.env.AUTH_DOMAIN_DEV,
+      projectId: process.env.PROJECT_ID_DEV,
+      storageBucket: process.env.STORAGE_BUCKET_DEV,
+      messagingSenderId: process.env.MESSAGING_SENDER_ID_DEV,
+      appId: process.env.APP_ID_DEV,
+      measurementId: process.env.MEASUREMENT_ID_DEV,
     };
-  } else {
+  } else if (process.env.NODE_ENV == "production") {
     return {
-      apiKey: API_KEY_PROD,
-      authDomain: AUTH_DOMAIN_PROD,
-      projectId: PROJECT_ID_PROD,
-      storageBucket: STORAGE_BUCKET_PROD,
-      messagingSenderId: MESSAGING_SENDER_ID_PROD,
-      appId: APP_ID_PROD,
-      measurementId: MEASUREMENT_ID_PROD,
+      apiKey: process.env.API_KEY_PROD,
+      authDomain: process.env.AUTH_DOMAIN_PROD,
+      projectId: process.env.PROJECT_ID_PROD,
+      storageBucket: process.env.STORAGE_BUCKET_PROD,
+      messagingSenderId: process.env.MESSAGING_SENDER_ID_PROD,
+      appId: process.env.APP_ID_PROD,
+      measurementId: process.env.MEASUREMENT_ID_PROD,
     };
   }
 }
