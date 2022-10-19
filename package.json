@@ -2,8 +2,7 @@
   "name": "smarttenant",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
-    "start:prod": "expo start",
+    "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
@@ -30,7 +29,7 @@
     "eslint": "^8.15.0",
     "expo": "^46.0.0",
     "expo-app-loading": "~2.1.0",
-    "expo-cli": "^6.0.6",
+    "expo-cli": "^5.2.0",
     "expo-dev-client": "~1.2.1",
     "expo-device": "~4.3.0",
     "expo-file-system": "~14.1.0",
