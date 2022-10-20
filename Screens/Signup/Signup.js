@@ -444,6 +444,7 @@ const Signup = ({ navigation }) => {
                 Email
               </Text>
               <TextInput
+                autoCapitalize="none"
                 placeholderTextColor={
                   signupPressed && !email
                     ? styleVariables.colors.errorText
