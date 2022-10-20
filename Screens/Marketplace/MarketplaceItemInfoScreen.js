@@ -152,7 +152,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
       flexDirection: "column",
     },
     userName: {
-      fontWeight: "500",
+      fontWeight: "600",
       fontSize: 17,
       lineHeight: 24,
       color: styleVariables.colors.black,
@@ -160,7 +160,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
     hoursAgo: {
       fontWeight: "400",
       fontSize: 15,
-      lineHeight: 18,
+      lineHeight: 22,
       color: styleVariables.colors.black,
     },
     messageButton: {
