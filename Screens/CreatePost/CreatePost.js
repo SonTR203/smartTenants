@@ -11,6 +11,8 @@ import {
   Alert,
   StyleSheet,
   Modal,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
@@ -219,6 +221,16 @@ const CreatePost = ({ navigation, route }) => {
       color: styleVariables.colors.primary,
       marginRight: 8,
     },
+    keyboardContainer: {
+      flex: 1,
+      height: "100%",
+    },
+    iOSMarginTop:
+      Platform.OS === "ios"
+        ? {
+            marginTop: "auto",
+          }
+        : null,
   });
 
   return (
@@ -304,25 +316,30 @@ const CreatePost = ({ navigation, route }) => {
             color={styleVariables.colors.primary}
           />
         ) : (
-          <TouchableOpacity
-            id="submitPostButton"
-            onPress={handleSelectedImage}
-            disable={!postContent}
-            style={[
-              theme.primaryButton,
-              styles.submitButton,
-              buttonDisabled ? styles.buttonDisabled : null,
-            ]}
+          <KeyboardAvoidingView
+            style={[styles.keyboardContainer, styles.iOSMarginTop]}
+            behavior="height"
           >
-            <Text
+            <TouchableOpacity
+              id="submitPostButton"
+              onPress={handleSelectedImage}
+              disable={!postContent}
               style={[
-                theme.primaryButtonText,
-                styleVariables.fontSizes.bodyBold,
+                theme.primaryButton,
+                styles.submitButton,
+                buttonDisabled ? styles.buttonDisabled : null,
               ]}
             >
-              Submit post
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  theme.primaryButtonText,
+                  styleVariables.fontSizes.bodyBold,
+                ]}
+              >
+                Submit post
+              </Text>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
         )}
       </View>
     </ScrollView>
