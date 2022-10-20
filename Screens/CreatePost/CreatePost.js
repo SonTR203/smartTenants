@@ -323,7 +323,7 @@ const CreatePost = ({ navigation, route }) => {
             <TouchableOpacity
               id="submitPostButton"
               onPress={handleSelectedImage}
-              disable={!postContent}
+              disabled={buttonDisabled}
               style={[
                 theme.primaryButton,
                 styles.submitButton,
