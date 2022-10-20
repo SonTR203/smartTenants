@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
   closeButton: (styleVariables) => ({
     backgroundColor: "white",
-    padding: 12,
+    padding: 16,
     borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
