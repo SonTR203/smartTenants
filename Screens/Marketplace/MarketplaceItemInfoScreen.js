@@ -118,7 +118,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
       maxWidth: constants.width * 0.74,
       fontSize: 28,
       fontWeight: "600",
-      lineHeight: 33,
+      lineHeight: 34,
       color: styleVariables.colors.black,
     },
     price: {
@@ -126,8 +126,8 @@ function MarketplaceItemInfoScreen({ navigation }) {
       marginLeft: 11,
       color: "#395E66",
       fontSize: 22,
-      fontWeight: "400",
-      lineHeight: 26,
+      fontWeight: "500",
+      lineHeight: 28,
     },
     content: {
       color: styleVariables.colors.black,
@@ -177,9 +177,9 @@ function MarketplaceItemInfoScreen({ navigation }) {
       bottom: 1,
     },
     messageText: {
-      fontWeight: "600",
+      fontWeight: "400",
       fontSize: 17,
-      lineHeight: 20,
+      lineHeight: 22,
       color: "white",
       backgroundColor: "#395E66",
     },
