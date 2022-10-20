@@ -267,7 +267,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
               colors: item.userColors,
             }}
             size={43}
-            borderRadius={12}
+            borderRadius={8}
           />
           <View style={styles.userNameContainer}>
             <Text style={styles.userName}>
