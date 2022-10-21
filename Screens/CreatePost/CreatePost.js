@@ -200,6 +200,7 @@ const CreatePost = ({ navigation, route }) => {
       marginBottom: 20,
     },
     buttonDisabled: {
+      marginTop: "auto",
       backgroundColor: "#748E94",
     },
     container: {
@@ -327,8 +328,9 @@ const CreatePost = ({ navigation, route }) => {
               disabled={buttonDisabled}
               style={[
                 theme.primaryButton,
-                styles.submitButton,
-                buttonDisabled ? styles.buttonDisabled : null,
+
+                buttonDisabled ? styles.buttonDisabled : styles.submitButton,
+                ,
               ]}
             >
               <Text
