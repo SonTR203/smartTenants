@@ -12,12 +12,7 @@ import {
   likeComment,
   deleteComment,
 } from "../../utils/IndividualPosts/individualPosts.services";
-import {
-  deleteImageFromStorage,
-  deleteItemFromFirestore,
-  deleteMultipleImages,
-  updateItemInFirestore,
-} from "../utils/firebase.services.js";
+
 import _ from "lodash";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";

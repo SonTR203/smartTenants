@@ -12,7 +12,6 @@ import {
   deleteImageFromStorage,
   deleteItemFromFirestore,
   deleteMultipleImages,
-  updateItemInFirestore,
 } from "../firebase.services.js";
 import _ from "lodash";
 import uuid from "react-native-uuid";
