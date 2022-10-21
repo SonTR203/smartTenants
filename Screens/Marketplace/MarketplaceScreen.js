@@ -28,6 +28,7 @@ import Modal from "react-native-modal";
 import FilterModal from "../../components/FilterModal";
 import SortModal from "../../components/SortModal";
 import PopupModal from "../../components/PopupModal";
+import { getDistance } from "geolib";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -172,6 +173,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
       unsubscribe();
     };
   }, []);
+
   // new itemList button animation handler
   useEffect(() => {
     if (refreshing) return;
