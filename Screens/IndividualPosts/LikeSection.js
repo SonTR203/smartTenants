@@ -41,6 +41,7 @@ function LikeSection({
       currentUser,
       post
     );
+
     if (updatedPost) {
       setPost({
         ...updatedPost,
@@ -64,7 +65,6 @@ function LikeSection({
   // execute function
   useEffect(() => {
     if (post && post.peopleWhoLiked.length > 0) {
-      handleShowPeopleWhoLiked();
       setHeartsToGreen();
       setNumberOfLikes(post.peopleWhoLiked.length);
     }
@@ -73,6 +73,12 @@ function LikeSection({
   useEffect(() => {
     setNumberOfComments(post.commentCount);
   });
+
+  useEffect(() => {
+    if (post) {
+      handleShowPeopleWhoLiked();
+    }
+  }, [post]);
 
   const styles = StyleSheet.create({
     container: {

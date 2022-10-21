@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
    *
    */
   button: (destructive, primary) => ({
-    paddingVertical: 12,
+    paddingVertical: 16,
     flex: 1,
     marginRight: primary ? 0 : 8,
     marginLeft: primary ? 8 : 0,

@@ -8,6 +8,11 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import {
+  deleteImageFromStorage,
+  deleteItemFromFirestore,
+  deleteMultipleImages,
+} from "../firebase.services.js";
 import _ from "lodash";
 import uuid from "react-native-uuid";
 import { createItemInFirestore, createListener } from "../firebase.services";
@@ -26,6 +31,23 @@ export const getPosts = async () => {
   });
   const sortedListOfPosts = _.sortBy(formattedData, "timestamp").reverse();
   return sortedListOfPosts;
+};
+
+// Function to Delete Post from Newsfeed Screen
+export const deletePost = async (item, setModalVisible) => {
+  const resDB = await deleteItemFromFirestore("Newsfeed", item.id);
+  item.images.length > 0 && item.images.length < 2
+    ? await deleteImageFromStorage(item.images[0])
+    : await deleteMultipleImages(item.images);
+  if (resDB) {
+    alert("Post deleted.");
+  } else {
+    alert("Error deleting post. Please try again later.");
+    return;
+  }
+  setModalVisible(false);
+  const posts = await getPosts();
+  return posts;
 };
 
 export const likePost = async (

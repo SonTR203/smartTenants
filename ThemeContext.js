@@ -83,7 +83,7 @@ let styleVariables = {
       lineHeight: 20, //added line height
     },
     cardUserName: {
-      fontSize: 17,
+      fontSize: 15,
       fontFamily: "Roboto_500Medium",
       lineHeight: 20, //added line height
       color: "#4d4d4d",
@@ -254,7 +254,7 @@ const theme = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    paddingVertical: 20,
+    paddingVertical: 16,
     borderColor: styleVariables.colors.primary14,
     borderWidth: 2,
     borderRadius: 18,
@@ -355,7 +355,7 @@ const theme = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     backgroundColor: "#F5F7F7",
-    padding: 17,
+    padding: 16,
     marginHorizontal: 17,
     borderRadius: 16,
   },
