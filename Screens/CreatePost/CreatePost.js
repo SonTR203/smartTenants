@@ -328,9 +328,7 @@ const CreatePost = ({ navigation, route }) => {
               disabled={buttonDisabled}
               style={[
                 theme.primaryButton,
-
                 buttonDisabled ? styles.buttonDisabled : styles.submitButton,
-                ,
               ]}
             >
               <Text
