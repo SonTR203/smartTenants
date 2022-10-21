@@ -5,11 +5,6 @@ import { useTheme } from "../../ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppContext } from "../../Context/AppContext";
 
-// Import DB from Firestore config file
-import { db } from "../../firebase-config";
-
-// Import required functions
-import { collection } from "@firebase/firestore";
 // import { compact } from "lodash";
 
 const BuildingInfo = () => {

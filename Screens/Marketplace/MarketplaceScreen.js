@@ -27,7 +27,7 @@ import FilterSVG from "../../components/Icons/FilterSVG";
 import Modal from "react-native-modal";
 import FilterModal from "../../components/FilterModal";
 import SortModal from "../../components/SortModal";
-import { getDistance } from "geolib";
+// import { getDistance } from "geolib";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -52,7 +52,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const {
     updatedMarketplacePosts,
     setUpdatedMarketplacePosts,
-    currentUserBuilding,
+    // currentUserBuilding,
   } = useAppContext();
 
   const onRefresh = useCallback(() => {
