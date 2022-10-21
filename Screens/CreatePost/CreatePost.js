@@ -231,7 +231,7 @@ const CreatePost = ({ navigation, route }) => {
       marginTop: "auto",
     },
     androidOSMarginTop: {
-      marginTop: "none",
+      marginTop: 0,
     },
   });
 
