@@ -113,9 +113,7 @@ function Post({ passedPost, windowWidth, isMyPost, setPosts, setRefreshing }) {
   }
   //prettier-ignore
   const styles = StyleSheet.create({
-    postStatus:
-      currentPost.isNSFW === true
-        ? {
+    postNSFW: {
             paddingHorizontal: 16,
             paddingVertical: 4,
             backgroundColor: "#FEF0E8",
@@ -125,9 +123,9 @@ function Post({ passedPost, windowWidth, isMyPost, setPosts, setRefreshing }) {
             borderRadius: 8,
             overflow: "hidden",
             alignSelf: "flex-start",
-          }
-        : {
-            paddingHorizontal: 16,
+    },
+    postNotNSFW: {
+           paddingHorizontal: 16,
             paddingVertical: 4,
             backgroundColor: "#E9FAF0",
             color: "#23CE6B",
@@ -136,7 +134,7 @@ function Post({ passedPost, windowWidth, isMyPost, setPosts, setRefreshing }) {
             borderRadius: 8,
             overflow: "hidden",
             alignSelf: "flex-start",
-          },
+    },
     timePosted: {
       color: styleVariables.colors.black,
       opacity: 0.66,
@@ -242,7 +240,13 @@ function Post({ passedPost, windowWidth, isMyPost, setPosts, setRefreshing }) {
               {currentPost.userFirstName} {currentPost.userLastName}
             </Text>
             {isMyPost === true ? (
-              <Text style={styles.postStatus}>
+              <Text
+                style={
+                  currentPost.isNSFW === true
+                    ? styles.postNSFW
+                    : styles.postNotNSFW
+                }
+              >
                 {currentPost.isNSFW === false ? "Posted" : "Pending approval"}
               </Text>
             ) : (
