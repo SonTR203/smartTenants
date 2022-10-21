@@ -14,7 +14,7 @@ import CustomBottomModal from "../../components/CustomBottomModal/index";
 import ModalActionConfirm from "../../components/CustomBottomModal/ModalActionConfirm";
 
 //============================== Individual Post Cards ==========================
-function Post({ passedPost, windowWidth, isMyPost }) {
+function Post({ passedPost, windowWidth, isMyPost, setPosts, setRefreshing }) {
   const navigation = useNavigation();
   const { theme, styleVariables } = useTheme();
   const [numberOfLikes, setNumberOfLikes] = useState(0);
@@ -98,11 +98,13 @@ function Post({ passedPost, windowWidth, isMyPost }) {
   };
 
   const handleDeletePost = async () => {
+    setRefreshing(true);
     const updatedPost = await deletePost(currentPost, setModalVisible);
 
     if (updatedPost) {
-      console.log(updatedPost);
-      setCurrentPost({ ...updatedPost });
+      console.log("DELETING");
+      setPosts(updatedPost);
+      setRefreshing(false);
     }
   };
 

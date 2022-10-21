@@ -132,7 +132,12 @@ const Newsfeed = ({ navigation, route }) => {
     [[posts]]
   );
   const renderPostItem = ({ item }) => (
-    <Post passedPost={item} windowWidth={constants.width} />
+    <Post
+      passedPost={item}
+      windowWidth={constants.width}
+      setPosts={setPosts}
+      setRefreshing={setRefreshing}
+    />
   );
 
   const renderEmpty = () => {

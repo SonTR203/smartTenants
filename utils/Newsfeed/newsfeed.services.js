@@ -47,6 +47,8 @@ export const deletePost = async (item, setModalVisible) => {
     return;
   }
   setModalVisible(false);
+  const posts = await getPosts();
+  return posts;
 };
 
 export const likePost = async (
