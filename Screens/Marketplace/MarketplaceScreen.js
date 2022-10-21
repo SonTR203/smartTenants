@@ -27,7 +27,7 @@ import FilterSVG from "../../components/Icons/FilterSVG";
 import Modal from "react-native-modal";
 import FilterModal from "../../components/FilterModal";
 import SortModal from "../../components/SortModal";
-import PopupModal from "../../components/PopupModal";
+import { getDistance } from "geolib";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -49,8 +49,11 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const [toastVisible, setToastVisible] = useState(false);
   const slideDown = useRef(new Animated.Value(-100)).current;
   let flatListRef;
-  const { updatedMarketplacePosts, setUpdatedMarketplacePosts } =
-    useAppContext();
+  const {
+    updatedMarketplacePosts,
+    setUpdatedMarketplacePosts,
+    currentUserBuilding,
+  } = useAppContext();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -132,7 +135,28 @@ const MarketplaceScreen = ({ navigation, route }) => {
       unsubscribe();
     };
   }, []);
-
+  // useEffect(() => {
+  //   if (!itemList) return;
+  //   // setItemList([...itemList.map((item) => {
+  //   //   const distance = getDistance(currentUserBuilding.location, item.buildingCoord)
+  //   //   console.log(distance)
+  //   // })]);
+  //   itemList.forEach((item) => {
+  //     console.log(currentUserBuilding.location);
+  //     console.log(item.buildingCoord);
+  //     const distance = getDistance(
+  //       {
+  //         latitude: currentUserBuilding.location.latitude,
+  //         longitude: currentUserBuilding.location.longitude,
+  //       },
+  //       {
+  //         latitude: item.buildingCoord.latitude,
+  //         longitude: item.buildingCoord.longitude,
+  //       }
+  //     );
+  //     console.log(distance);
+  //   });
+  // }, [itemList]);
   // new itemList button animation handler
   useEffect(() => {
     console.log("new length " + newPostsLength);
