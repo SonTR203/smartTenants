@@ -215,6 +215,7 @@ const CreatePost = ({ navigation, route }) => {
       paddingVertical: 16,
       borderRadius: 16,
       marginTop: 12,
+      marginBottom: 12,
       backgroundColor: styleVariables.colors.inputBackground,
     },
     uploadImageText: {
