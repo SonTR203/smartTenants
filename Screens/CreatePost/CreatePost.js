@@ -227,12 +227,12 @@ const CreatePost = ({ navigation, route }) => {
       flex: 1,
       height: "100%",
     },
-    iOSMarginTop:
-      Platform.OS === "ios"
-        ? {
-            marginTop: "auto",
-          }
-        : null,
+    iOSMarginTop: {
+      marginTop: "auto",
+    },
+    androidOSMarginTop: {
+      marginTop: "none",
+    },
   });
 
   return (
@@ -319,7 +319,12 @@ const CreatePost = ({ navigation, route }) => {
           />
         ) : (
           <KeyboardAvoidingView
-            style={[styles.keyboardContainer, styles.iOSMarginTop]}
+            style={[
+              styles.keyboardContainer,
+              Platform.OS === "ios"
+                ? styles.iOSMarginTop
+                : styles.androidOSMarginTop,
+            ]}
             behavior="height"
           >
             <TouchableOpacity
