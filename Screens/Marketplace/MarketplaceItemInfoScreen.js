@@ -113,6 +113,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
       backgroundColor: "white",
       flexDirection: "row",
       alignItems: "flex-start",
+      marginBottom: 8,
     },
     title: {
       maxWidth: constants.width * 0.74,
@@ -206,8 +207,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
       {/* BODY SECTION  */}
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={styles.scrollView}
-      >
+        style={styles.scrollView}>
         {/* IMAGE LIST  */}
         <FlatList
           contentContainerStyle={styles.flatList}
@@ -232,6 +232,11 @@ function MarketplaceItemInfoScreen({ navigation }) {
           </Text>
           <Text style={styles.price}>{item.price}</Text>
         </View>
+        {item.distance !== 0 && (
+          <Text style={styleVariables.fontSizes.callout}>
+            {item.distance.toFixed(1)}km
+          </Text>
+        )}
         {/* ITEM SOLD STATUS */}
         {item.isSold ? (
           <View style={styles.soldContainer}>
@@ -279,15 +284,14 @@ function MarketplaceItemInfoScreen({ navigation }) {
           </View>
         </View>
         {/* SEND A MESSAGE BOX  */}
-        {item.userID === currentUser.userID ? null : (
-          <TouchableOpacity
-            onPress={handleSendMessage}
-            style={styles.messageButton}
-          >
-            <Text style={styles.messageText}>Send a message</Text>
-          </TouchableOpacity>
-        )}
       </ScrollView>
+      {item.userID === currentUser.userID ? null : (
+        <TouchableOpacity
+          onPress={handleSendMessage}
+          style={styles.messageButton}>
+          <Text style={styles.messageText}>Send a message</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
