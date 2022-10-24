@@ -28,7 +28,6 @@ import Modal from "react-native-modal";
 import FilterModal from "../../components/FilterModal";
 import SortModal from "../../components/SortModal";
 import PopupModal from "../../components/PopupModal";
-// import { getDistance } from "geolib";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -53,23 +52,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const {
     updatedMarketplacePosts,
     setUpdatedMarketplacePosts,
-    // currentUserBuilding,
+    currentUserBuilding,
   } = useAppContext();
-  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-    console.log("run");
-    var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2 - lat1); // deg2rad below
-    var dLon = deg2rad(lon2 - lon1);
-    var a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) *
-        Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c; // Distance in km
-    return d;
-  }
 
   function deg2rad(deg) {
     return deg * (Math.PI / 180);
@@ -89,6 +73,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         );
         return { ...item, distance: distance };
       });
+      console.log(listWithDistance);
       setItemList(listWithDistance);
       setRefreshing(false);
     });
