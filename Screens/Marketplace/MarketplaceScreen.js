@@ -27,7 +27,7 @@ import FilterSVG from "../../components/Icons/FilterSVG";
 import Modal from "react-native-modal";
 import FilterModal from "../../components/FilterModal";
 import SortModal from "../../components/SortModal";
-// import { getDistance } from "geolib";
+import { getDistance } from "geolib";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -52,19 +52,47 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const {
     updatedMarketplacePosts,
     setUpdatedMarketplacePosts,
-    // currentUserBuilding,
+    currentUserBuilding,
   } = useAppContext();
+  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    console.log("run");
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+  }
 
+  function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+  }
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     resetAnimation();
     wait(refreshDelay).then(async () => {
       const list = await getMarketplaceItems();
-      setItemList(list);
+      const listWithDistance = list.map((item) => {
+        if (!item) return;
+        const distance = getDistanceFromLatLonInKm(
+          currentUserBuilding.location.latitude,
+          currentUserBuilding.location.longitude,
+          item.buildingCoord.latitude,
+          item.buildingCoord.longitude
+        );
+        return { ...item, distance: distance };
+      });
+      console.log(listWithDistance);
+      setItemList(listWithDistance);
       setRefreshing(false);
     });
   }, []);
-
   const startAnimation = () => {
     Animated.spring(slideDown, {
       toValue: 0,
@@ -83,7 +111,17 @@ const MarketplaceScreen = ({ navigation, route }) => {
   // only fetching available items, not sold items
   async function fetchMarketplaceList() {
     const list = await getMarketplaceItems();
-    const avaialbleListings = list.filter((item) => {
+    const listWithDistance = list.map((item) => {
+      if (!item) return;
+      const distance = getDistanceFromLatLonInKm(
+        currentUserBuilding.location.latitude,
+        currentUserBuilding.location.longitude,
+        item.buildingCoord.latitude,
+        item.buildingCoord.longitude
+      );
+      return { ...item, distance: distance };
+    });
+    const avaialbleListings = listWithDistance.filter((item) => {
       return !item.isSold;
     });
     setItemList(avaialbleListings);
@@ -137,30 +175,26 @@ const MarketplaceScreen = ({ navigation, route }) => {
   }, []);
   // useEffect(() => {
   //   if (!itemList) return;
-  //   // setItemList([...itemList.map((item) => {
-  //   //   const distance = getDistance(currentUserBuilding.location, item.buildingCoord)
-  //   //   console.log(distance)
-  //   // })]);
-  //   itemList.forEach((item) => {
-  //     console.log(currentUserBuilding.location);
-  //     console.log(item.buildingCoord);
-  //     const distance = getDistance(
-  //       {
-  //         latitude: currentUserBuilding.location.latitude,
-  //         longitude: currentUserBuilding.location.longitude,
-  //       },
-  //       {
-  //         latitude: item.buildingCoord.latitude,
-  //         longitude: item.buildingCoord.longitude,
-  //       }
-  //     );
-  //     console.log(distance);
-  //   });
+  //   setItemList([
+  //     ...itemList.map((item) => {
+  //       if (!item) return;
+  //       const distance = getDistance(
+  //         {
+  //           latitude: currentUserBuilding.location.latitude,
+  //           longitude: currentUserBuilding.location.longitude,
+  //         },
+  //         {
+  //           latitude: item.buildingCoord.latitude,
+  //           longitude: item.buildingCoord.longitude,
+  //         }
+  //       );
+  //       return { ...item, distance: distance };
+  //     }),
+  //   ]);
+  //   setRefreshing(false);
   // }, [itemList]);
   // new itemList button animation handler
   useEffect(() => {
-    console.log("new length " + newPostsLength);
-    console.log(itemList?.length);
     if (refreshing) return;
     if (newPostsLength > itemList.length) {
       startAnimation();
