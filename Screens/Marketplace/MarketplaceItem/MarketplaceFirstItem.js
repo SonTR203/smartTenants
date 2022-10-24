@@ -19,6 +19,7 @@ function MarketplaceFirstItem({
   isPopular = false,
   isMyPost,
 }) {
+  console.log(item);
   const { theme, styleVariables } = useTheme();
   const { setCurrentMarketplacePost } = useAppContext();
   const [timeSincePost, setTimeSincePost] = useState("");
@@ -41,7 +42,6 @@ function MarketplaceFirstItem({
 			flex: 1,
 			marginLeft: 17,
 			marginRight: 17,
-			marginBottom: 11,
 			flexDirection: "column",
 		},
 		title: {
@@ -57,6 +57,7 @@ function MarketplaceFirstItem({
 			fontWeight: "400",
 			lineHeight: 26,
 			marginTop: 8,
+      marginBottom:8
 		},
 		contentContainer: {
 			marginLeft: 17,
@@ -142,8 +143,7 @@ function MarketplaceFirstItem({
         });
       }}
       style={[theme.marketplaceItemContainer, styles.container]}
-      activeOpacity={1}
-    >
+      activeOpacity={1}>
       {/* ITEM IMAGE  */}
 
       <Image style={styles.image} source={{ uri: item.images[0] }} />
@@ -179,16 +179,14 @@ function MarketplaceFirstItem({
             backgroundColor: "rgba(255, 255, 255, 0.9)",
             borderRadius: 8,
             ...styleVariables.shadow,
-          }}
-        >
+          }}>
           <Text
             style={{
               fontSize: 15,
               lineHeight: 20,
               color: styleVariables.colors.popularOrange,
               textAlign: "center",
-            }}
-          >
+            }}>
             Popular 🔥️
           </Text>
         </View>
@@ -197,26 +195,26 @@ function MarketplaceFirstItem({
       {/* IMAGE TITLE & PRICE  */}
 
       <View style={styles.titleContainer}>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
             {item.postTitle}
           </Text>
-          <Text style={styles.price}>
-            {item.price === 0 ? "Free" : item.price}
-          </Text>
+          {item.distance !== 0 && (
+            <Text style={[styleVariables.fontSizes.callout]}>
+              {item.distance.toFixed(1)}km
+            </Text>
+          )}
         </View>
         {isMyPost === true ? (
           <View style={styles.postStatusContainer}>
             <Text
-              style={[styleVariables.fontSizes.callout, { marginRight: 8 }]}
-            >
+              style={[styleVariables.fontSizes.callout, { marginRight: 8 }]}>
               {timeSincePost}
             </Text>
             <Text
               style={
                 item.isNSFW ? styles.postStatusNsfw : styles.postStatusPosted
-              }
-            >
+              }>
               {item.isNSFW === false ? "Posted" : "Pending approval"}
             </Text>
           </View>
@@ -226,19 +224,20 @@ function MarketplaceFirstItem({
       </View>
       {/* ITEM CONTENT  */}
       <View style={styles.contentContainer}>
+        <Text style={styles.price}>
+          {item.price === 0 ? "Free" : item.price}
+        </Text>
         <Text style={styles.content} numberOfLines={2} ellipsizeMode={"tail"}>
           {item.postContent}
         </Text>
         {own || sold ? (
           <TouchableOpacity
             onPress={() => handleOpenSoldModal(item)}
-            style={styles.bottomButton}
-          >
+            style={styles.bottomButton}>
             <Text
               style={styles.buttonText}
               numberOfLines={2}
-              ellipsizeMode={"tail"}
-            >
+              ellipsizeMode={"tail"}>
               {sold ? "List again" : "Mark as sold"}
             </Text>
           </TouchableOpacity>
