@@ -19,7 +19,6 @@ function MarketplaceFirstItem({
   isPopular = false,
   isMyPost,
 }) {
-  console.log(item);
   const { theme, styleVariables } = useTheme();
   const { setCurrentMarketplacePost } = useAppContext();
   const [timeSincePost, setTimeSincePost] = useState("");
