@@ -172,6 +172,7 @@ const Login = ({ navigation, route }) => {
                 Email
               </Text>
               <TextInput
+                autoCapitalize="none"
                 placeholderTextColor={styleVariables.colors.placeholderText}
                 placeholder="name@email.com"
                 value={email}

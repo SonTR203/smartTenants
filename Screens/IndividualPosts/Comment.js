@@ -12,6 +12,7 @@ import {
   likeComment,
   deleteComment,
 } from "../../utils/IndividualPosts/individualPosts.services";
+
 import _ from "lodash";
 import DynamicProfilePicture from "../../components/ProfilePicture/DynamicProfilePicture";
 import CommentReply from "./CommentReply";
@@ -160,7 +161,7 @@ function Comment({
     fullName: { color: styleVariables.colors.black },
     timestamp: { color: styleVariables.colors.black, opacity: 0.66 },
     content: {
-      color: styleVariables.colors.primary,
+      color: styleVariables.colors.black,
       marginBottom: 17,
     },
     HorizontalDots: {
@@ -329,7 +330,7 @@ function Comment({
                     style={styles.likeCommentContainer}
                     onPress={handleLikeComment}
                   >
-                    <HeartFilledSVG />
+                    <HeartFilledSVG width={24} height={24} color={"#0AA74C"} />
                   </TouchableOpacity>
                 )}
                 {!userLikedComment && (
@@ -338,7 +339,12 @@ function Comment({
                     style={styles.likeCommentContainer}
                     onPress={handleLikeComment}
                   >
-                    <HeartSVG />
+                    <HeartSVG
+                      width={24}
+                      height={24}
+                      stroke={1.5}
+                      color={styleVariables.colors.black}
+                    />
                   </TouchableOpacity>
                 )}
                 {numberOfCommentLikes > 0 ? (
