@@ -172,26 +172,6 @@ const MarketplaceScreen = ({ navigation, route }) => {
       unsubscribe();
     };
   }, []);
-  // useEffect(() => {
-  //   if (!itemList) return;
-  //   setItemList([
-  //     ...itemList.map((item) => {
-  //       if (!item) return;
-  //       const distance = getDistance(
-  //         {
-  //           latitude: currentUserBuilding.location.latitude,
-  //           longitude: currentUserBuilding.location.longitude,
-  //         },
-  //         {
-  //           latitude: item.buildingCoord.latitude,
-  //           longitude: item.buildingCoord.longitude,
-  //         }
-  //       );
-  //       return { ...item, distance: distance };
-  //     }),
-  //   ]);
-  //   setRefreshing(false);
-  // }, [itemList]);
   // new itemList button animation handler
   useEffect(() => {
     if (refreshing) return;
