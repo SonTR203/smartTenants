@@ -14,9 +14,7 @@ package-lock.json
 .DS_Store
 # Android local
 .idea/
-config/env.development.js
-config/env.production.js
-
+config/
 
 
 
