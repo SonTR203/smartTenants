@@ -87,7 +87,6 @@ const MarketplaceScreen = ({ navigation, route }) => {
         );
         return { ...item, distance: distance };
       });
-      console.log(listWithDistance);
       setItemList(listWithDistance);
       setRefreshing(false);
     });
