@@ -38,6 +38,7 @@ const IndividualPosts = ({ navigation, route }) => {
   const [commentBoxPlaceholder, setCommentBoxPlaceholder] =
     useState("Post a comment");
   const commentListRef = useRef();
+  const commentBoxText = useRef("");
 
   // Get all Comments
   const getComments = () => {
@@ -209,6 +210,7 @@ const IndividualPosts = ({ navigation, route }) => {
         setRepliesVisible={setRepliesVisible}
         commentBoxPlaceholder={commentBoxPlaceholder}
         setCommentBoxPlaceholder={setCommentBoxPlaceholder}
+        commentBoxText={commentBoxText}
       />
     );
   };
