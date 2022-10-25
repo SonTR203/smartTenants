@@ -14,7 +14,7 @@ package-lock.json
 .DS_Store
 # Android local
 .idea/
-config/.env.*
+config/env.*
 
 
 # @generated expo-cli sync-e7dcf75f4e856f7b6f3239b3f3a7dd614ee755a8
