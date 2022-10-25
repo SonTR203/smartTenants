@@ -77,7 +77,8 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
               : "10%",
           display: getRouteName(),
         },
-      ]}>
+      ]}
+    >
       <View style={{ flexDirection: "row" }}>
         <Animated.View
           style={[
@@ -119,7 +120,8 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
                   flex: 1,
                   marginBottom: 28,
                   marginTop: 8,
-                }}>
+                }}
+              >
                 <BottomMenuItem
                   label={label.toString()}
                   isCurrent={isFocused}
