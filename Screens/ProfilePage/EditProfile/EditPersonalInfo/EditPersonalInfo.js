@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
   StyleSheet,
+  Modal,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { doc, updateDoc } from "@firebase/firestore";
@@ -27,6 +28,7 @@ import {
 import DynamicProfilePicture from "../../../../components/ProfilePicture/DynamicProfilePicture";
 import LoadingIndicator from "../../../../components/LoadingIndicator";
 import { uploadImageToStorage } from "../../../../utils/firebase.services";
+import PopupModal from "../../../../components/PopupModal";
 
 const EditPersonalInfo = ({ navigation }) => {
   const { currentUser, setCurrentUser } = useAppContext();
@@ -38,6 +40,9 @@ const EditPersonalInfo = ({ navigation }) => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastType, setToastType] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
 
   const checkTextInputs = () => {
     try {
@@ -117,7 +122,11 @@ const EditPersonalInfo = ({ navigation }) => {
         userProfileImage: imageUrl,
       });
       changeProfileImageInDatabase(imageUrl);
-      Alert.alert("Success", "Profile image updated");
+      setToastType("success");
+      setToastMessage("Profile image updated");
+      window.setTimeout(() => {
+        setToastVisible(true);
+      }, 400);
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -165,6 +174,27 @@ const EditPersonalInfo = ({ navigation }) => {
   return (
     <SafeAreaView edges={["top"]}>
       <LoadingIndicator visible={isLoading} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        // statusBarTranslucent={true}
+        visible={toastVisible}
+        onRequestClose={() => {
+          setToastVisible(false);
+        }}
+        onShow={() => {
+          setTimeout(() => {
+            setToastVisible(false);
+          }, 2000);
+        }}>
+        <PopupModal
+          modalType={toastType}
+          message={toastMessage}
+          hideModal={() => {
+            setToastVisible(false);
+          }}
+        />
+      </Modal>
       <View>
         <ScrollView
           contentContainerStyle={{
@@ -177,8 +207,7 @@ const EditPersonalInfo = ({ navigation }) => {
             {
               height: "100%",
             },
-          ]}
-        >
+          ]}>
           <StatusBar style="dark" />
           <View>
             {/* userHeader */}
@@ -189,8 +218,7 @@ const EditPersonalInfo = ({ navigation }) => {
                 flexDirection: "row",
                 width: "100%",
                 paddingVertical: 34,
-              }}
-            >
+              }}>
               {isLoading ? (
                 <View style={styles.profileLoading}>
                   <ActivityIndicator
@@ -215,20 +243,17 @@ const EditPersonalInfo = ({ navigation }) => {
                   style={[
                     styleVariables.fontSizes.title,
                     { marginBottom: 4, color: styleVariables.colors.black },
-                  ]}
-                >
+                  ]}>
                   {currentUser.firstName} {currentUser.lastName}
                 </Text>
                 <TouchableOpacity
                   onPress={() => pickImage()}
-                  style={{ flexDirection: "row" }}
-                >
+                  style={{ flexDirection: "row" }}>
                   <Text
                     style={[
                       styleVariables.fontSizes.body,
                       { color: styleVariables.colors.primary, opacity: 0.66 },
-                    ]}
-                  >
+                    ]}>
                     Change profile picture
                   </Text>
                   <MaterialCommunityIcons
@@ -247,8 +272,7 @@ const EditPersonalInfo = ({ navigation }) => {
                   style={[
                     theme.textInputLabel,
                     styleVariables.fontSizes.calloutBold,
-                  ]}
-                >
+                  ]}>
                   First Name
                 </Text>
                 <TextInput
@@ -264,8 +288,7 @@ const EditPersonalInfo = ({ navigation }) => {
                   style={[
                     theme.textInputLabel,
                     styleVariables.fontSizes.calloutBold,
-                  ]}
-                >
+                  ]}>
                   Last name
                 </Text>
                 <TextInput
@@ -282,21 +305,18 @@ const EditPersonalInfo = ({ navigation }) => {
           <TouchableOpacity
             id="save"
             onPress={saveProfileInfo}
-            disabled={buttonDisabled}
-          >
+            disabled={buttonDisabled}>
             <View
               style={[
                 theme.primaryButton,
                 { margin: 0, shadowColor: "#fff" },
                 buttonDisabled === true ? styles.buttonDisabled : {},
-              ]}
-            >
+              ]}>
               <Text
                 style={[
                   theme.primaryButtonText,
                   styleVariables.fontSizes.bodyBold,
-                ]}
-              >
+                ]}>
                 Save
               </Text>
             </View>
