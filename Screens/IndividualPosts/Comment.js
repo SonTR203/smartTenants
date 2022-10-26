@@ -288,11 +288,7 @@ function Comment({
             className="commentOwnerImageAndName"
             style={styles.ownerImageAndName}
           >
-            <DynamicProfilePicture
-              user={currentUser}
-              size={43}
-              borderRadius={12}
-            />
+            <DynamicProfilePicture user={item} size={43} borderRadius={12} />
             <View style={{ flexDirection: "column", margin: 8 }}>
               <Text
                 style={[styleVariables.fontSizes.bodyBold, styles.fullName]}
