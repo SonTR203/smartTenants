@@ -39,6 +39,7 @@ function DynamicProfilePicture({
         />
       ) : (
         <View style={styles.image(size, borderRadius)}>
+          {console.log(user.userProfileImage)}
           <LinearGradient
             // Background Linear Gradient
             colors={[defaultColor.start, defaultColor.end]}
