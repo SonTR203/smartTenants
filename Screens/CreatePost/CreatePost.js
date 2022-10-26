@@ -11,6 +11,8 @@ import {
   Alert,
   StyleSheet,
   Modal,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
@@ -198,6 +200,7 @@ const CreatePost = ({ navigation, route }) => {
       marginBottom: 20,
     },
     buttonDisabled: {
+      marginTop: "auto",
       backgroundColor: "#748E94",
     },
     container: {
@@ -213,11 +216,22 @@ const CreatePost = ({ navigation, route }) => {
       paddingVertical: 16,
       borderRadius: 16,
       marginTop: 12,
+      marginBottom: 12,
       backgroundColor: styleVariables.colors.inputBackground,
     },
     uploadImageText: {
       color: styleVariables.colors.primary,
       marginRight: 8,
+    },
+    keyboardContainer: {
+      flex: 1,
+      height: "100%",
+    },
+    iOSMarginTop: {
+      marginTop: "auto",
+    },
+    androidOSMarginTop: {
+      marginTop: 0,
     },
   });
 
@@ -304,25 +318,34 @@ const CreatePost = ({ navigation, route }) => {
             color={styleVariables.colors.primary}
           />
         ) : (
-          <TouchableOpacity
-            id="submitPostButton"
-            onPress={handleSelectedImage}
-            disabled={buttonDisabled}
+          <KeyboardAvoidingView
             style={[
-              theme.primaryButton,
-              styles.submitButton,
-              buttonDisabled ? styles.buttonDisabled : null,
+              styles.keyboardContainer,
+              Platform.OS === "ios"
+                ? styles.iOSMarginTop
+                : styles.androidOSMarginTop,
             ]}
+            behavior="height"
           >
-            <Text
+            <TouchableOpacity
+              id="submitPostButton"
+              onPress={handleSelectedImage}
+              disabled={buttonDisabled}
               style={[
-                theme.primaryButtonText,
-                styleVariables.fontSizes.bodyBold,
+                theme.primaryButton,
+                buttonDisabled ? styles.buttonDisabled : styles.submitButton,
               ]}
             >
-              Submit post
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  theme.primaryButtonText,
+                  styleVariables.fontSizes.bodyBold,
+                ]}
+              >
+                Submit post
+              </Text>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
         )}
       </View>
     </ScrollView>

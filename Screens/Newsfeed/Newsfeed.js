@@ -132,7 +132,12 @@ const Newsfeed = ({ navigation, route }) => {
     [[posts]]
   );
   const renderPostItem = ({ item }) => (
-    <Post passedPost={item} windowWidth={constants.width} />
+    <Post
+      passedPost={item}
+      windowWidth={constants.width}
+      setPosts={setPosts}
+      setRefreshing={setRefreshing}
+    />
   );
 
   const renderEmpty = () => {
@@ -146,6 +151,7 @@ const Newsfeed = ({ navigation, route }) => {
       return null;
     }
   };
+
   return (
     <SafeAreaView style={styles.newsfeedContainer} edges={["top"]}>
       <StatusBar style="light" />
@@ -167,7 +173,8 @@ const Newsfeed = ({ navigation, route }) => {
               reload: null,
             });
           }, 2000);
-        }}>
+        }}
+      >
         <PopupModal
           modalType={route.params?.modalType}
           message={route.params?.message}
@@ -181,7 +188,8 @@ const Newsfeed = ({ navigation, route }) => {
             {
               transform: [{ translateY: slideDown }],
             },
-          ]}>
+          ]}
+        >
           <TouchableOpacity
             onPress={() => {
               resetAnimation();
@@ -190,9 +198,11 @@ const Newsfeed = ({ navigation, route }) => {
               fetchNotifications();
             }}
             activeOpacity={1}
-            style={styles.newPostsButton}>
+            style={styles.newPostsButton}
+          >
             <Text
-              style={[{ color: "#fff" }, styleVariables.fontSizes.calloutBold]}>
+              style={[{ color: "#fff" }, styleVariables.fontSizes.calloutBold]}
+            >
               New posts
             </Text>
           </TouchableOpacity>
