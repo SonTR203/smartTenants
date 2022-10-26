@@ -164,14 +164,14 @@ function MarketplaceItemInfoScreen({ navigation }) {
       color: styleVariables.colors.black,
     },
     messageButton: {
-      position: "absolute",
+      // position: "absolute",
       marginLeft: 17,
       marginRight: 17,
       backgroundColor: "#395E66",
       borderRadius: 18,
       marginBottom: 25,
       height: 60,
-      width: constants.width - 34,
+      // width: constants.width - 34,
       alignItems: "center",
       justifyContent: "center",
       bottom: 1,
@@ -279,15 +279,15 @@ function MarketplaceItemInfoScreen({ navigation }) {
           </View>
         </View>
         {/* SEND A MESSAGE BOX  */}
+        {item.userID === currentUser.userID ? null : (
+          <TouchableOpacity
+            onPress={handleSendMessage}
+            style={styles.messageButton}
+          >
+            <Text style={styles.messageText}>Send a message</Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
-      {item.userID === currentUser.userID ? null : (
-        <TouchableOpacity
-          onPress={handleSendMessage}
-          style={styles.messageButton}
-        >
-          <Text style={styles.messageText}>Send a message</Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 }
