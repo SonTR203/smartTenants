@@ -1,0 +1,71 @@
+name: Merge to dev branch
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  publish:
+    name: Install and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          token: ${{ secrets.EXPO_CLI_TOKEN }}
+      - run: yarn install
+      - run: yarn test
+      - name: Run linters
+        uses: wearerequired/lint-action@v1
+        with:
+          eslint: true # needs to fix ESLint errors
+          prettier: true # Prettier causes unknown issues with current files
+      # Restore react-native metro cache for speed-up publish time
+      # See: https://github.com/facebook/metro/blob/7dca99af2e2af17921aa4a1e16b1972adc0d11e4/packages/metro-config/src/defaults/index.js#L121-L125
+      - name: Find Metro cache
+        id: metro-cache-dir-path
+        uses: actions/github-script@v4
+        with:
+          result-encoding: string
+          script: |
+            const os = require('os');
+            const path = require('path');
+            return path.join(os.tmpdir(), 'metro-cache');
+      - name: Restore Metro cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.metro-cache-dir-path.outputs.result }}
+          key: ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.ref }}
+          restore-keys: |
+            ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.base_ref }}
+            ${{ runner.os }}-metro-cache-${{ matrix.app }}-
+      - run: expo publish --release-channel=dev --non-interactive
+        env:
+          NODE_OPTIONS: --max_old_space_size=8192
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.19.0
+        with:
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          channel-id: "C03JH7NEKRR"
+          # For posting a rich message using Block Kit
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+             "text": ":white_check_mark: New Pull request merged to dev branch, you can test the application at https://expo.dev/@smarttenants/smartTenant?release-channel=dev :rocket:"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
