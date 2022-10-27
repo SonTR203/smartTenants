@@ -214,7 +214,6 @@ function ListFooter({
               setUserCommentId("");
               setCommentBoxPlaceholder("Post a comment");
               setTextInputValue(commentBoxText.current);
-              console.log(commentBoxText.current);
             }}
           >
             <X></X>
