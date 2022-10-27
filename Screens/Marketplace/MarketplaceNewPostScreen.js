@@ -11,7 +11,6 @@ import {
   Image,
   ScrollView,
   FlatList,
-  Alert,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
 import { Timestamp } from "@firebase/firestore";
@@ -121,9 +120,9 @@ function MarketplaceNewPostScreen({ navigation }) {
         });
     } catch (err) {
       console.log("error: ", err);
-      Alert.alert(
-        "This functionality is not available on Expo Go. Please use the standalone version."
-      );
+      // Alert.alert(
+      //   "This functionality is not available on Expo Go. Please use the standalone version."
+      // );
     }
   };
 
@@ -181,7 +180,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         createMarketplacePostFirestore(imageUrls, id, isNsfw);
       }
     } else {
-      alert("Please fill out all fields");
+      // alert("Please fill out all fields");
     }
   };
 
@@ -211,23 +210,30 @@ function MarketplaceNewPostScreen({ navigation }) {
       const res = await createItemInFirestore("Marketplace", id, propObj);
       setIsloading(false);
       if (isNsfw) {
-        alert(
-          "We've detected potential suggestive or profane content. Your post will be reviewed."
-        );
+        // alert(
+        //   "We've detected potential suggestive or profane content. Your post will be reviewed."
+        // );
         navigation.goBack();
         navigation.navigate("MarketplaceNavigator", {
           screen: "MarketplaceScreen",
           params: {
             reload: true,
+            saveModal: true,
+            modalType: "warning",
+            message:
+              "We’ve detected potential inappropriate content. Your post will be reviewed.",
           },
         });
       } else if (res) {
-        alert("Marketplace item successfully created!");
+        // alert("Marketplace item successfully created!");
         navigation.goBack();
         navigation.navigate("MarketplaceNavigator", {
           screen: "MarketplaceScreen",
           params: {
             reload: true,
+            saveModal: true,
+            modalType: "success",
+            message: "Listing created",
           },
         });
       } else {
@@ -236,6 +242,15 @@ function MarketplaceNewPostScreen({ navigation }) {
       }
     } catch (err) {
       deleteMultipleImages(imageUrls);
+      navigation.navigate("MarketplaceNavigator", {
+        screen: "MarketplaceScreen",
+        params: {
+          reload: true,
+          saveModal: true,
+          modalType: "error",
+          message: "Something went wrong, please try again",
+        },
+      });
     }
   };
 
@@ -276,8 +291,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         onPress={() => {
           handlePickImage(item.uri, index);
         }}
-        style={styles.imageContainer}
-      >
+        style={styles.imageContainer}>
         <>
           {imageLoading ? (
             <Progress.CircleSnail
@@ -378,8 +392,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}
-            >
+              ]}>
               Title
             </Text>
             <TextInput
@@ -397,15 +410,13 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}
-            >
+              ]}>
               Category
             </Text>
             <TouchableOpacity
               onPress={() => {
                 setCategoryModalVisible(true);
-              }}
-            >
+              }}>
               <View style={[theme.textInput, styles.input]}>
                 <Text
                   style={[
@@ -415,8 +426,7 @@ function MarketplaceNewPostScreen({ navigation }) {
                         ? styleVariables.colors.placeholderText
                         : styleVariables.colors.black,
                     },
-                  ]}
-                >
+                  ]}>
                   {category || "Choose category"}
                 </Text>
                 <ChevronDownSVG />
@@ -428,8 +438,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               backdropOpacity={0.5}
               onBackdropPress={() => setCategoryModalVisible(false)}
               style={styles.modal}
-              statusBarTranslucent={true}
-            >
+              statusBarTranslucent={true}>
               <ModalCategoryPicker
                 theme={theme}
                 styleVariables={styleVariables}
@@ -442,15 +451,13 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}
-            >
+              ]}>
               Condition
             </Text>
             <TouchableOpacity
               onPress={() => {
                 setConditionModalVisible(true);
-              }}
-            >
+              }}>
               <View style={[theme.textInput, styles.input]}>
                 <Text
                   style={[
@@ -460,8 +467,7 @@ function MarketplaceNewPostScreen({ navigation }) {
                         ? styleVariables.colors.placeholderText
                         : styleVariables.colors.black,
                     },
-                  ]}
-                >
+                  ]}>
                   {condition || "Choose condition"}
                 </Text>
                 <ChevronDownSVG />
@@ -473,8 +479,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               backdropOpacity={0.5}
               onBackdropPress={() => setConditionModalVisible(false)}
               style={styles.modal}
-              statusBarTranslucent={true}
-            >
+              statusBarTranslucent={true}>
               <ModalConditionPicker
                 theme={theme}
                 styleVariables={styleVariables}
@@ -488,8 +493,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}
-            >
+              ]}>
               Description
             </Text>
             <TextInput
@@ -511,8 +515,7 @@ function MarketplaceNewPostScreen({ navigation }) {
               style={[
                 theme.textInputLabel,
                 styleVariables.fontSizes.calloutBold,
-              ]}
-            >
+              ]}>
               Price
             </Text>
             <TextInput
@@ -552,14 +555,12 @@ function MarketplaceNewPostScreen({ navigation }) {
               <TouchableOpacity
                 id="submitPostButton"
                 onPress={handleSubmit}
-                style={[theme.primaryButton]}
-              >
+                style={[theme.primaryButton]}>
                 <Text
                   style={[
                     theme.primaryButtonText,
                     styleVariables.fontSizes.bodyBold,
-                  ]}
-                >
+                  ]}>
                   Submit post
                 </Text>
               </TouchableOpacity>

@@ -56,15 +56,29 @@ export default function CustomSubStackScreenHeader({ ...props }) {
     props.item.images.length > 0 && props.item.images.length < 2
       ? await deleteImageFromStorage(props.item.images[0])
       : await deleteMultipleImages(props.item.images);
+    let toastOption;
     if (resDB) {
-      alert("Post deleted.");
+      // alert("Post deleted.");
+      toastOption = {
+        saveModal: true,
+        modalType: "success",
+        message:
+          props.collection === "Newsfeed" ? "Post deleted" : "Listing deleted",
+      };
     } else {
-      alert("Error deleting post. Please try again later.");
+      // alert("Error deleting post. Please try again later.");
+      navigation.navigate(props.previousScreen, {
+        reload: true,
+        saveModal: true,
+        modalType: "error",
+        message: "Something went wrong, please try again",
+      });
       return;
     }
     setModalVisible(false);
     navigation.navigate(props.previousScreen, {
       reload: true,
+      ...toastOption,
     });
   };
 
@@ -112,10 +126,15 @@ export default function CustomSubStackScreenHeader({ ...props }) {
     }
     setModalVisible(false);
     navigation.navigate(props.previousScreen, {
+      saveModal: true,
       reload: true,
+      modalType: "success",
+      message: props.item.isSold
+        ? "Your item was listed"
+        : "Item marked as sold",
     });
-    let msg = props.item.isSold ? "re-listed" : "sold";
-    alert(`Successfully ${msg} item.`);
+    // let msg = props.item.isSold ? "re-listed" : "sold";
+    // alert(`Successfully ${msg} item.`);
   };
 
   const setModalOptions = () => {
@@ -231,8 +250,7 @@ export default function CustomSubStackScreenHeader({ ...props }) {
             if (props.navigation) {
               props.navigation.goBack();
             }
-          }}
-        >
+          }}>
           <MaterialCommunityIcons
             name="chevron-left"
             size={36}
@@ -245,8 +263,7 @@ export default function CustomSubStackScreenHeader({ ...props }) {
             {
               color: styleVariables.colors.black,
             },
-          ]}
-        >
+          ]}>
           {props.title && props.title}
         </Text>
         <View style={styles.headerRight}>
