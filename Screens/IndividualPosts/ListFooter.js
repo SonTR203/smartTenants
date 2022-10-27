@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState, memo, useEffect } from "react";
 import { useAppContext } from "../../Context/AppContext";
 import { moderateText } from "../../utils/moderation.services";
 import {
@@ -29,6 +29,7 @@ function ListFooter({
   setRepliesVisible,
   commentBoxPlaceholder,
   setCommentBoxPlaceholder,
+  commentBoxText,
 }) {
   const [textInputValue, setTextInputValue] = useState("");
   const { setPost, post, currentUser } = useAppContext();
@@ -37,11 +38,15 @@ function ListFooter({
   const dynamicWidth =
     Dimensions.get("window").width - Dimensions.get("window").width * 0.18;
 
+  useEffect(() => {
+    setTextInputValue(commentBoxText.current);
+  }, []);
+
   // Post Comments
   const postComment = async () => {
     if (textInputValue != "") {
       const isNsfw = await moderateText(textInputValue);
-
+      commentBoxText.current = "";
       if (isNsfw) {
         Alert.alert(
           "We've detected potential profane or offensive content in your message."
@@ -208,6 +213,7 @@ function ListFooter({
               setUserCommentName("");
               setUserCommentId("");
               setCommentBoxPlaceholder("Post a comment");
+              setTextInputValue(commentBoxText.current);
             }}
           >
             <X></X>
@@ -220,8 +226,9 @@ function ListFooter({
           onChange={handlePostButton}
           onChangeText={(text) => {
             setTextInputValue(text);
+            commentBoxText.current = text;
           }}
-          value={textInputValue}
+          value={commentBoxText.current}
           placeholder={commentBoxPlaceholder}
           maxLength={280}
           multiline

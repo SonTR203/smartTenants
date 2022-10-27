@@ -11,7 +11,6 @@ import {
   Alert,
   StyleSheet,
   Modal,
-  KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -318,7 +317,7 @@ const CreatePost = ({ navigation, route }) => {
             color={styleVariables.colors.primary}
           />
         ) : (
-          <KeyboardAvoidingView
+          <View
             style={[
               styles.keyboardContainer,
               Platform.OS === "ios"
@@ -345,7 +344,7 @@ const CreatePost = ({ navigation, route }) => {
                 Submit post
               </Text>
             </TouchableOpacity>
-          </KeyboardAvoidingView>
+          </View>
         )}
       </View>
     </ScrollView>
