@@ -33,6 +33,10 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
         return "none";
       case "IndividualPosts":
         return "none";
+      case "CreatePost":
+        return "none";
+      case "CreateMarketplaceItem":
+        return "none";
       default:
         break;
     }
