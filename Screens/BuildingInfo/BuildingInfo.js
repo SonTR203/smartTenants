@@ -42,7 +42,7 @@ const BuildingInfo = () => {
             style={theme.buildingImagePreview}
             source={
               currentUserBuilding?.buildingImage
-                ? currentUserBuilding?.buildingImage
+                ? { uri: currentUserBuilding?.buildingImage }
                 : require("../../assets/icon.png")
             }
           />
