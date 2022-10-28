@@ -178,7 +178,18 @@ const MarketplaceScreen = ({ navigation, route }) => {
     }
     return <EmptyListComponent screenName={"marketplace"} />;
   };
+  // Toast handler
+  const displayModal = () => {
+    if (route.params?.immediately)
+      return setToastVisible(route.params?.saveModal === true ? true : false);
+    window.setTimeout(() => {
+      return setToastVisible(route.params?.saveModal === true ? true : false);
+    }, 400);
+  };
 
+  useEffect(() => {
+    displayModal();
+  }, [route.params]);
   const renderListHeader = () => {
     return (
       <>
