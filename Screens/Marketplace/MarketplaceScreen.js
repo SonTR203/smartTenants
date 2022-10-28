@@ -79,7 +79,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
     wait(refreshDelay).then(async () => {
       const list = await getMarketplaceItems();
       const listWithDistance = list.map((item) => {
-        if (!item) return;
+        if (!item || item.isSold) return;
         const distance = getDistanceFromLatLonInKm(
           currentUserBuilding.location.latitude,
           currentUserBuilding.location.longitude,
