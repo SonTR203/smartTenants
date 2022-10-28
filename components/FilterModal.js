@@ -51,16 +51,16 @@ function FilterModal({
       categoryFilter != "All" ||
       conditionFilter != "All" ||
       minPrice != "" ||
-      maxPrice != ""
-      // || distance != "100"
+      maxPrice != "" ||
+      distance != "100"
     ) {
       const filteredList = getFilteredList(
         marketplaceData,
         categoryFilter,
         conditionFilter,
         minPrice,
-        maxPrice
-        // distance
+        maxPrice,
+        distance
       );
       setListingAmount(filteredList.length);
     } else {
@@ -110,8 +110,8 @@ function FilterModal({
       categoryFilter,
       conditionFilter,
       minPrice,
-      maxPrice
-      // distance
+      maxPrice,
+      distance
     );
     setFilteredItemList(filteredList);
     setFilterModalVisible(false);
@@ -207,27 +207,23 @@ function FilterModal({
     <TouchableWithoutFeedback
       onPress={() => {
         Keyboard.dismiss();
-      }}
-    >
+      }}>
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === "ios" ? -100 : -300}
         behavior={Platform.OS === "ios" ? "padding" : "position"}
-        style={styles.modalContainer}
-      >
+        style={styles.modalContainer}>
         <View>
           <View style={styles.filterSection}>
             <Text
               style={[
                 styleVariables.fontSizes.title,
                 { color: styleVariables.colors.black },
-              ]}
-            >
+              ]}>
               Filters
             </Text>
             <TouchableOpacity onPress={resetFilters}>
               <Text
-                style={[styleVariables.fontSizes.bodyBold, styles.primaryClr]}
-              >
+                style={[styleVariables.fontSizes.bodyBold, styles.primaryClr]}>
                 Reset all
               </Text>
             </TouchableOpacity>
@@ -239,8 +235,7 @@ function FilterModal({
                 style={[
                   styleVariables.fontSizes.bodyBold,
                   { color: styleVariables.colors.black },
-                ]}
-              >
+                ]}>
                 Category
               </Text>
               <Text style={[styleVariables.fontSizes.body, styles.primaryClr]}>
@@ -254,8 +249,7 @@ function FilterModal({
             style={[
               styleVariables.fontSizes.bodyBold,
               { color: styleVariables.colors.black },
-            ]}
-          >
+            ]}>
             Condition
           </Text>
           <View style={[styles.conditions]}>
@@ -266,15 +260,13 @@ function FilterModal({
               style={[
                 styles.condition,
                 conditionFilter == "All" && styles.conditionSelected,
-              ]}
-            >
+              ]}>
               <Text
                 style={[
                   styleVariables.fontSizes.body,
                   styles.primaryClr,
                   conditionFilter == "All" && styles.textWhite,
-                ]}
-              >
+                ]}>
                 All
               </Text>
             </TouchableOpacity>
@@ -286,15 +278,13 @@ function FilterModal({
                 styles.condition,
                 styles.conditionMargins,
                 conditionFilter == "New" && styles.conditionSelected,
-              ]}
-            >
+              ]}>
               <Text
                 style={[
                   styleVariables.fontSizes.body,
                   styles.primaryClr,
                   conditionFilter == "New" && styles.textWhite,
-                ]}
-              >
+                ]}>
                 New
               </Text>
             </TouchableOpacity>
@@ -305,15 +295,13 @@ function FilterModal({
               style={[
                 styles.condition,
                 conditionFilter == "Used" && styles.conditionSelected,
-              ]}
-            >
+              ]}>
               <Text
                 style={[
                   styleVariables.fontSizes.body,
                   styles.primaryClr,
                   conditionFilter == "Used" && styles.textWhite,
-                ]}
-              >
+                ]}>
                 Used
               </Text>
             </TouchableOpacity>
@@ -323,8 +311,7 @@ function FilterModal({
             style={[
               styleVariables.fontSizes.bodyBold,
               { color: styleVariables.colors.black },
-            ]}
-          >
+            ]}>
             Price
           </Text>
           <View style={styles.filterSection}>
@@ -394,8 +381,7 @@ function FilterModal({
               style={[
                 styleVariables.fontSizes.bodyBold,
                 { color: styleVariables.colors.black },
-              ]}
-            >
+              ]}>
               Distance
             </Text>
             <Text style={styles.distanceText}>{distance + "km"}</Text>
@@ -430,8 +416,7 @@ function FilterModal({
               style={[
                 theme.primaryButtonText,
                 styleVariables.fontSizes.bodyBold,
-              ]}
-            >
+              ]}>
               See {listingAmount} listings
             </Text>
           </TouchableOpacity>
