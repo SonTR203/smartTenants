@@ -178,6 +178,11 @@ const MarketplaceScreen = ({ navigation, route }) => {
     }
     return <EmptyListComponent screenName={"marketplace"} />;
   };
+  const getPopularItem = () => {
+    if (!filteredItemList)
+      return itemList.sort((a, b) => b.clicks - a.clicks)[0];
+    return filteredItemList.sort((a, b) => b.clicks - a.clicks)[0];
+  };
   // Toast handler
   const displayModal = () => {
     if (route.params?.immediately)
@@ -228,7 +233,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         </View>
         <MarketplaceFirstItem
           isPopular={true}
-          item={filteredItemList ? filteredItemList[0] : itemList[0]}
+          item={getPopularItem()}
           navigation={navigation}
         />
       </>
