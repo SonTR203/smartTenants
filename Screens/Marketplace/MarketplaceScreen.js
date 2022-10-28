@@ -27,6 +27,7 @@ import FilterSVG from "../../components/Icons/FilterSVG";
 import Modal from "react-native-modal";
 import FilterModal from "../../components/FilterModal";
 import SortModal from "../../components/SortModal";
+import PopupModal from "../../components/PopupModal";
 
 const MarketplaceScreen = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
@@ -41,6 +42,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [distance, setDistance] = useState("100");
+  const [toastVisible, setToastVisible] = useState(false);
   const [listingAmount, setListingAmount] = useState("0");
   const [sortActive, setSortActive] = useState(false);
   const [filterActive, setFilterActive] = useState(false);
