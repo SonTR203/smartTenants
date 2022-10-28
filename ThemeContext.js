@@ -188,9 +188,9 @@ const theme = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: windowWidth - 68,
+    width: windowWidth - 36,
     height: windowWidth - 68,
-    borderRadius: 18,
+    borderRadius: 12,
     marginBottom: 17,
   },
   buildingImagePreview: {
