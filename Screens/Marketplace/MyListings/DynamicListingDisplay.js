@@ -17,19 +17,16 @@ function DynamicListingDisplay({ data, available, handleSetListingSold }) {
   const { styleVariables, theme } = useTheme();
 
   const handleOpenSoldModal = (item) => {
-    if (available) {
-      setModalVisible(true);
-      setSelectedItem(item);
-    } else {
-      setCurrentMarketplacePost(item);
-      navigation.navigate("MarketplaceItemInfo", {
-        title: item.userFirstName,
-        itemUserId: item.userID,
-        item: item,
-        openModal: true,
-        // open the bottom modal by default
-      });
-    }
+    setModalVisible(true);
+    setSelectedItem(item);
+    // setCurrentMarketplacePost(item);
+    // navigation.navigate("MarketplaceItemInfo", {
+    //   title: item.userFirstName,
+    //   itemUserId: item.userID,
+    //   item: item,
+    //   openModal: true,
+    //   // open the bottom modal by default
+    // });
   };
 
   const handleCreateNewPost = () => {
@@ -68,16 +65,29 @@ function DynamicListingDisplay({ data, available, handleSetListingSold }) {
         setModalVisible={setModalVisible}
         // options={setModalOptions()}
       >
-        <ModalActionConfirm
-          title={"Mark listing as sold?"}
-          subtitle={"You will be able to restore it"}
-          confirmText="Confirm"
-          onConfirm={() => {
-            handleSetListingSold(selectedItem);
-            setModalVisible(false);
-          }}
-          onCancel={() => setModalVisible(false)}
-        />
+        {available ? (
+          <ModalActionConfirm
+            title={"Mark listing as sold?"}
+            subtitle={"You will be able to restore it."}
+            confirmText="Confirm"
+            onConfirm={() => {
+              handleSetListingSold(selectedItem);
+              setModalVisible(false);
+            }}
+            onCancel={() => setModalVisible(false)}
+          />
+        ) : (
+          <ModalActionConfirm
+            title={"Mark listing as available?"}
+            subtitle={"You will be able to set is as sold again."}
+            confirmText="Confirm"
+            onConfirm={() => {
+              handleSetListingSold(selectedItem);
+              setModalVisible(false);
+            }}
+            onCancel={() => setModalVisible(false)}
+          />
+        )}
       </CustomBottomModal>
       <FlatList
         data={data}
