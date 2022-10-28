@@ -8,12 +8,16 @@ import {
 } from "../../../utils/firebase.services";
 import DynamicListingDisplay from "./DynamicListingDisplay";
 import { Timestamp, deleteField } from "@firebase/firestore";
-// import { deleteField } from "firebase/firestore";
+import PopupModal from "../../../components/PopupModal";
+import Modal from "react-native-modal";
 
 function MyListingsScreen() {
   const [available, setAvailable] = useState(true);
   const [availableListings, setAvailableListings] = useState(undefined);
   const [soldListings, setSoldListings] = useState(undefined);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastType, setToastType] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
   const { currentUser } = useAppContext();
 
   useEffect(() => {
@@ -29,6 +33,7 @@ function MyListingsScreen() {
       myListingList
         ? setAvailableListings(myListingList)
         : setAvailableListings([]);
+
       mySoldListingList
         ? setSoldListings(mySoldListingList)
         : setSoldListings([]);
@@ -38,7 +43,6 @@ function MyListingsScreen() {
 
   // Updated handler to include re-listing
   const handleSetListingSold = async (selectedItem) => {
-    console.log(selectedItem);
     const res = await updateItemInFirestore("Marketplace", selectedItem.id, {
       isSold: selectedItem.isSold ? false : true,
       soldDate: selectedItem.isSold
@@ -67,6 +71,7 @@ function MyListingsScreen() {
 
       setSoldListings(newDataList);
       setAvailableListings(newAvailableListings);
+      setToastMessage("Your item was listed!");
     } else {
       const newSoldListings = soldListings
         ? [...soldListings, updatedItem]
@@ -74,7 +79,13 @@ function MyListingsScreen() {
 
       setSoldListings(newSoldListings);
       setAvailableListings(newDataList);
+      setToastMessage("Your item was marked as sold!");
     }
+
+    setToastType("success");
+    window.setTimeout(() => {
+      setToastVisible(true);
+    }, 400);
   };
 
   return (
@@ -84,6 +95,28 @@ function MyListingsScreen() {
         backgroundColor: "white",
       }}
     >
+      <Modal
+        animationType="slide"
+        transparent={true}
+        // statusBarTranslucent={true}
+        visible={toastVisible}
+        onRequestClose={() => {
+          setToastVisible(false);
+        }}
+        onShow={() => {
+          setTimeout(() => {
+            setToastVisible(false);
+          }, 2000);
+        }}
+      >
+        <PopupModal
+          modalType={toastType}
+          message={toastMessage}
+          hideModal={() => {
+            setToastVisible(false);
+          }}
+        />
+      </Modal>
       <ScreenSelector available={available} setAvailable={setAvailable} />
       <DynamicListingDisplay
         handleSetListingSold={handleSetListingSold}

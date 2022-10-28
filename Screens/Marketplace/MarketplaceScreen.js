@@ -209,9 +209,11 @@ const MarketplaceScreen = ({ navigation, route }) => {
               styles.headerBtn,
               sortActive ? styles.activeCondition : null,
             ]}
-            activeOpacity={1}>
+            activeOpacity={1}
+          >
             <Text
-              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}>
+              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
+            >
               Sort
             </Text>
             <SortSVG />
@@ -225,9 +227,11 @@ const MarketplaceScreen = ({ navigation, route }) => {
               styles.headerBtn,
               filterActive ? styles.activeCondition : null,
             ]}
-            activeOpacity={1}>
+            activeOpacity={1}
+          >
             <Text
-              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}>
+              style={[styles.btnText, styleVariables.fontSizes.calloutBold]}
+            >
               Filter
             </Text>
             <FilterSVG />
@@ -359,7 +363,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
               immediately: null,
             });
           }, 2000);
-        }}>
+        }}
+      >
         <PopupModal
           inlineStyles={{ width: "100%", bottom: -20 }}
           modalType={route.params?.modalType}
@@ -381,7 +386,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
         onBackdropPress={() => {
           setSortModalVisible(false);
         }}
-        statusBarTranslucent={true}>
+        statusBarTranslucent={true}
+      >
         <SortModal
           setSortModalVisible={setSortModalVisible}
           marketplaceData={itemList}
@@ -398,7 +404,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
         isVisible={filterModalVisible}
         style={styles.modal}
         onBackdropPress={() => setFilterModalVisible(false)}
-        statusBarTranslucent={true}>
+        statusBarTranslucent={true}
+      >
         <FilterModal
           marketplaceData={itemList}
           setFilteredItemList={setFilteredItemList}
@@ -430,7 +437,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
                 {
                   transform: [{ translateY: slideDown }],
                 },
-              ]}>
+              ]}
+            >
               <TouchableOpacity
                 onPress={() => {
                   resetAnimation();
@@ -439,12 +447,14 @@ const MarketplaceScreen = ({ navigation, route }) => {
                   fetchMarketplaceList();
                 }}
                 activeOpacity={1}
-                style={styles.newPostsButton}>
+                style={styles.newPostsButton}
+              >
                 <Text
                   style={[
                     { color: "#fff" },
                     styleVariables.fontSizes.calloutBold,
-                  ]}>
+                  ]}
+                >
                   New posts
                 </Text>
               </TouchableOpacity>
