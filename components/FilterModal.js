@@ -98,8 +98,8 @@ function FilterModal({
       categoryFilter != "All" ||
       conditionFilter != "All" ||
       maxPrice != "" ||
-      minPrice != ""
-      // || distance != 100
+      minPrice != "" ||
+      distance != 100
     ) {
       setFilterActive(true);
     } else {
