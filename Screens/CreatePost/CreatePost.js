@@ -201,12 +201,14 @@ const CreatePost = ({ navigation, route }) => {
     buttonDisabled: {
       marginTop: "auto",
       backgroundColor: "#748E94",
+      marginBottom: 34,
     },
     container: {
       flex: 1,
     },
     submitButton: {
       marginTop: "auto",
+      marginBottom: 34,
     },
     uploadImageButton: {
       flexDirection: "row",
