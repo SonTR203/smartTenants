@@ -354,7 +354,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
           }, 2000);
         }}>
         <PopupModal
-          inlineStyles={{ width: "100%" }}
+          inlineStyles={{ width: "100%", bottom: -20 }}
           modalType={route.params?.modalType}
           message={route.params?.message}
           hideModal={() => {

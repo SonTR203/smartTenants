@@ -180,7 +180,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         createMarketplacePostFirestore(imageUrls, id, isNsfw);
       }
     } else {
-      // alert("Please fill out all fields");
+      alert("Please fill out all fields");
     }
   };
 
