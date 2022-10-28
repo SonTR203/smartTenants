@@ -200,7 +200,10 @@ function MarketplaceFirstItem({
           </Text>
           {item.distance !== 0 && (
             <Text style={[styleVariables.fontSizes.callout]}>
-              {item.distance.toFixed(1)}km
+              {item.distance.toFixed(1) < 1
+                ? item.distance.toFixed(1) * 1000
+                : item.distance.toFixed(1)}
+              {item.distance.toFixed(1) < 1 ? "m" : "km"}
             </Text>
           )}
         </View>
