@@ -8,6 +8,7 @@ import {
 } from "../../../utils/firebase.services";
 import DynamicListingDisplay from "./DynamicListingDisplay";
 import { Timestamp, deleteField } from "@firebase/firestore";
+// import { deleteField } from "firebase/firestore";
 
 function MyListingsScreen() {
   const [available, setAvailable] = useState(true);
@@ -35,56 +36,44 @@ function MyListingsScreen() {
     setMarketplaceListings();
   }, []);
 
+  // Updated handler to include re-listing
   const handleSetListingSold = async (selectedItem) => {
-    if (!selectedItem.isSold) {
-      const res = await updateItemInFirestore("Marketplace", selectedItem.id, {
-        isSold: true,
-        soldDate: Timestamp.fromDate(new Date()),
-      });
-      if (!res) {
-        Alert.alert("Something went wrong");
-        return;
-      }
-      const updatedItem = {
-        ...selectedItem,
-        isSold: true,
-      };
-      const newDataList = availableListings.filter(
-        (item) => item.id !== selectedItem.id
-      );
-      const newSoldListings = soldListings
-        ? [...soldListings, updatedItem]
-        : [updatedItem];
-      setAvailableListings(newDataList);
-      setSoldListings(newSoldListings);
-    } else {
-      const res = await updateItemInFirestore("Marketplace", selectedItem.id, {
-        isSold: false,
-        soldDate: deleteField(),
-      });
+    console.log(selectedItem);
+    const res = await updateItemInFirestore("Marketplace", selectedItem.id, {
+      isSold: selectedItem.isSold ? false : true,
+      soldDate: selectedItem.isSold
+        ? deleteField()
+        : Timestamp.fromDate(new Date()),
+    });
 
-      if (!res) {
-        Alert.alert("Something went wrong");
-        return;
-      }
+    if (!res) {
+      Alert.alert("Something went wrong!");
+      return;
+    }
 
-      const updatedItem = {
-        ...selectedItem,
-        isSold: false,
-      };
+    const updatedItem = {
+      ...selectedItem,
+      isSold: selectedItem.isSold ? false : true,
+    };
 
-      const newDataList = soldListings.filter(
-        (item) => item.id !== selectedItem.id
-      );
+    const newDataList = selectedItem.isSold
+      ? soldListings.filter((item) => item.id !== selectedItem.id)
+      : availableListings.filter((item) => item.id !== selectedItem.id);
 
-      console.log(newDataList);
-
+    if (selectedItem.isSold) {
       const newAvailableListings = availableListings
         ? [...availableListings, updatedItem]
         : [updatedItem];
 
       setSoldListings(newDataList);
       setAvailableListings(newAvailableListings);
+    } else {
+      const newSoldListings = soldListings
+        ? [...soldListings, updatedItem]
+        : [updatedItem];
+
+      setSoldListings(newSoldListings);
+      setAvailableListings(newDataList);
     }
   };
 
