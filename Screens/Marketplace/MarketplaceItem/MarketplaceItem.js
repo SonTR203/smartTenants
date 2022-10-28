@@ -16,7 +16,7 @@ function MarketplaceItem({ item, index, navigation }) {
     },
     image: {
       resizeMode: "cover",
-      marginBottom: 17,
+      marginBottom: 8,
       height: constants.height * 0.2,
       backgroundColor: "#4d4d4d",
       borderTopRightRadius: 16,
