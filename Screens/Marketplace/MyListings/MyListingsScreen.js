@@ -7,7 +7,7 @@ import {
   updateItemInFirestore,
 } from "../../../utils/firebase.services";
 import DynamicListingDisplay from "./DynamicListingDisplay";
-import { Timestamp } from "@firebase/firestore";
+import { Timestamp, deleteField } from "@firebase/firestore";
 
 function MyListingsScreen() {
   const [available, setAvailable] = useState(true);
@@ -36,26 +36,56 @@ function MyListingsScreen() {
   }, []);
 
   const handleSetListingSold = async (selectedItem) => {
-    const res = await updateItemInFirestore("Marketplace", selectedItem.id, {
-      isSold: true,
-      soldDate: Timestamp.fromDate(new Date()),
-    });
-    if (!res) {
-      Alert.alert("Something went wrong");
-      return;
+    if (!selectedItem.isSold) {
+      const res = await updateItemInFirestore("Marketplace", selectedItem.id, {
+        isSold: true,
+        soldDate: Timestamp.fromDate(new Date()),
+      });
+      if (!res) {
+        Alert.alert("Something went wrong");
+        return;
+      }
+      const updatedItem = {
+        ...selectedItem,
+        isSold: true,
+      };
+      const newDataList = availableListings.filter(
+        (item) => item.id !== selectedItem.id
+      );
+      const newSoldListings = soldListings
+        ? [...soldListings, updatedItem]
+        : [updatedItem];
+      setAvailableListings(newDataList);
+      setSoldListings(newSoldListings);
+    } else {
+      const res = await updateItemInFirestore("Marketplace", selectedItem.id, {
+        isSold: false,
+        soldDate: deleteField(),
+      });
+
+      if (!res) {
+        Alert.alert("Something went wrong");
+        return;
+      }
+
+      const updatedItem = {
+        ...selectedItem,
+        isSold: false,
+      };
+
+      const newDataList = soldListings.filter(
+        (item) => item.id !== selectedItem.id
+      );
+
+      console.log(newDataList);
+
+      const newAvailableListings = availableListings
+        ? [...availableListings, updatedItem]
+        : [updatedItem];
+
+      setSoldListings(newDataList);
+      setAvailableListings(newAvailableListings);
     }
-    const updatedItem = {
-      ...selectedItem,
-      isSold: true,
-    };
-    const newDataList = availableListings.filter(
-      (item) => item.id !== selectedItem.id
-    );
-    const newSoldListings = soldListings
-      ? [...soldListings, updatedItem]
-      : [updatedItem];
-    setAvailableListings(newDataList);
-    setSoldListings(newSoldListings);
   };
 
   return (
