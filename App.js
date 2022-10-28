@@ -254,7 +254,7 @@ function App() {
     // Get collections data
     getDocs(collection(db, "Buildings")).then((snapshot) => {
       snapshot.docs.forEach((doc) => {
-        if (doc.data().buildingName == currentUser.buildingName) {
+        if (doc.data().id == currentUser.buildingID) {
           return setCurrentUserBuilding({ ...doc.data(), id: doc.id });
         }
       });
