@@ -47,7 +47,7 @@ function MyListingsScreen() {
     });
 
     if (!res) {
-      Alert.alert("Something went wrong!");
+      Alert.alert("Something went wrong. Please try again later.");
       return;
     }
 

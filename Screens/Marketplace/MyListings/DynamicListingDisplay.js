@@ -79,7 +79,7 @@ function DynamicListingDisplay({ data, available, handleSetListingSold }) {
         ) : (
           <ModalActionConfirm
             title={"Mark listing as available?"}
-            subtitle={"You will be able to set is as sold again."}
+            subtitle={"Your listing will be available immediately."}
             confirmText="Confirm"
             onConfirm={() => {
               handleSetListingSold(selectedItem);
