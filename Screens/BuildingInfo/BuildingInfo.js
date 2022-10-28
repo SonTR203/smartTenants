@@ -11,7 +11,6 @@ const BuildingInfo = () => {
   const { currentUserBuilding } = useAppContext();
 
   const { theme, styleVariables } = useTheme();
-
   // const makePhoneCall = () => {
   // 	let phoneNumber = "";
   // 	if (Platform.OS !== "android") {
@@ -41,7 +40,11 @@ const BuildingInfo = () => {
           ]}>
           <Image
             style={theme.buildingImagePreview}
-            source={require("../../assets/icon.png")}
+            source={
+              currentUserBuilding?.buildingImage
+                ? currentUserBuilding?.buildingImage
+                : require("../../assets/icon.png")
+            }
           />
           <View
             id="buildingInfoAddress"
