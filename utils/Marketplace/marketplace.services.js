@@ -53,8 +53,8 @@ export const getFilteredList = (
   category,
   condition,
   min,
-  max,
-  distance
+  max
+  // distance
 ) => {
   // format min and max price $1,500.0 -> 1500
   min = Number(min.replace(/[^0-9.-]+/g, ""));
@@ -74,8 +74,7 @@ export const getFilteredList = (
       (parseFloat(item.price.substr(1).replace(",", "")) >= parseInt(min) ||
         min == "") &&
       (parseFloat(item.price.substr(1).replace(",", "")) <= parseInt(max) ||
-        max == "") &&
-      item.distance <= distance
+        max == "")
     ) {
       return true;
     }
