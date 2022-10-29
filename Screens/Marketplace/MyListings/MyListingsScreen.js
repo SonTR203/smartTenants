@@ -79,7 +79,7 @@ function MyListingsScreen() {
 
       setSoldListings(newSoldListings);
       setAvailableListings(newDataList);
-      setToastMessage("Your item was marked as sold!");
+      setToastMessage("Item marked as sold!");
     }
 
     setToastType("success");
