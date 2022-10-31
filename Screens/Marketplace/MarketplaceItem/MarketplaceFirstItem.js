@@ -198,7 +198,7 @@ function MarketplaceFirstItem({
           <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
             {item.postTitle}
           </Text>
-          {item.distance !== 0 && (
+          {item.distance && item.distance !== 0 && (
             <Text style={[styleVariables.fontSizes.callout]}>
               {item.distance.toFixed(1) < 1
                 ? item.distance.toFixed(1) * 1000
