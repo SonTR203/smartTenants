@@ -80,6 +80,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
       const list = await getMarketplaceItems();
       const listWithDistance = list.map((item) => {
         if (!item || item.isSold) return;
+        if (!item.buildingCoord) return { ...item, distance: 0 };
         const distance = getDistanceFromLatLonInKm(
           currentUserBuilding.location.latitude,
           currentUserBuilding.location.longitude,
@@ -112,6 +113,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
     const list = await getMarketplaceItems();
     const listWithDistance = list.map((item) => {
       if (!item) return;
+      if (!item.buildingCoord) return { ...item, distance: 0 };
       const distance = getDistanceFromLatLonInKm(
         currentUserBuilding.location.latitude,
         currentUserBuilding.location.longitude,
