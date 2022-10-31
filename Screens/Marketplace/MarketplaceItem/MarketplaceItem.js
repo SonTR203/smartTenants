@@ -16,17 +16,17 @@ function MarketplaceItem({ item, index, navigation }) {
     },
     image: {
       resizeMode: "cover",
-      marginBottom: 17,
+      marginBottom: 8,
       height: constants.height * 0.2,
       backgroundColor: "#4d4d4d",
-      borderTopRightRadius: 24,
-      borderTopLeftRadius: 24,
+      borderTopRightRadius: 16,
+      borderTopLeftRadius: 16,
     },
     titleContainer: {
       flex: 1,
-      marginLeft: 17,
-      marginRight: 17,
-      marginBottom: 11,
+      marginLeft: 8,
+      marginRight: 8,
+      marginBottom: 5,
       flexDirection: "column",
       justifyContent: "space-between",
       alignItems: "flex-start",
@@ -40,15 +40,14 @@ function MarketplaceItem({ item, index, navigation }) {
     },
     price: {
       color: "#395E66",
-      marginTop: 6,
       fontSize: 17,
       fontWeight: "400",
       lineHeight: 20,
     },
     contentContainer: {
-      marginLeft: 17,
-      marginRight: 17,
-      marginBottom: 22,
+      marginLeft: 8,
+      marginRight: 8,
+      marginBottom: 8,
     },
     content: {
       color: styleVariables.colors.black,
@@ -75,8 +74,7 @@ function MarketplaceItem({ item, index, navigation }) {
         });
       }}
       style={[theme.marketplaceItemContainer, styles.container]}
-      activeOpacity={1}
-    >
+      activeOpacity={1}>
       {/* ITEM IMAGE  */}
       <Image style={styles.image} source={{ uri: item.images[0] }} />
       {/* ITEM TITLE & PRICE */}
@@ -84,9 +82,26 @@ function MarketplaceItem({ item, index, navigation }) {
         <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
           {item.postTitle}
         </Text>
-        <Text style={styles.price}>
-          {item.price === 0 ? "Free" : item.price}
-        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            marginTop: 6,
+          }}>
+          <Text style={styles.price}>
+            {item.price === 0 ? "Free" : item.price}
+          </Text>
+          {item.distance !== 0 && (
+            <Text style={[styleVariables.fontSizes.callout]}>
+              {item.distance.toFixed(1) < 1
+                ? item.distance.toFixed(1) * 1000
+                : item.distance.toFixed(1)}
+              {item.distance.toFixed(1) < 1 ? "m" : "km"}
+            </Text>
+          )}
+        </View>
       </View>
       {/* ITEM CONTENT */}
       <View style={styles.contentContainer}>

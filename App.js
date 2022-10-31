@@ -25,7 +25,6 @@ import {
 } from "@expo/react-native-action-sheet";
 import * as ExpoNotifications from "expo-notifications";
 import { getItemById } from "./utils/firebase.services";
-
 import {
   collection,
   doc,
@@ -33,6 +32,7 @@ import {
   query,
   updateDoc,
   where,
+  getDocs,
 } from "@firebase/firestore";
 import { db } from "./firebase-config";
 import { wait } from "./utils/wait";
@@ -60,6 +60,7 @@ function App() {
   const [unauthorizedUsers, setUnauthorizedUsers] = useState({});
   const [allUsers, setAllUsers] = useState({});
   const [buildings, setBuildings] = useState({});
+  const [currentUserBuilding, setCurrentUserBuilding] = useState({});
   const [marketplaceBadges, setMarketplaceBadges] = useState({
     unseen: [],
     list: [],
@@ -73,6 +74,8 @@ function App() {
     setPost,
     currentUser,
     setCurrentUser,
+    currentUserBuilding,
+    setCurrentUserBuilding,
     notifications,
     setNotifications,
     unauthorizedUsers,
@@ -245,7 +248,18 @@ function App() {
       }
     };
   }, [currentUser.userID]);
-
+  // get current user's building data
+  useEffect(() => {
+    if (!currentUser && !currentUser.userID) return;
+    // Get collections data
+    getDocs(collection(db, "Buildings")).then((snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        if (doc.data().id == currentUser.buildingID) {
+          return setCurrentUserBuilding({ ...doc.data(), id: doc.id });
+        }
+      });
+    });
+  }, [currentUser]);
   useEffect(() => {
     responseListener.current =
       ExpoNotifications.addNotificationResponseReceivedListener(
@@ -360,8 +374,7 @@ function AppContainer({ navigationRef }) {
           onStateChange={async () => {
             const currentRouteName = navigationRef.getCurrentRoute().name;
             setRouteName(currentRouteName);
-          }}
-        >
+          }}>
           <Tab.Navigator
             initialRouteName="NewsfeedNavigator"
             tabBar={(props) => <TabBar {...props} routeName={routeName} />}
@@ -381,8 +394,7 @@ function AppContainer({ navigationRef }) {
                 shadowRadius: 24, // radius: 24
                 elevation: 5, // elevation: 5
               },
-            })}
-          >
+            })}>
             {/* ======= Newsfeed ======= */}
             <Tab.Screen
               name="NewsfeedNavigator"
