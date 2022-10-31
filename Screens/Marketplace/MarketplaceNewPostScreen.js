@@ -50,7 +50,7 @@ function MarketplaceNewPostScreen({ navigation }) {
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [isLoading, setIsloading] = useState(false);
-  const { currentUser } = useAppContext();
+  const { currentUser, currentUserBuilding } = useAppContext();
   const [selectedImages, setSelectedImages] = useState([
     {
       uri: "",
@@ -180,7 +180,7 @@ function MarketplaceNewPostScreen({ navigation }) {
         createMarketplacePostFirestore(imageUrls, id, isNsfw);
       }
     } else {
-      // alert("Please fill out all fields");
+      alert("Please fill out all fields");
     }
   };
 
@@ -188,6 +188,8 @@ function MarketplaceNewPostScreen({ navigation }) {
     try {
       const propObj = {
         buildingLocation: "",
+        buildingId: currentUserBuilding.id,
+        buildingCoord: currentUserBuilding.location,
         images: imageUrls,
         isNSFW: isNsfw,
         id: id,

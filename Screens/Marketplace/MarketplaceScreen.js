@@ -42,26 +42,57 @@ const MarketplaceScreen = ({ navigation, route }) => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [distance, setDistance] = useState("100");
+  const [toastVisible, setToastVisible] = useState(false);
   const [listingAmount, setListingAmount] = useState("0");
   const [sortActive, setSortActive] = useState(false);
   const [filterActive, setFilterActive] = useState(false);
   const [newPostsLength, setNewPostsLength] = useState(0);
-  const [toastVisible, setToastVisible] = useState(false);
   const slideDown = useRef(new Animated.Value(-100)).current;
   let flatListRef;
-  const { updatedMarketplacePosts, setUpdatedMarketplacePosts } =
-    useAppContext();
+  const {
+    updatedMarketplacePosts,
+    setUpdatedMarketplacePosts,
+    currentUserBuilding,
+  } = useAppContext();
+  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    if (!lat1 || !lat2 || !lon1 || !lon2) return 0;
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+  }
 
+  function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+  }
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     resetAnimation();
     wait(refreshDelay).then(async () => {
       const list = await getMarketplaceItems();
-      setItemList(list);
+      const listWithDistance = list.map((item) => {
+        if (!item || item.isSold) return;
+        if (!item.buildingCoord) return { ...item, distance: 0 };
+        const distance = getDistanceFromLatLonInKm(
+          currentUserBuilding.location.latitude,
+          currentUserBuilding.location.longitude,
+          item.buildingCoord.latitude,
+          item.buildingCoord.longitude
+        );
+        return { ...item, distance: distance };
+      });
+      setItemList(listWithDistance);
       setRefreshing(false);
     });
   }, []);
-
   const startAnimation = () => {
     Animated.spring(slideDown, {
       toValue: 0,
@@ -80,20 +111,24 @@ const MarketplaceScreen = ({ navigation, route }) => {
   // only fetching available items, not sold items
   async function fetchMarketplaceList() {
     const list = await getMarketplaceItems();
-    const avaialbleListings = list.filter((item) => {
+    const listWithDistance = list.map((item) => {
+      if (!item) return;
+      if (!item.buildingCoord) return { ...item, distance: 0 };
+      const distance = getDistanceFromLatLonInKm(
+        currentUserBuilding.location.latitude,
+        currentUserBuilding.location.longitude,
+        item.buildingCoord.latitude,
+        item.buildingCoord.longitude
+      );
+      return { ...item, distance: distance };
+    });
+    const avaialbleListings = listWithDistance.filter((item) => {
       return !item.isSold;
     });
     setItemList(avaialbleListings);
     setRefreshing(false);
   }
 
-  // get most popular marketplace item
-  const getMostPopularItem = () => {
-    let sortedListByClicks = itemList.sort((a, b) => {
-      return b.clicks - a.clicks;
-    });
-    return sortedListByClicks[0];
-  };
   useEffect(() => {
     fetchMarketplaceList();
   }, []);
@@ -132,11 +167,8 @@ const MarketplaceScreen = ({ navigation, route }) => {
       unsubscribe();
     };
   }, []);
-
   // new itemList button animation handler
   useEffect(() => {
-    console.log("new length " + newPostsLength);
-    console.log(itemList?.length);
     if (refreshing) return;
     if (newPostsLength > itemList.length) {
       startAnimation();
@@ -148,7 +180,11 @@ const MarketplaceScreen = ({ navigation, route }) => {
     }
     return <EmptyListComponent screenName={"marketplace"} />;
   };
-
+  const getPopularItem = () => {
+    if (!filteredItemList)
+      return itemList.sort((a, b) => b.clicks - a.clicks)[0];
+    return filteredItemList.sort((a, b) => b.clicks - a.clicks)[0];
+  };
   // Toast handler
   const displayModal = () => {
     if (route.params?.immediately)
@@ -199,7 +235,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         </View>
         <MarketplaceFirstItem
           isPopular={true}
-          item={getMostPopularItem()}
+          item={getPopularItem()}
           navigation={navigation}
         />
       </>
@@ -307,6 +343,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
         transparent={true}
         // statusBarTranslucent={true}
         visible={toastVisible}
+        // visible={true}
         onRequestClose={() => {
           navigation.setParams({
             saveModal: false,
@@ -381,6 +418,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
           setFilterActive={setFilterActive}
         />
       </Modal>
+
       {/* ITEM LIST  */}
       <View style={styles.flatListContainer}>
         {itemList ? (

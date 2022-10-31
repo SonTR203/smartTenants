@@ -137,7 +137,7 @@ const theme = StyleSheet.create({
   marketplaceItemContainer: {
     backgroundColor: styleVariables.colors.white,
     marginBottom: 17,
-    borderRadius: 24,
+    borderRadius: 16,
     ...styleVariables.shadow,
   },
   modalView: {
