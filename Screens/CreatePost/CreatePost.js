@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  KeyboardAvoidingView,
   ScrollView,
   Alert,
   StyleSheet,
@@ -201,12 +202,14 @@ const CreatePost = ({ navigation, route }) => {
     buttonDisabled: {
       marginTop: "auto",
       backgroundColor: "#748E94",
+      marginBottom: 34,
     },
     container: {
       flex: 1,
     },
     submitButton: {
       marginTop: "auto",
+      marginBottom: 34,
     },
     uploadImageButton: {
       flexDirection: "row",
@@ -317,7 +320,7 @@ const CreatePost = ({ navigation, route }) => {
             color={styleVariables.colors.primary}
           />
         ) : (
-          <View
+          <KeyboardAvoidingView
             style={[
               styles.keyboardContainer,
               Platform.OS === "ios"
@@ -344,7 +347,7 @@ const CreatePost = ({ navigation, route }) => {
                 Submit post
               </Text>
             </TouchableOpacity>
-          </View>
+          </KeyboardAvoidingView>
         )}
       </View>
     </ScrollView>

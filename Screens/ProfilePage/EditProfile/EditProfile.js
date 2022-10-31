@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aSOsfpsMriI
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -20,7 +20,18 @@ import PopupModal from "../../../components/PopupModal";
 const EditProfile = ({ route, navigation }) => {
   const { currentUser } = useAppContext();
   const { theme, styleVariables } = useTheme();
+  const [toastVisible, setToastVisible] = useState(false);
+  const displayModal = () => {
+    if (route.params?.immediately)
+      return setToastVisible(route.params?.saveModal === true ? true : false);
+    window.setTimeout(() => {
+      return setToastVisible(route.params?.saveModal === true ? true : false);
+    }, 400);
+  };
 
+  useEffect(() => {
+    displayModal();
+  }, [route.params]);
   const styles = (styleVariables) =>
     StyleSheet.create({
       container: {
@@ -60,14 +71,13 @@ const EditProfile = ({ route, navigation }) => {
     <SafeAreaView edges={["top"]}>
       <KeyboardAvoidingView behavior="padding">
         <ScrollView
-          style={[theme.pageContainer, theme.globalMargins, theme.fullHeight]}
-        >
+          style={[theme.pageContainer, theme.globalMargins, theme.fullHeight]}>
           <StatusBar style="dark" />
           <Modal
             animationType="slide"
             transparent={true}
             // statusBarTranslucent={true}
-            visible={route.params?.saveModal === true ? true : false}
+            visible={toastVisible}
             onRequestClose={() => {
               navigation.setParams({
                 saveModal: false,
@@ -79,11 +89,17 @@ const EditProfile = ({ route, navigation }) => {
                   saveModal: false,
                 });
               }, 2000);
-            }}
-          >
+            }}>
             <PopupModal
               modalType={route.params?.modalType}
               message={route.params?.message}
+              hideModal={() => {
+                navigation.setParams({
+                  saveModal: false,
+                  reload: null,
+                  immediately: true,
+                });
+              }}
             />
           </Modal>
           <View style={[theme.topCard, styles(styleVariables).topCard]}>
@@ -91,8 +107,7 @@ const EditProfile = ({ route, navigation }) => {
               {/* userImage */}
               <View
                 id="userImage"
-                style={styles(styleVariables).userImageContainer}
-              >
+                style={styles(styleVariables).userImageContainer}>
                 <DynamicProfilePicture
                   user={{
                     userProfileImage: currentUser.userProfileImage,
@@ -113,8 +128,7 @@ const EditProfile = ({ route, navigation }) => {
                   {
                     color: styleVariables.colors.black,
                   },
-                ]}
-              >
+                ]}>
                 {`${currentUser.firstName} ${currentUser.lastName}`}
               </Text>
             </View>

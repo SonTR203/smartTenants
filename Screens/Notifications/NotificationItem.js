@@ -72,6 +72,7 @@ function NotificationItem({
       });
       setWasSeenToTrue(notifications);
     } else {
+      setWasSeenToTrue(notifications);
       // doc.data() will be undefined in this case
       console.log("No such document!");
     }
@@ -87,8 +88,7 @@ function NotificationItem({
       disabled={notifications.postID == "" ? true : false}
       onPress={handleViewNotifications}
       style={[theme.cardButton, styles.container]}
-      activeOpacity={1}
-    >
+      activeOpacity={1}>
       <View id="notificationContent" style={styles.notificationContent}>
         <View id="timeStamp-readState" style={styles.timestampContainer}>
           <Text style={[styleVariables.fontSizes.callout]}>
