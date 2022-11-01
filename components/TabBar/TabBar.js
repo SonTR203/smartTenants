@@ -37,6 +37,12 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
         return "none";
       case "CreateMarketplaceItem":
         return "none";
+      case "EditPersonalInfo":
+        return "none";
+      case "EditEmailInfo":
+        return "none";
+      case "EditPasswordInfo":
+        return "none";
       default:
         break;
     }
