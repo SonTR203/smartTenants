@@ -1,32 +1,11 @@
-import {
-  API_KEY_DEV,
-  // API_KEY_PROD,
-  AUTH_DOMAIN_DEV,
-  // AUTH_DOMAIN_PROD,
-  PROJECT_ID_DEV,
-  // PROJECT_ID_PROD,
-  STORAGE_BUCKET_DEV,
-  // STORAGE_BUCKET_PROD,
-  MESSAGING_SENDER_ID_DEV,
-  // MESSAGING_SENDER_ID_PROD,
-  APP_ID_DEV,
-  // APP_ID_PROD,
-  MEASUREMENT_ID_DEV,
-  // MEASUREMENT_ID_PROD,
-} from "@env";
-
-function getEnvironment() {
-  return {
-    apiKey: API_KEY_DEV,
-    authDomain: AUTH_DOMAIN_DEV,
-    projectId: PROJECT_ID_DEV,
-    storageBucket: STORAGE_BUCKET_DEV,
-    messagingSenderId: MESSAGING_SENDER_ID_DEV,
-    appId: APP_ID_DEV,
-    measurementId: MEASUREMENT_ID_DEV,
-  };
-}
-
-const firebaseConfig = getEnvironment();
+const firebaseConfig = {
+  apiKey: `${process.env.REACT_APP_API_KEY}`,
+  authDomain: `${process.env.REACT_APP_AUTH_DOMAIN}`,
+  projectId: `${process.env.REACT_APP_PROJECT_ID}`,
+  storageBucket: `${process.env.REACT_APP_STORAGE_BUCKET}`,
+  messagingSenderId: `${process.env.REACT_APP_MESSAGING_SENDER_ID}`,
+  appId: `${process.env.REACT_APP_APP_ID}`,
+  measurementId: `${process.env.REACT_APP_MEASUREMENT_ID}`,
+};
 
 export default firebaseConfig;
