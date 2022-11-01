@@ -6,6 +6,7 @@ import PencilIconSVG from "../Icons/PencilIconSVG";
 import BucketIconSVG from "../Icons/BucketIconSVG";
 import BellDashedSVG from "../Icons/BellDashedSVG";
 import ListingSoldSVG from "../Icons/ListingSoldSVG";
+import ListAgainSVG from "../Icons/ListAgainSVG";
 
 const styles = StyleSheet.create({
   modalContainer: { margin: 0, justifyContent: "flex-end" },
@@ -115,7 +116,9 @@ function CustomBottomModal({
 											"pencil": <PencilIconSVG />,
 											"trash-can-outline": <BucketIconSVG />,
 											"bell-off-outline": <BellDashedSVG />,
-                      "piggy-bank": <ListingSoldSVG />
+                      "piggy-bank": <ListingSoldSVG />,
+                      "account-cash-outline" : <ListAgainSVG/>
+
 										}[item.iconName]
                   }
                   <Text style={styles.modalOptionText}>{item.content}</Text>

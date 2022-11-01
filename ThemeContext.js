@@ -374,6 +374,16 @@ const theme = StyleSheet.create({
     borderRadius: 12,
     zIndex: 1,
   },
+  keyboardContainer: {
+    flex: 1,
+    height: "100%",
+  },
+  iOSMarginTop: {
+    marginTop: "auto",
+  },
+  androidOSMarginTop: {
+    marginTop: 0,
+  },
 });
 
 //primary color (navy/dark green): #395E66

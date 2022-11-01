@@ -171,6 +171,7 @@ const EditPersonalInfo = ({ navigation }) => {
       return setButtonDisabled(false);
     setButtonDisabled(true);
   }, [firstName, lastName]);
+
   return (
     <SafeAreaView edges={["top"]}>
       <LoadingIndicator visible={isLoading} />
@@ -186,7 +187,8 @@ const EditPersonalInfo = ({ navigation }) => {
           setTimeout(() => {
             setToastVisible(false);
           }, 2000);
-        }}>
+        }}
+      >
         <PopupModal
           modalType={toastType}
           message={toastMessage}
@@ -207,7 +209,8 @@ const EditPersonalInfo = ({ navigation }) => {
             {
               height: "100%",
             },
-          ]}>
+          ]}
+        >
           <StatusBar style="dark" />
           <View>
             {/* userHeader */}
@@ -218,7 +221,8 @@ const EditPersonalInfo = ({ navigation }) => {
                 flexDirection: "row",
                 width: "100%",
                 paddingVertical: 34,
-              }}>
+              }}
+            >
               {isLoading ? (
                 <View style={styles.profileLoading}>
                   <ActivityIndicator
@@ -243,17 +247,20 @@ const EditPersonalInfo = ({ navigation }) => {
                   style={[
                     styleVariables.fontSizes.title,
                     { marginBottom: 4, color: styleVariables.colors.black },
-                  ]}>
+                  ]}
+                >
                   {currentUser.firstName} {currentUser.lastName}
                 </Text>
                 <TouchableOpacity
                   onPress={() => pickImage()}
-                  style={{ flexDirection: "row" }}>
+                  style={{ flexDirection: "row" }}
+                >
                   <Text
                     style={[
                       styleVariables.fontSizes.body,
                       { color: styleVariables.colors.primary, opacity: 0.66 },
-                    ]}>
+                    ]}
+                  >
                     Change profile picture
                   </Text>
                   <MaterialCommunityIcons
@@ -272,7 +279,8 @@ const EditPersonalInfo = ({ navigation }) => {
                   style={[
                     theme.textInputLabel,
                     styleVariables.fontSizes.calloutBold,
-                  ]}>
+                  ]}
+                >
                   First Name
                 </Text>
                 <TextInput
@@ -288,7 +296,8 @@ const EditPersonalInfo = ({ navigation }) => {
                   style={[
                     theme.textInputLabel,
                     styleVariables.fontSizes.calloutBold,
-                  ]}>
+                  ]}
+                >
                   Last name
                 </Text>
                 <TextInput
@@ -305,18 +314,21 @@ const EditPersonalInfo = ({ navigation }) => {
           <TouchableOpacity
             id="save"
             onPress={saveProfileInfo}
-            disabled={buttonDisabled}>
+            disabled={buttonDisabled}
+          >
             <View
               style={[
                 theme.primaryButton,
                 { margin: 0, shadowColor: "#fff" },
                 buttonDisabled === true ? styles.buttonDisabled : {},
-              ]}>
+              ]}
+            >
               <Text
                 style={[
                   theme.primaryButtonText,
                   styleVariables.fontSizes.bodyBold,
-                ]}>
+                ]}
+              >
                 Save
               </Text>
             </View>

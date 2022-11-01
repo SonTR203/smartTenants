@@ -62,6 +62,7 @@ const CreatePost = ({ navigation, route }) => {
         peopleWhoLiked: [],
         commentCount: 0,
         userBuildingName: currentUser.buildingName,
+        userBuildingID: currentUser.buildingID,
       };
 
       const res = await createItemInFirestore("Newsfeed", id, propObj);

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp, deleteField } from "firebase/firestore";
 
 import { useTheme } from "../ThemeContext.js";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -119,7 +119,9 @@ export default function CustomSubStackScreenHeader({ ...props }) {
   const handleSetListingAsSold = async () => {
     const res = await updateItemInFirestore("Marketplace", props.item.id, {
       isSold: props.item.isSold ? false : true,
-      soldDate: props.item.isSold ? "" : Timestamp.fromDate(new Date()),
+      soldDate: props.item.isSold
+        ? deleteField()
+        : Timestamp.fromDate(new Date()),
     });
     if (!res) {
       alert("Something went wrong. Please try again later.");
@@ -250,7 +252,8 @@ export default function CustomSubStackScreenHeader({ ...props }) {
             if (props.navigation) {
               props.navigation.goBack();
             }
-          }}>
+          }}
+        >
           <MaterialCommunityIcons
             name="chevron-left"
             size={36}
@@ -263,7 +266,8 @@ export default function CustomSubStackScreenHeader({ ...props }) {
             {
               color: styleVariables.colors.black,
             },
-          ]}>
+          ]}
+        >
           {props.title && props.title}
         </Text>
         <View style={styles.headerRight}>
