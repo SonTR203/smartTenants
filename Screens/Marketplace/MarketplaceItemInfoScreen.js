@@ -232,7 +232,7 @@ function MarketplaceItemInfoScreen({ navigation }) {
           </Text>
           <Text style={styles.price}>{item.price}</Text>
         </View>
-        {item.distance !== 0 && (
+        {item.distance && item.distance !== 0 && (
           <Text style={[styleVariables.fontSizes.callout, { fontSize: 20 }]}>
             {item.distance.toFixed(1) < 1
               ? item.distance.toFixed(1) * 1000
