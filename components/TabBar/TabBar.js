@@ -63,7 +63,9 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
 
     // Scroll to Top Feature
     if (isFocused) {
+      console.log(scrollRef);
       scrollRef?.current?.scrollToOffset({ animated: true, offset: 0 });
+      scrollRef.current = undefined;
     }
 
     if (!isFocused && !event.defaultPrevented) {
