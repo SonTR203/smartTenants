@@ -236,12 +236,10 @@ function MarketplaceItemInfoScreen({ navigation }) {
           ? item.distance !== 0 && (
               <Text
                 style={[styleVariables.fontSizes.callout, { fontSize: 20 }]}>
-                {`${
-                  item.distance.toFixed(1) < 1
-                    ? item.distance.toFixed(1) * 1000
-                    : item.distance.toFixed(1)
-                }
-            ${item.distance.toFixed(1) < 1 ? "m" : "km"}`}
+                {item.distance.toFixed(1) < 1
+                  ? item.distance.toFixed(1) * 1000
+                  : item.distance.toFixed(1)}
+                {item.distance.toFixed(1) < 1 ? "m" : "km"}
               </Text>
             )
           : null}
