@@ -42,6 +42,7 @@ const Tab = createBottomTabNavigator();
 
 function App() {
   const responseListener = useRef();
+  const scrollRef = useRef();
   const navigationRef = useNavigationContainerRef();
 
   const [post, setPost] = useState({});
@@ -96,6 +97,7 @@ function App() {
     setCurrentMarketplacePost,
     updatedMarketplacePosts,
     setUpdatedMarketplacePosts,
+    scrollRef,
   };
 
   useEffect(() => {
@@ -374,7 +376,8 @@ function AppContainer({ navigationRef }) {
           onStateChange={async () => {
             const currentRouteName = navigationRef.getCurrentRoute().name;
             setRouteName(currentRouteName);
-          }}>
+          }}
+        >
           <Tab.Navigator
             initialRouteName="NewsfeedNavigator"
             tabBar={(props) => <TabBar {...props} routeName={routeName} />}
@@ -394,7 +397,8 @@ function AppContainer({ navigationRef }) {
                 shadowRadius: 24, // radius: 24
                 elevation: 5, // elevation: 5
               },
-            })}>
+            })}
+          >
             {/* ======= Newsfeed ======= */}
             <Tab.Screen
               name="NewsfeedNavigator"

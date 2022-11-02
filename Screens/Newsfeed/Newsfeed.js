@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../../ThemeContext";
+import { useAppContext } from "../../Context/AppContext";
 import { constants, refreshDelay } from "../../utils/constants";
 import Post from "./Post";
 import ListFooter from "./ListFooter";
@@ -27,6 +28,7 @@ import PopupModal from "../../components/PopupModal";
 
 const Newsfeed = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
+  const { scrollRef } = useAppContext();
   const [posts, setPosts] = useState([]);
   const [newPostsLength, setNewPostsLength] = useState(0);
   const [refreshing, setRefreshing] = useState(true);
@@ -187,7 +189,8 @@ const Newsfeed = ({ navigation, route }) => {
               immediately: null,
             });
           }, 2000);
-        }}>
+        }}
+      >
         <PopupModal
           modalType={route.params?.modalType}
           message={route.params?.message}
@@ -208,7 +211,8 @@ const Newsfeed = ({ navigation, route }) => {
             {
               transform: [{ translateY: slideDown }],
             },
-          ]}>
+          ]}
+        >
           <TouchableOpacity
             onPress={() => {
               resetAnimation();
@@ -217,9 +221,11 @@ const Newsfeed = ({ navigation, route }) => {
               fetchNotifications();
             }}
             activeOpacity={1}
-            style={styles.newPostsButton}>
+            style={styles.newPostsButton}
+          >
             <Text
-              style={[{ color: "#fff" }, styleVariables.fontSizes.calloutBold]}>
+              style={[{ color: "#fff" }, styleVariables.fontSizes.calloutBold]}
+            >
               New posts
             </Text>
           </TouchableOpacity>
@@ -234,7 +240,10 @@ const Newsfeed = ({ navigation, route }) => {
           renderItem={callBackRender}
           ListEmptyComponent={renderEmpty}
           ListFooterComponent={renderListFooter}
-          ref={(ref) => (flatListRef = ref)}
+          ref={(ref) => {
+            scrollRef.current = ref;
+            flatListRef = ref;
+          }}
           refreshControl={
             <RefreshControl
               progressBackgroundColor="white"
