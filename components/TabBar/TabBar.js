@@ -63,7 +63,7 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
     });
 
     // Scroll to Top Feature
-    if (event) {
+    if (isFocused) {
       switch (route.name) {
         case "NewsfeedNavigator":
           newsfeedScrollRef?.current?.scrollToOffset({
