@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useAppContext } from "../../Context/AppContext";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import {
