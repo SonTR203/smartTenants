@@ -93,14 +93,16 @@ function MarketplaceItem({ item, index, navigation }) {
           <Text style={styles.price}>
             {item.price === 0 ? "Free" : item.price}
           </Text>
-          {item.distance !== 0 && (
-            <Text style={[styleVariables.fontSizes.callout]}>
-              {item.distance.toFixed(1) < 1
-                ? item.distance.toFixed(1) * 1000
-                : item.distance.toFixed(1)}
-              {item.distance.toFixed(1) < 1 ? "m" : "km"}
-            </Text>
-          )}
+          {item.distance
+            ? item.distance !== 0 && (
+                <Text style={[styleVariables.fontSizes.callout]}>
+                  {item.distance.toFixed(1) < 1
+                    ? item.distance.toFixed(1) * 1000
+                    : item.distance.toFixed(1)}
+                  {item.distance.toFixed(1) < 1 ? "m" : "km"}
+                </Text>
+              )
+            : null}
         </View>
       </View>
       {/* ITEM CONTENT */}

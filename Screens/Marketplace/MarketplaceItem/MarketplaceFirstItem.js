@@ -198,14 +198,16 @@ function MarketplaceFirstItem({
           <Text style={styles.title} numberOfLines={1} ellipsizeMode={"tail"}>
             {item.postTitle}
           </Text>
-          {item.distance && item.distance !== 0 && (
-            <Text style={[styleVariables.fontSizes.callout]}>
-              {item.distance.toFixed(1) < 1
-                ? item.distance.toFixed(1) * 1000
-                : item.distance.toFixed(1)}
-              {item.distance.toFixed(1) < 1 ? "m" : "km"}
-            </Text>
-          )}
+          {item.distance
+            ? item.distance !== 0 && (
+                <Text style={[styleVariables.fontSizes.callout]}>
+                  {item.distance.toFixed(1) < 1
+                    ? item.distance.toFixed(1) * 1000
+                    : item.distance.toFixed(1)}
+                  {item.distance.toFixed(1) < 1 ? "m" : "km"}
+                </Text>
+              )
+            : null}
         </View>
         {isMyPost === true ? (
           <View style={styles.postStatusContainer}>
