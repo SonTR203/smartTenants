@@ -11,7 +11,7 @@ import _ from "lodash";
 
 const Notifications = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
-  const { notificationBadges } = useAppContext();
+  const { notificationBadges, notificationScrollRef } = useAppContext();
   const [notifications, setNotifications] = useState([]);
   const [wasSeenVar, setWasSeenVar] = useState();
 
@@ -83,6 +83,9 @@ const Notifications = ({ navigation, route }) => {
           renderItem={callBackRender}
           keyExtractor={(item, index) => item.id + index}
           ListFooterComponent={renderListEnd}
+          ref={(ref) => {
+            notificationScrollRef.current = ref;
+          }}
         />
       </View>
     </SafeAreaView>
