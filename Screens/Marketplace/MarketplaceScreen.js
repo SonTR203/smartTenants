@@ -53,7 +53,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
     updatedMarketplacePosts,
     setUpdatedMarketplacePosts,
     currentUserBuilding,
-    scrollRef,
+    marketplaceScrollRef,
   } = useAppContext();
   function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     if (!lat1 || !lat2 || !lon1 || !lon2) return 0;
@@ -466,7 +466,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
               initialNumToRender={3}
               style={styles.flatlist}
               ref={(ref) => {
-                scrollRef.current = ref;
+                marketplaceScrollRef.current = ref;
                 flatListRef = ref;
               }}
               data={

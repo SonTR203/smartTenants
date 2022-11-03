@@ -28,7 +28,7 @@ import PopupModal from "../../components/PopupModal";
 
 const Newsfeed = ({ navigation, route }) => {
   const { theme, styleVariables } = useTheme();
-  const { scrollRef } = useAppContext();
+  const { newsfeedScrollRef } = useAppContext();
   const [posts, setPosts] = useState([]);
   const [newPostsLength, setNewPostsLength] = useState(0);
   const [refreshing, setRefreshing] = useState(true);
@@ -241,7 +241,7 @@ const Newsfeed = ({ navigation, route }) => {
           ListEmptyComponent={renderEmpty}
           ListFooterComponent={renderListFooter}
           ref={(ref) => {
-            scrollRef.current = ref;
+            newsfeedScrollRef.current = ref;
             flatListRef = ref;
           }}
           refreshControl={

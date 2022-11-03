@@ -42,9 +42,10 @@ const Tab = createBottomTabNavigator();
 
 function App() {
   const responseListener = useRef();
-  const scrollRef = useRef();
+  const newsfeedScrollRef = useRef();
+  const marketplaceScrollRef = useRef();
+  const notificationScrollRef = useRef();
   const navigationRef = useNavigationContainerRef();
-
   const [post, setPost] = useState({});
   const [currentMarketplacePost, setCurrentMarketplacePost] = useState({});
   const [updatedMarketplacePosts, setUpdatedMarketplacePosts] = useState([]);
@@ -97,7 +98,9 @@ function App() {
     setCurrentMarketplacePost,
     updatedMarketplacePosts,
     setUpdatedMarketplacePosts,
-    scrollRef,
+    newsfeedScrollRef,
+    marketplaceScrollRef,
+    notificationScrollRef,
   };
 
   useEffect(() => {
