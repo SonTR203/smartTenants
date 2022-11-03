@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAppContext } from "../../Context/AppContext";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import {
   View,
@@ -14,6 +15,8 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
   const totalWidth = Dimensions.get("window").width;
   const tabWidth = totalWidth / state.routes.length - 41.5;
   const [translateValue] = useState(new Animated.Value(0));
+  const { newsfeedScrollRef, marketplaceScrollRef, notificationScrollRef } =
+    useAppContext();
 
   const getRouteName = () => {
     switch (routeName) {
@@ -58,6 +61,32 @@ export const TabBar = ({ state, descriptors, navigation, routeName }) => {
       target: route.key,
       canPreventDefault: true,
     });
+
+    // Scroll to Top Feature
+    if (isFocused) {
+      switch (route.name) {
+        case "NewsfeedNavigator":
+          newsfeedScrollRef?.current?.scrollToOffset({
+            animated: true,
+            offset: 0,
+          });
+          break;
+        case "MarketplaceNavigator":
+          marketplaceScrollRef?.current?.scrollToOffset({
+            animated: true,
+            offset: 0,
+          });
+          break;
+        case "NotificationsNavigator":
+          notificationScrollRef?.current?.scrollToOffset({
+            animated: true,
+            offset: 0,
+          });
+          break;
+        default:
+          break;
+      }
+    }
 
     if (!isFocused && !event.defaultPrevented) {
       navigation.navigate(route.name);
