@@ -68,7 +68,7 @@ export const getFilteredList = (
 
   const filteredList = data.filter((item) => {
     if (
-      (item.category.split(" - ")[index] == category.split(" - ")[index] ||
+      (item?.category.split(" - ")[index] == category.split(" - ")[index] ||
         category == "All") &&
       (item.condition == condition || condition == "All") &&
       (parseFloat(item.price.substr(1).replace(",", "")) >= parseInt(min) ||
