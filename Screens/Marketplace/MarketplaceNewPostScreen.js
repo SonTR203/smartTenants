@@ -12,6 +12,7 @@ import {
   ScrollView,
   FlatList,
   Dimensions,
+  Platform,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
 import { Timestamp } from "@firebase/firestore";
