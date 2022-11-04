@@ -129,7 +129,7 @@ exports.notificationsNewAnnouncement = functions.firestore
         result.forEach((doc) => {
           const data = doc.data();
           // Get the correct Expo push token of the recipients
-          if (recipients.includes(data.buildingName)) {
+          if (recipients.includes(data.buildingID)) {
             ExpoPushTokenList.push(data.expoPushToken);
           }
         });
