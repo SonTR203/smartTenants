@@ -164,13 +164,18 @@ export const getMarketplaceItems = async () => {
   return formattedData;
 };
 
-export const uploadExpoPushToken = async (id, buildingName = null) => {
+export const uploadExpoPushToken = async (
+  id,
+  buildingName = null,
+  buildingID = null
+) => {
   const expoPushToken = await registerForPushNotificationsAsync();
   try {
     await setDoc(doc(db, "ExpoPushTokens", id), {
       id: id,
       expoPushToken: expoPushToken ? expoPushToken : "",
       buildingName: buildingName ? buildingName : "",
+      buildingID: buildingID ? buildingID : "",
     });
   } catch (error) {
     console.log("error uploading expo token: ", error);
