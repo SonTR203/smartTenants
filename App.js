@@ -183,7 +183,7 @@ function App() {
       const announcementRef = collection(db, `Announcements`);
       const announcementQuery = query(
         announcementRef,
-        where("recipients", "array-contains", currentUser.buildingName)
+        where("recipients", "array-contains", currentUser.buildingID)
       );
 
       unsubscribeAnnouncements = onSnapshot(
