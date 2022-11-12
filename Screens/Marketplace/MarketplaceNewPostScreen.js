@@ -11,6 +11,8 @@ import {
   Image,
   ScrollView,
   FlatList,
+  Dimensions,
+  Platform,
 } from "react-native";
 import { useTheme } from "../../ThemeContext";
 import { Timestamp } from "@firebase/firestore";
@@ -388,7 +390,11 @@ function MarketplaceNewPostScreen({ navigation }) {
     <View style={styles.container}>
       <StatusBar style="dark" />
       {/* BODY CONTAINER  */}
-      <KeyboardAvoidingView style={styles.keyboardContainer} behavior="height">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        keyboardVerticalOffset={Dimensions.get("window").height * 0.15}
+        style={styles.keyboardContainer}
+      >
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* TEXT INPUT SECTIONS  */}
           <View style={styles.horizontalMargin}>
