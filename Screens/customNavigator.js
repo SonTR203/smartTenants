@@ -173,7 +173,11 @@ const NewsfeedNavigator = () => {
         console.log("user is logged in with id: ", uid);
         const userData = await getItemById("Tenants", uid);
         if (userData && userData.tenantAuthorized && userData.isActive) {
-          uploadExpoPushToken(userData.userID, userData.buildingName);
+          uploadExpoPushToken(
+            userData.userID,
+            userData.buildingName,
+            userData.buildingID
+          );
           setCurrentUser(userData);
         }
         // ...

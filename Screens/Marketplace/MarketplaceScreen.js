@@ -53,6 +53,7 @@ const MarketplaceScreen = ({ navigation, route }) => {
     updatedMarketplacePosts,
     setUpdatedMarketplacePosts,
     currentUserBuilding,
+    marketplaceScrollRef,
   } = useAppContext();
   function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     if (!lat1 || !lat2 || !lon1 || !lon2) return 0;
@@ -464,7 +465,10 @@ const MarketplaceScreen = ({ navigation, route }) => {
               removeClippedSubviews={true}
               initialNumToRender={3}
               style={styles.flatlist}
-              ref={(ref) => (flatListRef = ref)}
+              ref={(ref) => {
+                marketplaceScrollRef.current = ref;
+                flatListRef = ref;
+              }}
               data={
                 filteredItemList ? filteredItemList.slice(1) : itemList.slice(1)
               } // remove first item from list, put first item in Header
