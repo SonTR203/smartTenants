@@ -1,6 +1,6 @@
 {
   "name": "smarttenant",
-  "version": "1.0.0",
+  "version": "10.4.0",
   "scripts": {
     "start": "expo start",
     "start:prod": "expo start",
